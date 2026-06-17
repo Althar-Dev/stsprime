@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
-import { SearchX, Zap, Flame, LayoutGrid } from "lucide-react";
+import { SearchX, LayoutGrid } from "lucide-react";
 
 const CATALOG_ITEMS = [
   // Flash Sale
@@ -34,19 +34,28 @@ export function CatalogGrid() {
   const populerItems = filteredItems.filter(item => item.tag === "Populer");
   const topUpItems = filteredItems.filter(item => item.tag !== "Flash Sale" && item.tag !== "Populer");
 
-  const SectionHeader = ({ title, icon: Icon, subtitle }: { title: string, icon: any, subtitle?: string }) => (
-    <div className="mb-6 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-          <Icon className="h-5 w-5" />
-        </div>
-        <div>
-          <h2 className="font-headline text-xl md:text-2xl font-black tracking-tight">{title}</h2>
-          {subtitle && <p className="text-[10px] md:text-xs text-muted-foreground font-bold">{subtitle}</p>}
+  const SectionHeader = ({ title, icon: Icon, subtitle }: { title: string, icon: any, subtitle?: string }) => {
+    const isImagePath = typeof Icon === 'string';
+    return (
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          {isImagePath ? (
+            <div className="flex h-10 w-10 items-center justify-center">
+              <img src={Icon} alt={title} className="h-10 w-10 object-contain" />
+            </div>
+          ) : (
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Icon className="h-5 w-5" />
+            </div>
+          )}
+          <div>
+            <h2 className="font-headline text-xl md:text-2xl font-black tracking-tight">{title}</h2>
+            {subtitle && <p className="text-[10px] md:text-xs text-muted-foreground font-bold">{subtitle}</p>}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   if (filteredItems.length === 0) {
     return (
@@ -69,7 +78,7 @@ export function CatalogGrid() {
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           <SectionHeader 
             title="Flash Sale" 
-            icon={Zap} 
+            icon="/img/bolt.gif" 
             subtitle="Limited time offers with massive discounts."
           />
           <div className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6">
@@ -115,7 +124,7 @@ export function CatalogGrid() {
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <SectionHeader 
             title="Populer" 
-            icon={Flame} 
+            icon="/img/fire.gif" 
             subtitle="Most loved and frequently used by the community."
           />
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
