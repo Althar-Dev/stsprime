@@ -110,27 +110,14 @@
     @apply bg-primary;
   }
 
-  /* Custom Scrollbar for Modal */
+  /* Hidden Scrollbar for Modal but functional */
   .modal-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: hsl(var(--primary) / 0.4) transparent;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
   
   .modal-scrollbar::-webkit-scrollbar {
-    width: 5px;
-  }
-  
-  .modal-scrollbar::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
-  
-  .modal-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-primary/40 rounded-full transition-colors;
-    border: none;
-  }
-  
-  .modal-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary/70;
+    display: none; /* Chrome, Safari and Opera */
   }
 }
 
