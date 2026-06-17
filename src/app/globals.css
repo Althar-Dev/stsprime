@@ -53,7 +53,7 @@
   * {
     @apply border-border;
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--border)) hsl(var(--background));
+    scrollbar-color: hsl(var(--border)) transparent;
   }
   body {
     @apply bg-background text-foreground font-body transition-colors duration-300;
@@ -62,40 +62,50 @@
     @apply font-headline tracking-tight;
   }
 
+  /* Global Scrollbar Reset */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
+  
+  /* Hilangkan tombol panah secara total */
   ::-webkit-scrollbar-button {
-    display: none;
-    width: 0;
-    height: 0;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
+  
   ::-webkit-scrollbar-track {
-    @apply bg-background;
+    @apply bg-transparent;
   }
+  
   ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-border transition-colors;
-    border: 3px solid hsl(var(--background));
+    @apply rounded-full bg-border/50 transition-colors;
+    border: 2px solid transparent;
+    background-clip: padding-box;
   }
+  
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary;
+    @apply bg-primary/60;
   }
 }
 
 @layer utilities {
+  /* Flash Sale Scrollbar */
   .flash-sale-scrollbar::-webkit-scrollbar {
     height: 6px;
   }
-  .flash-sale-scrollbar::-webkit-scrollbar-button {
-    display: none;
-  }
+  
   .flash-sale-scrollbar::-webkit-scrollbar-track {
     @apply bg-muted/20 rounded-full mx-8;
   }
+  
   .flash-sale-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-primary/30 rounded-full transition-colors border-2 border-transparent bg-clip-padding;
+    @apply bg-primary/30 rounded-full transition-colors;
+    border: 1px solid transparent;
+    background-clip: padding-box;
   }
+  
   .flash-sale-scrollbar::-webkit-scrollbar-thumb:hover {
     @apply bg-primary;
   }
@@ -103,23 +113,24 @@
   /* Custom Scrollbar for Modal */
   .modal-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+    scrollbar-color: hsl(var(--primary) / 0.4) transparent;
   }
   
   .modal-scrollbar::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
   }
-  .modal-scrollbar::-webkit-scrollbar-button {
-    display: none;
-  }
+  
   .modal-scrollbar::-webkit-scrollbar-track {
     @apply bg-transparent;
   }
+  
   .modal-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-primary/30 rounded-full transition-colors border-2 border-transparent bg-clip-padding;
+    @apply bg-primary/40 rounded-full transition-colors;
+    border: none;
   }
+  
   .modal-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary/60;
+    @apply bg-primary/70;
   }
 }
 
