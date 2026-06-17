@@ -192,20 +192,23 @@ export function CatalogGrid() {
       {flashSaleItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="relative group">
-            {/* Protruding Timer */}
-            <div className="absolute -top-6 right-4 md:right-8 z-20">
-              <FlashSaleTimer />
-            </div>
-
             <div className="flex flex-col">
-              {/* Folder Tab Header */}
-              <div className="inline-flex items-center gap-3 bg-card border-t border-l border-r border-border px-6 py-4 rounded-t-2xl w-fit relative z-10 shadow-sm">
-                <img src="/img/bolt.gif" alt="Flash Sale" className="h-6 w-6 object-contain" />
-                <h2 className="font-headline text-lg md:text-xl font-black tracking-tight">Flash Sale</h2>
+              {/* Header Row: Tab + Aligned Timer */}
+              <div className="flex items-end justify-between relative z-10">
+                {/* Folder Tab Header */}
+                <div className="inline-flex items-center gap-3 bg-card border-t border-l border-r border-border px-4 md:px-6 py-3 md:py-4 rounded-t-2xl w-fit shadow-sm">
+                  <img src="/img/bolt.gif" alt="Flash Sale" className="h-6 w-6 object-contain" />
+                  <h2 className="font-headline text-lg md:text-xl font-black tracking-tight">Flash Sale</h2>
+                </div>
+
+                {/* Parallel Timer */}
+                <div className="mb-2 mr-2 md:mr-4">
+                  <FlashSaleTimer />
+                </div>
               </div>
 
               {/* Main Card Body */}
-              <div className="relative overflow-hidden border border-border bg-card/40 backdrop-blur-sm rounded-2xl rounded-tl-none p-5 md:p-8">
+              <div className="relative overflow-hidden border border-border bg-card/40 backdrop-blur-sm rounded-2xl rounded-tl-none p-5 md:p-8 -mt-px">
                 {/* Ambient Background Glow */}
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
                 <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
