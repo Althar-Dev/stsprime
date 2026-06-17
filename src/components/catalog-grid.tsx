@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -211,7 +210,7 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group bento-card p-1.5 transition-all active:scale-95 flex flex-row aspect-[16/7] overflow-hidden items-center hover:scale-[1.03] hover:shadow-lg"
+                  className="group bento-card p-1.5 bg-grid-pattern transition-all active:scale-95 flex flex-row aspect-[16/7] overflow-hidden items-center hover:scale-[1.03] hover:shadow-lg"
                 >
                   <div className="relative h-full aspect-square shrink-0 overflow-hidden rounded-lg">
                     <Image

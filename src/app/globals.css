@@ -119,6 +119,14 @@
   .modal-scrollbar::-webkit-scrollbar {
     display: none; /* Chrome, Safari and Opera */
   }
+
+  /* Grid Background Pattern */
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(to right, hsl(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--primary) / 0.05) 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
 }
 
 .bento-card {
