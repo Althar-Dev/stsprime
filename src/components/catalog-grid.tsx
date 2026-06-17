@@ -49,8 +49,16 @@ export function CatalogGrid() {
     </div>
   );
 
-  const ItemGrid = ({ items, aspect = "aspect-square" }: { items: typeof CATALOG_ITEMS, aspect?: string }) => (
-    <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
+  const ItemGrid = ({ 
+    items, 
+    aspect = "aspect-square", 
+    mobileCols = "grid-cols-3" 
+  }: { 
+    items: typeof CATALOG_ITEMS, 
+    aspect?: string,
+    mobileCols?: string
+  }) => (
+    <div className={cn("grid gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8", mobileCols)}>
       {items.map((item) => {
         const image = PlaceHolderImages.find((img) => img.id === item.imageId);
         return (
@@ -115,7 +123,7 @@ export function CatalogGrid() {
             icon={Zap} 
             subtitle="Limited time offers with massive discounts."
           />
-          <ItemGrid items={flashSaleItems} aspect="aspect-[9/16]" />
+          <ItemGrid items={flashSaleItems} aspect="aspect-[9/16]" mobileCols="grid-cols-3" />
         </div>
       )}
 
@@ -127,7 +135,7 @@ export function CatalogGrid() {
             icon={Flame} 
             subtitle="Most loved and frequently used by the community."
           />
-          <ItemGrid items={populerItems} aspect="aspect-[16/9]" />
+          <ItemGrid items={populerItems} aspect="aspect-[16/9]" mobileCols="grid-cols-2" />
         </div>
       )}
 
@@ -139,7 +147,7 @@ export function CatalogGrid() {
             icon={LayoutGrid} 
             subtitle="Browse all available game and digital services."
           />
-          <ItemGrid items={topUpItems} aspect="aspect-square" />
+          <ItemGrid items={topUpItems} aspect="aspect-square" mobileCols="grid-cols-3" />
         </div>
       )}
     </section>
