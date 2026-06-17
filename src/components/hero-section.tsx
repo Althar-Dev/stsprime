@@ -7,8 +7,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 
 export function HeroSection() {
@@ -46,9 +44,6 @@ export function HeroSection() {
               );
             })}
           </CarouselContent>
-          
-          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-background/40 backdrop-blur-xl border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-primary hover:text-black hover:border-primary z-20" />
-          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-background/40 backdrop-blur-xl border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-primary hover:text-black hover:border-primary z-20" />
         </Carousel>
       </div>
     </section>
