@@ -24,23 +24,26 @@ const CATALOG_ITEMS = [
 ];
 
 function FlashSaleTimer() {
-  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
-      const endOfDay = new Date();
-      endOfDay.setHours(23, 59, 59, 999);
+      // Target: End of the week for demonstration of days
+      const target = new Date();
+      target.setDate(now.getDate() + (7 - now.getDay()));
+      target.setHours(23, 59, 59, 999);
       
-      const diff = endOfDay.getTime() - now.getTime();
+      const diff = target.getTime() - now.getTime();
       
       if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((diff / 1000 / 60) % 60);
         const seconds = Math.floor((diff / 1000) % 60);
-        setTimeLeft({ hours, minutes, seconds });
+        setTimeLeft({ days, hours, minutes, seconds });
       } else {
-        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       }
     }, 1000);
 
@@ -52,6 +55,8 @@ function FlashSaleTimer() {
   return (
     <div className="flex items-center gap-1.5 ml-auto md:ml-0">
       <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-primary text-primary-foreground font-black text-[10px] md:text-xs shadow-[0_0_10px_rgba(242,255,0,0.3)]">
+        <span>{format(timeLeft.days)}</span>
+        <span className="animate-pulse">:</span>
         <span>{format(timeLeft.hours)}</span>
         <span className="animate-pulse">:</span>
         <span>{format(timeLeft.minutes)}</span>
@@ -176,7 +181,7 @@ export function CatalogGrid() {
             icon="/img/fire.gif" 
             subtitle="Most loved and frequently used by the community."
           />
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {populerItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
