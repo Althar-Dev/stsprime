@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -9,6 +10,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -128,10 +130,15 @@ export function Navbar() {
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 <Input 
                   placeholder="Search games..." 
-                  className="h-9 w-64 rounded-full bg-muted/50 pl-10 border-border focus-visible:ring-primary"
+                  className="h-9 w-48 xl:w-64 rounded-full bg-muted/50 pl-10 border-border focus-visible:ring-primary"
                   value={searchValue}
                   onChange={(e) => handleSearch(e.target.value)}
                 />
+              </div>
+              
+              {/* Theme Toggle (Desktop Only) */}
+              <div className="hidden sm:block">
+                <ThemeToggle />
               </div>
               
               {/* Mobile Search Toggle Button */}
@@ -191,6 +198,18 @@ export function Navbar() {
                               <LayoutDashboard className="h-5 w-5" /> Track order
                             </Button>
                           </Link>
+                        </div>
+                      </div>
+
+                      <Separator className="opacity-40" />
+
+                      <div>
+                        <p className="text-[10px] font-black tracking-widest text-muted-foreground/60 mb-3 px-2">Preferences</p>
+                        <div className="px-2 py-1">
+                           <div className="flex items-center justify-between">
+                              <span className="text-sm font-bold">Display Theme</span>
+                              <ThemeToggle />
+                           </div>
                         </div>
                       </div>
 

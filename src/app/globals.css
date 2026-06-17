@@ -1,13 +1,39 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 97%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 63 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 48 100% 55%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 48 100% 55%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 63 100% 50%;
+    --radius: 1rem;
+  }
+
+  .dark {
     --background: 0 0% 9%; /* #181818 */
     --foreground: 0 0% 98%;
     --card: 0 0% 19%; /* #303030 */
     --card-foreground: 0 0% 98%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
     --primary: 63 100% 50%;
     --primary-foreground: 0 0% 0%;
     --secondary: 48 100% 55%;
@@ -21,7 +47,6 @@
     --border: 0 0% 25%;
     --input: 0 0% 25%;
     --ring: 63 100% 50%;
-    --radius: 1rem;
   }
 }
 
@@ -32,7 +57,7 @@
     scrollbar-color: hsl(var(--border)) hsl(var(--background));
   }
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background text-foreground font-body transition-colors duration-300;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline tracking-tight;
