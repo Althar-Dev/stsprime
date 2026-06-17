@@ -210,9 +210,12 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group bento-card p-1.5 bg-grid-pattern transition-all active:scale-95 flex flex-row aspect-[16/7] overflow-hidden items-center hover:scale-[1.03] hover:shadow-lg"
+                  className="group bento-card p-1.5 bg-grid-pattern relative overflow-hidden transition-all active:scale-95 flex flex-row aspect-[16/7] items-center hover:scale-[1.03] hover:shadow-lg"
                 >
-                  <div className="relative h-full aspect-square shrink-0 overflow-hidden rounded-lg">
+                  {/* Shimmer Overlay */}
+                  <div className="absolute inset-0 pointer-events-none animate-shimmer opacity-40 z-0" />
+                  
+                  <div className="relative h-full aspect-square shrink-0 overflow-hidden rounded-lg z-10">
                     <Image
                       src={image?.imageUrl || ""}
                       alt={item.name}
@@ -221,7 +224,7 @@ export function CatalogGrid() {
                       data-ai-hint={image?.imageHint}
                     />
                   </div>
-                  <div className="flex-1 min-w-0 pl-2.5 pr-1 flex flex-col justify-center">
+                  <div className="flex-1 min-w-0 pl-2.5 pr-1 flex flex-col justify-center z-10">
                     <p className="text-[7px] md:text-[8px] tracking-[0.05em] text-accent font-black uppercase mb-0.5">
                       {item.type}
                     </p>
