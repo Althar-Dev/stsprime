@@ -8,8 +8,6 @@
     --foreground: 0 0% 98%;
     --card: 0 0% 15%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 13%;
-    --popover-foreground: 0 0% 98%;
     --primary: 63 100% 50%;
     --primary-foreground: 0 0% 0%;
     --secondary: 48 100% 55%;
@@ -30,6 +28,8 @@
 @layer base {
   * {
     @apply border-border;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) hsl(var(--background));
   }
   body {
     @apply bg-background text-foreground font-body;
@@ -37,6 +37,22 @@
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline tracking-tight;
+  }
+
+  /* Custom Scrollbar for Webkit Browsers (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border transition-colors;
+    border: 3px solid hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary;
   }
 }
 
