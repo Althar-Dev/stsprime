@@ -1,0 +1,59 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "mlbb",
+      "description": "Mobile Legends Bang Bang",
+      "imageUrl": "https://picsum.photos/seed/mlbb/400/400",
+      "imageHint": "mobile legends"
+    },
+    {
+      "id": "ff",
+      "description": "Free Fire",
+      "imageUrl": "https://picsum.photos/seed/ff/400/400",
+      "imageHint": "free fire"
+    },
+    {
+      "id": "pubgm",
+      "description": "PUBG Mobile",
+      "imageUrl": "https://picsum.photos/seed/pubgm/400/400",
+      "imageHint": "pubg mobile"
+    },
+    {
+      "id": "valorant",
+      "description": "Valorant Points",
+      "imageUrl": "https://picsum.photos/seed/valorant/400/400",
+      "imageHint": "valorant game"
+    },
+    {
+      "id": "genshin",
+      "description": "Genshin Impact Genesis Crystals",
+      "imageUrl": "https://picsum.photos/seed/genshin/400/400",
+      "imageHint": "genshin impact"
+    },
+    {
+      "id": "steam",
+      "description": "Steam Wallet",
+      "imageUrl": "https://picsum.photos/seed/steam/400/400",
+      "imageHint": "steam games"
+    },
+    {
+      "id": "telco",
+      "description": "Phone Credit",
+      "imageUrl": "https://picsum.photos/seed/telco/400/400",
+      "imageHint": "smartphone technology"
+    },
+    {
+      "id": "data",
+      "description": "Internet Data",
+      "imageUrl": "https://picsum.photos/seed/data/400/400",
+      "imageHint": "internet connectivity"
+    },
+    {
+      "id": "hero-banner",
+      "description": "Main Hero Banner",
+      "imageUrl": "https://picsum.photos/seed/sts-hero/1200/600",
+      "imageHint": "gaming neon"
+    }
+  ]
+}
