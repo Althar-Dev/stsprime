@@ -73,7 +73,7 @@ export function CatalogGrid() {
 
   return (
     <section className="container mx-auto px-4 py-8 space-y-12 md:space-y-16">
-      {/* Flash Sale Section: 3 columns mobile, 4 tablet, 6 desktop, 9:16 layout */}
+      {/* Flash Sale Section */}
       {flashSaleItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           <SectionHeader 
@@ -81,7 +81,7 @@ export function CatalogGrid() {
             icon="/img/bolt.gif" 
             subtitle="Limited time offers with massive discounts."
           />
-          <div className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6">
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
             {flashSaleItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
@@ -98,11 +98,6 @@ export function CatalogGrid() {
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                       data-ai-hint={image?.imageHint}
                     />
-                    {item.tag && (
-                      <Badge className="absolute left-1 top-1 bg-primary/90 text-primary-foreground text-[7px] md:text-[9px] font-black tracking-tighter border-none px-1.5 py-0.5 shadow-lg">
-                        {item.tag}
-                      </Badge>
-                    )}
                   </div>
                   <div className="p-2 flex flex-col justify-center flex-1 min-w-0">
                     <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black">
@@ -119,7 +114,7 @@ export function CatalogGrid() {
         </div>
       )}
 
-      {/* Populer Section: 2 columns mobile, 3 tablet, 4 desktop, 16:6 layout */}
+      {/* Populer Section */}
       {populerItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <SectionHeader 
@@ -127,7 +122,7 @@ export function CatalogGrid() {
             icon="/img/fire.gif" 
             subtitle="Most loved and frequently used by the community."
           />
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {populerItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
@@ -146,11 +141,6 @@ export function CatalogGrid() {
                     />
                   </div>
                   <div className="p-3 flex flex-col justify-center flex-1 min-w-0">
-                    {item.tag && (
-                      <Badge className="w-fit mb-1 bg-primary/90 text-primary-foreground text-[7px] md:text-[9px] font-black tracking-tighter border-none px-1.5 py-0.5 shadow-lg">
-                        {item.tag}
-                      </Badge>
-                    )}
                     <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate">
                       {item.type}
                     </p>
@@ -165,7 +155,7 @@ export function CatalogGrid() {
         </div>
       )}
 
-      {/* TopUp Section: 3 columns mobile, 4 tablet, 6 desktop, Square layout */}
+      {/* TopUp Section */}
       {topUpItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <SectionHeader 
