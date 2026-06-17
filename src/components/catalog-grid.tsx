@@ -116,7 +116,7 @@ export function CatalogGrid() {
           )}
           <div>
             <h2 className="font-headline text-xl md:text-2xl font-black tracking-tight">{title}</h2>
-            {subtitle && <p className="text-[10px] md:text-xs text-muted-foreground font-bold hidden sm:block">{subtitle}</p>}
+            {subtitle && <p className="text-[10px] md:text-xs text-muted-foreground font-bold">{subtitle}</p>}
           </div>
         </div>
         {rightElement && <div className="shrink-0">{rightElement}</div>}
