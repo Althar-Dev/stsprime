@@ -71,17 +71,17 @@ export default function TopupPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
               </div>
-              <h1 className="text-2xl md:text-3xl font-black mb-2 uppercase tracking-tight">{String(id).replace("-", " ")}</h1>
+              <h1 className="text-2xl md:text-3xl font-black mb-2 tracking-tight capitalize">{String(id).replace("-", " ")}</h1>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                 Top up {String(id).replace("-", " ")} instantly! Just enter your ID, select the pack, and pay. Your top-up is processed immediately.
               </p>
               
               <div className="mt-8 space-y-4 border-t border-border pt-6">
-                <div className="flex items-center gap-3 text-xs md:text-sm font-black uppercase tracking-tighter">
+                <div className="flex items-center gap-3 text-xs md:text-sm font-black tracking-tighter">
                   <ShieldCheck className="h-5 w-5 text-primary" />
                   Official & Secure
                 </div>
-                <div className="flex items-center gap-3 text-xs md:text-sm font-black uppercase tracking-tighter">
+                <div className="flex items-center gap-3 text-xs md:text-sm font-black tracking-tighter">
                   <CreditCard className="h-5 w-5 text-primary" />
                   Fast Payment
                 </div>
@@ -95,11 +95,11 @@ export default function TopupPage() {
             <div className="bento-card p-5 md:p-8">
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">1</div>
-                <h2 className="text-lg md:text-xl font-black uppercase tracking-tight">Enter User ID</h2>
+                <h2 className="text-lg md:text-xl font-black tracking-tight">Enter User ID</h2>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="userId" className="text-xs font-black uppercase text-muted-foreground">User ID</Label>
+                  <Label htmlFor="userId" className="text-xs font-black text-muted-foreground">User ID</Label>
                   <Input 
                     id="userId" 
                     placeholder="e.g. 12345678" 
@@ -109,7 +109,7 @@ export default function TopupPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="zoneId" className="text-xs font-black uppercase text-muted-foreground">Zone ID</Label>
+                  <Label htmlFor="zoneId" className="text-xs font-black text-muted-foreground">Zone ID</Label>
                   <Input 
                     id="zoneId" 
                     placeholder="e.g. 1234" 
@@ -125,7 +125,7 @@ export default function TopupPage() {
             <div className="bento-card p-5 md:p-8">
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">2</div>
-                <h2 className="text-lg md:text-xl font-black uppercase tracking-tight">Select Amount</h2>
+                <h2 className="text-lg md:text-xl font-black tracking-tight">Select Amount</h2>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
                 {PACKS.map((pack) => (
@@ -137,9 +137,9 @@ export default function TopupPage() {
                     }`}
                   >
                     {pack.popular && (
-                      <Badge className="absolute -top-2 -right-1 bg-accent text-[8px] md:text-[10px] text-accent-foreground font-black uppercase px-2 py-0">POPULAR</Badge>
+                      <Badge className="absolute -top-2 -right-1 bg-accent text-[8px] md:text-[10px] text-accent-foreground font-black px-2 py-0">Popular</Badge>
                     )}
-                    <span className="text-[10px] md:text-xs font-bold uppercase text-muted-foreground">{pack.amount}</span>
+                    <span className="text-[10px] md:text-xs font-bold text-muted-foreground">{pack.amount}</span>
                     <span className="text-[10px] md:text-xs text-primary font-black mt-0.5">{pack.bonus}</span>
                     <span className="text-sm md:text-lg font-black mt-2">{pack.price}</span>
                   </button>
@@ -151,7 +151,7 @@ export default function TopupPage() {
             <div className="bento-card p-5 md:p-8">
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">3</div>
-                <h2 className="text-lg md:text-xl font-black uppercase tracking-tight">Payment Method</h2>
+                <h2 className="text-lg md:text-xl font-black tracking-tight">Payment Method</h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                 {PAYMENT_METHODS.map((method) => (
@@ -166,7 +166,7 @@ export default function TopupPage() {
                       <div className="h-10 w-10 shrink-0 rounded-lg bg-background flex items-center justify-center border border-border">
                         {method.icon}
                       </div>
-                      <span className="font-black uppercase text-sm">{method.name}</span>
+                      <span className="font-black text-sm">{method.name}</span>
                     </div>
                     {selectedPayment === method.id && <Check className="h-5 w-5 text-primary" />}
                   </button>
@@ -178,8 +178,8 @@ export default function TopupPage() {
             <div className="bento-card p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 sticky bottom-4 md:static z-40 backdrop-blur-md">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div className="space-y-1">
-                  <h3 className="text-lg md:text-xl font-black uppercase">Summary</h3>
-                  <p className="text-xs text-muted-foreground font-bold uppercase">ID: {userId || "NOT SET"} {zoneId ? `(${zoneId})` : ""}</p>
+                  <h3 className="text-lg md:text-xl font-black">Summary</h3>
+                  <p className="text-xs text-muted-foreground font-bold">ID: {userId || "Not Set"} {zoneId ? `(${zoneId})` : ""}</p>
                   <p className="text-xl md:text-2xl font-black text-primary">
                     {selectedPack ? PACKS.find(p => p.id === selectedPack)?.price : "---"}
                   </p>
@@ -190,7 +190,7 @@ export default function TopupPage() {
                   onClick={handleOrder}
                   className="h-14 md:h-16 rounded-full px-8 md:px-12 text-lg md:text-xl font-black bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-transform w-full sm:w-auto"
                 >
-                  TOP UP NOW
+                  Top Up Now
                 </Button>
               </div>
             </div>

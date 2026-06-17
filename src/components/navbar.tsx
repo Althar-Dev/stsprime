@@ -13,7 +13,7 @@ export function Navbar() {
           <div className="flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-xl bg-primary shadow-[0_0_15px_rgba(242,255,0,0.3)]">
             <span className="font-headline text-lg md:text-xl font-bold text-primary-foreground">S</span>
           </div>
-          <span className="font-headline text-lg md:text-xl font-black tracking-tighter text-foreground">STS PEDIA</span>
+          <span className="font-headline text-lg md:text-xl font-black tracking-tighter text-foreground">STS Pedia</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -57,7 +57,7 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side="right" className="bg-background border-border">
               <SheetHeader className="text-left mb-8">
-                <SheetTitle className="font-headline font-black text-2xl text-primary">MENU</SheetTitle>
+                <SheetTitle className="font-headline font-black text-2xl text-primary">Menu</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-4">
                 <Link href="/">

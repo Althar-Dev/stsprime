@@ -42,7 +42,7 @@ export default function StatusPage() {
       <main className="flex-grow container mx-auto px-4 py-8 md:py-16">
         <div className="max-w-2xl mx-auto w-full">
           <div className="text-center mb-8 md:mb-12">
-            <h1 className="font-headline text-3xl md:text-5xl font-black mb-4 uppercase tracking-tight">Track Your Order</h1>
+            <h1 className="font-headline text-3xl md:text-5xl font-black mb-4 tracking-tight">Track Your Order</h1>
             <p className="text-xs md:text-base text-muted-foreground max-w-md mx-auto">Enter your transaction ID to check the real-time fulfillment status of your purchase.</p>
           </div>
 
@@ -54,7 +54,7 @@ export default function StatusPage() {
                 value={orderId}
                 onChange={(e) => setOrderId(e.target.value)}
               />
-              <Button onClick={handleSearch} disabled={!orderId || isSearching} className="h-12 md:h-14 px-8 bg-primary text-primary-foreground font-black text-base md:text-lg uppercase">
+              <Button onClick={handleSearch} disabled={!orderId || isSearching} className="h-12 md:h-14 px-8 bg-primary text-primary-foreground font-black text-base md:text-lg">
                 {isSearching ? <Loader2 className="h-6 w-6 animate-spin" /> : <Search className="h-6 w-6 mr-2" />}
                 Track
               </Button>
@@ -64,7 +64,7 @@ export default function StatusPage() {
           {isSearching && (
             <div className="flex flex-col items-center justify-center py-16 md:py-24 animate-pulse">
               <Loader2 className="h-12 w-12 text-primary animate-spin mb-6" />
-              <p className="font-black text-muted-foreground uppercase tracking-widest text-sm">Validating order sequence...</p>
+              <p className="font-black text-muted-foreground tracking-widest text-sm">Validating order sequence...</p>
             </div>
           )}
 
@@ -74,12 +74,12 @@ export default function StatusPage() {
                 <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-10">
                   <div>
                     <Badge className="bg-primary/20 text-primary border-primary/30 mb-3 font-black px-3 py-1 text-[10px] md:text-xs">#{orderId}</Badge>
-                    <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">Order Status</h2>
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight">Order Status</h2>
                   </div>
                   {orderStatus === "success" ? (
-                    <Badge className="bg-green-500/20 text-green-500 border-green-500/40 px-5 py-2 text-xs md:text-sm font-black uppercase">Completed</Badge>
+                    <Badge className="bg-green-500/20 text-green-500 border-green-500/40 px-5 py-2 text-xs md:text-sm font-black">Completed</Badge>
                   ) : (
-                    <Badge className="bg-accent/20 text-accent border-accent/40 px-5 py-2 text-xs md:text-sm font-black uppercase animate-pulse">Processing</Badge>
+                    <Badge className="bg-accent/20 text-accent border-accent/40 px-5 py-2 text-xs md:text-sm font-black animate-pulse">Processing</Badge>
                   )}
                 </div>
 
@@ -90,8 +90,8 @@ export default function StatusPage() {
                       <CheckCircle2 className="h-4 w-4 text-primary-foreground" />
                     </div>
                     <div>
-                      <p className="font-black uppercase text-sm md:text-base tracking-tight">Order Received</p>
-                      <p className="text-[10px] md:text-xs text-muted-foreground font-bold uppercase mt-1">Payment verified by the gateway.</p>
+                      <p className="font-black text-sm md:text-base tracking-tight">Order Received</p>
+                      <p className="text-[10px] md:text-xs text-muted-foreground font-bold mt-1">Payment verified by the gateway.</p>
                     </div>
                   </div>
 
@@ -104,8 +104,8 @@ export default function StatusPage() {
                        orderStatus === "success" ? <CheckCircle2 className="h-4 w-4 text-primary-foreground" /> : <Clock className="h-3 w-3 text-muted-foreground" />}
                     </div>
                     <div>
-                      <p className={`font-black uppercase text-sm md:text-base tracking-tight ${orderStatus === "pending" ? "text-muted-foreground" : "text-foreground"}`}>Game ID Validation</p>
-                      <p className="text-[10px] md:text-xs text-muted-foreground font-bold uppercase mt-1">Authenticating with game provider servers.</p>
+                      <p className={`font-black text-sm md:text-base tracking-tight ${orderStatus === "pending" ? "text-muted-foreground" : "text-foreground"}`}>Game ID Validation</p>
+                      <p className="text-[10px] md:text-xs text-muted-foreground font-bold mt-1">Authenticating with game provider servers.</p>
                     </div>
                   </div>
 
@@ -117,17 +117,17 @@ export default function StatusPage() {
                       {orderStatus === "success" ? <CheckCircle2 className="h-4 w-4 text-primary-foreground" /> : <Package className="h-3 w-3 text-muted-foreground" />}
                     </div>
                     <div>
-                      <p className={`font-black uppercase text-sm md:text-base tracking-tight ${orderStatus !== "success" ? "text-muted-foreground" : "text-foreground"}`}>Delivery Complete</p>
-                      <p className="text-[10px] md:text-xs text-muted-foreground font-bold uppercase mt-1">Credits injected into your target account.</p>
+                      <p className={`font-black text-sm md:text-base tracking-tight ${orderStatus !== "success" ? "text-muted-foreground" : "text-foreground"}`}>Delivery Complete</p>
+                      <p className="text-[10px] md:text-xs text-muted-foreground font-bold mt-1">Credits injected into your target account.</p>
                     </div>
                   </div>
                 </div>
 
                 {orderStatus === "success" && (
                   <div className="mt-12 p-6 md:p-8 bg-green-500/5 rounded-2xl border border-green-500/20 text-center">
-                    <p className="text-green-500 font-black uppercase text-sm md:text-base mb-2">Transaction Successful!</p>
-                    <p className="text-[10px] md:text-xs text-muted-foreground font-bold uppercase mb-6 max-w-xs mx-auto">Check your game mailbox. Credits have been delivered instantly.</p>
-                    <Button variant="outline" className="rounded-full border-green-500/40 text-green-500 hover:bg-green-500/10 font-black uppercase text-xs px-8">Download Receipt</Button>
+                    <p className="text-green-500 font-black text-sm md:text-base mb-2">Transaction Successful!</p>
+                    <p className="text-[10px] md:text-xs text-muted-foreground font-bold mb-6 max-w-xs mx-auto">Check your game mailbox. Credits have been delivered instantly.</p>
+                    <Button variant="outline" className="rounded-full border-green-500/40 text-green-500 hover:bg-green-500/10 font-black text-xs px-8">Download Receipt</Button>
                   </div>
                 )}
               </div>
