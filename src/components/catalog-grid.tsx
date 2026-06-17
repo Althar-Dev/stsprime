@@ -6,12 +6,21 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
-import { SearchX, LayoutGrid } from "lucide-react";
+import { SearchX, LayoutGrid, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const CATALOG_ITEMS = [
   // Flash Sale
-  { id: "ff", name: "Free Fire", type: "Game", imageId: "ff", tag: "Flash Sale" },
+  { 
+    id: "ff", 
+    name: "Free Fire", 
+    type: "Game", 
+    imageId: "ff", 
+    tag: "Flash Sale",
+    discount: "50%",
+    originalPrice: "Rp 20.000",
+    salePrice: "Rp 10.000"
+  },
   // Populer
   { id: "mlbb", name: "Mobile Legends", type: "Game", imageId: "mlbb", tag: "Populer" },
   { id: "pubgm", name: "PUBG Mobile", type: "Game", imageId: "pubgm", tag: "Populer" },
@@ -29,7 +38,7 @@ function FlashSaleTimer() {
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
-      // Target: End of the week for demonstration of days
+      // Target: End of the week for demonstration
       const target = new Date();
       target.setDate(now.getDate() + (7 - now.getDay()));
       target.setHours(23, 59, 59, 999);
@@ -54,7 +63,8 @@ function FlashSaleTimer() {
 
   return (
     <div className="flex items-center gap-1.5 ml-auto md:ml-0">
-      <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-primary text-primary-foreground font-black text-[10px] md:text-xs shadow-[0_0_10px_rgba(242,255,0,0.3)]">
+      <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-primary text-primary-foreground font-black text-[10px] md:text-xs shadow-[0_0_15px_rgba(242,255,0,0.4)]">
+        <span className="opacity-70">DAY</span>
         <span>{format(timeLeft.days)}</span>
         <span className="animate-pulse">:</span>
         <span>{format(timeLeft.hours)}</span>
@@ -63,7 +73,6 @@ function FlashSaleTimer() {
         <span className="animate-pulse">:</span>
         <span>{format(timeLeft.seconds)}</span>
       </div>
-      <span className="hidden sm:inline text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Ends in</span>
     </div>
   );
 }
@@ -94,7 +103,7 @@ export function CatalogGrid() {
   }) => {
     const isImagePath = typeof Icon === 'string';
     return (
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           {isImagePath ? (
             <div className="flex h-10 w-10 items-center justify-center">
@@ -140,14 +149,14 @@ export function CatalogGrid() {
             subtitle="Limited time offers with massive discounts."
             rightElement={<FlashSaleTimer />}
           />
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
             {flashSaleItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
                 <Link
                   key={item.id}
                   href={`/topup/${item.id}`}
-                  className="group bento-card p-0 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden"
+                  className="group bento-card p-0 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden border-primary/20 hover:border-primary/50"
                 >
                   <div className="relative aspect-square w-full shrink-0 overflow-hidden">
                     <Image
@@ -157,14 +166,34 @@ export function CatalogGrid() {
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                       data-ai-hint={image?.imageHint}
                     />
+                    {/* Discount Badge */}
+                    <div className="absolute top-0 left-0 bg-accent text-accent-foreground font-black text-[9px] md:text-[10px] px-2 py-1 rounded-br-lg shadow-lg z-10">
+                      -{item.discount}
+                    </div>
+                    {/* Urgency Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                    <div className="absolute bottom-1 right-2">
+                       <Zap className="h-3 w-3 text-primary fill-primary animate-pulse" />
+                    </div>
                   </div>
-                  <div className="p-2.5 flex flex-col justify-center flex-1 min-w-0 bg-card/40">
-                    <p className="text-[8px] md:text-[9px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
-                      {item.type}
-                    </p>
-                    <h3 className="line-clamp-2 text-[11px] md:text-sm font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
-                      {item.name}
-                    </h3>
+                  <div className="p-2.5 flex flex-col justify-between flex-1 min-w-0 bg-card/40">
+                    <div>
+                      <p className="text-[8px] md:text-[9px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
+                        {item.type}
+                      </p>
+                      <h3 className="line-clamp-1 text-[11px] md:text-sm font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
+                        {item.name}
+                      </h3>
+                    </div>
+                    
+                    <div className="mt-2">
+                      <p className="text-[10px] md:text-[12px] font-black text-primary leading-none">
+                        {item.salePrice}
+                      </p>
+                      <p className="text-[8px] md:text-[9px] text-muted-foreground line-through font-bold mt-0.5 opacity-60">
+                        {item.originalPrice}
+                      </p>
+                    </div>
                   </div>
                 </Link>
               );
@@ -181,7 +210,7 @@ export function CatalogGrid() {
             icon="/img/fire.gif" 
             subtitle="Most loved and frequently used by the community."
           />
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {populerItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
@@ -203,7 +232,7 @@ export function CatalogGrid() {
                     <p className="text-[8px] md:text-[10px] tracking-[0.15em] text-accent font-black uppercase mb-1">
                       {item.type}
                     </p>
-                    <h3 className="line-clamp-2 text-[12px] md:text-base font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="line-clamp-1 text-[12px] md:text-base font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
                   </div>
