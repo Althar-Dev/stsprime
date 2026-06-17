@@ -127,7 +127,7 @@ export function CatalogGrid() {
             icon={Flame} 
             subtitle="Most loved and frequently used by the community."
           />
-          <ItemGrid items={populerItems} aspect="aspect-[6/3]" />
+          <ItemGrid items={populerItems} aspect="aspect-[9/16]" />
         </div>
       )}
 
