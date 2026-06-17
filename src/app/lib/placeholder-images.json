@@ -54,6 +54,18 @@
       "description": "Main Hero Banner",
       "imageUrl": "https://picsum.photos/seed/sts-hero/1200/600",
       "imageHint": "gaming neon"
+    },
+    {
+      "id": "banner-2",
+      "description": "Valorant Promo Banner",
+      "imageUrl": "https://picsum.photos/seed/valorant-promo/1200/600",
+      "imageHint": "esports arena"
+    },
+    {
+      "id": "banner-3",
+      "description": "Secure Payment Banner",
+      "imageUrl": "https://picsum.photos/seed/secure-pay/1200/600",
+      "imageHint": "digital security"
     }
   ]
 }
