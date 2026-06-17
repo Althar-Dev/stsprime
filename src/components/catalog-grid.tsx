@@ -64,7 +64,7 @@ export function CatalogGrid() {
 
   return (
     <section className="container mx-auto px-4 py-8 space-y-12 md:space-y-16">
-      {/* Flash Sale Section: 3 columns, 9:16, image 1:1 top */}
+      {/* Flash Sale Section: 3 columns mobile, 4 tablet, 6 desktop, 9:16 layout */}
       {flashSaleItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           <SectionHeader 
@@ -72,7 +72,7 @@ export function CatalogGrid() {
             icon={Zap} 
             subtitle="Limited time offers with massive discounts."
           />
-          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
+          <div className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6">
             {flashSaleItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
@@ -156,7 +156,7 @@ export function CatalogGrid() {
         </div>
       )}
 
-      {/* TopUp Section: 3 columns, Square layout */}
+      {/* TopUp Section: 3 columns mobile, 4 tablet, 6 desktop, Square layout */}
       {topUpItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <SectionHeader 
@@ -164,7 +164,7 @@ export function CatalogGrid() {
             icon={LayoutGrid} 
             subtitle="Browse all available game and digital services."
           />
-          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
+          <div className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
             {topUpItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
