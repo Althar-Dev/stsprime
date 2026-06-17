@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { ChevronRight, SearchX, Zap, Flame, LayoutGrid } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const CATALOG_ITEMS = [
   // Flash Sale
@@ -48,7 +49,7 @@ export function CatalogGrid() {
     </div>
   );
 
-  const ItemGrid = ({ items }: { items: typeof CATALOG_ITEMS }) => (
+  const ItemGrid = ({ items, aspect = "aspect-square" }: { items: typeof CATALOG_ITEMS, aspect?: string }) => (
     <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
       {items.map((item) => {
         const image = PlaceHolderImages.find((img) => img.id === item.imageId);
@@ -56,7 +57,7 @@ export function CatalogGrid() {
           <Link
             key={item.id}
             href={`/topup/${item.id}`}
-            className="group bento-card aspect-square p-0"
+            className={cn("group bento-card p-0 transition-all active:scale-95", aspect)}
           >
             <div className="relative h-full w-full overflow-hidden">
               <Image
@@ -70,7 +71,7 @@ export function CatalogGrid() {
               <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90" />
               
               {item.tag && (
-                <Badge className="absolute left-1.5 top-1.5 bg-primary/90 text-primary-foreground text-[8px] md:text-[9px] font-black tracking-tighter border-none px-1.5 py-0.5">
+                <Badge className="absolute left-1.5 top-1.5 bg-primary/90 text-primary-foreground text-[8px] md:text-[9px] font-black tracking-tighter border-none px-1.5 py-0.5 shadow-lg">
                   {item.tag}
                 </Badge>
               )}
@@ -108,37 +109,37 @@ export function CatalogGrid() {
     <section className="container mx-auto px-4 py-8 space-y-12 md:space-y-16">
       {/* Flash Sale Section */}
       {flashSaleItems.length > 0 && (
-        <div>
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           <SectionHeader 
             title="Flash Sale" 
             icon={Zap} 
             subtitle="Limited time offers with massive discounts."
           />
-          <ItemGrid items={flashSaleItems} />
+          <ItemGrid items={flashSaleItems} aspect="aspect-square" />
         </div>
       )}
 
       {/* Populer Section */}
       {populerItems.length > 0 && (
-        <div>
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <SectionHeader 
             title="Populer" 
             icon={Flame} 
             subtitle="Most loved and frequently used by the community."
           />
-          <ItemGrid items={populerItems} />
+          <ItemGrid items={populerItems} aspect="aspect-[6/3]" />
         </div>
       )}
 
       {/* TopUp Section */}
       {topUpItems.length > 0 && (
-        <div>
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <SectionHeader 
             title="TopUp" 
             icon={LayoutGrid} 
             subtitle="Browse all available game and digital services."
           />
-          <ItemGrid items={topUpItems} />
+          <ItemGrid items={topUpItems} aspect="aspect-square" />
         </div>
       )}
     </section>
