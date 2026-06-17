@@ -81,7 +81,7 @@ export function CatalogGrid() {
             icon="/img/bolt.gif" 
             subtitle="Limited time offers with massive discounts."
           />
-          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {flashSaleItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
@@ -99,11 +99,11 @@ export function CatalogGrid() {
                       data-ai-hint={image?.imageHint}
                     />
                   </div>
-                  <div className="p-2 flex flex-col justify-center flex-1 min-w-0">
-                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black">
+                  <div className="p-2.5 flex flex-col justify-center flex-1 min-w-0 bg-card/40">
+                    <p className="text-[8px] md:text-[10px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
                       {item.type}
                     </p>
-                    <h3 className="line-clamp-2 text-[10px] md:text-sm font-black leading-tight">
+                    <h3 className="line-clamp-2 text-[11px] md:text-sm font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
                   </div>
@@ -122,7 +122,7 @@ export function CatalogGrid() {
             icon="/img/fire.gif" 
             subtitle="Most loved and frequently used by the community."
           />
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {populerItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
@@ -140,11 +140,11 @@ export function CatalogGrid() {
                       data-ai-hint={image?.imageHint}
                     />
                   </div>
-                  <div className="p-3 flex flex-col justify-center flex-1 min-w-0">
-                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate">
+                  <div className="p-3 md:p-4 flex flex-col justify-center flex-1 min-w-0 bg-card/40">
+                    <p className="text-[8px] md:text-[10px] tracking-[0.15em] text-accent font-black uppercase mb-1">
                       {item.type}
                     </p>
-                    <h3 className="line-clamp-2 text-[10px] md:text-sm font-black leading-tight">
+                    <h3 className="line-clamp-2 text-[12px] md:text-base font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
                   </div>
@@ -192,7 +192,7 @@ export function CatalogGrid() {
                     <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate">
                       {item.type}
                     </p>
-                    <h3 className="line-clamp-1 text-[10px] md:text-sm font-black">
+                    <h3 className="line-clamp-1 text-[10px] md:text-sm font-black text-foreground">
                       {item.name}
                     </h3>
                   </div>
