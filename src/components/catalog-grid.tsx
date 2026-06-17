@@ -70,7 +70,7 @@ function FlashSaleTimer() {
         </div>
         <span className="text-[6px] md:text-[8px] text-muted-foreground font-black tracking-tighter mt-0.5 uppercase">{label}</span>
       </div>
-      {showSeparator && <span className="text-primary font-black text-[10px] md:text-xs mb-3 animate-pulse">:</span>}
+      {showSeparator && <span className="text-primary font-black text-[10px] md:text-xs mb-3">:</span>}
     </div>
   );
 
@@ -208,66 +208,77 @@ export function CatalogGrid() {
               </div>
 
               {/* Main Card Body */}
-              <div className="relative overflow-hidden border border-border bg-card/40 backdrop-blur-sm rounded-2xl rounded-tl-none p-5 md:p-8 -mt-px">
-                {/* Ambient Background Glow */}
-                <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
-                <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
-                
-                <div className="mb-6">
-                  <p className="text-[10px] md:text-xs text-muted-foreground font-bold uppercase tracking-wider">
-                    Limited time offers with massive discounts.
-                  </p>
+              <div className="relative overflow-hidden border border-border rounded-2xl rounded-tl-none p-5 md:p-8 -mt-px min-h-[300px]">
+                {/* Background Image */}
+                <div className="absolute inset-0 z-0">
+                  <Image 
+                    src="/img/fsale.webp" 
+                    alt="Flash Sale Background" 
+                    fill 
+                    className="object-cover opacity-70" 
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
                 </div>
 
-                <div className="flex overflow-x-auto gap-4 pb-4 snap-x scrollbar-hide relative z-10">
-                  {flashSaleItems.map((item) => {
-                    const image = PlaceHolderImages.find((img) => img.id === item.imageId);
-                    return (
-                      <Link
-                        key={item.id}
-                        href={`/topup/${item.id}`}
-                        className="group shrink-0 w-[140px] md:w-[180px] bento-card p-0 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden border-primary/10 hover:border-primary/50 snap-start bg-card/40"
-                      >
-                        <div className="relative aspect-square w-full shrink-0 overflow-hidden">
-                          <Image
-                            src={image?.imageUrl || ""}
-                            alt={item.name}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-110"
-                            data-ai-hint={image?.imageHint}
-                          />
-                          {/* Discount Badge */}
-                          <div className="absolute top-0 left-0 bg-accent text-accent-foreground font-black text-[9px] md:text-[10px] px-2 py-1 rounded-br-lg shadow-lg z-10">
-                            -{item.discount}
+                {/* Content Layer */}
+                <div className="relative z-10">
+                  <div className="mb-6">
+                    <p className="text-[10px] md:text-xs text-white font-black uppercase tracking-wider drop-shadow-md">
+                      Limited time offers with massive discounts.
+                    </p>
+                  </div>
+
+                  <div className="flex overflow-x-auto gap-4 pb-4 snap-x scrollbar-hide">
+                    {flashSaleItems.map((item) => {
+                      const image = PlaceHolderImages.find((img) => img.id === item.imageId);
+                      return (
+                        <Link
+                          key={item.id}
+                          href={`/topup/${item.id}`}
+                          className="group shrink-0 w-[140px] md:w-[180px] bento-card p-0 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden border-primary/10 hover:border-primary/50 snap-start bg-card/40 backdrop-blur-md"
+                        >
+                          <div className="relative aspect-square w-full shrink-0 overflow-hidden">
+                            <Image
+                              src={image?.imageUrl || ""}
+                              alt={item.name}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-110"
+                              data-ai-hint={image?.imageHint}
+                            />
+                            {/* Discount Badge */}
+                            <div className="absolute top-0 left-0 bg-accent text-accent-foreground font-black text-[9px] md:text-[10px] px-2 py-1 rounded-br-lg shadow-lg z-10">
+                              -{item.discount}
+                            </div>
+                            {/* Urgency Overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                            <div className="absolute bottom-1 right-2">
+                               <Zap className="h-3 w-3 text-primary fill-primary animate-pulse" />
+                            </div>
                           </div>
-                          {/* Urgency Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                          <div className="absolute bottom-1 right-2">
-                             <Zap className="h-3 w-3 text-primary fill-primary animate-pulse" />
+                          <div className="p-2.5 flex flex-col justify-between flex-1 min-w-0">
+                            <div>
+                              <p className="text-[8px] md:text-[9px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
+                                {item.type}
+                              </p>
+                              <h3 className="line-clamp-1 text-[11px] md:text-sm font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
+                                {item.name}
+                              </h3>
+                            </div>
+                            
+                            <div className="mt-2">
+                              <p className="text-[10px] md:text-[12px] font-black text-primary leading-none">
+                                {item.salePrice}
+                              </p>
+                              <p className="text-[8px] md:text-[9px] text-muted-foreground line-through font-bold mt-0.5 opacity-60">
+                                {item.originalPrice}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                        <div className="p-2.5 flex flex-col justify-between flex-1 min-w-0">
-                          <div>
-                            <p className="text-[8px] md:text-[9px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
-                              {item.type}
-                            </p>
-                            <h3 className="line-clamp-1 text-[11px] md:text-sm font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
-                              {item.name}
-                            </h3>
-                          </div>
-                          
-                          <div className="mt-2">
-                            <p className="text-[10px] md:text-[12px] font-black text-primary leading-none">
-                              {item.salePrice}
-                            </p>
-                            <p className="text-[8px] md:text-[9px] text-muted-foreground line-through font-bold mt-0.5 opacity-60">
-                              {item.originalPrice}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                    );
-                  })}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
