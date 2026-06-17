@@ -95,7 +95,7 @@ export default function TopupPage() {
             <div className="bento-card p-5 md:p-8">
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">1</div>
-                <h2 className="text-lg md:text-xl font-black tracking-tight">Enter User ID</h2>
+                <h2 className="text-lg md:text-xl font-black tracking-tight">Enter user ID</h2>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
@@ -125,23 +125,23 @@ export default function TopupPage() {
             <div className="bento-card p-5 md:p-8">
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">2</div>
-                <h2 className="text-lg md:text-xl font-black tracking-tight">Select Amount</h2>
+                <h2 className="text-lg md:text-xl font-black tracking-tight">Select amount</h2>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-3 sm:gap-4">
                 {PACKS.map((pack) => (
                   <button
                     key={pack.id}
                     onClick={() => setSelectedPack(pack.id)}
-                    className={`relative flex flex-col p-3 md:p-4 text-left rounded-xl border transition-all ${
+                    className={`relative flex flex-col p-2.5 md:p-4 text-left rounded-xl border transition-all ${
                       selectedPack === pack.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
                     }`}
                   >
                     {pack.popular && (
-                      <Badge className="absolute -top-2 -right-1 bg-accent text-[8px] md:text-[10px] text-accent-foreground font-black px-2 py-0">Popular</Badge>
+                      <Badge className="absolute -top-1.5 -right-1 bg-accent text-[7px] md:text-[10px] text-accent-foreground font-black px-1.5 py-0">Popular</Badge>
                     )}
-                    <span className="text-[10px] md:text-xs font-bold text-muted-foreground">{pack.amount}</span>
-                    <span className="text-[10px] md:text-xs text-primary font-black mt-0.5">{pack.bonus}</span>
-                    <span className="text-sm md:text-lg font-black mt-2">{pack.price}</span>
+                    <span className="text-[9px] md:text-xs font-bold text-muted-foreground truncate">{pack.amount}</span>
+                    <span className="text-[8px] md:text-xs text-primary font-black mt-0.5">{pack.bonus}</span>
+                    <span className="text-xs md:text-lg font-black mt-1.5">{pack.price}</span>
                   </button>
                 ))}
               </div>
@@ -151,7 +151,7 @@ export default function TopupPage() {
             <div className="bento-card p-5 md:p-8">
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">3</div>
-                <h2 className="text-lg md:text-xl font-black tracking-tight">Payment Method</h2>
+                <h2 className="text-lg md:text-xl font-black tracking-tight">Payment method</h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                 {PAYMENT_METHODS.map((method) => (
@@ -179,7 +179,7 @@ export default function TopupPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div className="space-y-1">
                   <h3 className="text-lg md:text-xl font-black">Summary</h3>
-                  <p className="text-xs text-muted-foreground font-bold">ID: {userId || "Not Set"} {zoneId ? `(${zoneId})` : ""}</p>
+                  <p className="text-xs text-muted-foreground font-bold">ID: {userId || "not set"} {zoneId ? `(${zoneId})` : ""}</p>
                   <p className="text-xl md:text-2xl font-black text-primary">
                     {selectedPack ? PACKS.find(p => p.id === selectedPack)?.price : "---"}
                   </p>
@@ -190,7 +190,7 @@ export default function TopupPage() {
                   onClick={handleOrder}
                   className="h-14 md:h-16 rounded-full px-8 md:px-12 text-lg md:text-xl font-black bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-transform w-full sm:w-auto"
                 >
-                  Top Up Now
+                  Top up now
                 </Button>
               </div>
             </div>

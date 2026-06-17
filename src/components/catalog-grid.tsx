@@ -30,7 +30,7 @@ export function CatalogGrid() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+      <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
         {CATALOG_ITEMS.map((item) => {
           const image = PlaceHolderImages.find((img) => img.id === item.imageId);
           return (
@@ -51,16 +51,16 @@ export function CatalogGrid() {
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90" />
                 
                 {item.tag && (
-                  <Badge className="absolute left-2 top-2 bg-primary/90 text-primary-foreground text-[9px] md:text-[10px] font-black tracking-tighter border-none px-2 py-0.5">
+                  <Badge className="absolute left-1.5 top-1.5 bg-primary/90 text-primary-foreground text-[8px] md:text-[10px] font-black tracking-tighter border-none px-1.5 py-0">
                     {item.tag}
                   </Badge>
                 )}
 
-                <div className="absolute bottom-0 left-0 w-full p-3 md:p-4">
-                  <p className="text-[9px] md:text-[10px] tracking-widest text-accent font-black">
+                <div className="absolute bottom-0 left-0 w-full p-2 md:p-4">
+                  <p className="text-[8px] md:text-[10px] tracking-tight text-accent font-black">
                     {item.type}
                   </p>
-                  <h3 className="line-clamp-1 text-xs md:text-sm lg:text-base font-black">
+                  <h3 className="line-clamp-1 text-[10px] md:text-sm lg:text-base font-black">
                     {item.name}
                   </h3>
                 </div>
