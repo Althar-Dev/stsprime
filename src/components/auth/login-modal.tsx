@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, Mail, Lock, Chrome } from "lucide-react";
+import { ShieldCheck, Mail, Lock, Chrome, UserPlus } from "lucide-react";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -14,15 +14,20 @@ interface LoginModalProps {
 
 export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [mode, setMode] = useState<"login" | "register">("login");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate login
+    // Simulate auth process
     setTimeout(() => {
       setIsLoading(false);
       onOpenChange(false);
     }, 1500);
+  };
+
+  const toggleMode = () => {
+    setMode(mode === "login" ? "register" : "login");
   };
 
   return (
@@ -30,11 +35,19 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
       <DialogContent className="w-[95vw] sm:max-w-[400px] max-h-[90vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none">
         <div className="bg-primary p-6 md:p-8 flex flex-col items-center text-primary-foreground sticky top-0 z-10">
           <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center mb-4">
-            <ShieldCheck className="h-6 w-6 md:h-7 md:w-7 text-primary-foreground" />
+            {mode === "login" ? (
+              <ShieldCheck className="h-6 w-6 md:h-7 md:w-7 text-primary-foreground" />
+            ) : (
+              <UserPlus className="h-6 w-6 md:h-7 md:w-7 text-primary-foreground" />
+            )}
           </div>
-          <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center">Welcome Back</DialogTitle>
+          <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center">
+            {mode === "login" ? "Welcome Back" : "Join the Hub"}
+          </DialogTitle>
           <DialogDescription className="text-primary-foreground/80 font-bold text-[10px] md:text-xs mt-1 text-center">
-            Access your order history and faster checkout
+            {mode === "login" 
+              ? "Access your order history and faster checkout" 
+              : "Create an account to start tracking your purchases"}
           </DialogDescription>
         </div>
 
@@ -61,9 +74,11 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
                 <Label htmlFor="password" className="text-[10px] md:text-xs font-black uppercase tracking-widest text-muted-foreground">
                   Password
                 </Label>
-                <button type="button" className="text-[10px] font-black text-primary hover:underline">
-                  Forgot?
-                </button>
+                {mode === "login" && (
+                  <button type="button" className="text-[10px] font-black text-primary hover:underline">
+                    Forgot?
+                  </button>
+                )}
               </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -77,12 +92,30 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
               </div>
             </div>
 
+            {mode === "register" && (
+              <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                <Label htmlFor="confirmPassword" className="text-[10px] md:text-xs font-black uppercase tracking-widest text-muted-foreground">
+                  Confirm Password
+                </Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    id="confirmPassword" 
+                    type="password" 
+                    placeholder="••••••••" 
+                    className="pl-10 h-11 bg-muted/30 border-border focus:ring-primary text-sm"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
             <Button 
               type="submit" 
               className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform"
               disabled={isLoading}
             >
-              {isLoading ? "Authenticating..." : "Sign In"}
+              {isLoading ? "Processing..." : (mode === "login" ? "Sign In" : "Create Account")}
             </Button>
           </form>
 
@@ -104,8 +137,17 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
           </Button>
 
           <p className="text-center text-[10px] md:text-[11px] text-muted-foreground font-bold">
-            Don't have an account?{" "}
-            <button className="text-primary hover:underline">Create one</button>
+            {mode === "login" ? (
+              <>
+                Don't have an account?{" "}
+                <button onClick={toggleMode} className="text-primary hover:underline font-black">Create one</button>
+              </>
+            ) : (
+              <>
+                Already have an account?{" "}
+                <button onClick={toggleMode} className="text-primary hover:underline font-black">Sign in</button>
+              </>
+            )}
           </p>
         </div>
       </DialogContent>
