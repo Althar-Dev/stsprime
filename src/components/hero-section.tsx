@@ -15,13 +15,13 @@ export function HeroSection() {
   const bannerIds = ["banner-1", "banner-2", "banner-3", "banner-4", "banner-5"];
 
   return (
-    <section className="container mx-auto px-4 py-8">
-      <div className="relative group">
+    <section className="container mx-auto px-4 py-8 flex justify-center">
+      <div className="relative group w-full max-w-[860px]">
         <Carousel
           opts={{
             loop: true,
           }}
-          className="w-full overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl"
+          className="w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl"
         >
           <CarouselContent>
             {bannerIds.map((id, index) => {
@@ -30,14 +30,15 @@ export function HeroSection() {
               
               return (
                 <CarouselItem key={id}>
-                  <div className="relative aspect-[16/9] w-full bg-card">
+                  {/* Aspect ratio based on exactly 860x310px */}
+                  <div className="relative aspect-[860/310] w-full bg-card">
                     <Image
                       src={image.imageUrl}
                       alt={image.description}
                       fill
                       className="object-cover"
                       priority={index === 0}
-                      sizes="100vw"
+                      sizes="(max-width: 860px) 100vw, 860px"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent pointer-events-none" />
                   </div>
@@ -46,8 +47,8 @@ export function HeroSection() {
             })}
           </CarouselContent>
           
-          <CarouselPrevious className="absolute left-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-background/40 backdrop-blur-xl border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-primary hover:text-black hover:border-primary z-20" />
-          <CarouselNext className="absolute right-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-background/40 backdrop-blur-xl border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-primary hover:text-black hover:border-primary z-20" />
+          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-background/40 backdrop-blur-xl border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-primary hover:text-black hover:border-primary z-20" />
+          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-background/40 backdrop-blur-xl border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-primary hover:text-black hover:border-primary z-20" />
         </Carousel>
       </div>
     </section>
