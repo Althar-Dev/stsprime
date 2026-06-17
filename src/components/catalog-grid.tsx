@@ -110,7 +110,7 @@ export function CatalogGrid() {
         </div>
       )}
 
-      {/* Populer Section: 2 columns, 16:6, image 1:1 left */}
+      {/* Populer Section: 2 columns mobile, 3 tablet, 4 desktop, 16:6 layout */}
       {populerItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <SectionHeader 
@@ -118,7 +118,7 @@ export function CatalogGrid() {
             icon={Flame} 
             subtitle="Most loved and frequently used by the community."
           />
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
             {populerItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
