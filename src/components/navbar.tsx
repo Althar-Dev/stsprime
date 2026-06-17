@@ -42,12 +42,19 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <div className="hidden sm:flex h-9 items-center rounded-full bg-muted/50 px-4 py-2 text-sm text-muted-foreground lg:w-64">
+          {/* Desktop Search */}
+          <div className="hidden lg:flex h-9 items-center rounded-full bg-muted/50 px-4 py-2 text-sm text-muted-foreground w-64">
             <Search className="mr-2 h-4 w-4 shrink-0" />
             <span className="truncate">Search games...</span>
           </div>
           
-          <Button className="rounded-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 px-4 md:px-6">
+          {/* Mobile Search Button */}
+          <Button variant="ghost" size="icon" className="lg:hidden rounded-xl border border-border bg-card/50">
+            <Search className="h-5 w-5" />
+          </Button>
+          
+          {/* Desktop Login */}
+          <Button className="hidden sm:flex rounded-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 px-6">
             Login
           </Button>
 
@@ -63,8 +70,8 @@ export function Navbar() {
                 <SheetTitle>Navigation Menu</SheetTitle>
               </SheetHeader>
               
-              {/* Visual Header - Height synced with Navbar */}
-              <div className="h-16 px-6 border-b border-border bg-card/30 flex items-center">
+              {/* Visual Header - Height synced with Navbar (h-16) */}
+              <div className="h-16 px-6 border-b border-border bg-card/30 flex items-center shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center font-headline font-black text-xl text-primary-foreground shadow-lg shadow-primary/20">S</div>
                   <div>
@@ -76,12 +83,6 @@ export function Navbar() {
 
               <ScrollArea className="flex-1">
                 <div className="p-4 space-y-8">
-                  {/* Mobile Search */}
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search services..." className="pl-10 h-11 bg-muted/30 border-border rounded-xl" />
-                  </div>
-
                   {/* Main Menu */}
                   <div>
                     <p className="text-[10px] font-black tracking-widest text-muted-foreground/60 mb-3 px-2">Navigation</p>
