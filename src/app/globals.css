@@ -1,29 +1,28 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 255 23% 6%;
+    --background: 0 0% 13%;
     --foreground: 0 0% 98%;
-    --card: 255 23% 8%;
+    --card: 0 0% 15%;
     --card-foreground: 0 0% 98%;
-    --popover: 255 23% 6%;
+    --popover: 0 0% 13%;
     --popover-foreground: 0 0% 98%;
-    --primary: 251 91% 71%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 227 89% 76%;
-    --secondary-foreground: 255 23% 6%;
-    --muted: 255 10% 20%;
-    --muted-foreground: 227 20% 70%;
-    --accent: 251 91% 71%;
-    --accent-foreground: 0 0% 100%;
+    --primary: 63 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 48 100% 55%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 25%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 48 100% 55%;
+    --accent-foreground: 0 0% 0%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 255 15% 15%;
-    --input: 255 15% 15%;
-    --ring: 251 91% 71%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 63 100% 50%;
     --radius: 1rem;
   }
 }
@@ -34,7 +33,7 @@
   }
   body {
     @apply bg-background text-foreground font-body;
-    background-image: radial-gradient(circle at 50% 0%, rgba(139, 113, 249, 0.1) 0%, transparent 50%);
+    background-image: radial-gradient(circle at 50% 0%, rgba(242, 255, 0, 0.08) 0%, transparent 50%);
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline tracking-tight;
@@ -48,11 +47,11 @@
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 1;
-    filter: drop-shadow(0 0 5px rgba(139, 113, 249, 0.5));
+    filter: drop-shadow(0 0 5px rgba(242, 255, 0, 0.3));
   }
   50% {
     opacity: 0.8;
-    filter: drop-shadow(0 0 15px rgba(139, 113, 249, 0.8));
+    filter: drop-shadow(0 0 15px rgba(242, 255, 0, 0.6));
   }
 }
 
