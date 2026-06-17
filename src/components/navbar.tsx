@@ -58,18 +58,18 @@ export function Navbar() {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-background border-border p-0 flex flex-col w-[300px] sm:w-[350px]">
+            <SheetContent side="right" className="bg-background border-border p-0 flex flex-col w-[300px]">
               <SheetHeader className="sr-only">
                 <SheetTitle>Navigation Menu</SheetTitle>
               </SheetHeader>
               
-              {/* Visual Header */}
-              <div className="p-6 border-b border-border bg-card/30">
+              {/* Visual Header - Height synced with Navbar */}
+              <div className="h-16 px-6 border-b border-border bg-card/30 flex items-center">
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center font-headline font-black text-xl text-primary-foreground shadow-lg shadow-primary/20">S</div>
+                  <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center font-headline font-black text-xl text-primary-foreground shadow-lg shadow-primary/20">S</div>
                   <div>
-                    <h3 className="font-headline font-black text-lg tracking-tight">STS Pedia</h3>
-                    <p className="text-[10px] text-muted-foreground font-bold">Fast & Secure Topup Hub</p>
+                    <h3 className="font-headline font-black text-base tracking-tight leading-none">STS Pedia</h3>
+                    <p className="text-[9px] text-muted-foreground font-bold mt-1">Fast & Secure Hub</p>
                   </div>
                 </div>
               </div>
