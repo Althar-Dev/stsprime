@@ -11,7 +11,10 @@ export function Footer() {
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2">
               <Logo className="h-8 w-8 rounded-lg shadow-none" />
-              <span className="font-headline text-lg font-black tracking-tighter text-foreground">STS Pedia</span>
+              <div className="flex flex-col">
+                <span className="font-headline text-lg font-black tracking-tighter text-foreground leading-none">STS Pedia</span>
+                <span className="text-[10px] font-bold text-muted-foreground tracking-tight">from StarVale</span>
+              </div>
             </Link>
             <p className="mt-4 text-xs md:text-sm text-muted-foreground leading-relaxed">
               Empowering gamers worldwide with instant digital top-ups and premium connectivity services. Fast, secure, and reliable since day one.

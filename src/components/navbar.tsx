@@ -95,7 +95,10 @@ export function Navbar() {
             <>
               <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105 shrink-0">
                 <Logo className="h-9 w-9 md:h-10 md:w-10" />
-                <span className="font-headline text-lg md:text-xl font-black tracking-tighter text-foreground">STS Pedia</span>
+                <div className="flex flex-col">
+                  <span className="font-headline text-lg md:text-xl font-black tracking-tighter text-foreground leading-none">STS Pedia</span>
+                  <span className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-tight">from StarVale</span>
+                </div>
               </Link>
 
               <div className="hidden items-center gap-1 lg:flex">
@@ -164,7 +167,7 @@ export function Navbar() {
                         <Logo className="h-10 w-10" />
                         <div>
                           <h3 className="font-headline font-black text-base tracking-tight leading-none">STS Pedia</h3>
-                          <p className="text-[9px] text-muted-foreground font-bold mt-1">Fast & Secure Hub</p>
+                          <p className="text-[9px] text-muted-foreground font-bold mt-1">from StarVale</p>
                         </div>
                       </div>
                     </div>
