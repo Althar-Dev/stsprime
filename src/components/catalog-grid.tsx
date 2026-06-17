@@ -210,7 +210,7 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group bento-card p-2 transition-all active:scale-95 flex flex-row aspect-[16/7] overflow-hidden items-center"
+                  className="group bento-card p-2 transition-all active:scale-95 flex flex-row aspect-[16/7] overflow-hidden items-center hover:scale-[1.03] hover:shadow-lg"
                 >
                   <div className="relative aspect-square h-full shrink-0 overflow-hidden rounded-xl">
                     <Image
@@ -222,10 +222,10 @@ export function CatalogGrid() {
                     />
                   </div>
                   <div className="px-3 md:px-4 flex flex-col justify-center flex-1 min-w-0">
-                    <p className="text-[8px] md:text-[10px] tracking-[0.15em] text-accent font-black uppercase mb-1">
+                    <p className="text-[7px] md:text-[9px] tracking-[0.15em] text-accent font-black uppercase mb-1">
                       {item.type}
                     </p>
-                    <h3 className="line-clamp-1 text-[12px] md:text-base font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="line-clamp-1 text-[11px] md:text-sm font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
                   </div>
@@ -255,7 +255,7 @@ export function CatalogGrid() {
                 </div>
               </div>
 
-              {/* Main Card Body (STATIC - No Hover) */}
+              {/* Main Card Body (STATIC - No Hover on container) */}
               <div className="relative overflow-hidden border border-border rounded-2xl rounded-tl-none p-5 md:p-8 -mt-px min-h-[300px]">
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
@@ -347,7 +347,7 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group bento-card p-0 transition-all active:scale-95 aspect-square relative overflow-hidden"
+                  className="group bento-card p-0 transition-all active:scale-95 aspect-square relative overflow-hidden hover:scale-[1.03] hover:shadow-lg"
                 >
                   <Image
                     src={image?.imageUrl || ""}
