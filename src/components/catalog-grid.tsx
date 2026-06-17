@@ -8,11 +8,14 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronRight, SearchX } from "lucide-react";
 
 const CATALOG_ITEMS = [
-  { id: "mlbb", name: "Mobile Legends", type: "Game", imageId: "mlbb", tag: "Popular" },
+  // Flash Sale First
   { id: "ff", name: "Free Fire", type: "Game", imageId: "ff", tag: "Flash Sale" },
-  { id: "pubgm", name: "PUBG Mobile", type: "Game", imageId: "pubgm", tag: "Hot" },
+  // Populer Second
+  { id: "mlbb", name: "Mobile Legends", type: "Game", imageId: "mlbb", tag: "Populer" },
+  { id: "pubgm", name: "PUBG Mobile", type: "Game", imageId: "pubgm", tag: "Populer" },
+  { id: "genshin", name: "Genshin Impact", type: "Game", imageId: "genshin", tag: "Populer" },
+  // Others (General TopUp)
   { id: "valorant", name: "Valorant", type: "Game", imageId: "valorant", tag: "New" },
-  { id: "genshin", name: "Genshin Impact", type: "Game", imageId: "genshin", tag: "Hot" },
   { id: "steam", name: "Steam Wallet", type: "Voucher", imageId: "steam", tag: "" },
   { id: "telco", name: "Phone Credit", type: "Service", imageId: "telco", tag: "" },
   { id: "data", name: "Internet Data", type: "Service", imageId: "data", tag: "" },
@@ -32,7 +35,7 @@ export function CatalogGrid() {
       <div className="mb-6 md:mb-8 flex items-end justify-between">
         <div>
           <h2 className="font-headline text-2xl md:text-3xl lg:text-4xl font-black tracking-tight">
-            {query ? `Search results for "${query}"` : "Available Services"}
+            {query ? `Search results for "${query}"` : "TopUp"}
           </h2>
           <p className="mt-1 text-xs md:text-sm text-muted-foreground">
             {query ? `Found ${filteredItems.length} items matching your search.` : "Select your favorite game or service to start top-up."}
