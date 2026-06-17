@@ -38,7 +38,6 @@ function FlashSaleTimer() {
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
-      // Target: End of the week for demonstration
       const target = new Date();
       target.setDate(now.getDate() + (7 - now.getDay()));
       target.setHours(23, 59, 59, 999);
@@ -61,18 +60,24 @@ function FlashSaleTimer() {
 
   const format = (num: number) => num.toString().padStart(2, '0');
 
-  return (
-    <div className="flex items-center gap-1.5">
-      <div className="flex items-center gap-1 px-2 md:px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-black text-[9px] md:text-xs shadow-[0_0_15px_rgba(242,255,0,0.4)]">
-        <span className="opacity-70 text-[8px] md:text-[9px]">DAY</span>
-        <span>{format(timeLeft.days)}</span>
-        <span className="animate-pulse">:</span>
-        <span>{format(timeLeft.hours)}</span>
-        <span className="animate-pulse">:</span>
-        <span>{format(timeLeft.minutes)}</span>
-        <span className="animate-pulse">:</span>
-        <span>{format(timeLeft.seconds)}</span>
+  const TimeUnit = ({ label, value, showSeparator = true }: { label: string, value: string, showSeparator?: boolean }) => (
+    <div className="flex items-center gap-1 md:gap-1.5">
+      <div className="flex flex-col items-center">
+        <div className="flex items-center justify-center px-1.5 md:px-2 py-1 rounded bg-background/50 border border-primary/20 text-primary font-black text-[10px] md:text-xs min-w-[24px] md:min-w-[30px] shadow-[0_0_10px_rgba(242,255,0,0.1)]">
+          {value}
+        </div>
+        <span className="text-[6px] md:text-[8px] text-muted-foreground font-black tracking-tighter mt-0.5 uppercase">{label}</span>
       </div>
+      {showSeparator && <span className="text-primary font-black text-[10px] md:text-xs mb-3 animate-pulse">:</span>}
+    </div>
+  );
+
+  return (
+    <div className="flex items-center gap-1 md:gap-1.5 bg-black/20 p-1.5 md:p-2 rounded-xl border border-white/5 backdrop-blur-sm">
+      <TimeUnit label="Day" value={format(timeLeft.days)} />
+      <TimeUnit label="Hrs" value={format(timeLeft.hours)} />
+      <TimeUnit label="Min" value={format(timeLeft.minutes)} />
+      <TimeUnit label="Sec" value={format(timeLeft.seconds)} showSeparator={false} />
     </div>
   );
 }
@@ -184,21 +189,25 @@ export function CatalogGrid() {
       {/* Flash Sale Section */}
       {flashSaleItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="bento-card p-5 md:p-8 bg-primary/5 border-primary/20">
+          <div className="relative overflow-hidden bento-card p-5 md:p-8 border-primary/20 group">
+            {/* Ambient Background Glow */}
+            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
+            
             <SectionHeader 
               title="Flash Sale" 
               icon="/img/bolt.gif" 
               subtitle="Limited time offers with massive discounts."
               rightElement={<FlashSaleTimer />}
             />
-            <div className="flex overflow-x-auto gap-4 pb-4 snap-x scrollbar-hide">
+            <div className="flex overflow-x-auto gap-4 pb-4 snap-x scrollbar-hide relative z-10">
               {flashSaleItems.map((item) => {
                 const image = PlaceHolderImages.find((img) => img.id === item.imageId);
                 return (
                   <Link
                     key={item.id}
                     href={`/topup/${item.id}`}
-                    className="group shrink-0 w-[140px] md:w-[180px] bento-card p-0 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden border-primary/20 hover:border-primary/50 snap-start"
+                    className="group shrink-0 w-[140px] md:w-[180px] bento-card p-0 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden border-primary/10 hover:border-primary/50 snap-start bg-card/40"
                   >
                     <div className="relative aspect-square w-full shrink-0 overflow-hidden">
                       <Image
@@ -218,7 +227,7 @@ export function CatalogGrid() {
                          <Zap className="h-3 w-3 text-primary fill-primary animate-pulse" />
                       </div>
                     </div>
-                    <div className="p-2.5 flex flex-col justify-between flex-1 min-w-0 bg-card/40">
+                    <div className="p-2.5 flex flex-col justify-between flex-1 min-w-0">
                       <div>
                         <p className="text-[8px] md:text-[9px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
                           {item.type}
