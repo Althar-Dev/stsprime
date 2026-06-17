@@ -9,14 +9,14 @@ interface LogoProps {
 export function Logo({ className, iconClassName }: LogoProps) {
   return (
     <div className={cn(
-      "relative overflow-hidden rounded-xl bg-primary shadow-[0_0_15px_rgba(242,255,0,0.3)]",
+      "relative overflow-hidden",
       className
     )}>
       <Image 
         src="/img/icon.png" 
         alt="STS Pedia Logo" 
         fill 
-        className={cn("object-contain p-1.5", iconClassName)}
+        className={cn("object-contain", iconClassName)}
         priority
       />
     </div>
