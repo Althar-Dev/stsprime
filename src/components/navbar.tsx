@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Gamepad2, History, Search, LayoutDashboard, Menu } from "lucide-react";
+import { Gamepad2, History, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
 
 export function Navbar() {
   return (
@@ -48,33 +51,84 @@ export function Navbar() {
             Login
           </Button>
 
-          {/* Mobile Menu */}
+          {/* Mobile Sidebar */}
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="rounded-xl lg:hidden border-border bg-card/50">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-background border-border">
-              <SheetHeader className="text-left mb-8">
-                <SheetTitle className="font-headline font-black text-2xl text-primary">Menu</SheetTitle>
-              </SheetHeader>
-              <div className="flex flex-col gap-4">
-                <Link href="/">
-                  <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-lg font-bold hover:bg-primary/10 hover:text-primary">
-                    <Gamepad2 className="h-6 w-6" /> Games
-                  </Button>
-                </Link>
-                <Link href="/history">
-                  <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-lg font-bold hover:bg-primary/10 hover:text-primary">
-                    <History className="h-6 w-6" /> History
-                  </Button>
-                </Link>
-                <Link href="/status">
-                  <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-lg font-bold hover:bg-primary/10 hover:text-primary">
-                    <LayoutDashboard className="h-6 w-6" /> Track Order
-                  </Button>
-                </Link>
+            <SheetContent side="right" className="bg-background border-border p-0 flex flex-col w-[300px] sm:w-[350px]">
+              {/* Header */}
+              <div className="p-6 border-b border-border bg-card/30">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center font-headline font-black text-xl text-primary-foreground shadow-lg shadow-primary/20">S</div>
+                  <div>
+                    <h3 className="font-headline font-black text-lg tracking-tight">STS Pedia</h3>
+                    <p className="text-[10px] text-muted-foreground font-bold">Fast & Secure Topup Hub</p>
+                  </div>
+                </div>
+              </div>
+
+              <ScrollArea className="flex-1">
+                <div className="p-4 space-y-8">
+                  {/* Mobile Search */}
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Search services..." className="pl-10 h-11 bg-muted/30 border-border rounded-xl" />
+                  </div>
+
+                  {/* Main Menu */}
+                  <div>
+                    <p className="text-[10px] font-black tracking-widest text-muted-foreground/60 mb-3 px-2">Navigation</p>
+                    <div className="space-y-1">
+                      <Link href="/">
+                        <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                          <Gamepad2 className="h-5 w-5" /> Games
+                        </Button>
+                      </Link>
+                      <Link href="/history">
+                        <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                          <History className="h-5 w-5" /> Transaction history
+                        </Button>
+                      </Link>
+                      <Link href="/status">
+                        <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                          <LayoutDashboard className="h-5 w-5" /> Track order
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+
+                  <Separator className="opacity-40" />
+
+                  {/* Account & Help */}
+                  <div>
+                    <p className="text-[10px] font-black tracking-widest text-muted-foreground/60 mb-3 px-2">Support & account</p>
+                    <div className="space-y-1">
+                      <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                        <User className="h-5 w-5" /> My profile
+                      </Button>
+                      <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                        <MessageCircle className="h-5 w-5" /> Contact support
+                      </Button>
+                      <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                        <HelpCircle className="h-5 w-5" /> Help center
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </ScrollArea>
+
+              {/* Footer Section */}
+              <div className="p-6 border-t border-border mt-auto bg-muted/10">
+                <div className="flex items-center gap-3 mb-4">
+                  <ShieldCheck className="h-4 w-4 text-primary" />
+                  <p className="text-[10px] font-black text-muted-foreground">Certified & secure payment gateway</p>
+                </div>
+                <Button className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black text-sm">
+                  Sign in
+                </Button>
               </div>
             </SheetContent>
           </Sheet>
