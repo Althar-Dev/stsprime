@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 const CATALOG_ITEMS = [
   // Flash Sale
   { 
-    id: "ff", 
+    id: "ff-fs", 
     name: "Free Fire", 
     type: "Game", 
     imageId: "ff", 
@@ -21,6 +21,56 @@ const CATALOG_ITEMS = [
     discount: "50%",
     originalPrice: "Rp 20.000",
     salePrice: "Rp 10.000"
+  },
+  { 
+    id: "mlbb-fs", 
+    name: "Mobile Legends", 
+    type: "Game", 
+    imageId: "mlbb", 
+    tag: "Flash Sale",
+    discount: "30%",
+    originalPrice: "Rp 50.000",
+    salePrice: "Rp 35.000"
+  },
+  { 
+    id: "valorant-fs", 
+    name: "Valorant Points", 
+    type: "Game", 
+    imageId: "valorant", 
+    tag: "Flash Sale",
+    discount: "20%",
+    originalPrice: "Rp 125.000",
+    salePrice: "Rp 100.000"
+  },
+  { 
+    id: "pubgm-fs", 
+    name: "PUBG Mobile", 
+    type: "Game", 
+    imageId: "pubgm", 
+    tag: "Flash Sale",
+    discount: "40%",
+    originalPrice: "Rp 80.000",
+    salePrice: "Rp 48.000"
+  },
+  { 
+    id: "genshin-fs", 
+    name: "Genshin Impact", 
+    type: "Game", 
+    imageId: "genshin", 
+    tag: "Flash Sale",
+    discount: "15%",
+    originalPrice: "Rp 160.000",
+    salePrice: "Rp 136.000"
+  },
+  { 
+    id: "steam-fs", 
+    name: "Steam Wallet", 
+    type: "Voucher", 
+    imageId: "steam", 
+    tag: "Flash Sale",
+    discount: "25%",
+    originalPrice: "Rp 100.000",
+    salePrice: "Rp 75.000"
   },
   // Populer
   { id: "mlbb", name: "Mobile Legends", type: "Game", imageId: "mlbb", tag: "Populer" },
@@ -161,7 +211,7 @@ export function CatalogGrid() {
               return (
                 <Link
                   key={item.id}
-                  href={`/topup/${item.id}`}
+                  href={`/topup/${item.imageId}`}
                   className="group bento-card p-0 transition-all active:scale-95 flex flex-row aspect-[16/6] overflow-hidden"
                 >
                   <div className="relative aspect-square h-full shrink-0 overflow-hidden border-r border-border/10">
@@ -235,7 +285,7 @@ export function CatalogGrid() {
                       return (
                         <Link
                           key={item.id}
-                          href={`/topup/${item.id}`}
+                          href={`/topup/${item.imageId}`}
                           className="group shrink-0 w-[140px] md:w-[180px] bento-card p-0 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden border-primary/10 hover:border-primary/50 snap-start bg-card/40 backdrop-blur-md"
                         >
                           <div className="relative aspect-square w-full shrink-0 overflow-hidden">
@@ -300,7 +350,7 @@ export function CatalogGrid() {
               return (
                 <Link
                   key={item.id}
-                  href={`/topup/${item.id}`}
+                  href={`/topup/${item.imageId}`}
                   className="group bento-card p-0 transition-all active:scale-95 aspect-square relative overflow-hidden"
                 >
                   <Image
