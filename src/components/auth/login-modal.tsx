@@ -27,21 +27,21 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[400px] p-0 overflow-hidden border-border bg-background">
-        <div className="bg-primary p-6 flex flex-col items-center text-primary-foreground">
-          <div className="h-12 w-12 rounded-2xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center mb-4">
-            <ShieldCheck className="h-7 w-7 text-primary-foreground" />
+      <DialogContent className="w-[95vw] sm:max-w-[400px] p-0 overflow-hidden border-border bg-background rounded-2xl sm:rounded-3xl">
+        <div className="bg-primary p-6 md:p-8 flex flex-col items-center text-primary-foreground">
+          <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center mb-4">
+            <ShieldCheck className="h-6 w-6 md:h-7 md:w-7 text-primary-foreground" />
           </div>
-          <DialogTitle className="text-2xl font-black tracking-tight text-center">Welcome Back</DialogTitle>
-          <DialogDescription className="text-primary-foreground/80 font-bold text-xs mt-1">
+          <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center">Welcome Back</DialogTitle>
+          <DialogDescription className="text-primary-foreground/80 font-bold text-[10px] md:text-xs mt-1 text-center">
             Access your order history and faster checkout
           </DialogDescription>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-5 md:p-8 space-y-5 md:space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+              <Label htmlFor="email" className="text-[10px] md:text-xs font-black uppercase tracking-widest text-muted-foreground">
                 Email Address
               </Label>
               <div className="relative">
@@ -50,7 +50,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
                   id="email" 
                   type="email" 
                   placeholder="name@example.com" 
-                  className="pl-10 h-11 bg-muted/30 border-border focus:ring-primary"
+                  className="pl-10 h-11 bg-muted/30 border-border focus:ring-primary text-sm"
                   required
                 />
               </div>
@@ -58,7 +58,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
             
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+                <Label htmlFor="password" className="text-[10px] md:text-xs font-black uppercase tracking-widest text-muted-foreground">
                   Password
                 </Label>
                 <button type="button" className="text-[10px] font-black text-primary hover:underline">
@@ -71,7 +71,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
                   id="password" 
                   type="password" 
                   placeholder="••••••••" 
-                  className="pl-10 h-11 bg-muted/30 border-border focus:ring-primary"
+                  className="pl-10 h-11 bg-muted/30 border-border focus:ring-primary text-sm"
                   required
                 />
               </div>
@@ -90,7 +90,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-border" />
             </div>
-            <div className="relative flex justify-center text-[10px] uppercase font-black">
+            <div className="relative flex justify-center text-[9px] md:text-[10px] uppercase font-black">
               <span className="bg-background px-3 text-muted-foreground">Or continue with</span>
             </div>
           </div>
@@ -103,7 +103,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
             Google Account
           </Button>
 
-          <p className="text-center text-[11px] text-muted-foreground font-bold">
+          <p className="text-center text-[10px] md:text-[11px] text-muted-foreground font-bold">
             Don't have an account?{" "}
             <button className="text-primary hover:underline">Create one</button>
           </p>
