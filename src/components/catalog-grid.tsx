@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, SearchX, Zap, Flame, LayoutGrid } from "lucide-react";
+import { SearchX, Zap, Flame, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const CATALOG_ITEMS = [
@@ -115,7 +115,7 @@ export function CatalogGrid() {
             icon={Zap} 
             subtitle="Limited time offers with massive discounts."
           />
-          <ItemGrid items={flashSaleItems} aspect="aspect-square" />
+          <ItemGrid items={flashSaleItems} aspect="aspect-[9/16]" />
         </div>
       )}
 
@@ -127,7 +127,7 @@ export function CatalogGrid() {
             icon={Flame} 
             subtitle="Most loved and frequently used by the community."
           />
-          <ItemGrid items={populerItems} aspect="aspect-[9/16]" />
+          <ItemGrid items={populerItems} aspect="aspect-[16/9]" />
         </div>
       )}
 
