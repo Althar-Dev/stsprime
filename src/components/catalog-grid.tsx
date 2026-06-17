@@ -212,9 +212,9 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group bento-card p-0 transition-all active:scale-95 flex flex-row aspect-[16/6] overflow-hidden"
+                  className="group bento-card p-2 transition-all active:scale-95 flex flex-row aspect-[16/6] overflow-hidden items-center"
                 >
-                  <div className="relative aspect-square h-full shrink-0 overflow-hidden border-r border-border/10">
+                  <div className="relative aspect-square h-full shrink-0 overflow-hidden rounded-xl">
                     <Image
                       src={image?.imageUrl || ""}
                       alt={item.name}
@@ -223,7 +223,7 @@ export function CatalogGrid() {
                       data-ai-hint={image?.imageHint}
                     />
                   </div>
-                  <div className="p-3 md:p-4 flex flex-col justify-center flex-1 min-w-0 bg-card/40">
+                  <div className="px-3 md:px-4 flex flex-col justify-center flex-1 min-w-0">
                     <p className="text-[8px] md:text-[10px] tracking-[0.15em] text-accent font-black uppercase mb-1">
                       {item.type}
                     </p>
