@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, Mail, Lock, Chrome, UserPlus } from "lucide-react";
+import { ShieldCheck, Mail, Lock, UserPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LoginModalProps {
@@ -37,18 +37,18 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
         "w-[95vw] sm:max-w-[400px] max-h-[90vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none",
         "modal-scrollbar"
       )}>
-        <div className="bg-primary p-6 md:p-8 flex flex-col items-center text-primary-foreground sticky top-0 z-10">
-          <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center mb-4">
+        <div className="p-6 md:p-8 flex flex-col items-center border-b border-border bg-card/30 sticky top-0 z-10">
+          <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
             {mode === "login" ? (
-              <ShieldCheck className="h-6 w-6 md:h-7 md:w-7 text-primary-foreground" />
+              <ShieldCheck className="h-6 w-6 md:h-7 md:w-7 text-primary" />
             ) : (
-              <UserPlus className="h-6 w-6 md:h-7 md:w-7 text-primary-foreground" />
+              <UserPlus className="h-6 w-6 md:h-7 md:w-7 text-primary" />
             )}
           </div>
-          <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center">
+          <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center text-foreground">
             {mode === "login" ? "Welcome Back" : "Join the Hub"}
           </DialogTitle>
-          <DialogDescription className="text-primary-foreground/80 font-bold text-[10px] md:text-xs mt-1 text-center">
+          <DialogDescription className="text-muted-foreground font-bold text-[10px] md:text-xs mt-1 text-center">
             {mode === "login" 
               ? "Access your order history and faster checkout" 
               : "Create an account to start tracking your purchases"}
@@ -122,23 +122,6 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
               {isLoading ? "Processing..." : (mode === "login" ? "Sign In" : "Create Account")}
             </Button>
           </form>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border" />
-            </div>
-            <div className="relative flex justify-center text-[9px] md:text-[10px] uppercase font-black">
-              <span className="bg-background px-3 text-muted-foreground">Or continue with</span>
-            </div>
-          </div>
-
-          <Button 
-            variant="outline" 
-            className="w-full h-11 rounded-xl border-border bg-card/50 font-bold text-sm hover:bg-muted/50 transition-colors"
-          >
-            <Chrome className="mr-2 h-4 w-4" />
-            Google Account
-          </Button>
 
           <p className="text-center text-[10px] md:text-[11px] text-muted-foreground font-bold">
             {mode === "login" ? (
