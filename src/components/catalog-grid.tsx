@@ -110,7 +110,7 @@ export function CatalogGrid() {
         </div>
       )}
 
-      {/* Populer Section: 2 columns, 16:8, image 1:1 left */}
+      {/* Populer Section: 2 columns, 16:6, image 1:1 left */}
       {populerItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <SectionHeader 
@@ -125,7 +125,7 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.id}`}
-                  className="group bento-card p-0 transition-all active:scale-95 flex flex-row aspect-[16/8] overflow-hidden"
+                  className="group bento-card p-0 transition-all active:scale-95 flex flex-row aspect-[16/6] overflow-hidden"
                 >
                   <div className="relative aspect-square h-full shrink-0 overflow-hidden border-r border-border/10">
                     <Image
