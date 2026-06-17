@@ -131,9 +131,7 @@ export function Navbar() {
                   />
                 </div>
                 
-                <div className="hidden sm:block">
-                  <ThemeToggle />
-                </div>
+                <ThemeToggle />
                 
                 <Button 
                   variant="ghost" 
@@ -192,18 +190,6 @@ export function Navbar() {
                                 <LayoutDashboard className="h-5 w-5" /> Track order
                               </Button>
                             </Link>
-                          </div>
-                        </div>
-
-                        <Separator className="opacity-40" />
-
-                        <div>
-                          <p className="text-[10px] font-black tracking-widest text-muted-foreground/60 mb-3 px-2">Preferences</p>
-                          <div className="px-2 py-1">
-                             <div className="flex items-center justify-between">
-                                <span className="text-sm font-bold">Display Theme</span>
-                                <ThemeToggle />
-                             </div>
                           </div>
                         </div>
 
