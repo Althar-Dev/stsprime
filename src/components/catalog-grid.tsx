@@ -49,56 +49,6 @@ export function CatalogGrid() {
     </div>
   );
 
-  const ItemGrid = ({ 
-    items, 
-    aspect = "aspect-square", 
-    mobileCols = "grid-cols-3" 
-  }: { 
-    items: typeof CATALOG_ITEMS, 
-    aspect?: string,
-    mobileCols?: string
-  }) => (
-    <div className={cn("grid gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8", mobileCols)}>
-      {items.map((item) => {
-        const image = PlaceHolderImages.find((img) => img.id === item.imageId);
-        return (
-          <Link
-            key={item.id}
-            href={`/topup/${item.id}`}
-            className={cn("group bento-card p-0 transition-all active:scale-95", aspect)}
-          >
-            <div className="relative h-full w-full overflow-hidden">
-              <Image
-                src={image?.imageUrl || ""}
-                alt={item.name}
-                width={400}
-                height={400}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                data-ai-hint={image?.imageHint}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90" />
-              
-              {item.tag && (
-                <Badge className="absolute left-1.5 top-1.5 bg-primary/90 text-primary-foreground text-[8px] md:text-[9px] font-black tracking-tighter border-none px-1.5 py-0.5 shadow-lg">
-                  {item.tag}
-                </Badge>
-              )}
-
-              <div className="absolute bottom-0 left-0 w-full p-2 md:p-4">
-                <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black">
-                  {item.type}
-                </p>
-                <h3 className="line-clamp-1 text-[10px] md:text-sm font-black">
-                  {item.name}
-                </h3>
-              </div>
-            </div>
-          </Link>
-        );
-      })}
-    </div>
-  );
-
   if (filteredItems.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
@@ -115,7 +65,7 @@ export function CatalogGrid() {
 
   return (
     <section className="container mx-auto px-4 py-8 space-y-12 md:space-y-16">
-      {/* Flash Sale Section */}
+      {/* Flash Sale Section: 3 columns, 9:16, image 1:1 top */}
       {flashSaleItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           <SectionHeader 
@@ -123,11 +73,45 @@ export function CatalogGrid() {
             icon={Zap} 
             subtitle="Limited time offers with massive discounts."
           />
-          <ItemGrid items={flashSaleItems} aspect="aspect-[9/16]" mobileCols="grid-cols-3" />
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
+            {flashSaleItems.map((item) => {
+              const image = PlaceHolderImages.find((img) => img.id === item.imageId);
+              return (
+                <Link
+                  key={item.id}
+                  href={`/topup/${item.id}`}
+                  className="group bento-card p-0 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden"
+                >
+                  <div className="relative aspect-square w-full shrink-0 overflow-hidden">
+                    <Image
+                      src={image?.imageUrl || ""}
+                      alt={item.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      data-ai-hint={image?.imageHint}
+                    />
+                    {item.tag && (
+                      <Badge className="absolute left-1 top-1 bg-primary/90 text-primary-foreground text-[7px] md:text-[9px] font-black tracking-tighter border-none px-1.5 py-0.5 shadow-lg">
+                        {item.tag}
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="p-2 flex flex-col justify-center flex-1 min-w-0">
+                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate">
+                      {item.type}
+                    </p>
+                    <h3 className="line-clamp-2 text-[10px] md:text-sm font-black leading-tight">
+                      {item.name}
+                    </h3>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
 
-      {/* Populer Section */}
+      {/* Populer Section: 2 columns, 16:9, image 1:1 left */}
       {populerItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <SectionHeader 
@@ -135,11 +119,45 @@ export function CatalogGrid() {
             icon={Flame} 
             subtitle="Most loved and frequently used by the community."
           />
-          <ItemGrid items={populerItems} aspect="aspect-[16/9]" mobileCols="grid-cols-2" />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            {populerItems.map((item) => {
+              const image = PlaceHolderImages.find((img) => img.id === item.imageId);
+              return (
+                <Link
+                  key={item.id}
+                  href={`/topup/${item.id}`}
+                  className="group bento-card p-0 transition-all active:scale-95 flex flex-row aspect-[16/9] overflow-hidden"
+                >
+                  <div className="relative aspect-square h-full shrink-0 overflow-hidden border-r border-border/10">
+                    <Image
+                      src={image?.imageUrl || ""}
+                      alt={item.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      data-ai-hint={image?.imageHint}
+                    />
+                  </div>
+                  <div className="p-3 flex flex-col justify-center flex-1 min-w-0">
+                    {item.tag && (
+                      <Badge className="w-fit mb-1 bg-primary/90 text-primary-foreground text-[7px] md:text-[9px] font-black tracking-tighter border-none px-1.5 py-0.5 shadow-lg">
+                        {item.tag}
+                      </Badge>
+                    )}
+                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate">
+                      {item.type}
+                    </p>
+                    <h3 className="line-clamp-2 text-[10px] md:text-sm font-black leading-tight">
+                      {item.name}
+                    </h3>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
 
-      {/* TopUp Section */}
+      {/* TopUp Section: 3 columns, Square layout */}
       {topUpItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <SectionHeader 
@@ -147,7 +165,43 @@ export function CatalogGrid() {
             icon={LayoutGrid} 
             subtitle="Browse all available game and digital services."
           />
-          <ItemGrid items={topUpItems} aspect="aspect-square" mobileCols="grid-cols-3" />
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
+            {topUpItems.map((item) => {
+              const image = PlaceHolderImages.find((img) => img.id === item.imageId);
+              return (
+                <Link
+                  key={item.id}
+                  href={`/topup/${item.id}`}
+                  className="group bento-card p-0 transition-all active:scale-95 aspect-square relative overflow-hidden"
+                >
+                  <Image
+                    src={image?.imageUrl || ""}
+                    alt={item.name}
+                    width={400}
+                    height={400}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    data-ai-hint={image?.imageHint}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-90" />
+                  
+                  {item.tag && (
+                    <Badge className="absolute left-1.5 top-1.5 bg-primary/90 text-primary-foreground text-[8px] md:text-[9px] font-black tracking-tighter border-none px-1.5 py-0.5 shadow-lg">
+                      {item.tag}
+                    </Badge>
+                  )}
+
+                  <div className="absolute bottom-0 left-0 w-full p-2 md:p-3">
+                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate">
+                      {item.type}
+                    </p>
+                    <h3 className="line-clamp-1 text-[10px] md:text-sm font-black">
+                      {item.name}
+                    </h3>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
     </section>
