@@ -210,9 +210,9 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group bento-card p-2 transition-all active:scale-95 flex flex-row aspect-[16/7] overflow-hidden items-center hover:scale-[1.03] hover:shadow-lg"
+                  className="group bento-card p-0 transition-all active:scale-95 flex flex-row aspect-[16/7] overflow-hidden items-center hover:scale-[1.03] hover:shadow-lg"
                 >
-                  <div className="relative aspect-square h-full shrink-0 overflow-hidden rounded-xl">
+                  <div className="relative aspect-square h-full shrink-0 overflow-hidden">
                     <Image
                       src={image?.imageUrl || ""}
                       alt={item.name}
@@ -221,11 +221,11 @@ export function CatalogGrid() {
                       data-ai-hint={image?.imageHint}
                     />
                   </div>
-                  <div className="px-3 md:px-4 flex flex-col justify-center flex-1 min-w-0">
-                    <p className="text-[7px] md:text-[9px] tracking-[0.15em] text-accent font-black uppercase mb-1">
+                  <div className="px-2 md:px-3 flex flex-col justify-center flex-1 min-w-0">
+                    <p className="text-[7px] md:text-[8px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
                       {item.type}
                     </p>
-                    <h3 className="line-clamp-1 text-[11px] md:text-sm font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="line-clamp-1 text-[10px] md:text-[13px] font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
                   </div>
