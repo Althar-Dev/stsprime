@@ -1,11 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { SearchX, LayoutGrid } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const CATALOG_ITEMS = [
   // Flash Sale
@@ -21,6 +23,46 @@ const CATALOG_ITEMS = [
   { id: "data", name: "Internet Data", type: "Service", imageId: "data", tag: "" },
 ];
 
+function FlashSaleTimer() {
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date();
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999);
+      
+      const diff = endOfDay.getTime() - now.getTime();
+      
+      if (diff > 0) {
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / 1000 / 60) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        setTimeLeft({ hours, minutes, seconds });
+      } else {
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const format = (num: number) => num.toString().padStart(2, '0');
+
+  return (
+    <div className="flex items-center gap-1.5 ml-auto md:ml-0">
+      <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-primary text-primary-foreground font-black text-[10px] md:text-xs shadow-[0_0_10px_rgba(242,255,0,0.3)]">
+        <span>{format(timeLeft.hours)}</span>
+        <span className="animate-pulse">:</span>
+        <span>{format(timeLeft.minutes)}</span>
+        <span className="animate-pulse">:</span>
+        <span>{format(timeLeft.seconds)}</span>
+      </div>
+      <span className="hidden sm:inline text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Ends in</span>
+    </div>
+  );
+}
+
 export function CatalogGrid() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q")?.toLowerCase() || "";
@@ -34,7 +76,17 @@ export function CatalogGrid() {
   const populerItems = filteredItems.filter(item => item.tag === "Populer");
   const topUpItems = filteredItems.filter(item => item.tag !== "Flash Sale" && item.tag !== "Populer");
 
-  const SectionHeader = ({ title, icon: Icon, subtitle }: { title: string, icon: any, subtitle?: string }) => {
+  const SectionHeader = ({ 
+    title, 
+    icon: Icon, 
+    subtitle, 
+    rightElement 
+  }: { 
+    title: string, 
+    icon: any, 
+    subtitle?: string,
+    rightElement?: React.ReactNode
+  }) => {
     const isImagePath = typeof Icon === 'string';
     return (
       <div className="mb-6 flex items-center justify-between">
@@ -53,6 +105,7 @@ export function CatalogGrid() {
             {subtitle && <p className="text-[10px] md:text-xs text-muted-foreground font-bold">{subtitle}</p>}
           </div>
         </div>
+        {rightElement && <div>{rightElement}</div>}
       </div>
     );
   };
@@ -80,6 +133,7 @@ export function CatalogGrid() {
             title="Flash Sale" 
             icon="/img/bolt.gif" 
             subtitle="Limited time offers with massive discounts."
+            rightElement={<FlashSaleTimer />}
           />
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {flashSaleItems.map((item) => {
@@ -100,7 +154,7 @@ export function CatalogGrid() {
                     />
                   </div>
                   <div className="p-2.5 flex flex-col justify-center flex-1 min-w-0 bg-card/40">
-                    <p className="text-[8px] md:text-[10px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
+                    <p className="text-[8px] md:text-[9px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
                       {item.type}
                     </p>
                     <h3 className="line-clamp-2 text-[11px] md:text-sm font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
