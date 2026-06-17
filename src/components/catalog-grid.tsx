@@ -90,7 +90,6 @@ function FlashSaleTimer() {
     const timer = setInterval(() => {
       const now = new Date();
       const target = new Date();
-      // Set target to end of current week for visible "Days"
       target.setDate(now.getDate() + (7 - now.getDay()));
       target.setHours(23, 59, 59, 999);
       
@@ -241,7 +240,7 @@ export function CatalogGrid() {
       {/* Flash Sale Section */}
       {flashSaleItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="relative group">
+          <div className="relative">
             <div className="flex flex-col">
               {/* Header Row: Tab + Aligned Timer */}
               <div className="flex items-end justify-between relative z-10">
@@ -257,7 +256,7 @@ export function CatalogGrid() {
                 </div>
               </div>
 
-              {/* Main Card Body */}
+              {/* Main Card Body (STATIC - No Hover) */}
               <div className="relative overflow-hidden border border-border rounded-2xl rounded-tl-none p-5 md:p-8 -mt-px min-h-[300px]">
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
@@ -286,9 +285,9 @@ export function CatalogGrid() {
                         <Link
                           key={item.id}
                           href={`/topup/${item.imageId}`}
-                          className="group shrink-0 w-[140px] md:w-[180px] bento-card p-0 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden border-primary/10 hover:border-primary/50 snap-start bg-card/40 backdrop-blur-md"
+                          className="group shrink-0 w-[140px] md:w-[180px] bento-card p-1.5 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden border-primary/10 hover:border-primary/50 snap-start bg-card/40 backdrop-blur-md"
                         >
-                          <div className="relative aspect-square w-full shrink-0 overflow-hidden">
+                          <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-lg">
                             <Image
                               src={image?.imageUrl || ""}
                               alt={item.name}
@@ -300,8 +299,6 @@ export function CatalogGrid() {
                             <div className="absolute top-0 left-0 bg-accent text-accent-foreground font-black text-[9px] md:text-[10px] px-2 py-1 rounded-br-lg shadow-lg z-10">
                               -{item.discount}
                             </div>
-                            {/* Urgency Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
                             <div className="absolute bottom-1 right-2">
                                <Zap className="h-3 w-3 text-primary fill-primary animate-pulse" />
                             </div>
