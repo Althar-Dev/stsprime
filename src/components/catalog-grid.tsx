@@ -210,9 +210,9 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group bento-card p-1.5 md:p-2 transition-all active:scale-95 flex flex-row aspect-[16/7] overflow-hidden items-center hover:scale-[1.03] hover:shadow-lg"
+                  className="group bento-card p-1.5 transition-all active:scale-95 flex flex-row aspect-[16/7] overflow-hidden items-center hover:scale-[1.03] hover:shadow-lg"
                 >
-                  <div className="relative aspect-square h-full shrink-0 overflow-hidden rounded-lg md:rounded-xl">
+                  <div className="relative h-full aspect-square shrink-0 overflow-hidden rounded-lg">
                     <Image
                       src={image?.imageUrl || ""}
                       alt={item.name}
@@ -221,11 +221,11 @@ export function CatalogGrid() {
                       data-ai-hint={image?.imageHint}
                     />
                   </div>
-                  <div className="px-3 md:px-4 flex flex-col justify-center flex-1 min-w-0">
-                    <p className="text-[7px] md:text-[8px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
+                  <div className="flex-1 min-w-0 pl-2.5 pr-1 flex flex-col justify-center">
+                    <p className="text-[7px] md:text-[8px] tracking-[0.05em] text-accent font-black uppercase mb-0.5">
                       {item.type}
                     </p>
-                    <h3 className="line-clamp-1 text-[11px] md:text-[14px] font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="line-clamp-1 text-[10px] md:text-[13px] font-black leading-none tracking-tight text-foreground group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
                   </div>
@@ -241,23 +241,17 @@ export function CatalogGrid() {
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="relative">
             <div className="flex flex-col">
-              {/* Header Row: Tab + Aligned Timer */}
               <div className="flex items-end justify-between relative z-10">
-                {/* Folder Tab Header */}
                 <div className="inline-flex items-center gap-3 bg-card border-t border-l border-r border-border px-4 md:px-6 py-3 md:py-4 rounded-t-2xl w-fit shadow-sm">
                   <img src="/img/bolt.gif" alt="Flash Sale" className="h-6 w-6 object-contain" />
                   <h2 className="font-headline text-lg md:text-xl font-black tracking-tight">Flash Sale</h2>
                 </div>
-
-                {/* Parallel Timer */}
                 <div className="mb-2 mr-2 md:mr-4">
                   <FlashSaleTimer />
                 </div>
               </div>
 
-              {/* Main Card Body (STATIC) */}
               <div className="relative overflow-hidden border border-border rounded-2xl rounded-tl-none p-5 md:p-8 -mt-px min-h-[300px]">
-                {/* Background Image */}
                 <div className="absolute inset-0 z-0">
                   <Image 
                     src="/img/fsale.webp" 
@@ -269,7 +263,6 @@ export function CatalogGrid() {
                   <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
                 </div>
 
-                {/* Content Layer */}
                 <div className="relative z-10">
                   <div className="mb-6">
                     <p className="text-[10px] md:text-xs text-white font-black uppercase tracking-wider drop-shadow-md">
@@ -294,7 +287,6 @@ export function CatalogGrid() {
                               className="object-cover transition-transform duration-500 group-hover:scale-110"
                               data-ai-hint={image?.imageHint}
                             />
-                            {/* Discount Badge */}
                             <div className="absolute top-0 left-0 bg-accent text-accent-foreground font-black text-[9px] md:text-[10px] px-2 py-1 rounded-br-lg shadow-lg z-10">
                               -{item.discount}
                             </div>
@@ -311,7 +303,6 @@ export function CatalogGrid() {
                                 {item.name}
                               </h3>
                             </div>
-                            
                             <div className="mt-2">
                               <p className="text-[10px] md:text-[12px] font-black text-primary leading-none">
                                 {item.salePrice}
@@ -358,13 +349,11 @@ export function CatalogGrid() {
                     data-ai-hint={image?.imageHint}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-90" />
-                  
                   {item.tag && (
                     <Badge className="absolute left-1.5 top-1.5 bg-primary/90 text-primary-foreground text-[8px] md:text-[9px] font-black tracking-tighter border-none px-1.5 py-0.5 shadow-lg">
                       {item.tag}
                     </Badge>
                   )}
-
                   <div className="absolute bottom-0 left-0 w-full p-2 md:p-3">
                     <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate">
                       {item.type}
