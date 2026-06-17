@@ -59,7 +59,11 @@ export function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="bg-background border-border p-0 flex flex-col w-[300px] sm:w-[350px]">
-              {/* Header */}
+              <SheetHeader className="sr-only">
+                <SheetTitle>Navigation Menu</SheetTitle>
+              </SheetHeader>
+              
+              {/* Visual Header */}
               <div className="p-6 border-b border-border bg-card/30">
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center font-headline font-black text-xl text-primary-foreground shadow-lg shadow-primary/20">S</div>
