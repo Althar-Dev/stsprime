@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -35,7 +36,7 @@ export function HeroSection() {
   }, [api]);
 
   return (
-    <section className="w-full overflow-hidden py-10 flex flex-col items-center">
+    <section className="w-full overflow-hidden py-6 md:py-10 flex flex-col items-center">
       <div className="relative w-full max-w-screen-2xl">
         <Carousel
           setApi={setApi}
@@ -43,11 +44,11 @@ export function HeroSection() {
           opts={{
             loop: true,
             align: "center",
-            duration: 35, // Balanced smoothness
+            duration: 40,
           }}
           className="w-full"
         >
-          <CarouselContent className="-ml-4">
+          <CarouselContent className="-ml-2 md:-ml-4">
             {bannerIds.map((id, index) => {
               const image = PlaceHolderImages.find((img) => img.id === id);
               if (!image) return null;
@@ -57,14 +58,16 @@ export function HeroSection() {
               return (
                 <CarouselItem 
                   key={id} 
-                  className="pl-4 basis-[85%] md:basis-[75%] lg:basis-[860px]"
+                  // Mobile: 100% width to hide neighbors
+                  // Desktop: Fixed or partial width to show neighbors
+                  className="pl-2 md:pl-4 basis-full md:basis-[85%] lg:basis-[860px]"
                 >
                   <div 
                     className={cn(
-                      "relative aspect-[860/310] w-full bg-card rounded-2xl overflow-hidden border transition-all duration-500 ease-out will-change-transform",
+                      "relative aspect-[860/310] w-full bg-card rounded-xl md:rounded-2xl overflow-hidden border transition-all duration-500 ease-out will-change-transform",
                       isActive 
-                        ? "border-primary/60 z-20 scale-100 opacity-100 shadow-2xl" 
-                        : "border-white/5 z-10 scale-[0.9] opacity-40 shadow-none"
+                        ? "border-primary/60 z-20 scale-100 opacity-100" 
+                        : "border-white/5 z-10 scale-100 md:scale-[0.92] opacity-100 md:opacity-50"
                     )}
                   >
                     <Image
@@ -75,9 +78,11 @@ export function HeroSection() {
                       priority={index === 0}
                       sizes="(max-width: 860px) 100vw, 860px"
                     />
+                    
+                    {/* Desktop-only dimming overlay for inactive slides to reduce flicker/distraction */}
                     <div className={cn(
-                      "absolute inset-0 bg-gradient-to-t from-black/20 to-transparent transition-opacity duration-500",
-                      isActive ? "opacity-100" : "opacity-0"
+                      "absolute inset-0 bg-black/40 transition-opacity duration-500 hidden md:block pointer-events-none",
+                      isActive ? "opacity-0" : "opacity-100"
                     )} />
                   </div>
                 </CarouselItem>
@@ -88,16 +93,16 @@ export function HeroSection() {
       </div>
 
       {/* Pagination Dots */}
-      <div className="flex gap-2.5 mt-8">
+      <div className="flex gap-2 mt-6 md:mt-8">
         {Array.from({ length: count }).map((_, index) => (
           <button
             key={index}
             onClick={() => api?.scrollTo(index)}
             className={cn(
-              "h-1.5 rounded-full transition-all duration-300 ease-out",
+              "h-1 md:h-1.5 rounded-full transition-all duration-300 ease-out",
               current === index 
-                ? "bg-primary w-8" 
-                : "bg-muted-foreground/30 hover:bg-muted-foreground/50 w-1.5"
+                ? "bg-primary w-6 md:w-8" 
+                : "bg-muted-foreground/30 hover:bg-muted-foreground/50 w-1 md:w-1.5"
             )}
             aria-label={`Go to slide ${index + 1}`}
           />
