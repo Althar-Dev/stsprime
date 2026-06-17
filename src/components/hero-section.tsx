@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -37,25 +38,35 @@ export function HeroSection() {
   }, [api]);
 
   return (
-    <section className="container mx-auto px-4 py-8 flex flex-col items-center">
-      <div className="relative group w-full max-w-[860px]">
+    <section className="w-full overflow-hidden py-8 flex flex-col items-center">
+      <div className="relative group w-full max-w-screen-2xl px-4 md:px-0">
         <Carousel
           setApi={setApi}
           plugins={[plugin.current]}
           opts={{
             loop: true,
+            align: "center",
           }}
-          className="w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl"
+          className="w-full"
         >
-          <CarouselContent>
+          <CarouselContent className="-ml-4">
             {bannerIds.map((id, index) => {
               const image = PlaceHolderImages.find((img) => img.id === id);
               if (!image) return null;
               
+              const isActive = current === index;
+              
               return (
-                <CarouselItem key={id}>
-                  {/* Container matches 860x310px aspect ratio */}
-                  <div className="relative aspect-[860/310] w-full bg-card">
+                <CarouselItem 
+                  key={id} 
+                  className="pl-4 basis-full md:basis-[70%] lg:basis-[860px] transition-all duration-500 ease-in-out"
+                  style={{
+                    opacity: isActive ? 1 : 0.4,
+                    transform: isActive ? "scale(1)" : "scale(0.9)",
+                    zIndex: isActive ? 20 : 10,
+                  }}
+                >
+                  <div className="relative aspect-[860/310] w-full bg-card rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
                     <Image
                       src={image.imageUrl}
                       alt={image.description}
