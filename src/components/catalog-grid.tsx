@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { SearchX, Zap, Flame, LayoutGrid } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 const CATALOG_ITEMS = [
   // Flash Sale
@@ -97,7 +96,7 @@ export function CatalogGrid() {
                     )}
                   </div>
                   <div className="p-2 flex flex-col justify-center flex-1 min-w-0">
-                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate">
+                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black">
                       {item.type}
                     </p>
                     <h3 className="line-clamp-2 text-[10px] md:text-sm font-black leading-tight">
@@ -111,7 +110,7 @@ export function CatalogGrid() {
         </div>
       )}
 
-      {/* Populer Section: 2 columns, 16:9, image 1:1 left */}
+      {/* Populer Section: 2 columns, 16:8, image 1:1 left */}
       {populerItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <SectionHeader 
@@ -126,7 +125,7 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.id}`}
-                  className="group bento-card p-0 transition-all active:scale-95 flex flex-row aspect-[16/9] overflow-hidden"
+                  className="group bento-card p-0 transition-all active:scale-95 flex flex-row aspect-[16/8] overflow-hidden"
                 >
                   <div className="relative aspect-square h-full shrink-0 overflow-hidden border-r border-border/10">
                     <Image
