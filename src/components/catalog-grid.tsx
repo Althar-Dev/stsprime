@@ -203,7 +203,7 @@ export function CatalogGrid() {
             icon="/img/fire.gif" 
             subtitle="Most loved and frequently used by the community."
           />
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {populerItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
