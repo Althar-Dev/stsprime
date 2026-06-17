@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -39,6 +40,7 @@ function FlashSaleTimer() {
     const timer = setInterval(() => {
       const now = new Date();
       const target = new Date();
+      // Set target to end of current week for visible "Days"
       target.setDate(now.getDate() + (7 - now.getDay()));
       target.setHours(23, 59, 59, 999);
       
