@@ -65,7 +65,7 @@ function FlashSaleTimer() {
   const TimeUnit = ({ label, value, showSeparator = true }: { label: string, value: string, showSeparator?: boolean }) => (
     <div className="flex items-center gap-1 md:gap-1.5">
       <div className="flex flex-col items-center">
-        <div className="flex items-center justify-center px-1.5 md:px-2 py-1 rounded bg-background border border-primary/20 text-primary font-black text-[10px] md:text-xs min-w-[24px] md:min-w-[30px] shadow-[0_0_10px_rgba(242,255,0,0.1)]">
+        <div className="flex items-center justify-center px-1.5 md:px-2 py-1 rounded bg-background border border-primary/20 text-primary font-black text-[10px] md:text-xs min-w-[24px] md:min-w-[30px]">
           {value}
         </div>
         <span className="text-[6px] md:text-[8px] text-muted-foreground font-black tracking-tighter mt-0.5 uppercase">{label}</span>
@@ -75,7 +75,7 @@ function FlashSaleTimer() {
   );
 
   return (
-    <div className="flex items-center gap-1 md:gap-1.5 bg-card/90 p-1.5 md:p-2 rounded-xl border border-primary/30 backdrop-blur-md shadow-xl shadow-primary/5">
+    <div className="flex items-center gap-1 md:gap-1.5 bg-card/90 p-1.5 md:p-2 rounded-xl border border-primary/30 backdrop-blur-md">
       <TimeUnit label="Day" value={format(timeLeft.days)} />
       <TimeUnit label="Hrs" value={format(timeLeft.hours)} />
       <TimeUnit label="Min" value={format(timeLeft.minutes)} />
