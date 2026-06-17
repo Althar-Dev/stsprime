@@ -53,31 +53,31 @@
       "id": "banner-1",
       "description": "Banner 1 - MLBB Promo",
       "imageUrl": "/img/bann1.webp",
-      "imageHint": "gaming neon"
+      "imageHint": "gaming"
     },
     {
       "id": "banner-2",
       "description": "Banner 2 - Valorant Points",
       "imageUrl": "/img/bann2.webp",
-      "imageHint": "esports arena"
+      "imageHint": "esports"
     },
     {
       "id": "banner-3",
       "description": "Banner 3 - Secure Payment",
       "imageUrl": "/img/bann3.webp",
-      "imageHint": "digital security"
+      "imageHint": "security"
     },
     {
       "id": "banner-4",
       "description": "Banner 4 - Flash Sale",
       "imageUrl": "/img/bann4.webp",
-      "imageHint": "cyberpunk city"
+      "imageHint": "cyberpunk"
     },
     {
       "id": "banner-5",
       "description": "Banner 5 - New Service",
       "imageUrl": "/img/bann5.webp",
-      "imageHint": "future technology"
+      "imageHint": "future"
     }
   ]
 }
