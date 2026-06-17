@@ -11,6 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LoginModal } from "@/components/auth/login-modal";
+import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -93,9 +94,7 @@ export function Navbar() {
           ) : (
             <>
               <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105 shrink-0">
-                <div className="flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-xl bg-primary shadow-[0_0_15px_rgba(242,255,0,0.3)]">
-                  <span className="font-headline text-lg md:text-xl font-bold text-primary-foreground">S</span>
-                </div>
+                <Logo className="h-9 w-9 md:h-10 md:w-10" />
                 <span className="font-headline text-lg md:text-xl font-black tracking-tighter text-foreground">STS Pedia</span>
               </Link>
 
@@ -162,7 +161,7 @@ export function Navbar() {
                     
                     <div className="h-16 px-6 border-b border-border bg-card/30 flex items-center shrink-0">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center font-headline font-black text-xl text-primary-foreground shadow-lg shadow-primary/20">S</div>
+                        <Logo className="h-10 w-10" />
                         <div>
                           <h3 className="font-headline font-black text-base tracking-tight leading-none">STS Pedia</h3>
                           <p className="text-[9px] text-muted-foreground font-bold mt-1">Fast & Secure Hub</p>

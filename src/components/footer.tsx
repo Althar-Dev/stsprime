@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 
 export function Footer() {
   return (
@@ -9,9 +10,7 @@ export function Footer() {
         <div className="grid gap-10 md:gap-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <span className="font-headline text-base font-bold text-primary-foreground">S</span>
-              </div>
+              <Logo className="h-8 w-8 rounded-lg shadow-none" />
               <span className="font-headline text-lg font-black tracking-tighter text-foreground">STS Pedia</span>
             </Link>
             <p className="mt-4 text-xs md:text-sm text-muted-foreground leading-relaxed">
