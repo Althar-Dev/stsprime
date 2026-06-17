@@ -16,7 +16,7 @@ import React from "react";
 
 const BANNERS = [
   {
-    id: "hero-banner",
+    id: "banner-1",
     badge: "LIVE UPDATES: MLBB SEASON TOP-UP DISCOUNT UP TO 20%",
     title: "The Fastest Way to Level Up Your Game.",
     description: "Secure, instant, and reliable top-ups for your favorite games and digital services. Power up in seconds.",
@@ -38,6 +38,22 @@ const BANNERS = [
     description: "We use military-grade encryption to ensure every transaction is protected. Your satisfaction is our priority.",
     primaryBtn: "Check Status",
     secondaryBtn: "Learn Security"
+  },
+  {
+    id: "banner-4",
+    badge: "FLASH SALE: LIMITED TIME GEMS DISCOUNT",
+    title: "Don't Miss Out on Weekend Deals.",
+    description: "Get up to 50% extra bonuses on selected game vouchers this weekend only. Grab them before they're gone.",
+    primaryBtn: "See Deals",
+    secondaryBtn: "Claim Voucher"
+  },
+  {
+    id: "banner-5",
+    badge: "GLOBAL REACH: NOW SUPPORTING 50+ COUNTRIES",
+    title: "Universal Connectivity for Every Player.",
+    description: "Expand your horizon with global game credits and international mobile data packs available instantly.",
+    primaryBtn: "Global Shop",
+    secondaryBtn: "Learn More"
   }
 ];
 
@@ -67,7 +83,7 @@ export function HeroSection() {
                           </span>
                           {banner.badge}
                         </div>
-                        <h1 className="font-headline text-4xl font-black leading-[1.1] md:text-6xl lg:text-7xl">
+                        <h1 className="font-headline text-4xl font-black leading-[1.1] md:text-5xl lg:text-6xl">
                           {banner.title.split('to').map((part, i) => (
                             <React.Fragment key={i}>
                               {i > 0 && <><br /><span className="text-primary">to</span></>}
@@ -104,7 +120,7 @@ export function HeroSection() {
                       </div>
 
                       <div className="relative hidden lg:block">
-                        <div className="relative h-[450px] w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
+                        <div className="relative aspect-video w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
                           <Image
                             src={image?.imageUrl || ""}
                             alt={banner.title}

@@ -50,22 +50,34 @@
       "imageHint": "internet connectivity"
     },
     {
-      "id": "hero-banner",
-      "description": "Main Hero Banner",
-      "imageUrl": "https://picsum.photos/seed/sts-hero/1200/600",
+      "id": "banner-1",
+      "description": "Banner 1 - MLBB Promo",
+      "imageUrl": "https://picsum.photos/seed/b1/1280/720",
       "imageHint": "gaming neon"
     },
     {
       "id": "banner-2",
-      "description": "Valorant Promo Banner",
-      "imageUrl": "https://picsum.photos/seed/valorant-promo/1200/600",
+      "description": "Banner 2 - Valorant Points",
+      "imageUrl": "https://picsum.photos/seed/b2/1280/720",
       "imageHint": "esports arena"
     },
     {
       "id": "banner-3",
-      "description": "Secure Payment Banner",
-      "imageUrl": "https://picsum.photos/seed/secure-pay/1200/600",
+      "description": "Banner 3 - Secure Payment",
+      "imageUrl": "https://picsum.photos/seed/b3/1280/720",
       "imageHint": "digital security"
+    },
+    {
+      "id": "banner-4",
+      "description": "Banner 4 - Flash Sale",
+      "imageUrl": "https://picsum.photos/seed/b4/1280/720",
+      "imageHint": "cyberpunk city"
+    },
+    {
+      "id": "banner-5",
+      "description": "Banner 5 - New Service",
+      "imageUrl": "https://picsum.photos/seed/b5/1280/720",
+      "imageHint": "future technology"
     }
   ]
 }
