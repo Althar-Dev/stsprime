@@ -62,9 +62,9 @@ function FlashSaleTimer() {
   const format = (num: number) => num.toString().padStart(2, '0');
 
   return (
-    <div className="flex items-center gap-1.5 ml-auto md:ml-0">
-      <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-primary text-primary-foreground font-black text-[10px] md:text-xs shadow-[0_0_15px_rgba(242,255,0,0.4)]">
-        <span className="opacity-70">DAY</span>
+    <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1 px-2 md:px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-black text-[9px] md:text-xs shadow-[0_0_15px_rgba(242,255,0,0.4)]">
+        <span className="opacity-70 text-[8px] md:text-[9px]">DAY</span>
         <span>{format(timeLeft.days)}</span>
         <span className="animate-pulse">:</span>
         <span>{format(timeLeft.hours)}</span>
@@ -103,7 +103,7 @@ export function CatalogGrid() {
   }) => {
     const isImagePath = typeof Icon === 'string';
     return (
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="mb-6 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           {isImagePath ? (
             <div className="flex h-10 w-10 items-center justify-center">
@@ -116,10 +116,10 @@ export function CatalogGrid() {
           )}
           <div>
             <h2 className="font-headline text-xl md:text-2xl font-black tracking-tight">{title}</h2>
-            {subtitle && <p className="text-[10px] md:text-xs text-muted-foreground font-bold">{subtitle}</p>}
+            {subtitle && <p className="text-[10px] md:text-xs text-muted-foreground font-bold hidden sm:block">{subtitle}</p>}
           </div>
         </div>
-        {rightElement && <div>{rightElement}</div>}
+        {rightElement && <div className="shrink-0">{rightElement}</div>}
       </div>
     );
   };
@@ -210,7 +210,7 @@ export function CatalogGrid() {
             icon="/img/fire.gif" 
             subtitle="Most loved and frequently used by the community."
           />
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {populerItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
