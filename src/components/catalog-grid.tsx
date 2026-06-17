@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -270,7 +271,7 @@ export function CatalogGrid() {
                     </p>
                   </div>
 
-                  <div className="flex overflow-x-auto gap-4 pb-4 snap-x scrollbar-hide">
+                  <div className="flex overflow-x-auto gap-4 pb-4 snap-x flash-sale-scrollbar">
                     {flashSaleItems.map((item) => {
                       const image = PlaceHolderImages.find((img) => img.id === item.imageId);
                       return (

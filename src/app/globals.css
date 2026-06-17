@@ -79,6 +79,21 @@
   }
 }
 
+@layer utilities {
+  .flash-sale-scrollbar::-webkit-scrollbar {
+    height: 6px;
+  }
+  .flash-sale-scrollbar::-webkit-scrollbar-track {
+    @apply bg-muted/20 rounded-full mx-8;
+  }
+  .flash-sale-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full transition-colors border-2 border-transparent bg-clip-padding;
+  }
+  .flash-sale-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary;
+  }
+}
+
 .bento-card {
   @apply relative overflow-hidden rounded-2xl border border-border bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-card/80;
 }
