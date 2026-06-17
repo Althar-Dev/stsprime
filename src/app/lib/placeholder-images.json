@@ -52,31 +52,31 @@
     {
       "id": "banner-1",
       "description": "Banner 1 - MLBB Promo",
-      "imageUrl": "https://picsum.photos/seed/b1/1280/720",
+      "imageUrl": "/img/bann1.webp",
       "imageHint": "gaming neon"
     },
     {
       "id": "banner-2",
       "description": "Banner 2 - Valorant Points",
-      "imageUrl": "https://picsum.photos/seed/b2/1280/720",
+      "imageUrl": "/img/bann2.webp",
       "imageHint": "esports arena"
     },
     {
       "id": "banner-3",
       "description": "Banner 3 - Secure Payment",
-      "imageUrl": "https://picsum.photos/seed/b3/1280/720",
+      "imageUrl": "/img/bann3.webp",
       "imageHint": "digital security"
     },
     {
       "id": "banner-4",
       "description": "Banner 4 - Flash Sale",
-      "imageUrl": "https://picsum.photos/seed/b4/1280/720",
+      "imageUrl": "/img/bann4.webp",
       "imageHint": "cyberpunk city"
     },
     {
       "id": "banner-5",
       "description": "Banner 5 - New Service",
-      "imageUrl": "https://picsum.photos/seed/b5/1280/720",
+      "imageUrl": "/img/bann5.webp",
       "imageHint": "future technology"
     }
   ]

@@ -4,7 +4,7 @@
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
-import { Zap, ShieldCheck, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Zap, ShieldCheck, Clock } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -126,7 +126,7 @@ export function HeroSection() {
                             alt={banner.title}
                             fill
                             className="object-cover"
-                            data-ai-hint={image?.imageHint}
+                            priority={index === 0}
                           />
                           <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent" />
                         </div>
