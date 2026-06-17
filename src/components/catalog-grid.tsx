@@ -184,61 +184,63 @@ export function CatalogGrid() {
       {/* Flash Sale Section */}
       {flashSaleItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <SectionHeader 
-            title="Flash Sale" 
-            icon="/img/bolt.gif" 
-            subtitle="Limited time offers with massive discounts."
-            rightElement={<FlashSaleTimer />}
-          />
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
-            {flashSaleItems.map((item) => {
-              const image = PlaceHolderImages.find((img) => img.id === item.imageId);
-              return (
-                <Link
-                  key={item.id}
-                  href={`/topup/${item.id}`}
-                  className="group bento-card p-0 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden border-primary/20 hover:border-primary/50"
-                >
-                  <div className="relative aspect-square w-full shrink-0 overflow-hidden">
-                    <Image
-                      src={image?.imageUrl || ""}
-                      alt={item.name}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      data-ai-hint={image?.imageHint}
-                    />
-                    {/* Discount Badge */}
-                    <div className="absolute top-0 left-0 bg-accent text-accent-foreground font-black text-[9px] md:text-[10px] px-2 py-1 rounded-br-lg shadow-lg z-10">
-                      -{item.discount}
+          <div className="bento-card p-5 md:p-8 bg-primary/5 border-primary/20">
+            <SectionHeader 
+              title="Flash Sale" 
+              icon="/img/bolt.gif" 
+              subtitle="Limited time offers with massive discounts."
+              rightElement={<FlashSaleTimer />}
+            />
+            <div className="flex overflow-x-auto gap-4 pb-4 snap-x scrollbar-hide">
+              {flashSaleItems.map((item) => {
+                const image = PlaceHolderImages.find((img) => img.id === item.imageId);
+                return (
+                  <Link
+                    key={item.id}
+                    href={`/topup/${item.id}`}
+                    className="group shrink-0 w-[140px] md:w-[180px] bento-card p-0 transition-all active:scale-95 flex flex-col aspect-[9/16] overflow-hidden border-primary/20 hover:border-primary/50 snap-start"
+                  >
+                    <div className="relative aspect-square w-full shrink-0 overflow-hidden">
+                      <Image
+                        src={image?.imageUrl || ""}
+                        alt={item.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        data-ai-hint={image?.imageHint}
+                      />
+                      {/* Discount Badge */}
+                      <div className="absolute top-0 left-0 bg-accent text-accent-foreground font-black text-[9px] md:text-[10px] px-2 py-1 rounded-br-lg shadow-lg z-10">
+                        -{item.discount}
+                      </div>
+                      {/* Urgency Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                      <div className="absolute bottom-1 right-2">
+                         <Zap className="h-3 w-3 text-primary fill-primary animate-pulse" />
+                      </div>
                     </div>
-                    {/* Urgency Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                    <div className="absolute bottom-1 right-2">
-                       <Zap className="h-3 w-3 text-primary fill-primary animate-pulse" />
+                    <div className="p-2.5 flex flex-col justify-between flex-1 min-w-0 bg-card/40">
+                      <div>
+                        <p className="text-[8px] md:text-[9px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
+                          {item.type}
+                        </p>
+                        <h3 className="line-clamp-1 text-[11px] md:text-sm font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
+                          {item.name}
+                        </h3>
+                      </div>
+                      
+                      <div className="mt-2">
+                        <p className="text-[10px] md:text-[12px] font-black text-primary leading-none">
+                          {item.salePrice}
+                        </p>
+                        <p className="text-[8px] md:text-[9px] text-muted-foreground line-through font-bold mt-0.5 opacity-60">
+                          {item.originalPrice}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-2.5 flex flex-col justify-between flex-1 min-w-0 bg-card/40">
-                    <div>
-                      <p className="text-[8px] md:text-[9px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
-                        {item.type}
-                      </p>
-                      <h3 className="line-clamp-1 text-[11px] md:text-sm font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
-                        {item.name}
-                      </h3>
-                    </div>
-                    
-                    <div className="mt-2">
-                      <p className="text-[10px] md:text-[12px] font-black text-primary leading-none">
-                        {item.salePrice}
-                      </p>
-                      <p className="text-[8px] md:text-[9px] text-muted-foreground line-through font-bold mt-0.5 opacity-60">
-                        {item.originalPrice}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
