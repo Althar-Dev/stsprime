@@ -140,6 +140,47 @@ export function CatalogGrid() {
 
   return (
     <section className="container mx-auto px-4 py-8 space-y-12 md:space-y-16">
+      {/* Populer Section */}
+      {populerItems.length > 0 && (
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <SectionHeader 
+            title="Populer" 
+            icon="/img/fire.gif" 
+            subtitle="Most loved and frequently used by the community."
+          />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {populerItems.map((item) => {
+              const image = PlaceHolderImages.find((img) => img.id === item.imageId);
+              return (
+                <Link
+                  key={item.id}
+                  href={`/topup/${item.id}`}
+                  className="group bento-card p-0 transition-all active:scale-95 flex flex-row aspect-[16/6] overflow-hidden"
+                >
+                  <div className="relative aspect-square h-full shrink-0 overflow-hidden border-r border-border/10">
+                    <Image
+                      src={image?.imageUrl || ""}
+                      alt={item.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      data-ai-hint={image?.imageHint}
+                    />
+                  </div>
+                  <div className="p-3 md:p-4 flex flex-col justify-center flex-1 min-w-0 bg-card/40">
+                    <p className="text-[8px] md:text-[10px] tracking-[0.15em] text-accent font-black uppercase mb-1">
+                      {item.type}
+                    </p>
+                    <h3 className="line-clamp-1 text-[12px] md:text-base font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
+                      {item.name}
+                    </h3>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Flash Sale Section */}
       {flashSaleItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -194,47 +235,6 @@ export function CatalogGrid() {
                         {item.originalPrice}
                       </p>
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Populer Section */}
-      {populerItems.length > 0 && (
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <SectionHeader 
-            title="Populer" 
-            icon="/img/fire.gif" 
-            subtitle="Most loved and frequently used by the community."
-          />
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {populerItems.map((item) => {
-              const image = PlaceHolderImages.find((img) => img.id === item.imageId);
-              return (
-                <Link
-                  key={item.id}
-                  href={`/topup/${item.id}`}
-                  className="group bento-card p-0 transition-all active:scale-95 flex flex-row aspect-[16/6] overflow-hidden"
-                >
-                  <div className="relative aspect-square h-full shrink-0 overflow-hidden border-r border-border/10">
-                    <Image
-                      src={image?.imageUrl || ""}
-                      alt={item.name}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      data-ai-hint={image?.imageHint}
-                    />
-                  </div>
-                  <div className="p-3 md:p-4 flex flex-col justify-center flex-1 min-w-0 bg-card/40">
-                    <p className="text-[8px] md:text-[10px] tracking-[0.15em] text-accent font-black uppercase mb-1">
-                      {item.type}
-                    </p>
-                    <h3 className="line-clamp-1 text-[12px] md:text-base font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
-                      {item.name}
-                    </h3>
                   </div>
                 </Link>
               );
