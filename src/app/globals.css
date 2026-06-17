@@ -129,19 +129,19 @@
   }
 
   @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 
   .animate-shimmer {
     background: linear-gradient(
       110deg,
-      transparent 30%,
-      rgba(255, 255, 255, 0.4) 50%,
-      transparent 70%
+      transparent 35%,
+      rgba(255, 255, 255, 0.6) 50%,
+      transparent 65%
     );
     background-size: 200% 100%;
-    animation: shimmer 2.5s infinite linear;
+    animation: shimmer 3s infinite linear;
   }
 }
 
