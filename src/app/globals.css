@@ -33,13 +33,11 @@
   }
   body {
     @apply bg-background text-foreground font-body;
-    background-image: radial-gradient(circle at 50% 0%, rgba(242, 255, 0, 0.08) 0%, transparent 50%);
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline tracking-tight;
   }
 
-  /* Custom Scrollbar for Webkit Browsers (Chrome, Safari, Edge) */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -53,21 +51,6 @@
   }
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-primary;
-  }
-}
-
-.glow-pulse {
-  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 1;
-    filter: drop-shadow(0 0 5px rgba(242, 255, 0, 0.3));
-  }
-  50% {
-    opacity: 0.8;
-    filter: drop-shadow(0 0 15px rgba(242, 255, 0, 0.6));
   }
 }
 
