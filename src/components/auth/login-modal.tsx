@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ShieldCheck, Mail, Lock, Chrome, UserPlus } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -32,7 +33,10 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] sm:max-w-[400px] max-h-[90vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none">
+      <DialogContent className={cn(
+        "w-[95vw] sm:max-w-[400px] max-h-[90vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none",
+        "modal-scrollbar"
+      )}>
         <div className="bg-primary p-6 md:p-8 flex flex-col items-center text-primary-foreground sticky top-0 z-10">
           <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center mb-4">
             {mode === "login" ? (

@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -91,6 +90,20 @@
   }
   .flash-sale-scrollbar::-webkit-scrollbar-thumb:hover {
     @apply bg-primary;
+  }
+
+  /* Custom Scrollbar for Modal */
+  .modal-scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+  .modal-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .modal-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-primary/20 rounded-full transition-colors;
+  }
+  .modal-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
   }
 }
 
