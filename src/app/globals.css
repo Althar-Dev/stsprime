@@ -137,11 +137,11 @@
     background: linear-gradient(
       110deg,
       transparent 35%,
-      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0.4) 50%,
       transparent 65%
     );
     background-size: 200% 100%;
-    animation: shimmer 6s infinite linear;
+    animation: shimmer 8s infinite linear;
   }
 }
 
