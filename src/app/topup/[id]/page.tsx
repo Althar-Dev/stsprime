@@ -63,10 +63,10 @@ export default function TopupPage() {
           </Link>
         </div>
 
-        {/* Product Hero Section - Based on provided reference */}
-        <div className="mb-10 md:mb-16 overflow-hidden rounded-[2rem] border border-border bg-card shadow-sm">
+        {/* Product Hero Section - Open Design (No Card) */}
+        <div className="mb-10 md:mb-16">
           {/* Banner Area */}
-          <div className="relative h-44 md:h-72 w-full overflow-hidden bg-muted">
+          <div className="relative h-44 md:h-80 w-full overflow-hidden rounded-3xl bg-muted shadow-lg">
             <Image 
               src={`https://picsum.photos/seed/${id}-banner/1200/400`} 
               alt="Banner Background"
@@ -78,10 +78,10 @@ export default function TopupPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
           </div>
 
-          {/* Info Strip Area */}
-          <div className="relative px-6 py-6 md:px-10 md:py-8 flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-center">
+          {/* Info Area */}
+          <div className="relative px-4 py-6 md:px-6 md:py-8 flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-center">
             {/* Overlapping Product Icon */}
-            <div className="relative -mt-20 md:-mt-28 h-32 w-32 md:h-48 md:w-48 shrink-0 rounded-2xl md:rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-card bg-background z-20">
+            <div className="relative -mt-20 md:-mt-32 h-32 w-32 md:h-52 md:w-52 shrink-0 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-background bg-background z-20">
               <Image 
                 src={itemImage.imageUrl} 
                 alt="Service" 
@@ -94,26 +94,26 @@ export default function TopupPage() {
             {/* Title and Features */}
             <div className="flex-1 space-y-3 z-10">
               <div className="space-y-1">
-                <h1 className="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none">
+                <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase leading-none">
                   {String(id).replace("-", " ")}
                 </h1>
-                <p className="text-xs md:text-sm text-muted-foreground font-black uppercase opacity-70">
+                <p className="text-xs md:text-base text-muted-foreground font-black uppercase opacity-70">
                   {itemImage.description || "Official Service"}
                 </p>
               </div>
 
-              {/* Feature Badges - Indonesian labels as per reference */}
-              <div className="flex flex-wrap gap-4 pt-1 md:pt-2">
-                <div className="flex items-center gap-2 text-[10px] md:text-xs font-black text-foreground">
-                  <Zap className="h-3.5 w-3.5 text-primary fill-primary" />
+              {/* Feature Badges */}
+              <div className="flex flex-wrap gap-4 pt-2">
+                <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
+                  <Zap className="h-4 w-4 text-primary fill-primary" />
                   <span>Proses Cepat</span>
                 </div>
-                <div className="flex items-center gap-2 text-[10px] md:text-xs font-black text-foreground">
-                  <MessageCircle className="h-3.5 w-3.5 text-primary fill-primary/20" />
+                <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
+                  <MessageCircle className="h-4 w-4 text-primary fill-primary/20" />
                   <span>Layanan Chat 24/7</span>
                 </div>
-                <div className="flex items-center gap-2 text-[10px] md:text-xs font-black text-foreground">
-                  <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
+                  <ShieldCheck className="h-4 w-4 text-primary" />
                   <span>Pembayaran Aman!</span>
                 </div>
               </div>
