@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Gamepad2, History, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft, LogOut, Settings, Coins } from "lucide-react";
+import { Gamepad2, History, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
@@ -195,7 +195,7 @@ export function Navbar() {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="cursor-pointer font-bold gap-2 flex justify-between items-center">
                           <div className="flex items-center gap-2">
-                            <Coins className="h-4 w-4 text-primary" />
+                            <img src="/img/coin.png" alt="STS Coin" className="h-4 w-4 object-contain" />
                             <span>STS Coin</span>
                           </div>
                           <span className="text-primary">0</span>
@@ -295,7 +295,7 @@ export function Navbar() {
                         {user && (
                           <div className="mb-4 p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
                             <div className="flex items-center gap-3">
-                              <Coins className="h-5 w-5 text-primary" />
+                              <img src="/img/coin.png" alt="STS Coin" className="h-5 w-5 object-contain" />
                               <span className="text-xs font-black">STS Coin</span>
                             </div>
                             <span className="text-sm font-black text-primary">0</span>
