@@ -46,7 +46,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
             )}
           </div>
           <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center text-accent-foreground">
-            {mode === "login" ? "Welcome Back" : "Join the Hub"}
+            {mode === "login" ? "Welcome back" : "Join the hub"}
           </DialogTitle>
           <DialogDescription className="text-accent-foreground/80 font-bold text-[10px] md:text-xs mt-1 text-center">
             {mode === "login" 
@@ -58,8 +58,8 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
         <div className="p-5 md:p-8 space-y-5 md:space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-[10px] md:text-xs font-black uppercase tracking-widest text-muted-foreground">
-                Email Address
+              <Label htmlFor="email" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground">
+                Email address
               </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -75,7 +75,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
             
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-[10px] md:text-xs font-black uppercase tracking-widest text-muted-foreground">
+                <Label htmlFor="password" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground">
                   Password
                 </Label>
                 {mode === "login" && (
@@ -98,8 +98,8 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
 
             {mode === "register" && (
               <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                <Label htmlFor="confirmPassword" className="text-[10px] md:text-xs font-black uppercase tracking-widest text-muted-foreground">
-                  Confirm Password
+                <Label htmlFor="confirmPassword" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground">
+                  Confirm password
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -119,7 +119,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
               className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform"
               disabled={isLoading}
             >
-              {isLoading ? "Processing..." : (mode === "login" ? "Sign In" : "Create Account")}
+              {isLoading ? "Processing..." : (mode === "login" ? "Sign in" : "Create account")}
             </Button>
           </form>
 

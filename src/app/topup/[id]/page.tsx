@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -92,26 +91,26 @@ export default function TopupPage() {
 
             <div className="flex-1 space-y-3 z-10">
               <div className="space-y-1">
-                <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase leading-none">
+                <h1 className="text-3xl md:text-5xl font-black tracking-tighter leading-none">
                   {String(id).replace("-", " ")}
                 </h1>
-                <p className="text-xs md:text-base text-muted-foreground font-black uppercase opacity-70">
-                  {itemImage.description || "Official Service"}
+                <p className="text-xs md:text-base text-muted-foreground font-black opacity-70">
+                  {itemImage.description || "Official service"}
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-4 pt-2">
                 <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
                   <Zap className="h-4 w-4 text-primary fill-primary" />
-                  <span>Proses Cepat</span>
+                  <span>Proses cepat</span>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
                   <MessageCircle className="h-4 w-4 text-primary fill-primary/20" />
-                  <span>Layanan Chat 24/7</span>
+                  <span>Layanan chat 24/7</span>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
                   <ShieldCheck className="h-4 w-4 text-primary" />
-                  <span>Pembayaran Aman!</span>
+                  <span>Pembayaran aman!</span>
                 </div>
               </div>
             </div>
@@ -123,15 +122,14 @@ export default function TopupPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Step 1: User Data */}
             <div className="bento-card p-5 md:p-8">
-              {/* Card Header Style */}
               <div className="-mx-5 -mt-5 mb-6 md:-mx-8 md:-mt-8 px-5 py-4 md:px-8 md:py-5 border-b border-border bg-muted/30 rounded-t-[calc(var(--radius)-1px)] flex items-center gap-3 md:gap-4">
                 <div className="flex h-6 w-6 md:h-8 md:w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-[10px] md:text-sm shadow-lg shadow-primary/20">1</div>
-                <h2 className="text-sm md:text-xl font-black tracking-tight uppercase">Masukkan ID Pengguna</h2>
+                <h2 className="text-sm md:text-xl font-black tracking-tight">Masukkan ID pengguna</h2>
               </div>
               
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="userId" className="text-[10px] md:text-xs font-black text-muted-foreground uppercase tracking-wider">User ID</Label>
+                  <Label htmlFor="userId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">User ID</Label>
                   <Input 
                     id="userId" 
                     placeholder="e.g. 12345678" 
@@ -141,7 +139,7 @@ export default function TopupPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-black text-muted-foreground uppercase tracking-wider">Zone ID</Label>
+                  <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">Zone ID</Label>
                   <Input 
                     id="zoneId" 
                     placeholder="e.g. 1234" 
@@ -155,10 +153,9 @@ export default function TopupPage() {
 
             {/* Step 2: Select Pack */}
             <div className="bento-card p-5 md:p-8">
-              {/* Card Header Style */}
               <div className="-mx-5 -mt-5 mb-6 md:-mx-8 md:-mt-8 px-5 py-4 md:px-8 md:py-5 border-b border-border bg-muted/30 rounded-t-[calc(var(--radius)-1px)] flex items-center gap-3 md:gap-4">
                 <div className="flex h-6 w-6 md:h-8 md:w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-[10px] md:text-sm shadow-lg shadow-primary/20">2</div>
-                <h2 className="text-sm md:text-xl font-black tracking-tight uppercase">Pilih Nominal Topup</h2>
+                <h2 className="text-sm md:text-xl font-black tracking-tight">Pilih nominal topup</h2>
               </div>
               
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
@@ -171,7 +168,7 @@ export default function TopupPage() {
                     }`}
                   >
                     {pack.popular && (
-                      <Badge className="absolute -top-1.5 -right-1 bg-accent text-[9px] text-accent-foreground font-black px-2 py-0.5">Popular</Badge>
+                      <Badge className="absolute -top-1.5 -right-1 bg-accent text-[9px] text-accent-foreground font-black px-2 py-0.5 border-none">Populer</Badge>
                     )}
                     <span className="text-[10px] md:text-xs font-bold text-muted-foreground truncate">{pack.amount}</span>
                     <span className="text-[10px] md:text-xs text-primary font-black mt-0.5">{pack.bonus}</span>
@@ -186,10 +183,9 @@ export default function TopupPage() {
           <div className="space-y-6">
             {/* Step 3: Payment */}
             <div className="bento-card p-5 md:p-8">
-              {/* Card Header Style */}
               <div className="-mx-5 -mt-5 mb-6 md:-mx-8 md:-mt-8 px-5 py-4 md:px-8 md:py-5 border-b border-border bg-muted/30 rounded-t-[calc(var(--radius)-1px)] flex items-center gap-3 md:gap-4">
                 <div className="flex h-6 w-6 md:h-8 md:w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-[10px] md:text-sm shadow-lg shadow-primary/20">3</div>
-                <h2 className="text-sm md:text-xl font-black tracking-tight uppercase">Metode Pembayaran</h2>
+                <h2 className="text-sm md:text-xl font-black tracking-tight">Metode pembayaran</h2>
               </div>
               
               <div className="grid grid-cols-1 gap-3">
@@ -217,7 +213,7 @@ export default function TopupPage() {
             <div className="bento-card p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 sticky bottom-4 z-40 backdrop-blur-md">
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h3 className="text-lg font-black tracking-tight uppercase">Ringkasan Pesanan</h3>
+                  <h3 className="text-lg font-black tracking-tight">Ringkasan pesanan</h3>
                   <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
                     <span>Target ID</span>
                     <span className="text-foreground">{userId || "-"} {zoneId ? `(${zoneId})` : ""}</span>
@@ -227,7 +223,7 @@ export default function TopupPage() {
                     <span className="text-foreground">{selectedPack ? PACKS.find(p => p.id === selectedPack)?.amount : "-"}</span>
                   </div>
                   <div className="flex justify-between items-end pt-2">
-                    <span className="text-sm font-black uppercase">Total Pembayaran</span>
+                    <span className="text-sm font-black">Total pembayaran</span>
                     <span className="text-2xl font-black text-primary">
                       {selectedPack ? PACKS.find(p => p.id === selectedPack)?.price : "---"}
                     </span>
@@ -237,9 +233,9 @@ export default function TopupPage() {
                   size="lg" 
                   disabled={!userId || !selectedPack || !selectedPayment}
                   onClick={handleOrder}
-                  className="h-14 md:h-16 rounded-full px-8 text-lg font-black bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full uppercase"
+                  className="h-14 md:h-16 rounded-full px-8 text-lg font-black bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
                 >
-                  Bayar Sekarang
+                  Bayar sekarang
                 </Button>
               </div>
             </div>

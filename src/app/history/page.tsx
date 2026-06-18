@@ -31,15 +31,15 @@ export default function HistoryPage() {
             <div className="bento-card p-5 md:p-6">
               <h3 className="font-black text-sm mb-4 flex items-center gap-2">
                 <ShoppingBag className="h-4 w-4 text-primary" />
-                Quick Stats
+                Quick stats
               </h3>
               <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
                 <div className="p-4 bg-muted/30 rounded-xl border border-border">
-                  <p className="text-[10px] text-muted-foreground font-black tracking-widest">Total Orders</p>
+                  <p className="text-[10px] text-muted-foreground font-black tracking-widest">Total orders</p>
                   <p className="text-xl md:text-2xl font-black">24</p>
                 </div>
                 <div className="p-4 bg-muted/30 rounded-xl border border-border">
-                  <p className="text-[10px] text-muted-foreground font-black tracking-widest">Total Spent</p>
+                  <p className="text-[10px] text-muted-foreground font-black tracking-widest">Total spent</p>
                   <p className="text-xl md:text-2xl font-black text-primary">Rp 1.450k</p>
                 </div>
               </div>
@@ -48,7 +48,7 @@ export default function HistoryPage() {
             <div className="bento-card p-5 md:p-6 bg-primary/5 hidden sm:block">
               <h3 className="font-black text-sm mb-4 flex items-center gap-2">
                 <Clock className="h-4 w-4 text-primary" />
-                Top Pick
+                Top pick
               </h3>
               <div className="flex items-center gap-4">
                 <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-primary flex items-center justify-center font-headline font-black text-primary-foreground text-sm md:text-base">ML</div>
@@ -96,7 +96,7 @@ export default function HistoryPage() {
                   
                   <div className="flex items-center gap-4 md:gap-6 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 border-border/50 pt-4 sm:pt-0">
                     <div className="text-left sm:text-right">
-                      <p className="text-[9px] md:text-[10px] text-muted-foreground font-black">Paid Amount</p>
+                      <p className="text-[9px] md:text-[10px] text-muted-foreground font-black">Paid amount</p>
                       <p className="font-black text-lg md:text-xl text-foreground">{order.price}</p>
                     </div>
                     <Link href={`/topup/mlbb`}>

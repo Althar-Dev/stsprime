@@ -135,7 +135,7 @@ function FlashSaleTimer() {
         <div className="flex items-center justify-center px-1.5 md:px-2 py-1 rounded bg-background border border-primary/20 text-primary font-black text-[10px] md:text-xs min-w-[24px] md:min-w-[30px]">
           {value}
         </div>
-        <span className="text-[6px] md:text-[8px] text-muted-foreground font-black tracking-tighter mt-0.5 uppercase">{label}</span>
+        <span className="text-[6px] md:text-[8px] text-muted-foreground font-black tracking-tighter mt-0.5">{label}</span>
       </div>
       {showSeparator && <span className="text-primary font-black text-[10px] md:text-xs mb-3">:</span>}
     </div>
@@ -260,7 +260,7 @@ export function CatalogGrid() {
                     <h3 className="text-xs md:text-lg lg:text-xl font-black tracking-tight text-card-foreground leading-tight mb-0.5 md:mb-1 group-hover:text-primary transition-colors truncate">
                       {item.name}
                     </h3>
-                    <p className="text-[8px] md:text-sm font-bold text-muted-foreground opacity-80 uppercase tracking-wide truncate">
+                    <p className="text-[8px] md:text-sm font-bold text-muted-foreground opacity-80 tracking-wide truncate">
                       {item.type}
                     </p>
                   </div>
@@ -300,7 +300,7 @@ export function CatalogGrid() {
 
                 <div className="relative z-10">
                   <div className="mb-6">
-                    <p className="text-[10px] md:text-xs text-white font-black uppercase tracking-wider drop-shadow-md">
+                    <p className="text-[10px] md:text-xs text-white font-black tracking-wider drop-shadow-md">
                       Limited time offers with massive discounts.
                     </p>
                   </div>
@@ -331,7 +331,7 @@ export function CatalogGrid() {
                           </div>
                           <div className="p-2.5 flex flex-col justify-between flex-1 min-w-0">
                             <div>
-                              <p className="text-[8px] md:text-[9px] tracking-[0.1em] text-accent font-black uppercase mb-0.5">
+                              <p className="text-[8px] md:text-[9px] tracking-[0.1em] text-accent font-black mb-0.5">
                                 {item.type}
                               </p>
                               <h3 className="line-clamp-1 text-[11px] md:text-sm font-black leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">
@@ -438,7 +438,7 @@ export function CatalogGrid() {
                     )}
                   </div>
                   <div className="p-2 md:p-3 flex flex-col justify-center flex-1 bg-card/30">
-                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate uppercase mb-0.5">
+                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate mb-0.5">
                       {item.type}
                     </p>
                     <h3 className="line-clamp-1 text-[10px] md:sm font-black text-foreground group-hover:text-primary transition-colors">
