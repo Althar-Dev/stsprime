@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { Check, ChevronLeft, CreditCard, ShieldCheck, Wallet } from "lucide-react";
+import { Check, ChevronLeft, CreditCard, ShieldCheck, Wallet, Zap, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/logo";
 
@@ -63,23 +63,25 @@ export default function TopupPage() {
           </Link>
         </div>
 
-        {/* Product Info - Full Width Header with Banner */}
-        <div className="mb-10 md:mb-16 relative overflow-hidden rounded-[2rem] border border-border bg-muted/20">
-          {/* Background Banner Image */}
-          <div className="absolute inset-0 z-0">
+        {/* Product Hero Section - Based on provided reference */}
+        <div className="mb-10 md:mb-16 overflow-hidden rounded-[2rem] border border-border bg-card shadow-sm">
+          {/* Banner Area */}
+          <div className="relative h-44 md:h-72 w-full overflow-hidden bg-muted">
             <Image 
-              src="https://picsum.photos/seed/banner/1200/400" 
+              src={`https://picsum.photos/seed/${id}-banner/1200/400`} 
               alt="Banner Background"
               fill
-              className="object-cover opacity-10 dark:opacity-30 blur-[2px]"
+              className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
+            {/* Soft gradient overlay at the bottom for text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
           </div>
 
-          <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start md:items-center p-6 md:p-12">
-            {/* Image Container */}
-            <div className="relative h-44 w-full md:h-52 md:w-52 shrink-0 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-background">
+          {/* Info Strip Area */}
+          <div className="relative px-6 py-6 md:px-10 md:py-8 flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-center">
+            {/* Overlapping Product Icon */}
+            <div className="relative -mt-20 md:-mt-28 h-32 w-32 md:h-48 md:w-48 shrink-0 rounded-2xl md:rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-card bg-background z-20">
               <Image 
                 src={itemImage.imageUrl} 
                 alt="Service" 
@@ -88,19 +90,31 @@ export default function TopupPage() {
                 data-ai-hint={itemImage.imageHint}
               />
             </div>
-            <div className="space-y-4 max-w-2xl">
-              <h1 className="text-4xl md:text-6xl font-black tracking-tighter capitalize">{String(id).replace("-", " ")}</h1>
-              <p className="text-sm md:text-base text-muted-foreground font-medium leading-relaxed max-w-xl">
-                Top up {String(id).replace("-", " ")} instantly! Just enter your ID, select the pack, and pay. Your top-up is processed immediately.
-              </p>
-              <div className="flex flex-wrap gap-3 pt-2">
-                <div className="flex items-center gap-2 bg-background/50 backdrop-blur-sm px-4 py-2 rounded-full text-[10px] md:text-xs font-black tracking-tighter uppercase text-primary border border-primary/20">
-                  <ShieldCheck className="h-4 w-4" />
-                  Official & Secure
+
+            {/* Title and Features */}
+            <div className="flex-1 space-y-3 z-10">
+              <div className="space-y-1">
+                <h1 className="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none">
+                  {String(id).replace("-", " ")}
+                </h1>
+                <p className="text-xs md:text-sm text-muted-foreground font-black uppercase opacity-70">
+                  {itemImage.description || "Official Service"}
+                </p>
+              </div>
+
+              {/* Feature Badges - Indonesian labels as per reference */}
+              <div className="flex flex-wrap gap-4 pt-1 md:pt-2">
+                <div className="flex items-center gap-2 text-[10px] md:text-xs font-black text-foreground">
+                  <Zap className="h-3.5 w-3.5 text-primary fill-primary" />
+                  <span>Proses Cepat</span>
                 </div>
-                <div className="flex items-center gap-2 bg-background/50 backdrop-blur-sm px-4 py-2 rounded-full text-[10px] md:text-xs font-black tracking-tighter uppercase text-primary border border-primary/20">
-                  <CreditCard className="h-4 w-4" />
-                  Fast Payment
+                <div className="flex items-center gap-2 text-[10px] md:text-xs font-black text-foreground">
+                  <MessageCircle className="h-3.5 w-3.5 text-primary fill-primary/20" />
+                  <span>Layanan Chat 24/7</span>
+                </div>
+                <div className="flex items-center gap-2 text-[10px] md:text-xs font-black text-foreground">
+                  <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                  <span>Pembayaran Aman!</span>
                 </div>
               </div>
             </div>
@@ -114,7 +128,7 @@ export default function TopupPage() {
             <div className="bento-card p-5 md:p-8">
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">1</div>
-                <h2 className="text-lg md:text-xl font-black tracking-tight">Enter user ID</h2>
+                <h2 className="text-lg md:text-xl font-black tracking-tight">Masukkan ID Pengguna</h2>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
@@ -144,7 +158,7 @@ export default function TopupPage() {
             <div className="bento-card p-5 md:p-8">
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">2</div>
-                <h2 className="text-lg md:text-xl font-black tracking-tight">Select amount</h2>
+                <h2 className="text-lg md:text-xl font-black tracking-tight">Pilih Nominal Topup</h2>
               </div>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
                 {PACKS.map((pack) => (
@@ -173,7 +187,7 @@ export default function TopupPage() {
             <div className="bento-card p-5 md:p-8">
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">3</div>
-                <h2 className="text-lg md:text-xl font-black tracking-tight">Payment</h2>
+                <h2 className="text-lg md:text-xl font-black tracking-tight">Metode Pembayaran</h2>
               </div>
               <div className="grid grid-cols-1 gap-3">
                 {PAYMENT_METHODS.map((method) => (
@@ -200,17 +214,17 @@ export default function TopupPage() {
             <div className="bento-card p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 sticky bottom-4 z-40 backdrop-blur-md">
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h3 className="text-lg font-black">Order Summary</h3>
+                  <h3 className="text-lg font-black">Ringkasan Pesanan</h3>
                   <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
                     <span>Target ID</span>
                     <span className="text-foreground">{userId || "-"} {zoneId ? `(${zoneId})` : ""}</span>
                   </div>
                   <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
-                    <span>Pack</span>
+                    <span>Paket</span>
                     <span className="text-foreground">{selectedPack ? PACKS.find(p => p.id === selectedPack)?.amount : "-"}</span>
                   </div>
                   <div className="flex justify-between items-end pt-2">
-                    <span className="text-sm font-black">Total Price</span>
+                    <span className="text-sm font-black">Total Pembayaran</span>
                     <span className="text-2xl font-black text-primary">
                       {selectedPack ? PACKS.find(p => p.id === selectedPack)?.price : "---"}
                     </span>
@@ -222,7 +236,7 @@ export default function TopupPage() {
                   onClick={handleOrder}
                   className="h-14 md:h-16 rounded-full px-8 text-lg font-black bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
                 >
-                  Top up now
+                  Bayar Sekarang
                 </Button>
               </div>
             </div>
