@@ -169,7 +169,10 @@ export function Navbar() {
                     <SearchInput />
                   </Suspense>
                   
-                  <ThemeToggle />
+                  {/* ThemeToggle disembunyikan di mobile baris atas ini, karena pindah ke baris search */}
+                  <div className="hidden lg:block">
+                    <ThemeToggle />
+                  </div>
                   
                   {user ? (
                     <DropdownMenu>
@@ -304,16 +307,17 @@ export function Navbar() {
 
           {/* Mobile Search Bar Row (Only shown when not in full search mode) */}
           {!isSearchOpen && (
-            <div className="lg:hidden pb-4 pt-1 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="lg:hidden pb-4 pt-1 animate-in fade-in slide-in-from-top-2 duration-300 flex items-center gap-2">
               <div 
                 onClick={() => setIsSearchOpen(true)}
-                className="relative group cursor-pointer"
+                className="relative group cursor-pointer flex-1"
               >
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-hover:text-primary transition-colors" />
                 <div className="h-10 w-full rounded-full border border-border bg-muted/40 pl-10 flex items-center text-sm font-bold text-muted-foreground">
                   Cari game atau layanan...
                 </div>
               </div>
+              <ThemeToggle />
             </div>
           )}
         </div>
