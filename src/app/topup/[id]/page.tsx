@@ -9,10 +9,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { Check, ChevronLeft, CreditCard, ShieldCheck, Wallet, Zap, MessageCircle, ChevronUp } from "lucide-react";
+import { Check, ChevronLeft, CreditCard, ShieldCheck, Wallet, Zap, MessageCircle, ChevronUp, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const PACKS = [
   { id: 1, amount: "86 diamonds", price: "Rp 19,500", bonus: "+9 bonus" },
@@ -38,15 +45,20 @@ export default function TopupPage() {
   const [userId, setUserId] = useState("");
   const [zoneId, setZoneId] = useState("");
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
 
   const itemImage = PlaceHolderImages.find((img) => img.id === id) || PlaceHolderImages[0];
+  const selectedPackData = PACKS.find(p => p.id === selectedPack);
+  const selectedPaymentData = PAYMENT_METHODS.find(m => m.id === selectedPayment);
 
   const handleOrder = () => {
     if (!userId || !selectedPack || !selectedPayment) return;
-    router.push("/status?orderId=STS-" + Math.floor(Math.random() * 90000 + 10000));
+    setShowCheckout(true);
   };
 
-  const selectedPackData = PACKS.find(p => p.id === selectedPack);
+  const confirmOrder = () => {
+    router.push("/status?orderId=STS-" + Math.floor(Math.random() * 90000 + 10000));
+  };
 
   const StepHeader = ({ number, title }: { number: number; title: string }) => (
     <div className="-mx-5 -mt-5 mb-6 md:-mx-8 md:-mt-8 flex items-stretch overflow-hidden rounded-t-md bg-muted/30">
@@ -61,7 +73,6 @@ export default function TopupPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Sticky Header Nav */}
       <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/10">
         <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
           <Button 
@@ -81,7 +92,6 @@ export default function TopupPage() {
 
       <main className="flex-grow pb-32 lg:pb-10">
         <div className="container mx-auto px-4 py-6 md:py-10">
-          {/* Product Hero Section - No Card Wrapper */}
           <div className="mb-10 md:mb-16">
             <div className="relative h-44 md:h-80 w-full overflow-hidden rounded-md bg-muted shadow-lg">
               <Image 
@@ -134,12 +144,9 @@ export default function TopupPage() {
           </div>
 
           <div className="grid gap-8 lg:grid-cols-3 items-start">
-            {/* Form Content - Steps on the left */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Step 1: User Data */}
               <div className="bento-card !rounded-md p-5 md:p-8">
                 <StepHeader number={1} title="masukkan data akun" />
-                
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="userId" className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-wider">user id</Label>
@@ -164,10 +171,8 @@ export default function TopupPage() {
                 </div>
               </div>
 
-              {/* Step 2: Select Pack */}
               <div className="bento-card !rounded-md p-5 md:p-8">
                 <StepHeader number={2} title="pilih nominal topup" />
-                
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
                   {PACKS.map((pack) => (
                     <button
@@ -188,10 +193,8 @@ export default function TopupPage() {
                 </div>
               </div>
 
-              {/* Step 3: Payment */}
               <div className="bento-card !rounded-md p-5 md:p-8">
                 <StepHeader number={3} title="metode pembayaran" />
-                
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {PAYMENT_METHODS.map((method) => (
                     <button
@@ -214,7 +217,6 @@ export default function TopupPage() {
               </div>
             </div>
 
-            {/* Sidebar Content - Order Summary (Desktop Sticky) */}
             <div className="hidden lg:block lg:sticky lg:top-24 space-y-6">
               <div className="bento-card !rounded-md p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 backdrop-blur-md">
                 <div className="space-y-6">
@@ -250,10 +252,8 @@ export default function TopupPage() {
         </div>
       </main>
 
-      {/* Mobile Sticky Summary Bar - Drawer Style from reference */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border p-5 pb-6 animate-in slide-in-from-bottom duration-300 rounded-t-md shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
         <div className="container mx-auto space-y-4">
-          {/* Expanded Details Section */}
           {isDetailsOpen && selectedPack && (
             <div className="mb-2 space-y-2 border-b border-border pb-4 animate-in slide-in-from-bottom-2 duration-300">
               <div className="flex justify-between text-[11px] font-bold text-muted-foreground">
@@ -275,7 +275,6 @@ export default function TopupPage() {
             </div>
           )}
 
-          {/* Product and Pack Info with Border */}
           <div className="flex items-center justify-between p-3 border border-border rounded-md bg-card/30 min-h-[64px]">
             {selectedPack ? (
               <>
@@ -312,7 +311,6 @@ export default function TopupPage() {
             )}
           </div>
 
-          {/* Large Action Button */}
           <div className="space-y-3">
              <Button 
               disabled={!userId || !selectedPack || !selectedPayment}
@@ -324,6 +322,74 @@ export default function TopupPage() {
           </div>
         </div>
       </div>
+
+      <Dialog open={showCheckout} onOpenChange={setShowCheckout}>
+        <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-border bg-background rounded-xl">
+          <DialogHeader className="p-6 md:p-8 bg-muted/30 border-b border-border">
+            <DialogTitle className="text-xl md:text-2xl font-black tracking-tight flex items-center gap-3">
+              <AlertCircle className="h-6 w-6 text-primary" />
+              konfirmasi pesanan
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="p-6 md:p-8 space-y-8">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-2 border-b border-border/50">
+                <span className="text-xs font-bold text-muted-foreground">item</span>
+                <span className="text-sm font-black">{String(id).replace("-", " ")}</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-border/50">
+                <span className="text-xs font-bold text-muted-foreground">target id</span>
+                <span className="text-sm font-black text-primary">{userId} {zoneId ? `(${zoneId})` : ""}</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-border/50">
+                <span className="text-xs font-bold text-muted-foreground">nominal</span>
+                <span className="text-sm font-black">{selectedPackData?.amount}</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-border/50">
+                <span className="text-xs font-bold text-muted-foreground">metode</span>
+                <span className="text-sm font-black">{selectedPaymentData?.name}</span>
+              </div>
+            </div>
+
+            <div className="bg-primary/5 p-5 rounded-lg border border-primary/20 space-y-3">
+              <div className="flex justify-between text-xs font-bold text-muted-foreground">
+                <span>harga paket</span>
+                <span className="text-foreground">{selectedPackData?.price}</span>
+              </div>
+              <div className="flex justify-between text-xs font-bold text-muted-foreground">
+                <span>biaya layanan</span>
+                <span className="text-foreground">Rp 0</span>
+              </div>
+              <Separator className="bg-primary/20" />
+              <div className="flex justify-between items-center pt-1">
+                <span className="text-sm font-black">total bayar</span>
+                <span className="text-xl font-black text-primary">{selectedPackData?.price}</span>
+              </div>
+            </div>
+            
+            <p className="text-[10px] text-muted-foreground text-center font-bold">
+              pastikan data akun dan nominal sudah benar sebelum melanjutkan.
+            </p>
+          </div>
+
+          <DialogFooter className="p-6 md:p-8 bg-muted/30 border-t border-border flex flex-col sm:flex-row gap-3">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowCheckout(false)}
+              className="flex-1 h-11 rounded-lg font-bold border-border"
+            >
+              batal
+            </Button>
+            <Button 
+              onClick={confirmOrder}
+              className="flex-1 h-11 rounded-lg bg-primary text-primary-foreground font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform"
+            >
+              pesan sekarang
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
