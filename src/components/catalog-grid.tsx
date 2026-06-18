@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -341,27 +342,27 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group bento-card p-0 transition-all active:scale-95 aspect-square relative overflow-hidden hover:scale-[1.03] hover:shadow-lg"
+                  className="group bento-card p-0 transition-all active:scale-95 flex flex-col overflow-hidden hover:scale-[1.03] hover:shadow-lg h-full"
                 >
-                  <Image
-                    src={image?.imageUrl || ""}
-                    alt={item.name}
-                    width={400}
-                    height={400}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    data-ai-hint={image?.imageHint}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-90" />
-                  {item.tag && (
-                    <Badge className="absolute left-1.5 top-1.5 bg-primary/90 text-primary-foreground text-[8px] md:text-[9px] font-black tracking-tighter border-none px-1.5 py-0.5 shadow-lg">
-                      {item.tag}
-                    </Badge>
-                  )}
-                  <div className="absolute bottom-0 left-0 w-full p-2 md:p-3">
-                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate">
+                  <div className="relative aspect-square w-full overflow-hidden shrink-0">
+                    <Image
+                      src={image?.imageUrl || ""}
+                      alt={item.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      data-ai-hint={image?.imageHint}
+                    />
+                    {item.tag && (
+                      <Badge className="absolute left-1.5 top-1.5 bg-primary text-primary-foreground text-[8px] md:text-[9px] font-black tracking-tighter border-none px-1.5 py-0.5 shadow-lg">
+                        {item.tag}
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="p-2 md:p-3 flex flex-col justify-center flex-1 bg-card/30">
+                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate uppercase mb-0.5">
                       {item.type}
                     </p>
-                    <h3 className="line-clamp-1 text-[10px] md:text-sm font-black text-foreground">
+                    <h3 className="line-clamp-1 text-[10px] md:text-sm font-black text-foreground group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
                   </div>
