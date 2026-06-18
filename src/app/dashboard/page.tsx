@@ -93,17 +93,14 @@ export default function DashboardPage() {
             </div>
 
             {/* STS Coin Bento Card */}
-            <div className="bento-card p-6 relative overflow-hidden bg-gradient-to-br from-primary/10 via-card to-card border-primary/20 group">
-              <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-shimmer" />
-              
+            <div className="bento-card p-6 relative overflow-hidden border-primary/20 bg-card/50">
               <div className="relative z-10">
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <p className="text-[10px] text-muted-foreground font-black tracking-widest">SALDO DIGITAL</p>
                     <h3 className="font-headline text-2xl font-black text-foreground mt-1">STS Coin</h3>
                   </div>
-                  <img src="/img/coin.png" alt="STS Coin" className="h-10 w-10 object-contain animate-pulse" />
+                  <img src="/img/coin.png" alt="STS Coin" className="h-10 w-10 object-contain" />
                 </div>
                 <div className="flex items-baseline gap-1 mt-2">
                   <span className="text-4xl font-black text-primary">0</span>
