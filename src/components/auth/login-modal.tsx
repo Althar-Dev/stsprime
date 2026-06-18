@@ -5,12 +5,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, Mail, Lock, UserPlus } from "lucide-react";
+import { ShieldCheck, Mail, Lock, UserPlus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -53,7 +54,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         
-        // Simpan data profil pengguna ke Firestore tanpa await (optimistic)
+        // Simpan data profil pengguna ke Firestore
         setDoc(doc(db, "users", user.uid), {
           email: user.email,
           displayName: "",
@@ -87,21 +88,28 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
-        "w-[95vw] sm:max-w-[400px] max-h-[90vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none",
+        "w-[95vw] sm:max-w-[400px] max-h-[90vh] p-0 overflow-hidden border-border bg-background rounded-2xl sm:rounded-3xl outline-none",
         "modal-scrollbar"
       )}>
-        <div className="p-6 md:p-8 flex flex-col items-center border-b border-border bg-primary/10 sticky top-0 z-10">
-          <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-primary flex items-center justify-center mb-4">
+        {/* Custom Close Button for Accent Header */}
+        <DialogPrimitive.Close className="absolute right-4 top-4 z-20 rounded-full p-1 text-accent-foreground/70 opacity-70 ring-offset-accent transition-opacity hover:opacity-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
+
+        {/* Header dengan Warna Accent */}
+        <div className="p-6 md:p-8 flex flex-col items-center border-b border-border bg-accent sticky top-0 z-10">
+          <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-accent-foreground/20 backdrop-blur-sm flex items-center justify-center mb-4">
             {mode === "login" ? (
-              <ShieldCheck className="h-6 w-6 md:h-7 md:w-7 text-primary-foreground" />
+              <ShieldCheck className="h-6 w-6 md:h-7 md:w-7 text-accent-foreground" />
             ) : (
-              <UserPlus className="h-6 w-6 md:h-7 md:w-7 text-primary-foreground" />
+              <UserPlus className="h-6 w-6 md:h-7 md:w-7 text-accent-foreground" />
             )}
           </div>
-          <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center text-foreground">
+          <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center text-accent-foreground">
             {mode === "login" ? "Selamat Datang" : "Gabung di STS Pedia"}
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground font-bold text-[10px] md:text-xs mt-1 text-center">
+          <DialogDescription className="text-accent-foreground/80 font-bold text-[10px] md:text-xs mt-1 text-center">
             {mode === "login" 
               ? "Masuk untuk melihat riwayat pesanan dan checkout lebih cepat" 
               : "Buat akun untuk mulai memantau semua transaksi Anda"}
