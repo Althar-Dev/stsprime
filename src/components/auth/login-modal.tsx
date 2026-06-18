@@ -5,10 +5,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, Mail, Lock, UserPlus, X } from "lucide-react";
+import { ShieldCheck, Mail, Lock, UserPlus, X, User, Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
@@ -24,8 +24,11 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   const auth = useAuth();
   const db = useFirestore();
@@ -52,25 +55,27 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
           title: "Berhasil masuk",
           description: "Selamat datang kembali di STS Pedia!",
         });
-        onOpenChange(false);
       } else {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         
+        // Update basic profile
+        await updateProfile(user, { displayName });
+
         const userData = {
           email: user.email,
-          displayName: "",
+          displayName: displayName,
           createdAt: new Date().toISOString(),
         };
 
         const userDocRef = doc(db, "users", user.uid);
         
-        // Use non-blocking mutation with proper error surfacing
+        // Save to Firestore with contextual error handling
         setDoc(userDocRef, userData)
           .catch(async (serverError) => {
             const permissionError = new FirestorePermissionError({
               path: userDocRef.path,
-              operation: 'create',
+              operation: 'write',
               requestResourceData: userData,
             } satisfies SecurityRuleContext);
 
@@ -79,15 +84,15 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
 
         toast({
           title: "Akun berhasil dibuat",
-          description: "Selamat bergabung di STS Pedia!",
+          description: `Selamat bergabung, ${displayName}!`,
         });
-        onOpenChange(false);
       }
+      onOpenChange(false);
     } catch (error: any) {
       let message = "Terjadi kesalahan saat mencoba masuk.";
       
       if (error.code === 'auth/configuration-not-found') {
-        message = "Metode Email/Password belum diaktifkan di Firebase Console. Silakan aktifkan di Authentication > Sign-in method.";
+        message = "Metode Email/Password belum diaktifkan di Firebase Console.";
       } else if (error.code === 'auth/invalid-credential') {
         message = "Email atau password salah.";
       } else if (error.code === 'auth/email-already-in-use') {
@@ -109,6 +114,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
   const toggleMode = () => {
     setMode(mode === "login" ? "register" : "login");
     setEmail("");
+    setDisplayName("");
     setPassword("");
     setConfirmPassword("");
   };
@@ -133,19 +139,39 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
             )}
           </div>
           <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center text-accent-foreground">
-            {mode === "login" ? "Selamat Datang" : "Gabung di STS Pedia"}
+            {mode === "login" ? "Selamat Datang" : "Daftar Akun"}
           </DialogTitle>
           <DialogDescription className="text-accent-foreground/80 font-bold text-[10px] md:text-xs mt-1 text-center">
             {mode === "login" 
               ? "Masuk untuk akses cepat ke semua layanan kami" 
-              : "Buat akun untuk melacak setiap transaksi Anda"}
+              : "Buat akun untuk mendapatkan fitur eksklusif"}
           </DialogDescription>
         </div>
 
         <div className="p-5 md:p-8 space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
+            {mode === "register" && (
+              <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                <Label htmlFor="username" className="text-[10px] font-black tracking-widest text-muted-foreground">
+                  Username
+                </Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    id="username" 
+                    type="text" 
+                    placeholder="Nama lengkap atau username" 
+                    className="pl-10 h-11 bg-muted/30 border-border text-sm font-bold"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">
+              <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground">
                 Alamat Email
               </Label>
               <div className="relative">
@@ -164,8 +190,8 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
             
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">
-                  Password
+                <Label htmlFor="password" className="text-[10px] font-black tracking-widest text-muted-foreground">
+                  Kata Sandi
                 </Label>
                 {mode === "login" && (
                   <button type="button" className="text-[10px] font-black text-primary hover:underline">
@@ -177,32 +203,46 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
                   id="password" 
-                  type="password" 
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••" 
-                  className="pl-10 h-11 bg-muted/30 border-border text-sm font-bold"
+                  className="pl-10 pr-10 h-11 bg-muted/30 border-border text-sm font-bold"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
             </div>
 
             {mode === "register" && (
               <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                <Label htmlFor="confirmPassword" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">
-                  Konfirmasi Password
+                <Label htmlFor="confirmPassword" className="text-[10px] font-black tracking-widest text-muted-foreground">
+                  Konfirmasi Kata Sandi
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input 
                     id="confirmPassword" 
-                    type="password" 
+                    type={showConfirmPassword ? "text" : "password"}
                     placeholder="••••••••" 
-                    className="pl-10 h-11 bg-muted/30 border-border text-sm font-bold"
+                    className="pl-10 pr-10 h-11 bg-muted/30 border-border text-sm font-bold"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
             )}
@@ -212,7 +252,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
               className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform mt-2"
               disabled={isLoading}
             >
-              {isLoading ? "Memproses..." : (mode === "login" ? "Masuk Sekarang" : "Buat Akun")}
+              {isLoading ? "Memproses..." : (mode === "login" ? "Masuk Sekarang" : "Daftar Akun")}
             </Button>
           </form>
 
