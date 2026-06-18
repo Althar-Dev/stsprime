@@ -193,7 +193,7 @@ export function Navbar() {
                           </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="cursor-pointer font-bold gap-2 flex justify-between items-center">
+                        <DropdownMenuItem className="cursor-default font-bold gap-2 flex justify-between items-center">
                           <div className="flex items-center gap-2">
                             <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 object-contain" />
                             <span>STSCoin</span>
@@ -201,11 +201,15 @@ export function Navbar() {
                           <span className="text-primary">0</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="cursor-pointer font-bold gap-2">
-                          <LayoutDashboard className="h-4 w-4" /> Dashboard
+                        <DropdownMenuItem className="cursor-pointer font-bold gap-2" asChild>
+                          <Link href="/dashboard" className="flex items-center w-full">
+                            <LayoutDashboard className="h-4 w-4" /> Dashboard
+                          </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer font-bold gap-2">
-                          <Settings className="h-4 w-4" /> Settings
+                        <DropdownMenuItem className="cursor-pointer font-bold gap-2" asChild>
+                          <Link href="/dashboard" className="flex items-center w-full">
+                            <Settings className="h-4 w-4" /> Settings
+                          </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer font-bold gap-2 text-destructive focus:text-destructive" onClick={handleLogout}>
                           <LogOut className="h-4 w-4" /> Keluar
@@ -272,12 +276,16 @@ export function Navbar() {
                             <div className="space-y-1">
                               {user && (
                                 <>
-                                  <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                    <LayoutDashboard className="h-5 w-5" /> Dashboard
-                                  </Button>
-                                  <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                    <Settings className="h-5 w-5" /> Settings
-                                  </Button>
+                                  <Link href="/dashboard">
+                                    <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                      <LayoutDashboard className="h-5 w-5" /> Dashboard
+                                    </Button>
+                                  </Link>
+                                  <Link href="/dashboard">
+                                    <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                      <Settings className="h-5 w-5" /> Settings
+                                    </Button>
+                                  </Link>
                                 </>
                               )}
                               <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
