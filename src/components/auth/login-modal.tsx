@@ -12,6 +12,8 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "fire
 import { doc, setDoc } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -50,22 +52,37 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
           title: "Berhasil masuk",
           description: "Selamat datang kembali di STS Pedia!",
         });
+        onOpenChange(false);
       } else {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         
-        setDoc(doc(db, "users", user.uid), {
+        const userData = {
           email: user.email,
           displayName: "",
           createdAt: new Date().toISOString(),
-        });
+        };
+
+        const userDocRef = doc(db, "users", user.uid);
+        
+        // Use non-blocking mutation with proper error surfacing
+        setDoc(userDocRef, userData)
+          .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+              path: userDocRef.path,
+              operation: 'create',
+              requestResourceData: userData,
+            } satisfies SecurityRuleContext);
+
+            errorEmitter.emit('permission-error', permissionError);
+          });
 
         toast({
           title: "Akun berhasil dibuat",
           description: "Selamat bergabung di STS Pedia!",
         });
+        onOpenChange(false);
       }
-      onOpenChange(false);
     } catch (error: any) {
       let message = "Terjadi kesalahan saat mencoba masuk.";
       
@@ -102,9 +119,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
         "w-[95vw] sm:max-w-[400px] max-h-[85vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none shadow-2xl",
         "modal-scrollbar"
       )}>
-        {/* Sticky Header berwarna Accent */}
         <div className="sticky top-0 z-50 p-6 md:p-8 flex flex-col items-center border-b border-border bg-accent">
-          {/* Tombol Close tetap di Header */}
           <DialogPrimitive.Close className="absolute right-4 top-4 z-[60] rounded-full p-1.5 text-accent-foreground/70 opacity-70 ring-offset-accent transition-all hover:opacity-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
