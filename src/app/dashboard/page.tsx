@@ -93,22 +93,27 @@ export default function DashboardPage() {
             </div>
 
             {/* STS Coin Bento Card */}
-            <div className="bento-card p-6 relative overflow-hidden bg-gradient-to-br from-primary/10 via-card to-card border-primary/20">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <p className="text-[10px] text-muted-foreground font-black tracking-widest">SALDO DIGITAL</p>
-                  <h3 className="font-headline text-2xl font-black text-foreground mt-1">STS Coin</h3>
+            <div className="bento-card p-6 relative overflow-hidden bg-gradient-to-br from-primary/10 via-card to-card border-primary/20 group">
+              <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-shimmer" />
+              
+              <div className="relative z-10">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <p className="text-[10px] text-muted-foreground font-black tracking-widest">SALDO DIGITAL</p>
+                    <h3 className="font-headline text-2xl font-black text-foreground mt-1">STS Coin</h3>
+                  </div>
+                  <img src="/img/coin.png" alt="STS Coin" className="h-10 w-10 object-contain animate-pulse" />
                 </div>
-                <img src="/img/coin.png" alt="STS Coin" className="h-10 w-10 object-contain animate-bounce" />
+                <div className="flex items-baseline gap-1 mt-2">
+                  <span className="text-4xl font-black text-primary">0</span>
+                  <span className="text-xs text-muted-foreground font-bold">Coins</span>
+                </div>
+                <p className="text-[10px] text-muted-foreground font-bold mt-4 flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                  Gunakan koin untuk diskon instan saat checkout.
+                </p>
               </div>
-              <div className="flex items-baseline gap-1 mt-2">
-                <span className="text-4xl font-black text-primary">0</span>
-                <span className="text-xs text-muted-foreground font-bold">Coins</span>
-              </div>
-              <p className="text-[10px] text-muted-foreground font-bold mt-4 flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-                Gunakan koin untuk diskon instan saat checkout.
-              </p>
             </div>
           </div>
 
@@ -138,7 +143,7 @@ export default function DashboardPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={CHART_DATA} margin={{ left: -10, right: 10, top: 10, bottom: 0 }}>
                       <defs>
-                        <linearGradient id="colorSpent" x1="0" y1="0" x2="0" y2="1">
+                        <linearGradient id="colorSpent" x1="0" x1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
                           <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
                         </linearGradient>
