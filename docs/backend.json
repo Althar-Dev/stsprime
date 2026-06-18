@@ -1,0 +1,36 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Informasi profil tambahan untuk pengguna.",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "description": "Nama tampilan pengguna."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Alamat email pengguna."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Waktu pembuatan akun."
+        }
+      },
+      "required": ["email"]
+    }
+  },
+  "auth": {
+    "providers": ["password"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Dokumen profil pengguna."
+    }
+  }
+}

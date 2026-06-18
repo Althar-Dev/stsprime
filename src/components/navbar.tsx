@@ -1,9 +1,10 @@
+
 "use client";
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Gamepad2, History, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft } from "lucide-react";
+import { Gamepad2, History, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
@@ -13,6 +14,17 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LoginModal } from "@/components/auth/login-modal";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
+import { useUser, useAuth } from "@/firebase";
+import { signOut } from "firebase/auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function SearchInput({ isMobile, closeSearch }: { isMobile?: boolean, closeSearch?: () => void }) {
   const router = useRouter();
@@ -24,12 +36,6 @@ function SearchInput({ isMobile, closeSearch }: { isMobile?: boolean, closeSearc
   useEffect(() => {
     setSearchValue(searchParams.get("q") || "");
   }, [searchParams]);
-
-  useEffect(() => {
-    if (!isMobile && inputRef.current) {
-      // Focus if needed for desktop or specific triggers
-    }
-  }, [isMobile]);
 
   const handleSearchAction = (value: string) => {
     setSearchValue(value);
@@ -101,6 +107,15 @@ function SearchInput({ isMobile, closeSearch }: { isMobile?: boolean, closeSearc
 export function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  
+  const { user } = useUser();
+  const auth = useAuth();
+
+  const handleLogout = async () => {
+    if (auth) {
+      await signOut(auth);
+    }
+  };
 
   return (
     <>
@@ -157,12 +172,42 @@ export function Navbar() {
                   <Search className="h-5 w-5" />
                 </Button>
                 
-                <Button 
-                  onClick={() => setIsLoginModalOpen(true)}
-                  className="hidden sm:flex rounded-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 px-6"
-                >
-                  Login
-                </Button>
+                {user ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                        <Avatar className="h-10 w-10 border border-border">
+                          <AvatarImage src={user.photoURL || ""} alt={user.email || "User"} />
+                          <AvatarFallback className="bg-primary text-primary-foreground font-black">
+                            {user.email?.charAt(0).toUpperCase() || "U"}
+                          </AvatarFallback>
+                        </Avatar>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56 rounded-xl border-border" align="end" forceMount>
+                      <DropdownMenuLabel className="font-normal">
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-black leading-none">{user.displayName || "Gamer"}</p>
+                          <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="cursor-pointer font-bold gap-2">
+                        <User className="h-4 w-4" /> Profile
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer font-bold gap-2 text-destructive focus:text-destructive" onClick={handleLogout}>
+                        <LogOut className="h-4 w-4" /> Log out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Button 
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="hidden sm:flex rounded-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 px-6"
+                  >
+                    Login
+                  </Button>
+                )}
 
                 <Sheet>
                   <SheetTrigger asChild>
@@ -175,7 +220,7 @@ export function Navbar() {
                       <SheetTitle>Navigation Menu</SheetTitle>
                     </SheetHeader>
                     
-                    <div className="h-16 px-6 border-b border-border bg-card/30 flex items-center shrink-0">
+                    <div className="h-16 px-6 border-b border-border bg-card/30 flex items-center justify-between shrink-0">
                       <div className="flex items-center gap-3">
                         <Logo className="h-10 w-10" />
                         <div>
@@ -213,9 +258,11 @@ export function Navbar() {
                         <div>
                           <p className="text-[10px] font-black tracking-widest text-muted-foreground/60 mb-3 px-2">Support & account</p>
                           <div className="space-y-1">
-                            <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                              <User className="h-5 w-5" /> My profile
-                            </Button>
+                            {user && (
+                              <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                <User className="h-5 w-5" /> My profile
+                              </Button>
+                            )}
                             <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
                               <MessageCircle className="h-5 w-5" /> Contact support
                             </Button>
@@ -232,12 +279,22 @@ export function Navbar() {
                         <ShieldCheck className="h-4 w-4 text-primary" />
                         <p className="text-[10px] font-black text-muted-foreground">Certified & secure payment gateway</p>
                       </div>
-                      <Button 
-                        onClick={() => setIsLoginModalOpen(true)}
-                        className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black text-sm"
-                      >
-                        Sign in
-                      </Button>
+                      {user ? (
+                        <Button 
+                          onClick={handleLogout}
+                          variant="outline"
+                          className="w-full h-11 rounded-xl border-destructive text-destructive font-black text-sm hover:bg-destructive/10"
+                        >
+                          <LogOut className="h-4 w-4 mr-2" /> Sign out
+                        </Button>
+                      ) : (
+                        <Button 
+                          onClick={() => setIsLoginModalOpen(true)}
+                          className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black text-sm"
+                        >
+                          Sign in
+                        </Button>
+                      )}
                     </div>
                   </SheetContent>
                 </Sheet>
