@@ -14,19 +14,19 @@ import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/logo";
 
 const PACKS = [
-  { id: 1, amount: "86 Diamonds", price: "Rp 19,500", bonus: "+9 Bonus" },
-  { id: 2, amount: "172 Diamonds", price: "Rp 38,000", bonus: "+18 Bonus", popular: true },
-  { id: 3, amount: "257 Diamonds", price: "Rp 56,000", bonus: "+26 Bonus" },
-  { id: 4, amount: "344 Diamonds", price: "Rp 74,000", bonus: "+35 Bonus" },
-  { id: 5, amount: "706 Diamonds", price: "Rp 148,000", bonus: "+72 Bonus" },
-  { id: 6, amount: "1050 Diamonds", price: "Rp 215,000", bonus: "+110 Bonus" },
+  { id: 1, amount: "86 diamonds", price: "Rp 19,500", bonus: "+9 bonus" },
+  { id: 2, amount: "172 diamonds", price: "Rp 38,000", bonus: "+18 bonus", popular: true },
+  { id: 3, amount: "257 diamonds", price: "Rp 56,000", bonus: "+26 bonus" },
+  { id: 4, amount: "344 diamonds", price: "Rp 74,000", bonus: "+35 bonus" },
+  { id: 5, amount: "706 diamonds", price: "Rp 148,000", bonus: "+72 bonus" },
+  { id: 6, amount: "1050 diamonds", price: "Rp 215,000", bonus: "+110 bonus" },
 ];
 
 const PAYMENT_METHODS = [
-  { id: "qris", name: "QRIS", icon: <CreditCard className="h-5 w-5" /> },
-  { id: "dana", name: "DANA", icon: <Wallet className="h-5 w-5" /> },
-  { id: "gopay", name: "GoPay", icon: <Wallet className="h-5 w-5" /> },
-  { id: "ovo", name: "OVO", icon: <Wallet className="h-5 w-5" /> },
+  { id: "qris", name: "qris", icon: <CreditCard className="h-5 w-5" /> },
+  { id: "dana", name: "dana", icon: <Wallet className="h-5 w-5" /> },
+  { id: "gopay", name: "gopay", icon: <Wallet className="h-5 w-5" /> },
+  { id: "ovo", name: "ovo", icon: <Wallet className="h-5 w-5" /> },
 ];
 
 export default function TopupPage() {
@@ -43,6 +43,17 @@ export default function TopupPage() {
     if (!userId || !selectedPack || !selectedPayment) return;
     router.push("/status?orderId=STS-" + Math.floor(Math.random() * 90000 + 10000));
   };
+
+  const StepHeader = ({ number, title }: { number: number; title: string }) => (
+    <div className="-mx-5 -mt-5 mb-6 md:-mx-8 md:-mt-8 flex items-stretch overflow-hidden rounded-t-[calc(var(--radius)-1px)] bg-muted/30">
+      <div className="flex w-10 md:w-16 shrink-0 items-center justify-center bg-primary text-primary-foreground font-black text-sm md:text-xl">
+        {number}
+      </div>
+      <div className="flex-1 flex items-center px-4 py-3 md:px-6 md:py-4 bg-muted/50 border-b border-border">
+        <h2 className="text-sm md:text-lg font-black tracking-tight text-foreground">{title}</h2>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -70,7 +81,7 @@ export default function TopupPage() {
           <div className="relative h-44 md:h-80 w-full overflow-hidden rounded-3xl bg-muted shadow-lg">
             <Image 
               src={`https://picsum.photos/seed/${id}-banner/1200/400`} 
-              alt="Banner Background"
+              alt="Banner background"
               fill
               className="object-cover"
               priority
@@ -122,14 +133,11 @@ export default function TopupPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Step 1: User Data */}
             <div className="bento-card p-5 md:p-8">
-              <div className="-mx-5 -mt-5 mb-6 md:-mx-8 md:-mt-8 px-5 py-4 md:px-8 md:py-5 border-b border-border bg-muted/30 rounded-t-[calc(var(--radius)-1px)] flex items-center gap-3 md:gap-4">
-                <div className="flex h-6 w-6 md:h-8 md:w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-[10px] md:text-sm shadow-lg shadow-primary/20">1</div>
-                <h2 className="text-sm md:text-xl font-black tracking-tight">Masukkan ID pengguna</h2>
-              </div>
+              <StepHeader number={1} title="Masukkan data akun" />
               
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="userId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">User ID</Label>
+                  <Label htmlFor="userId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">User id</Label>
                   <Input 
                     id="userId" 
                     placeholder="e.g. 12345678" 
@@ -139,7 +147,7 @@ export default function TopupPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">Zone ID</Label>
+                  <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">Zone id</Label>
                   <Input 
                     id="zoneId" 
                     placeholder="e.g. 1234" 
@@ -153,10 +161,7 @@ export default function TopupPage() {
 
             {/* Step 2: Select Pack */}
             <div className="bento-card p-5 md:p-8">
-              <div className="-mx-5 -mt-5 mb-6 md:-mx-8 md:-mt-8 px-5 py-4 md:px-8 md:py-5 border-b border-border bg-muted/30 rounded-t-[calc(var(--radius)-1px)] flex items-center gap-3 md:gap-4">
-                <div className="flex h-6 w-6 md:h-8 md:w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-[10px] md:text-sm shadow-lg shadow-primary/20">2</div>
-                <h2 className="text-sm md:text-xl font-black tracking-tight">Pilih nominal topup</h2>
-              </div>
+              <StepHeader number={2} title="Pilih nominal topup" />
               
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
                 {PACKS.map((pack) => (
@@ -183,10 +188,7 @@ export default function TopupPage() {
           <div className="space-y-6">
             {/* Step 3: Payment */}
             <div className="bento-card p-5 md:p-8">
-              <div className="-mx-5 -mt-5 mb-6 md:-mx-8 md:-mt-8 px-5 py-4 md:px-8 md:py-5 border-b border-border bg-muted/30 rounded-t-[calc(var(--radius)-1px)] flex items-center gap-3 md:gap-4">
-                <div className="flex h-6 w-6 md:h-8 md:w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-[10px] md:text-sm shadow-lg shadow-primary/20">3</div>
-                <h2 className="text-sm md:text-xl font-black tracking-tight">Metode pembayaran</h2>
-              </div>
+              <StepHeader number={3} title="Metode pembayaran" />
               
               <div className="grid grid-cols-1 gap-3">
                 {PAYMENT_METHODS.map((method) => (
@@ -215,7 +217,7 @@ export default function TopupPage() {
                 <div className="space-y-2">
                   <h3 className="text-lg font-black tracking-tight">Ringkasan pesanan</h3>
                   <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
-                    <span>Target ID</span>
+                    <span>Target id</span>
                     <span className="text-foreground">{userId || "-"} {zoneId ? `(${zoneId})` : ""}</span>
                   </div>
                   <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
