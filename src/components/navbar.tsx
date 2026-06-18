@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Gamepad2, History, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft, LogOut } from "lucide-react";
+import { Gamepad2, History, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
@@ -195,7 +195,10 @@ export function Navbar() {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="cursor-pointer font-bold gap-2">
-                          <User className="h-4 w-4" /> Profil
+                          <LayoutDashboard className="h-4 w-4" /> Dashboard
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer font-bold gap-2">
+                          <Settings className="h-4 w-4" /> Settings
                         </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer font-bold gap-2 text-destructive focus:text-destructive" onClick={handleLogout}>
                           <LogOut className="h-4 w-4" /> Keluar
