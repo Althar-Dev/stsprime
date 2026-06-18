@@ -1,9 +1,9 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import Image from "next/image";
+import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Check, ChevronLeft, CreditCard, ShieldCheck, Wallet } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Logo } from "@/components/logo";
 
 const PACKS = [
   { id: 1, amount: "86 Diamonds", price: "Rp 19,500", bonus: "+9 Bonus" },
@@ -45,17 +46,21 @@ export default function TopupPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
-      
       <main className="flex-grow container mx-auto px-4 py-6 md:py-10">
-        <Button 
-          variant="ghost" 
-          className="mb-4 md:mb-8 -ml-2 text-muted-foreground hover:text-foreground text-xs md:text-sm font-bold"
-          onClick={() => router.back()}
-        >
-          <ChevronLeft className="mr-2 h-4 w-4" />
-          Back to catalog
-        </Button>
+        <div className="flex items-center justify-between mb-6 md:mb-10">
+          <Button 
+            variant="ghost" 
+            className="-ml-2 text-muted-foreground hover:text-foreground text-xs md:text-sm font-bold"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+          
+          <Link href="/" className="transition-transform hover:scale-105">
+            <Logo className="h-9 w-9 md:h-12 md:w-12" />
+          </Link>
+        </div>
 
         <div className="grid gap-6 lg:grid-cols-3 items-start">
           {/* Left Column: Info */}
