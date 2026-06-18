@@ -57,6 +57,9 @@
   }
   body {
     @apply bg-background text-foreground font-body transition-colors duration-300;
+    /* Mencegah zoom pada double tap dan pinch */
+    touch-action: pan-x pan-y;
+    -webkit-text-size-adjust: 100%;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline tracking-tight;
@@ -68,7 +71,6 @@
     height: 8px;
   }
   
-  /* Hilangkan tombol panah secara total */
   ::-webkit-scrollbar-button {
     display: none !important;
     width: 0 !important;
@@ -110,17 +112,15 @@
     @apply bg-primary;
   }
 
-  /* Hidden Scrollbar for Modal but functional */
   .modal-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   
   .modal-scrollbar::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+    display: none;
   }
 
-  /* Grid Background Pattern */
   .bg-grid-pattern {
     background-image: 
       linear-gradient(to right, hsl(var(--primary) / 0.1) 1px, transparent 1px),
@@ -128,7 +128,6 @@
     background-size: 16px 16px;
   }
 
-  /* Dots Background Pattern */
   .bg-dots-pattern {
     background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
     background-size: 10px 10px;
