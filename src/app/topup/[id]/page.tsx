@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -44,13 +45,15 @@ export default function TopupPage() {
     router.push("/status?orderId=STS-" + Math.floor(Math.random() * 90000 + 10000));
   };
 
+  const selectedPackData = PACKS.find(p => p.id === selectedPack);
+
   const StepHeader = ({ number, title }: { number: number; title: string }) => (
     <div className="-mx-5 -mt-5 mb-6 md:-mx-8 md:-mt-8 flex items-stretch overflow-hidden rounded-t-[calc(var(--radius)-1px)] bg-muted/30">
       <div className="flex w-10 md:w-16 shrink-0 items-center justify-center bg-primary text-primary-foreground font-black text-sm md:text-xl">
         {number}
       </div>
       <div className="flex-1 flex items-center px-4 py-3 md:px-6 md:py-4 bg-muted/50 border-b border-border">
-        <h2 className="text-sm md:text-lg font-black tracking-tight text-foreground">{title}</h2>
+        <h2 className="text-sm md:text-lg font-bold tracking-tight text-foreground">{title}</h2>
       </div>
     </div>
   );
@@ -62,7 +65,7 @@ export default function TopupPage() {
         <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
           <Button 
             variant="ghost" 
-            className="-ml-2 text-muted-foreground hover:text-foreground text-xs md:text-sm font-black"
+            className="-ml-2 text-muted-foreground hover:text-foreground text-xs md:text-sm font-bold"
             onClick={() => router.back()}
           >
             <ChevronLeft className="mr-1 h-5 w-5" />
@@ -75,174 +78,195 @@ export default function TopupPage() {
         </div>
       </nav>
 
-      <main className="flex-grow container mx-auto px-4 py-6 md:py-10">
-        {/* Product Hero Section */}
-        <div className="mb-10 md:mb-16">
-          <div className="relative h-44 md:h-80 w-full overflow-hidden rounded-3xl bg-muted shadow-lg">
-            <Image 
-              src={`https://picsum.photos/seed/${id}-banner/1200/400`} 
-              alt="Banner background"
-              fill
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
-          </div>
-
-          <div className="relative px-4 py-6 md:px-6 md:py-8 flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-center">
-            <div className="relative -mt-20 md:-mt-32 h-32 w-32 md:h-52 md:w-52 shrink-0 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-background bg-background z-20">
+      <main className="flex-grow pb-24 lg:pb-10">
+        <div className="container mx-auto px-4 py-6 md:py-10">
+          {/* Product Hero Section */}
+          <div className="mb-10 md:mb-16">
+            <div className="relative h-44 md:h-80 w-full overflow-hidden rounded-3xl bg-muted shadow-lg">
               <Image 
-                src={itemImage.imageUrl} 
-                alt="Service" 
-                fill 
+                src={`https://picsum.photos/seed/${id}-banner/1200/400`} 
+                alt="Banner background"
+                fill
                 className="object-cover"
-                data-ai-hint={itemImage.imageHint}
+                priority
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
             </div>
 
-            <div className="flex-1 space-y-3 z-10">
-              <div className="space-y-1">
-                <h1 className="text-3xl md:text-5xl font-black tracking-tighter leading-none">
-                  {String(id).replace("-", " ")}
-                </h1>
-                <p className="text-xs md:text-base text-muted-foreground font-black opacity-70">
-                  {itemImage.description || "Official service"}
-                </p>
+            <div className="relative px-4 py-6 md:px-6 md:py-8 flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-center">
+              <div className="relative -mt-20 md:-mt-32 h-32 w-32 md:h-52 md:w-52 shrink-0 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-background bg-background z-20">
+                <Image 
+                  src={itemImage.imageUrl} 
+                  alt="Service" 
+                  fill 
+                  className="object-cover"
+                  data-ai-hint={itemImage.imageHint}
+                />
               </div>
 
-              <div className="flex flex-wrap gap-4 pt-2">
-                <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
-                  <Zap className="h-4 w-4 text-primary fill-primary" />
-                  <span>proses cepat</span>
+              <div className="flex-1 space-y-3 z-10">
+                <div className="space-y-1">
+                  <h1 className="text-3xl md:text-5xl font-black tracking-tighter leading-none">
+                    {String(id).replace("-", " ")}
+                  </h1>
+                  <p className="text-xs md:text-base text-muted-foreground font-bold opacity-70">
+                    {itemImage.description || "official service"}
+                  </p>
                 </div>
-                <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
-                  <MessageCircle className="h-4 w-4 text-primary fill-primary/20" />
-                  <span>layanan chat 24/7</span>
-                </div>
-                <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
-                  <ShieldCheck className="h-4 w-4 text-primary" />
-                  <span>pembayaran aman!</span>
+
+                <div className="flex flex-wrap gap-4 pt-2">
+                  <div className="flex items-center gap-2 text-[10px] md:text-sm font-bold text-foreground">
+                    <Zap className="h-4 w-4 text-primary fill-primary" />
+                    <span>proses cepat</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] md:text-sm font-bold text-foreground">
+                    <MessageCircle className="h-4 w-4 text-primary fill-primary/20" />
+                    <span>layanan chat 24/7</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] md:text-sm font-bold text-foreground">
+                    <ShieldCheck className="h-4 w-4 text-primary" />
+                    <span>pembayaran aman!</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="grid gap-8 lg:grid-cols-3 items-start">
-          {/* Form Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Step 1: User Data */}
-            <div className="bento-card p-5 md:p-8">
-              <StepHeader number={1} title="masukkan data akun" />
-              
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="userId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">user id</Label>
-                  <Input 
-                    id="userId" 
-                    placeholder="e.g. 12345678" 
-                    className="h-12 bg-background border-border text-sm font-bold" 
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">zone id</Label>
-                  <Input 
-                    id="zoneId" 
-                    placeholder="e.g. 1234" 
-                    className="h-12 bg-background border-border text-sm font-bold"
-                    value={zoneId}
-                    onChange={(e) => setZoneId(e.target.value)}
-                  />
+          <div className="grid gap-8 lg:grid-cols-3 items-start">
+            {/* Form Content */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Step 1: User Data */}
+              <div className="bento-card p-5 md:p-8">
+                <StepHeader number={1} title="masukkan data akun" />
+                
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="userId" className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-wider">user id</Label>
+                    <Input 
+                      id="userId" 
+                      placeholder="e.g. 12345678" 
+                      className="h-12 bg-background border-border text-sm font-bold" 
+                      value={userId}
+                      onChange={(e) => setUserId(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-wider">zone id</Label>
+                    <Input 
+                      id="zoneId" 
+                      placeholder="e.g. 1234" 
+                      className="h-12 bg-background border-border text-sm font-bold"
+                      value={zoneId}
+                      onChange={(e) => setZoneId(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Step 2: Select Pack */}
-            <div className="bento-card p-5 md:p-8">
-              <StepHeader number={2} title="pilih nominal topup" />
-              
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-                {PACKS.map((pack) => (
-                  <button
-                    key={pack.id}
-                    onClick={() => setSelectedPack(pack.id)}
-                    className={`relative flex flex-col p-4 text-left rounded-2xl border transition-all ${
-                      selectedPack === pack.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
-                    }`}
-                  >
-                    {pack.popular && (
-                      <Badge className="absolute -top-1.5 -right-1 bg-accent text-[9px] text-accent-foreground font-black px-2 py-0.5 border-none">populer</Badge>
-                    )}
-                    <span className="text-[10px] md:text-xs font-bold text-muted-foreground truncate">{pack.amount}</span>
-                    <span className="text-[10px] md:text-xs text-primary font-black mt-0.5">{pack.bonus}</span>
-                    <span className="text-sm md:text-lg font-black mt-2">{pack.price}</span>
-                  </button>
-                ))}
+              {/* Step 2: Select Pack */}
+              <div className="bento-card p-5 md:p-8">
+                <StepHeader number={2} title="pilih nominal topup" />
+                
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+                  {PACKS.map((pack) => (
+                    <button
+                      key={pack.id}
+                      onClick={() => setSelectedPack(pack.id)}
+                      className={`relative flex flex-col p-4 text-left rounded-2xl border transition-all ${
+                        selectedPack === pack.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
+                      }`}
+                    >
+                      {pack.popular && (
+                        <Badge className="absolute -top-1.5 -right-1 bg-accent text-[9px] text-accent-foreground font-bold px-2 py-0.5 border-none">populer</Badge>
+                      )}
+                      <span className="text-[10px] md:text-xs font-bold text-muted-foreground truncate">{pack.amount}</span>
+                      <span className="text-[10px] md:text-xs text-primary font-bold mt-0.5">{pack.bonus}</span>
+                      <span className="text-sm md:text-lg font-bold mt-2">{pack.price}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Step 3: Payment */}
-            <div className="bento-card p-5 md:p-8">
-              <StepHeader number={3} title="metode pembayaran" />
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {PAYMENT_METHODS.map((method) => (
-                  <button
-                    key={method.id}
-                    onClick={() => setSelectedPayment(method.id)}
-                    className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
-                      selectedPayment === method.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 shrink-0 rounded-lg bg-background flex items-center justify-center border border-border">
-                        {method.icon}
+              {/* Step 3: Payment */}
+              <div className="bento-card p-5 md:p-8">
+                <StepHeader number={3} title="metode pembayaran" />
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {PAYMENT_METHODS.map((method) => (
+                    <button
+                      key={method.id}
+                      onClick={() => setSelectedPayment(method.id)}
+                      className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
+                        selectedPayment === method.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 shrink-0 rounded-lg bg-background flex items-center justify-center border border-border">
+                          {method.icon}
+                        </div>
+                        <span className="font-bold text-sm">{method.name}</span>
                       </div>
-                      <span className="font-black text-sm">{method.name}</span>
-                    </div>
-                    {selectedPayment === method.id && <Check className="h-5 w-5 text-primary" />}
-                  </button>
-                ))}
+                      {selectedPayment === method.id && <Check className="h-5 w-5 text-primary" />}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Sidebar Content - Order Summary */}
-          <div className="lg:sticky lg:top-24 space-y-6">
-            <div className="bento-card p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 backdrop-blur-md">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <h3 className="text-lg font-black tracking-tight">ringkasan pesanan</h3>
-                  <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
-                    <span>target id</span>
-                    <span className="text-foreground">{userId || "-"} {zoneId ? `(${zoneId})` : ""}</span>
+            {/* Sidebar Content - Order Summary (Desktop) */}
+            <div className="hidden lg:block lg:sticky lg:top-24 space-y-6">
+              <div className="bento-card p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 backdrop-blur-md">
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-bold tracking-tight">ringkasan pesanan</h3>
+                    <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
+                      <span>target id</span>
+                      <span className="text-foreground">{userId || "-"} {zoneId ? `(${zoneId})` : ""}</span>
+                    </div>
+                    <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
+                      <span>paket</span>
+                      <span className="text-foreground">{selectedPack ? selectedPackData?.amount : "-"}</span>
+                    </div>
+                    <div className="flex justify-between items-end pt-2">
+                      <span className="text-sm font-bold">total pembayaran</span>
+                      <span className="text-2xl font-black text-primary">
+                        {selectedPack ? selectedPackData?.price : "---"}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
-                    <span>paket</span>
-                    <span className="text-foreground">{selectedPack ? PACKS.find(p => p.id === selectedPack)?.amount : "-"}</span>
-                  </div>
-                  <div className="flex justify-between items-end pt-2">
-                    <span className="text-sm font-black">total pembayaran</span>
-                    <span className="text-2xl font-black text-primary">
-                      {selectedPack ? PACKS.find(p => p.id === selectedPack)?.price : "---"}
-                    </span>
-                  </div>
+                  <Button 
+                    size="lg" 
+                    disabled={!userId || !selectedPack || !selectedPayment}
+                    onClick={handleOrder}
+                    className="h-14 md:h-16 rounded-full px-8 text-lg font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
+                  >
+                    bayar sekarang
+                  </Button>
                 </div>
-                <Button 
-                  size="lg" 
-                  disabled={!userId || !selectedPack || !selectedPayment}
-                  onClick={handleOrder}
-                  className="h-14 md:h-16 rounded-full px-8 text-lg font-black bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
-                >
-                  bayar sekarang
-                </Button>
               </div>
             </div>
           </div>
         </div>
       </main>
+
+      {/* Mobile Sticky Summary Bar - Sticks to bottom on mobile/tablet */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-border p-4 animate-in slide-in-from-bottom duration-300">
+        <div className="container mx-auto flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-[10px] text-muted-foreground font-bold tracking-wider">total pembayaran</p>
+            <p className="text-lg font-black text-primary truncate">
+              {selectedPack ? selectedPackData?.price : "---"}
+            </p>
+          </div>
+          <Button 
+            disabled={!userId || !selectedPack || !selectedPayment}
+            onClick={handleOrder}
+            className="flex-1 h-12 rounded-xl font-bold bg-primary text-primary-foreground shadow-lg shadow-primary/20 active:scale-95 transition-transform"
+          >
+            bayar sekarang
+          </Button>
+        </div>
+      </div>
 
       <Footer />
     </div>
