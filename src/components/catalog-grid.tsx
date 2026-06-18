@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
-import { SearchX, LayoutGrid, Zap } from "lucide-react";
+import { SearchX, LayoutGrid, Zap, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
 const CATALOG_ITEMS = [
   // Flash Sale
@@ -155,6 +155,7 @@ export function CatalogGrid() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q")?.toLowerCase() || "";
   const [activeTab, setActiveTab] = useState("Semua");
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const filteredItems = CATALOG_ITEMS.filter((item) => 
     item.name.toLowerCase().includes(query) || 
@@ -168,6 +169,16 @@ export function CatalogGrid() {
     item.tag !== "Populer" &&
     (activeTab === "Semua" || item.category === activeTab)
   );
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 200;
+      scrollContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth"
+      });
+    }
+  };
 
   const SectionHeader = ({ 
     title, 
@@ -355,24 +366,51 @@ export function CatalogGrid() {
           subtitle="Browse all available game and digital services."
         />
         
-        {/* Category Filter Tabs */}
-        <div className="mb-8 overflow-x-auto pb-2 scrollbar-none">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="h-auto p-1 bg-muted/50 border border-border rounded-xl inline-flex">
+        {/* Category Filter Tabs with Navigation Arrows */}
+        <div className="mb-8 relative flex items-center gap-2">
+          {/* Scroll Left Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => scroll("left")}
+            className="shrink-0 h-10 w-10 rounded-full border border-border bg-background shadow-sm z-10"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+
+          {/* Transparent Container with Scrollable List */}
+          <div 
+            ref={scrollContainerRef}
+            className="flex-grow overflow-x-auto scrollbar-none flex items-center gap-2 py-1 px-1 no-scrollbar"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            <div className="flex items-center gap-2">
               {CATEGORIES.map((cat) => (
-                <TabsTrigger 
-                  key={cat} 
-                  value={cat}
+                <button
+                  key={cat}
+                  onClick={() => setActiveTab(cat)}
                   className={cn(
-                    "px-5 py-2.5 text-xs font-black rounded-lg transition-all",
-                    "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg"
+                    "whitespace-nowrap px-6 py-2.5 text-xs font-black rounded-xl transition-all duration-200 border border-transparent",
+                    activeTab === cat 
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                   )}
                 >
                   {cat}
-                </TabsTrigger>
+                </button>
               ))}
-            </TabsList>
-          </Tabs>
+            </div>
+          </div>
+
+          {/* Scroll Right Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => scroll("right")}
+            className="shrink-0 h-10 w-10 rounded-full border border-border bg-background shadow-sm z-10"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
         </div>
 
         {topUpItems.length > 0 ? (
