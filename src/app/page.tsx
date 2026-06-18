@@ -1,10 +1,10 @@
-
 "use client";
 
 import { Suspense } from "react";
 import { Navbar } from "@/components/navbar";
 import { HeroSection } from "@/components/hero-section";
 import { CatalogGrid } from "@/components/catalog-grid";
+import { CatalogSkeleton } from "@/components/catalog-skeleton";
 import { Footer } from "@/components/footer";
 
 export default function Home() {
@@ -15,7 +15,7 @@ export default function Home() {
       </Suspense>
       <main className="flex-grow">
         <HeroSection />
-        <Suspense fallback={<div className="container mx-auto px-4 py-20 text-center font-bold">Loading catalog...</div>}>
+        <Suspense fallback={<CatalogSkeleton />}>
           <CatalogGrid />
         </Suspense>
       </main>
