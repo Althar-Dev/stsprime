@@ -54,7 +54,6 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         
-        // Simpan data profil pengguna ke Firestore
         setDoc(doc(db, "users", user.uid), {
           email: user.email,
           displayName: "",
@@ -68,10 +67,22 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
       }
       onOpenChange(false);
     } catch (error: any) {
+      let message = "Terjadi kesalahan saat mencoba masuk.";
+      
+      if (error.code === 'auth/configuration-not-found') {
+        message = "Metode Email/Password belum diaktifkan di Firebase Console. Silakan aktifkan di Authentication > Sign-in method.";
+      } else if (error.code === 'auth/invalid-credential') {
+        message = "Email atau password salah.";
+      } else if (error.code === 'auth/email-already-in-use') {
+        message = "Email sudah digunakan oleh akun lain.";
+      } else if (error.code === 'auth/weak-password') {
+        message = "Password terlalu lemah (minimal 6 karakter).";
+      }
+
       toast({
         variant: "destructive",
         title: "Gagal Autentikasi",
-        description: error.message || "Terjadi kesalahan saat mencoba masuk.",
+        description: message,
       });
     } finally {
       setIsLoading(false);
@@ -88,22 +99,22 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
-        "w-[95vw] sm:max-w-[400px] max-h-[90vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none",
+        "w-[95vw] sm:max-w-[400px] max-h-[85vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none shadow-2xl",
         "modal-scrollbar"
       )}>
-        {/* Header dengan Warna Accent - Sticky agar tetap terlihat saat scroll */}
-        <div className="p-6 md:p-8 flex flex-col items-center border-b border-border bg-accent sticky top-0 z-20">
-          {/* Custom Close Button inside Sticky Header */}
-          <DialogPrimitive.Close className="absolute right-4 top-4 z-30 rounded-full p-1 text-accent-foreground/70 opacity-70 ring-offset-accent transition-opacity hover:opacity-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
+        {/* Sticky Header berwarna Accent */}
+        <div className="sticky top-0 z-50 p-6 md:p-8 flex flex-col items-center border-b border-border bg-accent">
+          {/* Tombol Close tetap di Header */}
+          <DialogPrimitive.Close className="absolute right-4 top-4 z-[60] rounded-full p-1.5 text-accent-foreground/70 opacity-70 ring-offset-accent transition-all hover:opacity-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
 
-          <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-accent-foreground/20 backdrop-blur-sm flex items-center justify-center mb-4">
+          <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-accent-foreground/20 backdrop-blur-sm flex items-center justify-center mb-4">
             {mode === "login" ? (
-              <ShieldCheck className="h-6 w-6 md:h-7 md:w-7 text-accent-foreground" />
+              <ShieldCheck className="h-6 w-6 text-accent-foreground" />
             ) : (
-              <UserPlus className="h-6 w-6 md:h-7 md:w-7 text-accent-foreground" />
+              <UserPlus className="h-6 w-6 text-accent-foreground" />
             )}
           </div>
           <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center text-accent-foreground">
@@ -111,16 +122,16 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
           </DialogTitle>
           <DialogDescription className="text-accent-foreground/80 font-bold text-[10px] md:text-xs mt-1 text-center">
             {mode === "login" 
-              ? "Masuk untuk melihat riwayat pesanan dan checkout lebih cepat" 
-              : "Buat akun untuk mulai memantau semua transaksi Anda"}
+              ? "Masuk untuk akses cepat ke semua layanan kami" 
+              : "Buat akun untuk melacak setiap transaksi Anda"}
           </DialogDescription>
         </div>
 
-        <div className="p-5 md:p-8 space-y-5 md:space-y-6">
+        <div className="p-5 md:p-8 space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground">
-                ALAMAT EMAIL
+              <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">
+                Alamat Email
               </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -128,7 +139,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
                   id="email" 
                   type="email" 
                   placeholder="name@example.com" 
-                  className="pl-10 h-11 bg-muted/30 border-border focus:ring-primary text-sm font-bold"
+                  className="pl-10 h-11 bg-muted/30 border-border text-sm font-bold"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -138,8 +149,8 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
             
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground">
-                  PASSWORD
+                <Label htmlFor="password" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">
+                  Password
                 </Label>
                 {mode === "login" && (
                   <button type="button" className="text-[10px] font-black text-primary hover:underline">
@@ -153,7 +164,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
                   id="password" 
                   type="password" 
                   placeholder="••••••••" 
-                  className="pl-10 h-11 bg-muted/30 border-border focus:ring-primary text-sm font-bold"
+                  className="pl-10 h-11 bg-muted/30 border-border text-sm font-bold"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -163,8 +174,8 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
 
             {mode === "register" && (
               <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                <Label htmlFor="confirmPassword" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground">
-                  KONFIRMASI PASSWORD
+                <Label htmlFor="confirmPassword" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">
+                  Konfirmasi Password
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -172,7 +183,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
                     id="confirmPassword" 
                     type="password" 
                     placeholder="••••••••" 
-                    className="pl-10 h-11 bg-muted/30 border-border focus:ring-primary text-sm font-bold"
+                    className="pl-10 h-11 bg-muted/30 border-border text-sm font-bold"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
@@ -183,7 +194,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
 
             <Button 
               type="submit" 
-              className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform"
+              className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform mt-2"
               disabled={isLoading}
             >
               {isLoading ? "Memproses..." : (mode === "login" ? "Masuk Sekarang" : "Buat Akun")}
