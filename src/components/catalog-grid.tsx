@@ -422,7 +422,7 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group bento-card !rounded-sm p-0 transition-all active:scale-95 flex flex-col overflow-hidden hover:scale-[1.03] hover:shadow-lg hover:-rotate-2 h-full"
+                  className="group bento-card !rounded-sm p-0 transition-all active:scale-95 flex flex-col overflow-hidden hover:scale-[1.03] hover:shadow-lg hover:rotate-2 h-full"
                 >
                   <div className="relative aspect-square w-full overflow-hidden shrink-0">
                     <Image
