@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -246,7 +245,7 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group relative flex items-center gap-3 md:gap-5 p-3 md:p-4 bg-[#1a1a1a] bg-dots-pattern border border-white/5 rounded-2xl transition-all hover:scale-[1.02] hover:bg-[#222] hover:border-primary/30 active:scale-95 shadow-xl"
+                  className="group relative flex items-center gap-3 md:gap-5 p-3 md:p-4 bg-card bg-dots-pattern border border-border rounded-2xl transition-all hover:scale-[1.02] hover:bg-muted/50 hover:border-primary/30 active:scale-95 shadow-xl"
                 >
                   <div className="relative h-12 w-12 md:h-20 md:w-20 shrink-0 overflow-hidden rounded-xl md:rounded-2xl z-10">
                     <Image
@@ -258,7 +257,7 @@ export function CatalogGrid() {
                     />
                   </div>
                   <div className="flex flex-col justify-center z-10 min-w-0">
-                    <h3 className="text-xs md:text-lg lg:text-xl font-black tracking-tight text-white leading-tight mb-0.5 md:mb-1 group-hover:text-primary transition-colors truncate">
+                    <h3 className="text-xs md:text-lg lg:text-xl font-black tracking-tight text-card-foreground leading-tight mb-0.5 md:mb-1 group-hover:text-primary transition-colors truncate">
                       {item.name}
                     </h3>
                     <p className="text-[8px] md:text-sm font-bold text-muted-foreground opacity-80 uppercase tracking-wide truncate">

@@ -57,7 +57,6 @@
   }
   body {
     @apply bg-background text-foreground font-body transition-colors duration-300;
-    /* Mengizinkan scrolling sambil mencegah zoom pada double tap dan pinch */
     touch-action: manipulation;
     -webkit-text-size-adjust: 100%;
   }
@@ -129,8 +128,9 @@
   }
 
   .bg-dots-pattern {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-image: radial-gradient(currentColor 1px, transparent 1px);
     background-size: 10px 10px;
+    @apply text-foreground/10;
   }
 
   @keyframes shimmer {
