@@ -133,23 +133,23 @@ export default function TopupPage() {
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">1</div>
                 <h2 className="text-lg md:text-xl font-black tracking-tight">Masukkan ID Pengguna</h2>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="userId" className="text-xs font-black text-muted-foreground">User ID</Label>
+                  <Label htmlFor="userId" className="text-[10px] md:text-xs font-black text-muted-foreground">User ID</Label>
                   <Input 
                     id="userId" 
                     placeholder="e.g. 12345678" 
-                    className="h-12 bg-background border-border" 
+                    className="h-12 bg-background border-border text-sm" 
                     value={userId}
                     onChange={(e) => setUserId(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="zoneId" className="text-xs font-black text-muted-foreground">Zone ID</Label>
+                  <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-black text-muted-foreground">Zone ID</Label>
                   <Input 
                     id="zoneId" 
                     placeholder="e.g. 1234" 
-                    className="h-12 bg-background border-border"
+                    className="h-12 bg-background border-border text-sm"
                     value={zoneId}
                     onChange={(e) => setZoneId(e.target.value)}
                   />
