@@ -13,6 +13,7 @@ import { Check, ChevronLeft, CreditCard, ShieldCheck, Wallet, Zap, MessageCircle
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
