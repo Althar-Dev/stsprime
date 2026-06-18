@@ -37,18 +37,18 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
         "w-[95vw] sm:max-w-[400px] max-h-[90vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none",
         "modal-scrollbar"
       )}>
-        <div className="p-6 md:p-8 flex flex-col items-center border-b border-border bg-card/30 sticky top-0 z-10">
-          <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+        <div className="p-6 md:p-8 flex flex-col items-center border-b border-border bg-accent sticky top-0 z-10">
+          <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-white/20 flex items-center justify-center mb-4">
             {mode === "login" ? (
-              <ShieldCheck className="h-6 w-6 md:h-7 md:w-7 text-primary" />
+              <ShieldCheck className="h-6 w-6 md:h-7 md:w-7 text-white" />
             ) : (
-              <UserPlus className="h-6 w-6 md:h-7 md:w-7 text-primary" />
+              <UserPlus className="h-6 w-6 md:h-7 md:w-7 text-white" />
             )}
           </div>
-          <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center text-foreground">
+          <DialogTitle className="text-xl md:text-2xl font-black tracking-tight text-center text-accent-foreground">
             {mode === "login" ? "Welcome Back" : "Join the Hub"}
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground font-bold text-[10px] md:text-xs mt-1 text-center">
+          <DialogDescription className="text-accent-foreground/80 font-bold text-[10px] md:text-xs mt-1 text-center">
             {mode === "login" 
               ? "Access your order history and faster checkout" 
               : "Create an account to start tracking your purchases"}
