@@ -8,6 +8,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { SearchX, LayoutGrid, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const CATALOG_ITEMS = [
   // Flash Sale
@@ -15,6 +16,7 @@ const CATALOG_ITEMS = [
     id: "ff-fs", 
     name: "Free Fire", 
     type: "Garena", 
+    category: "Game",
     imageId: "ff", 
     tag: "Flash Sale",
     discount: "50%",
@@ -25,6 +27,7 @@ const CATALOG_ITEMS = [
     id: "mlbb-fs", 
     name: "Mobile Legends", 
     type: "Moonton", 
+    category: "Game",
     imageId: "mlbb", 
     tag: "Flash Sale",
     discount: "30%",
@@ -35,6 +38,7 @@ const CATALOG_ITEMS = [
     id: "valorant-fs", 
     name: "Valorant Points", 
     type: "Riot Games", 
+    category: "Game",
     imageId: "valorant", 
     tag: "Flash Sale",
     discount: "20%",
@@ -45,6 +49,7 @@ const CATALOG_ITEMS = [
     id: "pubgm-fs", 
     name: "PUBG Mobile", 
     type: "Level Infinite", 
+    category: "Game",
     imageId: "pubgm", 
     tag: "Flash Sale",
     discount: "40%",
@@ -55,6 +60,7 @@ const CATALOG_ITEMS = [
     id: "genshin-fs", 
     name: "Genshin Impact", 
     type: "HoYoverse", 
+    category: "Game",
     imageId: "genshin", 
     tag: "Flash Sale",
     discount: "15%",
@@ -65,6 +71,7 @@ const CATALOG_ITEMS = [
     id: "steam-fs", 
     name: "Steam Wallet", 
     type: "Valve", 
+    category: "Voucher",
     imageId: "steam", 
     tag: "Flash Sale",
     discount: "25%",
@@ -72,15 +79,27 @@ const CATALOG_ITEMS = [
     salePrice: "Rp 75.000"
   },
   // Populer
-  { id: "mlbb", name: "Mobile Legends", type: "Moonton", imageId: "mlbb", tag: "Populer" },
-  { id: "pubgm", name: "PUBG Mobile", type: "Level Infinite", imageId: "pubgm", tag: "Populer" },
-  { id: "genshin", name: "Genshin Impact", type: "HoYoverse", imageId: "genshin", tag: "Populer" },
-  // Others (TopUp)
-  { id: "valorant", name: "Valorant", type: "Game", imageId: "valorant", tag: "New" },
-  { id: "steam", name: "Steam Wallet", type: "Voucher", imageId: "steam", tag: "" },
-  { id: "telco", name: "Phone Credit", type: "Service", imageId: "telco", tag: "" },
-  { id: "data", name: "Internet Data", type: "Service", imageId: "data", tag: "" },
+  { id: "mlbb-p", name: "Mobile Legends", type: "Moonton", category: "Game", imageId: "mlbb", tag: "Populer" },
+  { id: "pubgm-p", name: "PUBG Mobile", type: "Level Infinite", category: "Game", imageId: "pubgm", tag: "Populer" },
+  { id: "genshin-p", name: "Genshin Impact", type: "HoYoverse", category: "Game", imageId: "genshin", tag: "Populer" },
+  { id: "valorant-p", name: "Valorant", type: "Riot Games", category: "Game", imageId: "valorant", tag: "Populer" },
+  
+  // TopUp Section (General Items)
+  { id: "mlbb", name: "Mobile Legends", type: "Moonton", category: "Game", imageId: "mlbb", tag: "" },
+  { id: "pubgm", name: "PUBG Mobile", type: "Level Infinite", category: "Game", imageId: "pubgm", tag: "" },
+  { id: "genshin", name: "Genshin Impact", type: "HoYoverse", category: "Game", imageId: "genshin", tag: "" },
+  { id: "valorant", name: "Valorant", type: "Game", category: "Game", imageId: "valorant", tag: "New" },
+  { id: "ff", name: "Free Fire", type: "Garena", category: "Game", imageId: "ff", tag: "" },
+  { id: "steam", name: "Steam Wallet", type: "Voucher", category: "Voucher", imageId: "steam", tag: "" },
+  { id: "telco", name: "Pulsa Reguler", type: "Service", category: "Pulsa", imageId: "telco", tag: "" },
+  { id: "data", name: "Paket Data", type: "Service", category: "Pulsa", imageId: "data", tag: "" },
+  { id: "dana", name: "DANA", type: "E-Wallet", category: "E-Wallet", imageId: "telco", tag: "" },
+  { id: "ovo", name: "OVO", type: "E-Wallet", category: "E-Wallet", imageId: "telco", tag: "" },
+  { id: "gopay", name: "GoPay", type: "E-Wallet", category: "E-Wallet", imageId: "telco", tag: "" },
+  { id: "pln", name: "Token Listrik", type: "PLN", category: "Listrik", imageId: "data", tag: "" },
 ];
+
+const CATEGORIES = ["Semua", "Game", "Voucher", "E-Wallet", "Listrik", "Pulsa"];
 
 function FlashSaleTimer() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -135,6 +154,7 @@ function FlashSaleTimer() {
 export function CatalogGrid() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q")?.toLowerCase() || "";
+  const [activeTab, setActiveTab] = useState("Semua");
 
   const filteredItems = CATALOG_ITEMS.filter((item) => 
     item.name.toLowerCase().includes(query) || 
@@ -143,7 +163,11 @@ export function CatalogGrid() {
 
   const flashSaleItems = filteredItems.filter(item => item.tag === "Flash Sale");
   const populerItems = filteredItems.filter(item => item.tag === "Populer");
-  const topUpItems = filteredItems.filter(item => item.tag !== "Flash Sale" && item.tag !== "Populer");
+  const topUpItems = filteredItems.filter(item => 
+    item.tag !== "Flash Sale" && 
+    item.tag !== "Populer" &&
+    (activeTab === "Semua" || item.category === activeTab)
+  );
 
   const SectionHeader = ({ 
     title, 
@@ -324,13 +348,34 @@ export function CatalogGrid() {
       )}
 
       {/* TopUp Section */}
-      {topUpItems.length > 0 && (
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
-          <SectionHeader 
-            title="TopUp" 
-            icon={LayoutGrid} 
-            subtitle="Browse all available game and digital services."
-          />
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <SectionHeader 
+          title="TopUp" 
+          icon={LayoutGrid} 
+          subtitle="Browse all available game and digital services."
+        />
+        
+        {/* Category Filter Tabs */}
+        <div className="mb-8 overflow-x-auto pb-2 scrollbar-none">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="h-auto p-1 bg-muted/50 border border-border rounded-xl inline-flex">
+              {CATEGORIES.map((cat) => (
+                <TabsTrigger 
+                  key={cat} 
+                  value={cat}
+                  className={cn(
+                    "px-5 py-2.5 text-xs font-black rounded-lg transition-all",
+                    "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg"
+                  )}
+                >
+                  {cat}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        </div>
+
+        {topUpItems.length > 0 ? (
           <div className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
             {topUpItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
@@ -366,8 +411,13 @@ export function CatalogGrid() {
               );
             })}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <SearchX className="h-10 w-10 text-muted-foreground mb-4 opacity-20" />
+            <p className="text-sm text-muted-foreground font-bold">No items found in this category.</p>
+          </div>
+        )}
+      </div>
     </section>
   );
 }
