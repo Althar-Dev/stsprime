@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Check, ChevronLeft, CreditCard, ShieldCheck, Wallet, Zap, MessageCircle, ChevronUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/logo";
+import { cn } from "@/lib/utils";
 
 const PACKS = [
   { id: 1, amount: "86 diamonds", price: "Rp 19,500", bonus: "+9 bonus" },
@@ -36,6 +37,7 @@ export default function TopupPage() {
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   const [userId, setUserId] = useState("");
   const [zoneId, setZoneId] = useState("");
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const itemImage = PlaceHolderImages.find((img) => img.id === id) || PlaceHolderImages[0];
 
@@ -251,6 +253,28 @@ export default function TopupPage() {
       {/* Mobile Sticky Summary Bar - Drawer Style from reference */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border p-5 pb-6 animate-in slide-in-from-bottom duration-300 rounded-t-md shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
         <div className="container mx-auto space-y-4">
+          {/* Expanded Details Section */}
+          {isDetailsOpen && selectedPack && (
+            <div className="mb-2 space-y-2 border-b border-border pb-4 animate-in slide-in-from-bottom-2 duration-300">
+              <div className="flex justify-between text-[11px] font-bold text-muted-foreground">
+                <span>Harga</span>
+                <span className="text-foreground">{selectedPackData?.price}</span>
+              </div>
+              <div className="flex justify-between text-[11px] font-bold text-muted-foreground">
+                <span>Jumlah</span>
+                <span className="text-foreground">{selectedPackData?.amount}</span>
+              </div>
+              <div className="flex justify-between text-[11px] font-bold text-muted-foreground">
+                <span>Biaya Layanan</span>
+                <span className="text-foreground">Rp 0</span>
+              </div>
+              <div className="flex justify-between items-end pt-2">
+                <span className="text-xs font-bold">Total Pembayaran</span>
+                <span className="text-base font-black text-primary">{selectedPackData?.price}</span>
+              </div>
+            </div>
+          )}
+
           {/* Product and Pack Info with Border */}
           <div className="flex items-center justify-between p-3 border border-border rounded-md bg-card/30 min-h-[64px]">
             {selectedPack ? (
@@ -273,9 +297,13 @@ export default function TopupPage() {
                     </p>
                   </div>
                 </div>
-                <div className="h-8 w-8 rounded-full bg-muted/50 flex items-center justify-center text-muted-foreground">
+                <button 
+                  onClick={() => setIsDetailsOpen(!isDetailsOpen)}
+                  className="h-8 w-8 rounded-full bg-muted/50 flex items-center justify-center text-muted-foreground transition-transform duration-300"
+                  style={{ transform: isDetailsOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                >
                   <ChevronUp className="h-5 w-5" />
-                </div>
+                </button>
               </>
             ) : (
               <p className="text-[11px] font-bold text-muted-foreground w-full text-center">
