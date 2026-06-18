@@ -36,7 +36,7 @@ export default function TopupPage() {
   const [selectedPack, setSelectedPack] = useState<number | null>(null);
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   const [userId, setUserId] = useState("");
-  const [zoneId, setZoneId] = useState("");
+  const [zoneId, setUserIdZone] = useState("");
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
 
@@ -74,7 +74,7 @@ export default function TopupPage() {
             onClick={() => router.back()}
           >
             <ChevronLeft className="mr-1 h-5 w-5" />
-            Back
+            Kembali
           </Button>
           
           <Link href="/" className="transition-transform hover:scale-105">
@@ -98,7 +98,8 @@ export default function TopupPage() {
             </div>
 
             <div className="relative px-4 py-6 md:px-6 md:py-8 flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-center">
-              <div className="relative -mt-20 md:-mt-32 h-32 w-32 md:h-52 md:w-52 shrink-0 rounded-md overflow-hidden shadow-2xl border-4 border-background bg-background z-20">
+              {/* Ikon Produk Tanpa Border dan Rounded-MD */}
+              <div className="relative -mt-20 md:-mt-32 h-32 w-32 md:h-52 md:w-52 shrink-0 rounded-md overflow-hidden shadow-2xl z-20">
                 <Image 
                   src={itemImage.imageUrl} 
                   alt="Service" 
@@ -113,8 +114,8 @@ export default function TopupPage() {
                   <h1 className="text-3xl md:text-5xl font-black tracking-tighter leading-none capitalize">
                     {String(id).replace("-", " ")}
                   </h1>
-                  <p className="text-xs md:text-base text-muted-foreground font-bold opacity-70 capitalize">
-                    {itemImage.description || "Official Service"}
+                  <p className="text-xs md:text-base text-muted-foreground font-bold opacity-70">
+                    {itemImage.description || "Layanan Resmi"}
                   </p>
                 </div>
 
@@ -158,7 +159,7 @@ export default function TopupPage() {
                       placeholder="Contoh: 1234" 
                       className="h-12 bg-background border-border text-sm font-bold rounded-md"
                       value={zoneId}
-                      onChange={(e) => setZoneId(e.target.value)}
+                      onChange={(e) => setUserIdZone(e.target.value)}
                     />
                   </div>
                 </div>
@@ -252,10 +253,10 @@ export default function TopupPage() {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" onClick={() => setShowCheckout(false)} className="flex-1 h-9 font-bold text-xs">
+                      <Button variant="outline" onClick={() => setShowCheckout(false)} className="flex-1 h-9 font-bold text-xs rounded-md">
                         Batal
                       </Button>
-                      <Button onClick={confirmOrder} className="flex-1 h-9 font-black text-xs bg-primary text-primary-foreground">
+                      <Button onClick={confirmOrder} className="flex-1 h-9 font-black text-xs bg-primary text-primary-foreground rounded-md">
                         Pesan Sekarang
                       </Button>
                     </div>
@@ -295,6 +296,7 @@ export default function TopupPage() {
         </div>
       </main>
 
+      {/* Mobile Sticky Bar - Terintegrasi sebagai Bottom Sheet */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border p-4 pb-6 shadow-[0_-10px_30px_rgba(0,0,0,0.15)] rounded-t-md">
         <div className="container mx-auto space-y-4">
           {showCheckout ? (
@@ -358,11 +360,12 @@ export default function TopupPage() {
                 </div>
               )}
 
+              {/* Area Ringkasan Mobile */}
               <div className="flex items-center justify-between p-3 border border-border rounded-md bg-card/30 min-h-[54px]">
                 {selectedPack ? (
                   <>
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 relative rounded overflow-hidden bg-muted border border-border">
+                      <div className="h-8 w-8 relative rounded overflow-hidden bg-muted">
                         <Image src={itemImage.imageUrl} alt={itemImage.description} fill className="object-cover" />
                       </div>
                       <div className="space-y-0.5">
