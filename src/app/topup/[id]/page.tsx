@@ -66,7 +66,7 @@ export default function TopupPage() {
             onClick={() => router.back()}
           >
             <ChevronLeft className="mr-1 h-5 w-5" />
-            Back
+            back
           </Button>
           
           <Link href="/" className="transition-transform hover:scale-105">
@@ -113,15 +113,15 @@ export default function TopupPage() {
               <div className="flex flex-wrap gap-4 pt-2">
                 <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
                   <Zap className="h-4 w-4 text-primary fill-primary" />
-                  <span>Proses cepat</span>
+                  <span>proses cepat</span>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
                   <MessageCircle className="h-4 w-4 text-primary fill-primary/20" />
-                  <span>Layanan chat 24/7</span>
+                  <span>layanan chat 24/7</span>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] md:text-sm font-black text-foreground">
                   <ShieldCheck className="h-4 w-4 text-primary" />
-                  <span>Pembayaran aman!</span>
+                  <span>pembayaran aman!</span>
                 </div>
               </div>
             </div>
@@ -133,11 +133,11 @@ export default function TopupPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Step 1: User Data */}
             <div className="bento-card p-5 md:p-8">
-              <StepHeader number={1} title="Masukkan data akun" />
+              <StepHeader number={1} title="masukkan data akun" />
               
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="userId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">User id</Label>
+                  <Label htmlFor="userId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">user id</Label>
                   <Input 
                     id="userId" 
                     placeholder="e.g. 12345678" 
@@ -147,7 +147,7 @@ export default function TopupPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">Zone id</Label>
+                  <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-black text-muted-foreground tracking-wider">zone id</Label>
                   <Input 
                     id="zoneId" 
                     placeholder="e.g. 1234" 
@@ -161,7 +161,7 @@ export default function TopupPage() {
 
             {/* Step 2: Select Pack */}
             <div className="bento-card p-5 md:p-8">
-              <StepHeader number={2} title="Pilih nominal topup" />
+              <StepHeader number={2} title="pilih nominal topup" />
               
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
                 {PACKS.map((pack) => (
@@ -173,7 +173,7 @@ export default function TopupPage() {
                     }`}
                   >
                     {pack.popular && (
-                      <Badge className="absolute -top-1.5 -right-1 bg-accent text-[9px] text-accent-foreground font-black px-2 py-0.5 border-none">Populer</Badge>
+                      <Badge className="absolute -top-1.5 -right-1 bg-accent text-[9px] text-accent-foreground font-black px-2 py-0.5 border-none">populer</Badge>
                     )}
                     <span className="text-[10px] md:text-xs font-bold text-muted-foreground truncate">{pack.amount}</span>
                     <span className="text-[10px] md:text-xs text-primary font-black mt-0.5">{pack.bonus}</span>
@@ -182,15 +182,12 @@ export default function TopupPage() {
                 ))}
               </div>
             </div>
-          </div>
 
-          {/* Sidebar Content */}
-          <div className="space-y-6">
             {/* Step 3: Payment */}
             <div className="bento-card p-5 md:p-8">
-              <StepHeader number={3} title="Metode pembayaran" />
+              <StepHeader number={3} title="metode pembayaran" />
               
-              <div className="grid grid-cols-1 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {PAYMENT_METHODS.map((method) => (
                   <button
                     key={method.id}
@@ -210,22 +207,24 @@ export default function TopupPage() {
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Checkout Summary Card */}
-            <div className="bento-card p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 sticky bottom-4 z-40 backdrop-blur-md">
+          {/* Sidebar Content - Order Summary */}
+          <div className="lg:sticky lg:top-24 space-y-6">
+            <div className="bento-card p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 backdrop-blur-md">
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h3 className="text-lg font-black tracking-tight">Ringkasan pesanan</h3>
+                  <h3 className="text-lg font-black tracking-tight">ringkasan pesanan</h3>
                   <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
-                    <span>Target id</span>
+                    <span>target id</span>
                     <span className="text-foreground">{userId || "-"} {zoneId ? `(${zoneId})` : ""}</span>
                   </div>
                   <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
-                    <span>Paket</span>
+                    <span>paket</span>
                     <span className="text-foreground">{selectedPack ? PACKS.find(p => p.id === selectedPack)?.amount : "-"}</span>
                   </div>
                   <div className="flex justify-between items-end pt-2">
-                    <span className="text-sm font-black">Total pembayaran</span>
+                    <span className="text-sm font-black">total pembayaran</span>
                     <span className="text-2xl font-black text-primary">
                       {selectedPack ? PACKS.find(p => p.id === selectedPack)?.price : "---"}
                     </span>
@@ -237,7 +236,7 @@ export default function TopupPage() {
                   onClick={handleOrder}
                   className="h-14 md:h-16 rounded-full px-8 text-lg font-black bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
                 >
-                  Bayar sekarang
+                  bayar sekarang
                 </Button>
               </div>
             </div>
