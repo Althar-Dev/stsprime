@@ -128,6 +128,12 @@
     background-size: 16px 16px;
   }
 
+  /* Dots Background Pattern */
+  .bg-dots-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 10px 10px;
+  }
+
   @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }

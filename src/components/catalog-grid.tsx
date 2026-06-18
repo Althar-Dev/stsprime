@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -15,7 +14,7 @@ const CATALOG_ITEMS = [
   { 
     id: "ff-fs", 
     name: "Free Fire", 
-    type: "Game", 
+    type: "Garena", 
     imageId: "ff", 
     tag: "Flash Sale",
     discount: "50%",
@@ -25,7 +24,7 @@ const CATALOG_ITEMS = [
   { 
     id: "mlbb-fs", 
     name: "Mobile Legends", 
-    type: "Game", 
+    type: "Moonton", 
     imageId: "mlbb", 
     tag: "Flash Sale",
     discount: "30%",
@@ -35,7 +34,7 @@ const CATALOG_ITEMS = [
   { 
     id: "valorant-fs", 
     name: "Valorant Points", 
-    type: "Game", 
+    type: "Riot Games", 
     imageId: "valorant", 
     tag: "Flash Sale",
     discount: "20%",
@@ -45,7 +44,7 @@ const CATALOG_ITEMS = [
   { 
     id: "pubgm-fs", 
     name: "PUBG Mobile", 
-    type: "Game", 
+    type: "Level Infinite", 
     imageId: "pubgm", 
     tag: "Flash Sale",
     discount: "40%",
@@ -55,7 +54,7 @@ const CATALOG_ITEMS = [
   { 
     id: "genshin-fs", 
     name: "Genshin Impact", 
-    type: "Game", 
+    type: "HoYoverse", 
     imageId: "genshin", 
     tag: "Flash Sale",
     discount: "15%",
@@ -65,7 +64,7 @@ const CATALOG_ITEMS = [
   { 
     id: "steam-fs", 
     name: "Steam Wallet", 
-    type: "Voucher", 
+    type: "Valve", 
     imageId: "steam", 
     tag: "Flash Sale",
     discount: "25%",
@@ -73,9 +72,9 @@ const CATALOG_ITEMS = [
     salePrice: "Rp 75.000"
   },
   // Populer
-  { id: "mlbb", name: "Mobile Legends", type: "Game", imageId: "mlbb", tag: "Populer" },
-  { id: "pubgm", name: "PUBG Mobile", type: "Game", imageId: "pubgm", tag: "Populer" },
-  { id: "genshin", name: "Genshin Impact", type: "Game", imageId: "genshin", tag: "Populer" },
+  { id: "mlbb", name: "Mobile Legends", type: "Moonton", imageId: "mlbb", tag: "Populer" },
+  { id: "pubgm", name: "PUBG Mobile", type: "Level Infinite", imageId: "pubgm", tag: "Populer" },
+  { id: "genshin", name: "Genshin Impact", type: "HoYoverse", imageId: "genshin", tag: "Populer" },
   // Others (TopUp)
   { id: "valorant", name: "Valorant", type: "Game", imageId: "valorant", tag: "New" },
   { id: "steam", name: "Steam Wallet", type: "Voucher", imageId: "steam", tag: "" },
@@ -202,21 +201,18 @@ export function CatalogGrid() {
           <SectionHeader 
             title="Populer" 
             icon="/img/fire.gif" 
-            subtitle="Most loved and frequently used by the community."
+            subtitle="Paling banyak dicari dan dimainkan oleh komunitas."
           />
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {populerItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group bento-card p-1.5 bg-grid-pattern relative overflow-hidden transition-all active:scale-95 flex flex-row aspect-[16/7] items-center hover:scale-[1.03] hover:shadow-lg"
+                  className="group relative flex items-center gap-5 p-4 bg-[#1a1a1a] bg-dots-pattern border border-white/5 rounded-[2.5rem] transition-all hover:scale-[1.02] hover:bg-[#222] hover:border-primary/30 active:scale-95 shadow-xl"
                 >
-                  {/* Glow Effect in Bottom Right Corner */}
-                  <div className="absolute bottom-0 right-0 h-16 w-16 bg-primary/30 blur-2xl rounded-full -mr-8 -mb-8 pointer-events-none z-0" />
-                  
-                  <div className="relative h-full aspect-square shrink-0 overflow-hidden rounded-lg z-10">
+                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl z-10">
                     <Image
                       src={image?.imageUrl || ""}
                       alt={item.name}
@@ -225,13 +221,13 @@ export function CatalogGrid() {
                       data-ai-hint={image?.imageHint}
                     />
                   </div>
-                  <div className="flex-1 min-w-0 pl-2.5 pr-1 flex flex-col justify-center z-10">
-                    <p className="text-[7px] md:text-[8px] tracking-[0.05em] text-accent font-black uppercase mb-0.5">
-                      {item.type}
-                    </p>
-                    <h3 className="line-clamp-1 text-[10px] md:text-[13px] font-black leading-none tracking-tight text-foreground group-hover:text-primary transition-colors">
+                  <div className="flex flex-col justify-center z-10">
+                    <h3 className="text-lg md:text-xl font-black tracking-tight text-white leading-tight mb-1 group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
+                    <p className="text-sm font-bold text-muted-foreground opacity-80 uppercase tracking-wide">
+                      {item.type}
+                    </p>
                   </div>
                 </Link>
               );
