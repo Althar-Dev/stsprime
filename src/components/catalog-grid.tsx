@@ -212,8 +212,8 @@ export function CatalogGrid() {
                   href={`/topup/${item.imageId}`}
                   className="group bento-card p-1.5 bg-grid-pattern relative overflow-hidden transition-all active:scale-95 flex flex-row aspect-[16/7] items-center hover:scale-[1.03] hover:shadow-lg"
                 >
-                  {/* Shimmer Overlay */}
-                  <div className="absolute inset-0 pointer-events-none animate-shimmer opacity-40 z-0" />
+                  {/* Glow Effect in Bottom Right Corner */}
+                  <div className="absolute bottom-0 right-0 h-16 w-16 bg-primary/30 blur-2xl rounded-full -mr-8 -mb-8 pointer-events-none z-0" />
                   
                   <div className="relative h-full aspect-square shrink-0 overflow-hidden rounded-lg z-10">
                     <Image
