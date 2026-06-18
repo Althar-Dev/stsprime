@@ -10,19 +10,19 @@
     --card-foreground: 0 0% 9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 9%;
-    --primary: 63 100% 50%;
+    --primary: 45 95% 55%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 48 100% 55%;
+    --secondary: 45 95% 55%;
     --secondary-foreground: 0 0% 0%;
     --muted: 0 0% 94%;
     --muted-foreground: 0 0% 45%;
-    --accent: 48 100% 55%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 227 77% 58%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 63 100% 50%;
+    --ring: 45 95% 55%;
     --radius: 1rem;
   }
 
@@ -33,19 +33,19 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 15%;
     --popover-foreground: 0 0% 98%;
-    --primary: 63 100% 50%;
+    --primary: 45 95% 55%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 48 100% 55%;
+    --secondary: 45 95% 55%;
     --secondary-foreground: 0 0% 0%;
     --muted: 0 0% 25%;
     --muted-foreground: 0 0% 70%;
-    --accent: 48 100% 55%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 227 77% 58%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 25%;
     --input: 0 0% 25%;
-    --ring: 63 100% 50%;
+    --ring: 45 95% 55%;
   }
 }
 
@@ -123,14 +123,14 @@
   /* Grid Background Pattern */
   .bg-grid-pattern {
     background-image: 
-      linear-gradient(to right, hsl(var(--primary) / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(var(--primary) / 0.05) 1px, transparent 1px);
-    background-size: 12px 12px;
+      linear-gradient(to right, hsl(var(--primary) / 0.1) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--primary) / 0.1) 1px, transparent 1px);
+    background-size: 16px 16px;
   }
 
   @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
 
   .animate-shimmer {
