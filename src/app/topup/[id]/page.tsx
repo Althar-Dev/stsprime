@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useParams, useRouter } from "next/navigation";
 import { Footer } from "@/components/footer";
@@ -12,15 +12,7 @@ import { useState } from "react";
 import { Check, ChevronLeft, CreditCard, ShieldCheck, Wallet, Zap, MessageCircle, ChevronUp, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/logo";
-import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 
 const PACKS = [
   { id: 1, amount: "86 Diamonds", price: "Rp 19,500", bonus: "+9 Bonus" },
@@ -91,7 +83,7 @@ export default function TopupPage() {
         </div>
       </nav>
 
-      <main className="flex-grow pb-32 lg:pb-10">
+      <main className="flex-grow pb-40 lg:pb-10">
         <div className="container mx-auto px-4 py-6 md:py-10">
           <div className="mb-10 md:mb-16">
             <div className="relative h-44 md:h-80 w-full overflow-hidden rounded-md bg-muted shadow-lg">
@@ -137,7 +129,7 @@ export default function TopupPage() {
                   </div>
                   <div className="flex items-center gap-2 text-[10px] md:text-sm font-bold text-foreground">
                     <ShieldCheck className="h-4 w-4 text-primary" />
-                    <span>Pembayaran Aman!</span>
+                    <span>Pembayaran Aman</span>
                   </div>
                 </div>
               </div>
@@ -153,7 +145,7 @@ export default function TopupPage() {
                     <Label htmlFor="userId" className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-wider">User ID</Label>
                     <Input 
                       id="userId" 
-                      placeholder="e.g. 12345678" 
+                      placeholder="Contoh: 12345678" 
                       className="h-12 bg-background border-border text-sm font-bold rounded-md" 
                       value={userId}
                       onChange={(e) => setUserId(e.target.value)}
@@ -163,7 +155,7 @@ export default function TopupPage() {
                     <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-wider">Zone ID</Label>
                     <Input 
                       id="zoneId" 
-                      placeholder="e.g. 1234" 
+                      placeholder="Contoh: 1234" 
                       className="h-12 bg-background border-border text-sm font-bold rounded-md"
                       value={zoneId}
                       onChange={(e) => setZoneId(e.target.value)}
@@ -220,177 +212,192 @@ export default function TopupPage() {
 
             <div className="hidden lg:block lg:sticky lg:top-24 space-y-6">
               <div className="bento-card !rounded-md p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 backdrop-blur-md">
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-bold tracking-tight">Ringkasan Pesanan</h3>
-                    <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
-                      <span>Target ID</span>
-                      <span className="text-foreground">{userId || "-"} {zoneId ? `(${zoneId})` : ""}</span>
+                {showCheckout ? (
+                  <div className="space-y-6 animate-in fade-in duration-300">
+                    <h3 className="text-lg font-bold tracking-tight flex items-center gap-2">
+                      <AlertCircle className="h-5 w-5 text-primary" />
+                      Konfirmasi Pesanan
+                    </h3>
+                    <div className="space-y-3 text-xs font-bold">
+                      <div className="flex justify-between border-b border-border pb-1.5">
+                        <span className="text-muted-foreground">Item</span>
+                        <span className="capitalize">{String(id).replace("-", " ")}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-border pb-1.5">
+                        <span className="text-muted-foreground">Target ID</span>
+                        <span className="text-primary">{userId} {zoneId ? `(${zoneId})` : ""}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-border pb-1.5">
+                        <span className="text-muted-foreground">Nominal</span>
+                        <span>{selectedPackData?.amount}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-border pb-1.5">
+                        <span className="text-muted-foreground">Metode</span>
+                        <span>{selectedPaymentData?.name}</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
-                      <span>Paket</span>
-                      <span className="text-foreground">{selectedPack ? selectedPackData?.amount : "Belum ada produk yang dipilih"}</span>
+                    <div className="bg-primary/5 p-4 rounded border border-primary/10 text-xs font-bold space-y-1.5">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Harga Paket</span>
+                        <span>{selectedPackData?.price}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Biaya Layanan</span>
+                        <span>Rp 0</span>
+                      </div>
+                      <Separator className="my-1" />
+                      <div className="flex justify-between items-center text-sm font-black pt-1">
+                        <span>Total Bayar</span>
+                        <span className="text-primary">{selectedPackData?.price}</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between items-end pt-2">
-                      <span className="text-sm font-bold">Total Pembayaran</span>
-                      <span className="text-2xl font-black text-primary">
-                        {selectedPack ? selectedPackData?.price : "---"}
-                      </span>
+                    <div className="flex gap-2">
+                      <Button variant="outline" onClick={() => setShowCheckout(false)} className="flex-1 h-9 font-bold text-xs">
+                        Batal
+                      </Button>
+                      <Button onClick={confirmOrder} className="flex-1 h-9 font-black text-xs bg-primary text-primary-foreground">
+                        Pesan Sekarang
+                      </Button>
                     </div>
                   </div>
-                  <Button 
-                    size="lg" 
-                    disabled={!userId || !selectedPack || !selectedPayment}
-                    onClick={handleOrder}
-                    className="h-9 rounded-md px-8 text-sm font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
-                  >
-                    Bayar Sekarang
-                  </Button>
-                </div>
+                ) : (
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-bold tracking-tight">Ringkasan Pesanan</h3>
+                      <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
+                        <span>Target ID</span>
+                        <span className="text-foreground">{userId || "-"} {zoneId ? `(${zoneId})` : ""}</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
+                        <span>Paket</span>
+                        <span className="text-foreground">{selectedPack ? selectedPackData?.amount : "Belum ada produk yang dipilih"}</span>
+                      </div>
+                      <div className="flex justify-between items-end pt-2">
+                        <span className="text-sm font-bold">Total Pembayaran</span>
+                        <span className="text-2xl font-black text-primary">
+                          {selectedPack ? selectedPackData?.price : "---"}
+                        </span>
+                      </div>
+                    </div>
+                    <Button 
+                      size="lg" 
+                      disabled={!userId || !selectedPack || !selectedPayment}
+                      onClick={handleOrder}
+                      className="h-9 rounded-md px-8 text-sm font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
+                    >
+                      Bayar Sekarang
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
       </main>
 
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border p-5 pb-6 animate-in slide-in-from-bottom duration-300 rounded-t-md shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border p-4 pb-6 shadow-[0_-10px_30px_rgba(0,0,0,0.15)] rounded-t-md">
         <div className="container mx-auto space-y-4">
-          {isDetailsOpen && selectedPack && (
-            <div className="mb-2 space-y-2 border-b border-border pb-4 animate-in slide-in-from-bottom-2 duration-300">
-              <div className="flex justify-between text-[11px] font-bold text-muted-foreground">
-                <span>Harga</span>
-                <span className="text-foreground">{selectedPackData?.price}</span>
+          {showCheckout ? (
+            <div className="space-y-4 animate-in slide-in-from-bottom duration-300">
+              <div className="flex items-center gap-2 border-b border-border pb-2">
+                <AlertCircle className="h-4 w-4 text-primary" />
+                <h4 className="text-sm font-black">Konfirmasi Pesanan</h4>
               </div>
-              <div className="flex justify-between text-[11px] font-bold text-muted-foreground">
-                <span>Jumlah</span>
-                <span className="text-foreground">{selectedPackData?.amount}</span>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[11px] font-bold">
+                <div className="flex justify-between border-b border-border/40 pb-1">
+                  <span className="text-muted-foreground">Item:</span>
+                  <span className="text-foreground capitalize truncate max-w-[80px]">{String(id).replace("-", " ")}</span>
+                </div>
+                <div className="flex justify-between border-b border-border/40 pb-1">
+                  <span className="text-muted-foreground">Target:</span>
+                  <span className="text-primary truncate max-w-[80px]">{userId}</span>
+                </div>
+                <div className="flex justify-between border-b border-border/40 pb-1">
+                  <span className="text-muted-foreground">Nominal:</span>
+                  <span className="text-foreground truncate max-w-[80px]">{selectedPackData?.amount}</span>
+                </div>
+                <div className="flex justify-between border-b border-border/40 pb-1">
+                  <span className="text-muted-foreground">Metode:</span>
+                  <span className="text-foreground truncate max-w-[80px]">{selectedPaymentData?.name}</span>
+                </div>
               </div>
-              <div className="flex justify-between text-[11px] font-bold text-muted-foreground">
-                <span>Biaya Layanan</span>
-                <span className="text-foreground">Rp 0</span>
+              <div className="bg-primary/5 p-3 rounded border border-primary/10 text-[11px] font-bold flex justify-between items-center">
+                <span className="text-muted-foreground">Total Bayar:</span>
+                <span className="text-sm font-black text-primary">{selectedPackData?.price}</span>
               </div>
-              <div className="flex justify-between items-end pt-2">
-                <span className="text-xs font-bold">Total Pembayaran</span>
-                <span className="text-base font-black text-primary">{selectedPackData?.price}</span>
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={() => setShowCheckout(false)} className="flex-1 h-9 rounded-md font-bold text-xs border-border">
+                  Batal
+                </Button>
+                <Button onClick={confirmOrder} className="flex-1 h-9 rounded-md font-black text-xs bg-primary text-primary-foreground shadow-md">
+                  Pesan Sekarang
+                </Button>
               </div>
             </div>
-          )}
-
-          <div className="flex items-center justify-between p-3 border border-border rounded-md bg-card/30 min-h-[64px]">
-            {selectedPack ? (
-              <>
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 relative rounded-md overflow-hidden bg-muted border border-border">
-                    <Image 
-                      src={itemImage.imageUrl} 
-                      alt={itemImage.description} 
-                      fill 
-                      className="object-cover"
-                    />
+          ) : (
+            <>
+              {isDetailsOpen && selectedPack && (
+                <div className="mb-2 space-y-2 border-b border-border pb-3 animate-in slide-in-from-bottom-2 duration-300">
+                  <div className="flex justify-between text-[11px] font-bold text-muted-foreground">
+                    <span>Harga</span>
+                    <span className="text-foreground">{selectedPackData?.price}</span>
                   </div>
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-bold text-foreground leading-tight capitalize">
-                      {String(id).replace("-", " ")}
-                    </p>
-                    <p className="text-[11px] font-bold text-muted-foreground">
-                      {selectedPackData?.amount}
-                    </p>
+                  <div className="flex justify-between text-[11px] font-bold text-muted-foreground">
+                    <span>Jumlah</span>
+                    <span className="text-foreground">{selectedPackData?.amount}</span>
+                  </div>
+                  <div className="flex justify-between text-[11px] font-bold text-muted-foreground">
+                    <span>Biaya Layanan</span>
+                    <span className="text-foreground">Rp 0</span>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between items-end pt-1">
+                    <span className="text-xs font-bold">Total Pembayaran</span>
+                    <span className="text-sm font-black text-primary">{selectedPackData?.price}</span>
                   </div>
                 </div>
-                <button 
-                  onClick={() => setIsDetailsOpen(!isDetailsOpen)}
-                  className="h-8 w-8 rounded-full bg-muted/50 flex items-center justify-center text-muted-foreground transition-transform duration-300"
-                  style={{ transform: isDetailsOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                >
-                  <ChevronUp className="h-5 w-5" />
-                </button>
-              </>
-            ) : (
-              <p className="text-[11px] font-bold text-muted-foreground w-full text-center">
-                Belum ada produk yang dipilih.
-              </p>
-            )}
-          </div>
+              )}
 
-          <div className="space-y-3">
-             <Button 
-              disabled={!userId || !selectedPack || !selectedPayment}
-              onClick={handleOrder}
-              className="w-full h-9 rounded-md font-black text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"
-            >
-              Bayar Sekarang
-            </Button>
-          </div>
+              <div className="flex items-center justify-between p-3 border border-border rounded-md bg-card/30 min-h-[54px]">
+                {selectedPack ? (
+                  <>
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 relative rounded overflow-hidden bg-muted border border-border">
+                        <Image src={itemImage.imageUrl} alt={itemImage.description} fill className="object-cover" />
+                      </div>
+                      <div className="space-y-0.5">
+                        <p className="text-xs font-bold text-foreground leading-tight capitalize">{String(id).replace("-", " ")}</p>
+                        <p className="text-[10px] font-bold text-muted-foreground">{selectedPackData?.amount}</p>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => setIsDetailsOpen(!isDetailsOpen)}
+                      className="h-7 w-7 rounded-full bg-muted/50 flex items-center justify-center text-muted-foreground transition-transform duration-300"
+                      style={{ transform: isDetailsOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                    >
+                      <ChevronUp className="h-4 w-4" />
+                    </button>
+                  </>
+                ) : (
+                  <p className="text-[11px] font-bold text-muted-foreground w-full text-center">
+                    Belum ada produk yang dipilih.
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                 <Button 
+                  disabled={!userId || !selectedPack || !selectedPayment}
+                  onClick={handleOrder}
+                  className="w-full h-9 rounded-md font-black text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"
+                >
+                  Bayar Sekarang
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
-
-      <Dialog open={showCheckout} onOpenChange={setShowCheckout}>
-        <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-border bg-background rounded-xl">
-          <DialogHeader className="p-6 md:p-8 bg-muted/30 border-b border-border">
-            <DialogTitle className="text-xl md:text-2xl font-black tracking-tight flex items-center gap-3">
-              <AlertCircle className="h-6 w-6 text-primary" />
-              Konfirmasi Pesanan
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="p-6 md:p-8 space-y-8">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b border-border/50">
-                <span className="text-xs font-bold text-muted-foreground">Item</span>
-                <span className="text-sm font-black capitalize">{String(id).replace("-", " ")}</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-border/50">
-                <span className="text-xs font-bold text-muted-foreground">Target ID</span>
-                <span className="text-sm font-black text-primary">{userId} {zoneId ? `(${zoneId})` : ""}</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-border/50">
-                <span className="text-xs font-bold text-muted-foreground">Nominal</span>
-                <span className="text-sm font-black">{selectedPackData?.amount}</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-border/50">
-                <span className="text-xs font-bold text-muted-foreground">Metode</span>
-                <span className="text-sm font-black">{selectedPaymentData?.name}</span>
-              </div>
-            </div>
-
-            <div className="bg-primary/5 p-5 rounded-lg border border-primary/20 space-y-3">
-              <div className="flex justify-between text-xs font-bold text-muted-foreground">
-                <span>Harga Paket</span>
-                <span className="text-foreground">{selectedPackData?.price}</span>
-              </div>
-              <div className="flex justify-between text-xs font-bold text-muted-foreground">
-                <span>Biaya Layanan</span>
-                <span className="text-foreground">Rp 0</span>
-              </div>
-              <Separator className="bg-primary/20" />
-              <div className="flex justify-between items-center pt-1">
-                <span className="text-sm font-black">Total Bayar</span>
-                <span className="text-xl font-black text-primary">{selectedPackData?.price}</span>
-              </div>
-            </div>
-            
-            <p className="text-[10px] text-muted-foreground text-center font-bold">
-              Pastikan data akun dan nominal sudah benar sebelum melanjutkan.
-            </p>
-          </div>
-
-          <DialogFooter className="p-6 md:p-8 bg-muted/30 border-t border-border flex flex-col sm:flex-row gap-3">
-            <Button 
-              variant="outline" 
-              onClick={() => setShowCheckout(false)}
-              className="flex-1 h-11 rounded-lg font-bold border-border"
-            >
-              Batal
-            </Button>
-            <Button 
-              onClick={confirmOrder}
-              className="flex-1 h-11 rounded-lg bg-primary text-primary-foreground font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform"
-            >
-              Pesan Sekarang
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       <Footer />
     </div>
