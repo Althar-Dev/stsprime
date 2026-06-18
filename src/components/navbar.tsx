@@ -195,8 +195,8 @@ export function Navbar() {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="cursor-pointer font-bold gap-2 flex justify-between items-center">
                           <div className="flex items-center gap-2">
-                            <img src="/img/coin.png" alt="STS Coin" className="h-4 w-4 object-contain" />
-                            <span>STS Coin</span>
+                            <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 object-contain" />
+                            <span>STSCoin</span>
                           </div>
                           <span className="text-primary">0</span>
                         </DropdownMenuItem>
