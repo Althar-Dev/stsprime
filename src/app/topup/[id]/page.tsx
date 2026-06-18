@@ -47,7 +47,7 @@ export default function TopupPage() {
   const selectedPackData = PACKS.find(p => p.id === selectedPack);
 
   const StepHeader = ({ number, title }: { number: number; title: string }) => (
-    <div className="-mx-5 -mt-5 mb-6 md:-mx-8 md:-mt-8 flex items-stretch overflow-hidden rounded-t-[calc(var(--radius)-1px)] bg-muted/30">
+    <div className="-mx-5 -mt-5 mb-6 md:-mx-8 md:-mt-8 flex items-stretch overflow-hidden rounded-t-lg bg-muted/30">
       <div className="flex w-10 md:w-16 shrink-0 items-center justify-center bg-primary text-primary-foreground font-black text-sm md:text-xl">
         {number}
       </div>
@@ -79,9 +79,9 @@ export default function TopupPage() {
 
       <main className="flex-grow pb-32 lg:pb-10">
         <div className="container mx-auto px-4 py-6 md:py-10">
-          {/* Product Hero Section */}
+          {/* Product Hero Section - No Card Wrapper */}
           <div className="mb-10 md:mb-16">
-            <div className="relative h-44 md:h-80 w-full overflow-hidden rounded-3xl bg-muted shadow-lg">
+            <div className="relative h-44 md:h-80 w-full overflow-hidden rounded-2xl bg-muted shadow-lg">
               <Image 
                 src={`https://picsum.photos/seed/${id}-banner/1200/400`} 
                 alt="Banner background"
@@ -93,7 +93,7 @@ export default function TopupPage() {
             </div>
 
             <div className="relative px-4 py-6 md:px-6 md:py-8 flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-center">
-              <div className="relative -mt-20 md:-mt-32 h-32 w-32 md:h-52 md:w-52 shrink-0 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-background bg-background z-20">
+              <div className="relative -mt-20 md:-mt-32 h-32 w-32 md:h-52 md:w-52 shrink-0 rounded-2xl overflow-hidden shadow-2xl border-4 border-background bg-background z-20">
                 <Image 
                   src={itemImage.imageUrl} 
                   alt="Service" 
@@ -132,10 +132,10 @@ export default function TopupPage() {
           </div>
 
           <div className="grid gap-8 lg:grid-cols-3 items-start">
-            {/* Form Content */}
+            {/* Form Content - Steps on the left */}
             <div className="lg:col-span-2 space-y-6">
               {/* Step 1: User Data */}
-              <div className="bento-card p-5 md:p-8">
+              <div className="bento-card !rounded-lg p-5 md:p-8">
                 <StepHeader number={1} title="masukkan data akun" />
                 
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -144,7 +144,7 @@ export default function TopupPage() {
                     <Input 
                       id="userId" 
                       placeholder="e.g. 12345678" 
-                      className="h-12 bg-background border-border text-sm font-bold" 
+                      className="h-12 bg-background border-border text-sm font-bold rounded-md" 
                       value={userId}
                       onChange={(e) => setUserId(e.target.value)}
                     />
@@ -154,7 +154,7 @@ export default function TopupPage() {
                     <Input 
                       id="zoneId" 
                       placeholder="e.g. 1234" 
-                      className="h-12 bg-background border-border text-sm font-bold"
+                      className="h-12 bg-background border-border text-sm font-bold rounded-md"
                       value={zoneId}
                       onChange={(e) => setZoneId(e.target.value)}
                     />
@@ -163,7 +163,7 @@ export default function TopupPage() {
               </div>
 
               {/* Step 2: Select Pack */}
-              <div className="bento-card p-5 md:p-8">
+              <div className="bento-card !rounded-lg p-5 md:p-8">
                 <StepHeader number={2} title="pilih nominal topup" />
                 
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
@@ -171,7 +171,7 @@ export default function TopupPage() {
                     <button
                       key={pack.id}
                       onClick={() => setSelectedPack(pack.id)}
-                      className={`relative flex flex-col p-4 text-left rounded-xl border transition-all ${
+                      className={`relative flex flex-col p-4 text-left rounded-lg border transition-all ${
                         selectedPack === pack.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
                       }`}
                     >
@@ -187,7 +187,7 @@ export default function TopupPage() {
               </div>
 
               {/* Step 3: Payment */}
-              <div className="bento-card p-5 md:p-8">
+              <div className="bento-card !rounded-lg p-5 md:p-8">
                 <StepHeader number={3} title="metode pembayaran" />
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -195,7 +195,7 @@ export default function TopupPage() {
                     <button
                       key={method.id}
                       onClick={() => setSelectedPayment(method.id)}
-                      className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
+                      className={`flex items-center justify-between p-4 rounded-lg border transition-all ${
                         selectedPayment === method.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
                       }`}
                     >
@@ -212,9 +212,9 @@ export default function TopupPage() {
               </div>
             </div>
 
-            {/* Sidebar Content - Order Summary (Desktop) */}
+            {/* Sidebar Content - Order Summary (Desktop Sticky) */}
             <div className="hidden lg:block lg:sticky lg:top-24 space-y-6">
-              <div className="bento-card p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 backdrop-blur-md">
+              <div className="bento-card !rounded-lg p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 backdrop-blur-md">
                 <div className="space-y-6">
                   <div className="space-y-2">
                     <h3 className="text-lg font-bold tracking-tight">ringkasan pesanan</h3>
@@ -224,7 +224,7 @@ export default function TopupPage() {
                     </div>
                     <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
                       <span>paket</span>
-                      <span className="text-foreground">{selectedPack ? selectedPackData?.amount : "-"}</span>
+                      <span className="text-foreground">{selectedPack ? selectedPackData?.amount : "belum ada produk yang dipilih"}</span>
                     </div>
                     <div className="flex justify-between items-end pt-2">
                       <span className="text-sm font-bold">total pembayaran</span>
@@ -237,7 +237,7 @@ export default function TopupPage() {
                     size="lg" 
                     disabled={!userId || !selectedPack || !selectedPayment}
                     onClick={handleOrder}
-                    className="h-12 md:h-14 rounded-full px-8 text-lg font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
+                    className="h-11 rounded-md px-8 text-base font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
                   >
                     bayar sekarang
                   </Button>
@@ -249,10 +249,10 @@ export default function TopupPage() {
       </main>
 
       {/* Mobile Sticky Summary Bar - Drawer Style from reference */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border p-5 pb-6 animate-in slide-in-from-bottom duration-300 rounded-t-2xl shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border p-5 pb-6 animate-in slide-in-from-bottom duration-300 rounded-t-lg shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
         <div className="container mx-auto space-y-4">
-          {/* Product and Pack Info */}
-          <div className="flex items-center justify-between">
+          {/* Product and Pack Info with Border */}
+          <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-card/30">
             <div className="flex items-center gap-4">
               <div className="h-10 w-10 relative rounded-lg overflow-hidden bg-muted border border-border">
                 <Image 
@@ -267,7 +267,7 @@ export default function TopupPage() {
                   {String(id).replace("-", " ")}
                 </p>
                 <p className="text-[11px] font-bold text-muted-foreground">
-                  {selectedPack ? selectedPackData?.amount : "pilih paket"}
+                  {selectedPack ? selectedPackData?.amount : "Belum ada produk yang dipilih."}
                 </p>
               </div>
             </div>
@@ -281,7 +281,7 @@ export default function TopupPage() {
              <Button 
               disabled={!userId || !selectedPack || !selectedPayment}
               onClick={handleOrder}
-              className="w-full h-12 rounded-xl font-black text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"
+              className="w-full h-11 rounded-md font-black text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"
             >
               bayar sekarang
             </Button>
