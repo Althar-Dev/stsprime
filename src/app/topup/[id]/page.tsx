@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -47,7 +48,7 @@ export default function TopupPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <main className="flex-grow container mx-auto px-4 py-6 md:py-10">
-        <div className="flex items-center justify-between mb-6 md:mb-10">
+        <div className="flex items-center justify-between mb-8 md:mb-12">
           <Button 
             variant="ghost" 
             className="-ml-2 text-muted-foreground hover:text-foreground text-xs md:text-sm font-bold"
@@ -62,39 +63,40 @@ export default function TopupPage() {
           </Link>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3 items-start">
-          {/* Left Column: Info (No Card) */}
-          <div className="space-y-6">
-            <div className="px-2">
-              <div className="relative h-40 md:h-52 w-full rounded-2xl overflow-hidden mb-6 shadow-xl border border-border">
-                <Image 
-                  src={itemImage.imageUrl} 
-                  alt="Service" 
-                  fill 
-                  className="object-cover"
-                  data-ai-hint={itemImage.imageHint}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
-              </div>
-              <h1 className="text-2xl md:text-4xl font-black mb-3 tracking-tight capitalize">{String(id).replace("-", " ")}</h1>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+        {/* Product Info - Full Width Header */}
+        <div className="mb-10 md:mb-16">
+          <div className="flex flex-col md:flex-row gap-8 items-start md:items-center">
+            {/* Image Container - Width Full on Mobile */}
+            <div className="relative h-48 w-full md:h-52 md:w-52 shrink-0 rounded-3xl overflow-hidden shadow-2xl border border-border">
+              <Image 
+                src={itemImage.imageUrl} 
+                alt="Service" 
+                fill 
+                className="object-cover"
+                data-ai-hint={itemImage.imageHint}
+              />
+            </div>
+            <div className="space-y-4 max-w-2xl">
+              <h1 className="text-3xl md:text-5xl font-black tracking-tight capitalize">{String(id).replace("-", " ")}</h1>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                 Top up {String(id).replace("-", " ")} instantly! Just enter your ID, select the pack, and pay. Your top-up is processed immediately.
               </p>
-              
-              <div className="mt-8 space-y-4 border-t border-border pt-6">
-                <div className="flex items-center gap-3 text-xs md:text-sm font-black tracking-tighter">
-                  <ShieldCheck className="h-5 w-5 text-primary" />
+              <div className="flex flex-wrap gap-4 pt-2">
+                <div className="flex items-center gap-2 text-[10px] md:text-xs font-black tracking-tighter uppercase text-primary">
+                  <ShieldCheck className="h-4 w-4" />
                   Official & Secure
                 </div>
-                <div className="flex items-center gap-3 text-xs md:text-sm font-black tracking-tighter">
-                  <CreditCard className="h-5 w-5 text-primary" />
+                <div className="flex items-center gap-2 text-[10px] md:text-xs font-black tracking-tighter uppercase text-primary">
+                  <CreditCard className="h-4 w-4" />
                   Fast Payment
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Right Column: Form */}
+        <div className="grid gap-8 lg:grid-cols-3 items-start">
+          {/* Form Content: Steps 1 & 2 */}
           <div className="lg:col-span-2 space-y-6">
             {/* Step 1: User Data */}
             <div className="bento-card p-5 md:p-8">
@@ -132,33 +134,36 @@ export default function TopupPage() {
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">2</div>
                 <h2 className="text-lg md:text-xl font-black tracking-tight">Select amount</h2>
               </div>
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-3 sm:gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
                 {PACKS.map((pack) => (
                   <button
                     key={pack.id}
                     onClick={() => setSelectedPack(pack.id)}
-                    className={`relative flex flex-col p-2.5 md:p-4 text-left rounded-xl border transition-all ${
+                    className={`relative flex flex-col p-4 text-left rounded-2xl border transition-all ${
                       selectedPack === pack.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
                     }`}
                   >
                     {pack.popular && (
-                      <Badge className="absolute -top-1.5 -right-1 bg-accent text-[7px] md:text-[10px] text-accent-foreground font-black px-1.5 py-0">Popular</Badge>
+                      <Badge className="absolute -top-1.5 -right-1 bg-accent text-[9px] text-accent-foreground font-black px-2 py-0.5">Popular</Badge>
                     )}
-                    <span className="text-[9px] md:text-xs font-bold text-muted-foreground truncate">{pack.amount}</span>
-                    <span className="text-[8px] md:text-xs text-primary font-black mt-0.5">{pack.bonus}</span>
-                    <span className="text-xs md:text-lg font-black mt-1.5">{pack.price}</span>
+                    <span className="text-[10px] md:text-xs font-bold text-muted-foreground truncate">{pack.amount}</span>
+                    <span className="text-[10px] md:text-xs text-primary font-black mt-0.5">{pack.bonus}</span>
+                    <span className="text-sm md:text-lg font-black mt-2">{pack.price}</span>
                   </button>
                 ))}
               </div>
             </div>
+          </div>
 
+          {/* Sidebar Content: Step 3 & Checkout */}
+          <div className="space-y-6">
             {/* Step 3: Payment */}
             <div className="bento-card p-5 md:p-8">
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-black text-sm">3</div>
-                <h2 className="text-lg md:text-xl font-black tracking-tight">Payment method</h2>
+                <h2 className="text-lg md:text-xl font-black tracking-tight">Payment</h2>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+              <div className="grid grid-cols-1 gap-3">
                 {PAYMENT_METHODS.map((method) => (
                   <button
                     key={method.id}
@@ -179,21 +184,31 @@ export default function TopupPage() {
               </div>
             </div>
 
-            {/* Checkout Footer */}
-            <div className="bento-card p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 sticky bottom-4 md:static z-40 backdrop-blur-md">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                <div className="space-y-1">
-                  <h3 className="text-lg md:text-xl font-black">Summary</h3>
-                  <p className="text-xs text-muted-foreground font-bold">ID: {userId || "not set"} {zoneId ? `(${zoneId})` : ""}</p>
-                  <p className="text-xl md:text-2xl font-black text-primary">
-                    {selectedPack ? PACKS.find(p => p.id === selectedPack)?.price : "---"}
-                  </p>
+            {/* Checkout Summary Card */}
+            <div className="bento-card p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 sticky bottom-4 z-40 backdrop-blur-md">
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-black">Order Summary</h3>
+                  <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
+                    <span>Target ID</span>
+                    <span className="text-foreground">{userId || "-"} {zoneId ? `(${zoneId})` : ""}</span>
+                  </div>
+                  <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
+                    <span>Pack</span>
+                    <span className="text-foreground">{selectedPack ? PACKS.find(p => p.id === selectedPack)?.amount : "-"}</span>
+                  </div>
+                  <div className="flex justify-between items-end pt-2">
+                    <span className="text-sm font-black">Total Price</span>
+                    <span className="text-2xl font-black text-primary">
+                      {selectedPack ? PACKS.find(p => p.id === selectedPack)?.price : "---"}
+                    </span>
+                  </div>
                 </div>
                 <Button 
                   size="lg" 
                   disabled={!userId || !selectedPack || !selectedPayment}
                   onClick={handleOrder}
-                  className="h-14 md:h-16 rounded-full px-8 md:px-12 text-lg md:text-xl font-black bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-transform w-full sm:w-auto"
+                  className="h-14 md:h-16 rounded-full px-8 text-lg font-black bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
                 >
                   Top up now
                 </Button>
