@@ -91,14 +91,14 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
         "w-[95vw] sm:max-w-[400px] max-h-[90vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none",
         "modal-scrollbar"
       )}>
-        {/* Custom Close Button for Accent Header */}
-        <DialogPrimitive.Close className="absolute right-4 top-4 z-20 rounded-full p-1 text-accent-foreground/70 opacity-70 ring-offset-accent transition-opacity hover:opacity-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close>
-
         {/* Header dengan Warna Accent - Sticky agar tetap terlihat saat scroll */}
-        <div className="p-6 md:p-8 flex flex-col items-center border-b border-border bg-accent sticky top-0 z-10">
+        <div className="p-6 md:p-8 flex flex-col items-center border-b border-border bg-accent sticky top-0 z-20">
+          {/* Custom Close Button inside Sticky Header */}
+          <DialogPrimitive.Close className="absolute right-4 top-4 z-30 rounded-full p-1 text-accent-foreground/70 opacity-70 ring-offset-accent transition-opacity hover:opacity-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </DialogPrimitive.Close>
+
           <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-accent-foreground/20 backdrop-blur-sm flex items-center justify-center mb-4">
             {mode === "login" ? (
               <ShieldCheck className="h-6 w-6 md:h-7 md:w-7 text-accent-foreground" />
