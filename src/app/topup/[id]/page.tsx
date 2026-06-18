@@ -23,19 +23,19 @@ import {
 } from "@/components/ui/dialog";
 
 const PACKS = [
-  { id: 1, amount: "86 diamonds", price: "Rp 19,500", bonus: "+9 bonus" },
-  { id: 2, amount: "172 diamonds", price: "Rp 38,000", bonus: "+18 bonus", popular: true },
-  { id: 3, amount: "257 diamonds", price: "Rp 56,000", bonus: "+26 bonus" },
-  { id: 4, amount: "344 diamonds", price: "Rp 74,000", bonus: "+35 bonus" },
-  { id: 5, amount: "706 diamonds", price: "Rp 148,000", bonus: "+72 bonus" },
-  { id: 6, amount: "1050 diamonds", price: "Rp 215,000", bonus: "+110 bonus" },
+  { id: 1, amount: "86 Diamonds", price: "Rp 19,500", bonus: "+9 Bonus" },
+  { id: 2, amount: "172 Diamonds", price: "Rp 38,000", bonus: "+18 Bonus", popular: true },
+  { id: 3, amount: "257 Diamonds", price: "Rp 56,000", bonus: "+26 Bonus" },
+  { id: 4, amount: "344 Diamonds", price: "Rp 74,000", bonus: "+35 Bonus" },
+  { id: 5, amount: "706 Diamonds", price: "Rp 148,000", bonus: "+72 Bonus" },
+  { id: 6, amount: "1050 Diamonds", price: "Rp 215,000", bonus: "+110 Bonus" },
 ];
 
 const PAYMENT_METHODS = [
-  { id: "qris", name: "qris", icon: <CreditCard className="h-5 w-5" /> },
-  { id: "dana", name: "dana", icon: <Wallet className="h-5 w-5" /> },
-  { id: "gopay", name: "gopay", icon: <Wallet className="h-5 w-5" /> },
-  { id: "ovo", name: "ovo", icon: <Wallet className="h-5 w-5" /> },
+  { id: "qris", name: "QRIS", icon: <CreditCard className="h-5 w-5" /> },
+  { id: "dana", name: "DANA", icon: <Wallet className="h-5 w-5" /> },
+  { id: "gopay", name: "GoPay", icon: <Wallet className="h-5 w-5" /> },
+  { id: "ovo", name: "OVO", icon: <Wallet className="h-5 w-5" /> },
 ];
 
 export default function TopupPage() {
@@ -82,7 +82,7 @@ export default function TopupPage() {
             onClick={() => router.back()}
           >
             <ChevronLeft className="mr-1 h-5 w-5" />
-            back
+            Back
           </Button>
           
           <Link href="/" className="transition-transform hover:scale-105">
@@ -118,26 +118,26 @@ export default function TopupPage() {
 
               <div className="flex-1 space-y-3 z-10">
                 <div className="space-y-1">
-                  <h1 className="text-3xl md:text-5xl font-black tracking-tighter leading-none">
+                  <h1 className="text-3xl md:text-5xl font-black tracking-tighter leading-none capitalize">
                     {String(id).replace("-", " ")}
                   </h1>
-                  <p className="text-xs md:text-base text-muted-foreground font-bold opacity-70">
-                    {itemImage.description || "official service"}
+                  <p className="text-xs md:text-base text-muted-foreground font-bold opacity-70 capitalize">
+                    {itemImage.description || "Official Service"}
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-4 pt-2">
                   <div className="flex items-center gap-2 text-[10px] md:text-sm font-bold text-foreground">
                     <Zap className="h-4 w-4 text-primary fill-primary" />
-                    <span>proses cepat</span>
+                    <span>Proses Cepat</span>
                   </div>
                   <div className="flex items-center gap-2 text-[10px] md:text-sm font-bold text-foreground">
                     <MessageCircle className="h-4 w-4 text-primary fill-primary/20" />
-                    <span>layanan chat 24/7</span>
+                    <span>Layanan Chat 24/7</span>
                   </div>
                   <div className="flex items-center gap-2 text-[10px] md:text-sm font-bold text-foreground">
                     <ShieldCheck className="h-4 w-4 text-primary" />
-                    <span>pembayaran aman!</span>
+                    <span>Pembayaran Aman!</span>
                   </div>
                 </div>
               </div>
@@ -147,10 +147,10 @@ export default function TopupPage() {
           <div className="grid gap-8 lg:grid-cols-3 items-start">
             <div className="lg:col-span-2 space-y-6">
               <div className="bento-card !rounded-md p-5 md:p-8">
-                <StepHeader number={1} title="masukkan data akun" />
+                <StepHeader number={1} title="Masukkan Data Akun" />
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="userId" className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-wider">user id</Label>
+                    <Label htmlFor="userId" className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-wider">User ID</Label>
                     <Input 
                       id="userId" 
                       placeholder="e.g. 12345678" 
@@ -160,7 +160,7 @@ export default function TopupPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-wider">zone id</Label>
+                    <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-wider">Zone ID</Label>
                     <Input 
                       id="zoneId" 
                       placeholder="e.g. 1234" 
@@ -173,7 +173,7 @@ export default function TopupPage() {
               </div>
 
               <div className="bento-card !rounded-md p-5 md:p-8">
-                <StepHeader number={2} title="pilih nominal topup" />
+                <StepHeader number={2} title="Pilih Nominal Topup" />
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
                   {PACKS.map((pack) => (
                     <button
@@ -184,7 +184,7 @@ export default function TopupPage() {
                       }`}
                     >
                       {pack.popular && (
-                        <Badge className="absolute -top-1.5 -right-1 bg-accent text-[9px] text-accent-foreground font-bold px-2 py-0.5 border-none">populer</Badge>
+                        <Badge className="absolute -top-1.5 -right-1 bg-accent text-[9px] text-accent-foreground font-bold px-2 py-0.5 border-none">Populer</Badge>
                       )}
                       <span className="text-[10px] md:text-xs font-bold text-muted-foreground truncate">{pack.amount}</span>
                       <span className="text-[10px] md:text-xs text-primary font-bold mt-0.5">{pack.bonus}</span>
@@ -195,7 +195,7 @@ export default function TopupPage() {
               </div>
 
               <div className="bento-card !rounded-md p-5 md:p-8">
-                <StepHeader number={3} title="metode pembayaran" />
+                <StepHeader number={3} title="Metode Pembayaran" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {PAYMENT_METHODS.map((method) => (
                     <button
@@ -222,17 +222,17 @@ export default function TopupPage() {
               <div className="bento-card !rounded-md p-6 md:p-8 bg-gradient-to-br from-primary/20 via-background to-background border-primary/20 backdrop-blur-md">
                 <div className="space-y-6">
                   <div className="space-y-2">
-                    <h3 className="text-lg font-bold tracking-tight">ringkasan pesanan</h3>
+                    <h3 className="text-lg font-bold tracking-tight">Ringkasan Pesanan</h3>
                     <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
-                      <span>target id</span>
+                      <span>Target ID</span>
                       <span className="text-foreground">{userId || "-"} {zoneId ? `(${zoneId})` : ""}</span>
                     </div>
                     <div className="flex justify-between text-xs font-bold text-muted-foreground border-b border-border/50 pb-2">
-                      <span>paket</span>
-                      <span className="text-foreground">{selectedPack ? selectedPackData?.amount : "belum ada produk yang dipilih"}</span>
+                      <span>Paket</span>
+                      <span className="text-foreground">{selectedPack ? selectedPackData?.amount : "Belum ada produk yang dipilih"}</span>
                     </div>
                     <div className="flex justify-between items-end pt-2">
-                      <span className="text-sm font-bold">total pembayaran</span>
+                      <span className="text-sm font-bold">Total Pembayaran</span>
                       <span className="text-2xl font-black text-primary">
                         {selectedPack ? selectedPackData?.price : "---"}
                       </span>
@@ -244,7 +244,7 @@ export default function TopupPage() {
                     onClick={handleOrder}
                     className="h-9 rounded-md px-8 text-sm font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
                   >
-                    bayar sekarang
+                    Bayar Sekarang
                   </Button>
                 </div>
               </div>
@@ -289,7 +289,7 @@ export default function TopupPage() {
                     />
                   </div>
                   <div className="space-y-0.5">
-                    <p className="text-sm font-bold text-foreground leading-tight">
+                    <p className="text-sm font-bold text-foreground leading-tight capitalize">
                       {String(id).replace("-", " ")}
                     </p>
                     <p className="text-[11px] font-bold text-muted-foreground">
@@ -318,7 +318,7 @@ export default function TopupPage() {
               onClick={handleOrder}
               className="w-full h-9 rounded-md font-black text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"
             >
-              bayar sekarang
+              Bayar Sekarang
             </Button>
           </div>
         </div>
@@ -329,48 +329,48 @@ export default function TopupPage() {
           <DialogHeader className="p-6 md:p-8 bg-muted/30 border-b border-border">
             <DialogTitle className="text-xl md:text-2xl font-black tracking-tight flex items-center gap-3">
               <AlertCircle className="h-6 w-6 text-primary" />
-              konfirmasi pesanan
+              Konfirmasi Pesanan
             </DialogTitle>
           </DialogHeader>
           
           <div className="p-6 md:p-8 space-y-8">
             <div className="space-y-4">
               <div className="flex justify-between items-center py-2 border-b border-border/50">
-                <span className="text-xs font-bold text-muted-foreground">item</span>
-                <span className="text-sm font-black">{String(id).replace("-", " ")}</span>
+                <span className="text-xs font-bold text-muted-foreground">Item</span>
+                <span className="text-sm font-black capitalize">{String(id).replace("-", " ")}</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-border/50">
-                <span className="text-xs font-bold text-muted-foreground">target id</span>
+                <span className="text-xs font-bold text-muted-foreground">Target ID</span>
                 <span className="text-sm font-black text-primary">{userId} {zoneId ? `(${zoneId})` : ""}</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-border/50">
-                <span className="text-xs font-bold text-muted-foreground">nominal</span>
+                <span className="text-xs font-bold text-muted-foreground">Nominal</span>
                 <span className="text-sm font-black">{selectedPackData?.amount}</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-border/50">
-                <span className="text-xs font-bold text-muted-foreground">metode</span>
+                <span className="text-xs font-bold text-muted-foreground">Metode</span>
                 <span className="text-sm font-black">{selectedPaymentData?.name}</span>
               </div>
             </div>
 
             <div className="bg-primary/5 p-5 rounded-lg border border-primary/20 space-y-3">
               <div className="flex justify-between text-xs font-bold text-muted-foreground">
-                <span>harga paket</span>
+                <span>Harga Paket</span>
                 <span className="text-foreground">{selectedPackData?.price}</span>
               </div>
               <div className="flex justify-between text-xs font-bold text-muted-foreground">
-                <span>biaya layanan</span>
+                <span>Biaya Layanan</span>
                 <span className="text-foreground">Rp 0</span>
               </div>
               <Separator className="bg-primary/20" />
               <div className="flex justify-between items-center pt-1">
-                <span className="text-sm font-black">total bayar</span>
+                <span className="text-sm font-black">Total Bayar</span>
                 <span className="text-xl font-black text-primary">{selectedPackData?.price}</span>
               </div>
             </div>
             
             <p className="text-[10px] text-muted-foreground text-center font-bold">
-              pastikan data akun dan nominal sudah benar sebelum melanjutkan.
+              Pastikan data akun dan nominal sudah benar sebelum melanjutkan.
             </p>
           </div>
 
@@ -380,13 +380,13 @@ export default function TopupPage() {
               onClick={() => setShowCheckout(false)}
               className="flex-1 h-11 rounded-lg font-bold border-border"
             >
-              batal
+              Batal
             </Button>
             <Button 
               onClick={confirmOrder}
               className="flex-1 h-11 rounded-lg bg-primary text-primary-foreground font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform"
             >
-              pesan sekarang
+              Pesan Sekarang
             </Button>
           </DialogFooter>
         </DialogContent>
