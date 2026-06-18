@@ -63,11 +63,23 @@ export default function TopupPage() {
           </Link>
         </div>
 
-        {/* Product Info - Full Width Header */}
-        <div className="mb-10 md:mb-16">
-          <div className="flex flex-col md:flex-row gap-8 items-start md:items-center">
-            {/* Image Container - Width Full on Mobile */}
-            <div className="relative h-48 w-full md:h-52 md:w-52 shrink-0 rounded-3xl overflow-hidden shadow-2xl border border-border">
+        {/* Product Info - Full Width Header with Banner */}
+        <div className="mb-10 md:mb-16 relative overflow-hidden rounded-[2rem] border border-border bg-muted/20">
+          {/* Background Banner Image */}
+          <div className="absolute inset-0 z-0">
+            <Image 
+              src="https://picsum.photos/seed/banner/1200/400" 
+              alt="Banner Background"
+              fill
+              className="object-cover opacity-10 dark:opacity-30 blur-[2px]"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
+          </div>
+
+          <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start md:items-center p-6 md:p-12">
+            {/* Image Container */}
+            <div className="relative h-44 w-full md:h-52 md:w-52 shrink-0 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-background">
               <Image 
                 src={itemImage.imageUrl} 
                 alt="Service" 
@@ -77,16 +89,16 @@ export default function TopupPage() {
               />
             </div>
             <div className="space-y-4 max-w-2xl">
-              <h1 className="text-3xl md:text-5xl font-black tracking-tight capitalize">{String(id).replace("-", " ")}</h1>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+              <h1 className="text-4xl md:text-6xl font-black tracking-tighter capitalize">{String(id).replace("-", " ")}</h1>
+              <p className="text-sm md:text-base text-muted-foreground font-medium leading-relaxed max-w-xl">
                 Top up {String(id).replace("-", " ")} instantly! Just enter your ID, select the pack, and pay. Your top-up is processed immediately.
               </p>
-              <div className="flex flex-wrap gap-4 pt-2">
-                <div className="flex items-center gap-2 text-[10px] md:text-xs font-black tracking-tighter uppercase text-primary">
+              <div className="flex flex-wrap gap-3 pt-2">
+                <div className="flex items-center gap-2 bg-background/50 backdrop-blur-sm px-4 py-2 rounded-full text-[10px] md:text-xs font-black tracking-tighter uppercase text-primary border border-primary/20">
                   <ShieldCheck className="h-4 w-4" />
                   Official & Secure
                 </div>
-                <div className="flex items-center gap-2 text-[10px] md:text-xs font-black tracking-tighter uppercase text-primary">
+                <div className="flex items-center gap-2 bg-background/50 backdrop-blur-sm px-4 py-2 rounded-full text-[10px] md:text-xs font-black tracking-tighter uppercase text-primary border border-primary/20">
                   <CreditCard className="h-4 w-4" />
                   Fast Payment
                 </div>
