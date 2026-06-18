@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -392,8 +393,8 @@ export function CatalogGrid() {
                   className={cn(
                     "whitespace-nowrap px-6 py-2.5 text-xs font-black rounded-xl transition-all duration-200 border border-transparent",
                     activeTab === cat 
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
-                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                      ? "bg-primary text-primary-foreground" 
+                      : "bg-muted/30 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                   )}
                 >
                   {cat}
@@ -441,7 +442,7 @@ export function CatalogGrid() {
                     <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate uppercase mb-0.5">
                       {item.type}
                     </p>
-                    <h3 className="line-clamp-1 text-[10px] md:text-sm font-black text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="line-clamp-1 text-[10px] md:sm font-black text-foreground group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
                   </div>
