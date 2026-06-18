@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Gamepad2, History, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft, LogOut, Settings } from "lucide-react";
+import { Gamepad2, History, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft, LogOut, Settings, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
@@ -169,7 +169,6 @@ export function Navbar() {
                     <SearchInput />
                   </Suspense>
                   
-                  {/* ThemeToggle disembunyikan di mobile baris atas ini, karena pindah ke baris search */}
                   <div className="hidden lg:block">
                     <ThemeToggle />
                   </div>
@@ -193,6 +192,14 @@ export function Navbar() {
                             <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
                           </div>
                         </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="cursor-pointer font-bold gap-2 flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <Coins className="h-4 w-4 text-primary" />
+                            <span>STS Coin</span>
+                          </div>
+                          <span className="text-primary">0</span>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="cursor-pointer font-bold gap-2">
                           <LayoutDashboard className="h-4 w-4" /> Dashboard
@@ -264,9 +271,14 @@ export function Navbar() {
                             <p className="text-[10px] font-black tracking-widest text-muted-foreground/60 mb-3 px-2">Dukungan & Akun</p>
                             <div className="space-y-1">
                               {user && (
-                                <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                  <User className="h-5 w-5" /> Profil Saya
-                                </Button>
+                                <>
+                                  <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                    <LayoutDashboard className="h-5 w-5" /> Dashboard
+                                  </Button>
+                                  <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                    <Settings className="h-5 w-5" /> Settings
+                                  </Button>
+                                </>
                               )}
                               <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
                                 <MessageCircle className="h-5 w-5" /> Hubungi Dukungan
@@ -280,6 +292,15 @@ export function Navbar() {
                       </ScrollArea>
 
                       <div className="p-6 border-t border-border mt-auto bg-muted/10">
+                        {user && (
+                          <div className="mb-4 p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
+                            <div className="flex items-center gap-3">
+                              <Coins className="h-5 w-5 text-primary" />
+                              <span className="text-xs font-black">STS Coin</span>
+                            </div>
+                            <span className="text-sm font-black text-primary">0</span>
+                          </div>
+                        )}
                         <div className="flex items-center gap-3 mb-4">
                           <ShieldCheck className="h-4 w-4 text-primary" />
                           <p className="text-[10px] font-black text-muted-foreground">Gerbang pembayaran bersertifikat & aman</p>
