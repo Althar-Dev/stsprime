@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -63,7 +64,7 @@ export function CatalogSkeleton() {
         </div>
         <div className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
           {[...Array(16)].map((_, i) => (
-            <div key={i} className="flex flex-col rounded-xl border border-border bg-card/50 overflow-hidden h-full">
+            <div key={i} className="flex flex-col rounded-sm border border-border bg-card/50 overflow-hidden h-full">
               <Skeleton className="aspect-square w-full" />
               <div className="p-2 md:p-3 space-y-2">
                 <Skeleton className="h-1.5 w-12" />
