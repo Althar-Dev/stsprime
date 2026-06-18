@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { Check, ChevronLeft, CreditCard, ShieldCheck, Wallet, Zap, MessageCircle } from "lucide-react";
+import { Check, ChevronLeft, CreditCard, ShieldCheck, Wallet, Zap, MessageCircle, ChevronUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/logo";
 
@@ -78,7 +78,7 @@ export default function TopupPage() {
         </div>
       </nav>
 
-      <main className="flex-grow pb-24 lg:pb-10">
+      <main className="flex-grow pb-32 lg:pb-10">
         <div className="container mx-auto px-4 py-6 md:py-10">
           {/* Product Hero Section */}
           <div className="mb-10 md:mb-16">
@@ -249,22 +249,44 @@ export default function TopupPage() {
         </div>
       </main>
 
-      {/* Mobile Sticky Summary Bar - Sticks to bottom on mobile/tablet */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-border p-4 animate-in slide-in-from-bottom duration-300">
-        <div className="container mx-auto flex items-center justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-[10px] text-muted-foreground font-bold tracking-wider">total pembayaran</p>
-            <p className="text-lg font-black text-primary truncate">
-              {selectedPack ? selectedPackData?.price : "---"}
-            </p>
+      {/* Mobile Sticky Summary Bar - Drawer Style from reference */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border p-5 pb-8 animate-in slide-in-from-bottom duration-300 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
+        <div className="container mx-auto space-y-5">
+          {/* Product and Pack Info */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 relative rounded-xl overflow-hidden bg-muted border border-border">
+                <Image 
+                  src={itemImage.imageUrl} 
+                  alt={itemImage.description} 
+                  fill 
+                  className="object-cover"
+                />
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-sm font-bold text-foreground leading-tight">
+                  {String(id).replace("-", " ")}
+                </p>
+                <p className="text-[11px] font-bold text-muted-foreground">
+                  {selectedPack ? selectedPackData?.amount : "pilih paket"}
+                </p>
+              </div>
+            </div>
+            <div className="h-8 w-8 rounded-full bg-muted/50 flex items-center justify-center text-muted-foreground">
+              <ChevronUp className="h-5 w-5" />
+            </div>
           </div>
-          <Button 
-            disabled={!userId || !selectedPack || !selectedPayment}
-            onClick={handleOrder}
-            className="flex-1 h-12 rounded-xl font-bold bg-primary text-primary-foreground shadow-lg shadow-primary/20 active:scale-95 transition-transform"
-          >
-            bayar sekarang
-          </Button>
+
+          {/* Large Action Button */}
+          <div className="space-y-3">
+             <Button 
+              disabled={!userId || !selectedPack || !selectedPayment}
+              onClick={handleOrder}
+              className="w-full h-14 rounded-2xl font-black text-base bg-primary text-primary-foreground shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"
+            >
+              bayar sekarang
+            </Button>
+          </div>
         </div>
       </div>
 
