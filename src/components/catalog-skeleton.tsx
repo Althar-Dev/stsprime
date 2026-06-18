@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,13 +14,13 @@ export function CatalogSkeleton() {
             <Skeleton className="h-3 w-48" />
           </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-[70px] md:h-[80px] rounded-2xl border border-border bg-card/50 flex items-center p-1.5 gap-2.5">
-              <Skeleton className="h-full aspect-square rounded-lg" />
-              <div className="flex-1 space-y-2">
-                <Skeleton className="h-1.5 w-10" />
-                <Skeleton className="h-3 w-20" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-[70px] md:h-[90px] rounded-[2.5rem] border border-border bg-card/50 flex items-center p-3 md:p-4 gap-3 md:gap-5">
+              <Skeleton className="h-12 w-12 md:h-16 md:w-16 shrink-0 rounded-xl" />
+              <div className="flex-1 space-y-2 min-w-0">
+                <Skeleton className="h-3 md:h-4 w-2/3" />
+                <Skeleton className="h-2 md:h-3 w-1/3" />
               </div>
             </div>
           ))}

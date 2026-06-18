@@ -203,16 +203,16 @@ export function CatalogGrid() {
             icon="/img/fire.gif" 
             subtitle="Paling banyak dicari dan dimainkan oleh komunitas."
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {populerItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group relative flex items-center gap-5 p-4 bg-[#1a1a1a] bg-dots-pattern border border-white/5 rounded-[2.5rem] transition-all hover:scale-[1.02] hover:bg-[#222] hover:border-primary/30 active:scale-95 shadow-xl"
+                  className="group relative flex items-center gap-3 md:gap-5 p-3 md:p-4 bg-[#1a1a1a] bg-dots-pattern border border-white/5 rounded-[2.5rem] transition-all hover:scale-[1.02] hover:bg-[#222] hover:border-primary/30 active:scale-95 shadow-xl"
                 >
-                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl z-10">
+                  <div className="relative h-12 w-12 md:h-20 md:w-20 shrink-0 overflow-hidden rounded-xl md:rounded-2xl z-10">
                     <Image
                       src={image?.imageUrl || ""}
                       alt={item.name}
@@ -221,11 +221,11 @@ export function CatalogGrid() {
                       data-ai-hint={image?.imageHint}
                     />
                   </div>
-                  <div className="flex flex-col justify-center z-10">
-                    <h3 className="text-lg md:text-xl font-black tracking-tight text-white leading-tight mb-1 group-hover:text-primary transition-colors">
+                  <div className="flex flex-col justify-center z-10 min-w-0">
+                    <h3 className="text-xs md:text-lg lg:text-xl font-black tracking-tight text-white leading-tight mb-0.5 md:mb-1 group-hover:text-primary transition-colors truncate">
                       {item.name}
                     </h3>
-                    <p className="text-sm font-bold text-muted-foreground opacity-80 uppercase tracking-wide">
+                    <p className="text-[8px] md:text-sm font-bold text-muted-foreground opacity-80 uppercase tracking-wide truncate">
                       {item.type}
                     </p>
                   </div>
