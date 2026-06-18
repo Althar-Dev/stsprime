@@ -88,7 +88,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
-        "w-[95vw] sm:max-w-[400px] max-h-[90vh] p-0 overflow-hidden border-border bg-background rounded-2xl sm:rounded-3xl outline-none",
+        "w-[95vw] sm:max-w-[400px] max-h-[90vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none",
         "modal-scrollbar"
       )}>
         {/* Custom Close Button for Accent Header */}
@@ -97,7 +97,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
 
-        {/* Header dengan Warna Accent */}
+        {/* Header dengan Warna Accent - Sticky agar tetap terlihat saat scroll */}
         <div className="p-6 md:p-8 flex flex-col items-center border-b border-border bg-accent sticky top-0 z-10">
           <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-accent-foreground/20 backdrop-blur-sm flex items-center justify-center mb-4">
             {mode === "login" ? (
