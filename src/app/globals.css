@@ -23,7 +23,7 @@
     --border: 0 0% 90%;
     --input: 0 0% 90%;
     --ring: 45 95% 55%;
-    --radius: 1rem;
+    --radius: 0.75rem;
   }
 
   .dark {
@@ -151,5 +151,5 @@
 }
 
 .bento-card {
-  @apply relative overflow-hidden rounded-2xl border border-border bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-card/80;
+  @apply relative overflow-hidden rounded-xl border border-border bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-card/80;
 }

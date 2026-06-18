@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -172,7 +171,7 @@ export default function TopupPage() {
                     <button
                       key={pack.id}
                       onClick={() => setSelectedPack(pack.id)}
-                      className={`relative flex flex-col p-4 text-left rounded-2xl border transition-all ${
+                      className={`relative flex flex-col p-4 text-left rounded-xl border transition-all ${
                         selectedPack === pack.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
                       }`}
                     >
@@ -238,7 +237,7 @@ export default function TopupPage() {
                     size="lg" 
                     disabled={!userId || !selectedPack || !selectedPayment}
                     onClick={handleOrder}
-                    className="h-14 md:h-16 rounded-full px-8 text-lg font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
+                    className="h-12 md:h-14 rounded-full px-8 text-lg font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
                   >
                     bayar sekarang
                   </Button>
@@ -250,12 +249,12 @@ export default function TopupPage() {
       </main>
 
       {/* Mobile Sticky Summary Bar - Drawer Style from reference */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border p-5 pb-8 animate-in slide-in-from-bottom duration-300 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
-        <div className="container mx-auto space-y-5">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border p-5 pb-6 animate-in slide-in-from-bottom duration-300 rounded-t-2xl shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
+        <div className="container mx-auto space-y-4">
           {/* Product and Pack Info */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="h-12 w-12 relative rounded-xl overflow-hidden bg-muted border border-border">
+              <div className="h-10 w-10 relative rounded-lg overflow-hidden bg-muted border border-border">
                 <Image 
                   src={itemImage.imageUrl} 
                   alt={itemImage.description} 
@@ -282,7 +281,7 @@ export default function TopupPage() {
              <Button 
               disabled={!userId || !selectedPack || !selectedPayment}
               onClick={handleOrder}
-              className="w-full h-14 rounded-2xl font-black text-base bg-primary text-primary-foreground shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"
+              className="w-full h-12 rounded-xl font-black text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"
             >
               bayar sekarang
             </Button>
