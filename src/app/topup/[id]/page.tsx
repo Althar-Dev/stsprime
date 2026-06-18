@@ -63,10 +63,10 @@ export default function TopupPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3 items-start">
-          {/* Left Column: Info */}
+          {/* Left Column: Info (No Card) */}
           <div className="space-y-6">
-            <div className="bento-card p-5 md:p-6 overflow-hidden">
-              <div className="relative h-40 md:h-52 w-full rounded-xl overflow-hidden mb-6">
+            <div className="px-2">
+              <div className="relative h-40 md:h-52 w-full rounded-2xl overflow-hidden mb-6 shadow-xl border border-border">
                 <Image 
                   src={itemImage.imageUrl} 
                   alt="Service" 
@@ -74,10 +74,10 @@ export default function TopupPage() {
                   className="object-cover"
                   data-ai-hint={itemImage.imageHint}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
               </div>
-              <h1 className="text-2xl md:text-3xl font-black mb-2 tracking-tight capitalize">{String(id).replace("-", " ")}</h1>
-              <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+              <h1 className="text-2xl md:text-4xl font-black mb-3 tracking-tight capitalize">{String(id).replace("-", " ")}</h1>
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 Top up {String(id).replace("-", " ")} instantly! Just enter your ID, select the pack, and pay. Your top-up is processed immediately.
               </p>
               
