@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Gamepad2, History, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft } from "lucide-react";
@@ -14,12 +15,10 @@ import { LoginModal } from "@/components/auth/login-modal";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 
-export function Navbar() {
+function SearchInput({ isMobile, closeSearch }: { isMobile?: boolean, closeSearch?: () => void }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState(searchParams.get("q") || "");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -28,12 +27,12 @@ export function Navbar() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (isSearchOpen && inputRef.current) {
-      inputRef.current.focus();
+    if (!isMobile && inputRef.current) {
+      // Focus if needed for desktop or specific triggers
     }
-  }, [isSearchOpen]);
+  }, [isMobile]);
 
-  const handleSearch = (value: string) => {
+  const handleSearchAction = (value: string) => {
     setSearchValue(value);
     const params = new URLSearchParams(searchParams.toString());
     if (value) {
@@ -42,55 +41,76 @@ export function Navbar() {
       params.delete("q");
     }
     
+    const queryString = params.toString();
+    const newPath = queryString ? `/?${queryString}` : '/';
+
     if (pathname !== "/") {
-      router.push(`/?${params.toString()}`);
+      router.push(newPath);
     } else {
-      router.replace(`/?${params.toString()}`, { scroll: false });
+      router.replace(newPath, { scroll: false });
     }
   };
 
-  const closeSearch = () => {
-    setIsSearchOpen(false);
-    if (!searchParams.get("q")) {
-      setSearchValue("");
-    }
-  };
+  if (isMobile) {
+    return (
+      <div className="flex w-full items-center gap-2 animate-in fade-in slide-in-from-right-2 duration-200">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={closeSearch}
+          className="shrink-0 text-muted-foreground"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </Button>
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            ref={inputRef}
+            placeholder="Search games..."
+            className="h-10 w-full rounded-full border-border bg-muted/50 pl-10 pr-10 focus-visible:ring-primary"
+            value={searchValue}
+            onChange={(e) => handleSearchAction(e.target.value)}
+          />
+          {searchValue && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full hover:bg-transparent"
+              onClick={() => handleSearchAction("")}
+            >
+              <X className="h-4 w-4 text-muted-foreground" />
+            </Button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="hidden lg:flex relative group">
+      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
+      <Input 
+        placeholder="Search games..." 
+        className="h-9 w-48 xl:w-64 rounded-full bg-muted/50 pl-10 border-border focus-visible:ring-primary"
+        value={searchValue}
+        onChange={(e) => handleSearchAction(e.target.value)}
+      />
+    </div>
+  );
+}
+
+export function Navbar() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   return (
     <>
       <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           {isSearchOpen ? (
-            <div className="flex w-full items-center gap-2 animate-in fade-in slide-in-from-right-2 duration-200">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={closeSearch}
-                className="shrink-0 text-muted-foreground"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </Button>
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  ref={inputRef}
-                  placeholder="Search games or services..."
-                  className="h-10 w-full rounded-full border-border bg-muted/50 pl-10 pr-10 focus-visible:ring-primary"
-                  value={searchValue}
-                  onChange={(e) => handleSearch(e.target.value)}
-                />
-                {searchValue && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full hover:bg-transparent"
-                    onClick={() => handleSearch("")}
-                  >
-                    <X className="h-4 w-4 text-muted-foreground" />
-                  </Button>
-                )}
-              </div>
-            </div>
+            <Suspense fallback={<div className="h-10 w-full bg-muted rounded-full animate-pulse" />}>
+              <SearchInput isMobile closeSearch={() => setIsSearchOpen(false)} />
+            </Suspense>
           ) : (
             <>
               <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105 shrink-0">
@@ -123,15 +143,9 @@ export function Navbar() {
               </div>
 
               <div className="flex items-center gap-2 md:gap-4">
-                <div className="hidden lg:flex relative group">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                  <Input 
-                    placeholder="Search games..." 
-                    className="h-9 w-48 xl:w-64 rounded-full bg-muted/50 pl-10 border-border focus-visible:ring-primary"
-                    value={searchValue}
-                    onChange={(e) => handleSearch(e.target.value)}
-                  />
-                </div>
+                <Suspense fallback={<div className="hidden lg:block h-9 w-48 bg-muted rounded-full animate-pulse" />}>
+                  <SearchInput />
+                </Suspense>
                 
                 <ThemeToggle />
                 
