@@ -54,7 +54,7 @@ const TABS_CONFIG = [
 ];
 
 const BACKGROUND_OPTIONS = [
-  // Solids (Original)
+  // Solids
   { id: "default", name: "Netral", class: "bg-muted/30" },
   { id: "primary", name: "STS Gold", class: "bg-primary" },
   { id: "accent", name: "STS Blue", class: "bg-accent" },
@@ -67,8 +67,6 @@ const BACKGROUND_OPTIONS = [
   { id: "cyan", name: "Cyan", class: "bg-cyan-500" },
   { id: "violet", name: "Violet", class: "bg-violet-600" },
   { id: "fuchsia", name: "Fuchsia", class: "bg-fuchsia-600" },
-  
-  // New Solids (Added 10)
   { id: "teal", name: "Teal", class: "bg-teal-500" },
   { id: "indigo", name: "Indigo", class: "bg-indigo-600" },
   { id: "lime", name: "Lime", class: "bg-lime-500" },
@@ -80,7 +78,7 @@ const BACKGROUND_OPTIONS = [
   { id: "gray", name: "Stone", class: "bg-stone-500" },
   { id: "deep-blue", name: "Navy", class: "bg-blue-900" },
 
-  // Gradients (Original)
+  // Gradients
   { id: "grad-hyper", name: "Hyper", class: "bg-gradient-to-br from-primary to-accent" },
   { id: "grad-legendary", name: "Legendary", class: "bg-gradient-to-br from-slate-900 via-primary/50 to-slate-900" },
   { id: "grad-cosmic", name: "Cosmic", class: "bg-gradient-to-br from-purple-600 to-blue-500" },
@@ -91,8 +89,6 @@ const BACKGROUND_OPTIONS = [
   { id: "grad-fire", name: "Inferno", class: "bg-gradient-to-br from-red-600 to-yellow-500" },
   { id: "grad-glacier", name: "Glacier", class: "bg-gradient-to-br from-blue-100 to-blue-300" },
   { id: "grad-midnight", name: "Midnight", class: "bg-gradient-to-br from-zinc-950 to-slate-900" },
-
-  // New Gradients (Added 10)
   { id: "grad-aurora", name: "Aurora", class: "bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600" },
   { id: "grad-lava", name: "Lava", class: "bg-gradient-to-r from-red-800 via-orange-600 to-yellow-500" },
   { id: "grad-forest", name: "Forest", class: "bg-gradient-to-b from-emerald-900 to-green-700" },
@@ -313,32 +309,35 @@ export default function SettingsPage() {
                           </button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 modal-scrollbar scroll-smooth">
-                          <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border p-6 flex flex-col items-center">
+                          <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border p-4 flex flex-col items-center shrink-0">
                             <DialogClose className="absolute right-4 top-4 p-2 rounded-full hover:bg-muted/50 transition-colors">
-                              <X className="h-6 w-6" />
+                              <X className="h-5 w-5" />
                             </DialogClose>
                             
-                            <DialogHeader className="text-center">
-                              <DialogTitle className="font-black text-xl">Kustomisasi Avatar</DialogTitle>
-                              <DialogDescription className="font-bold">
+                            <DialogHeader className="text-center px-8">
+                              <DialogTitle className="font-black text-lg">Kustomisasi Avatar</DialogTitle>
+                              <DialogDescription className="font-bold text-[10px]">
                                 Sesuaikan karakter dan latar belakang profil Anda.
                               </DialogDescription>
                             </DialogHeader>
 
-                            {/* Live Preview Inside Modal */}
-                            <div className="mt-6 flex flex-col items-center justify-center py-6 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden relative w-full max-w-md">
+                            {/* Live Preview Inside Modal - Reduced Height */}
+                            <div className="mt-3 flex items-center gap-4 py-2 px-6 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden relative w-full max-w-sm">
                               <div className={cn(
-                                "h-24 w-24 md:h-32 md:w-32 rounded-full flex items-center justify-center p-1 transition-all duration-500 mb-2",
+                                "h-16 w-16 rounded-full flex items-center justify-center p-0.5 transition-all duration-500 shrink-0",
                                 profileBg
                               )}>
-                                <Avatar className="h-full w-full border-2 border-background shadow-lg">
+                                <Avatar className="h-full w-full border border-background shadow-md">
                                   <AvatarImage src={photoURL} className="object-cover" />
-                                  <AvatarFallback className="bg-muted text-muted-foreground font-black text-3xl">
+                                  <AvatarFallback className="bg-muted text-muted-foreground font-black text-xl">
                                     {userInitial}
                                   </AvatarFallback>
                                 </Avatar>
                               </div>
-                              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Pratinjau Profil</p>
+                              <div className="flex flex-col">
+                                <p className="text-[10px] font-black text-foreground uppercase tracking-wider">Pratinjau Profil</p>
+                                <p className="text-[9px] text-muted-foreground font-bold">Inilah tampilan Anda di platform.</p>
+                              </div>
                             </div>
                           </div>
                           
