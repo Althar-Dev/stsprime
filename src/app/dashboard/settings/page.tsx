@@ -17,13 +17,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { 
   User, 
   Settings, 
   ShieldCheck, 
@@ -57,7 +50,6 @@ export default function SettingsPage() {
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
-  // Fungsi untuk memindahkan indikator ke elemen tertentu
   const moveIndicatorToElement = (element: HTMLElement | null) => {
     if (element) {
       setIndicatorStyle({
@@ -67,7 +59,6 @@ export default function SettingsPage() {
     }
   };
 
-  // Fungsi untuk mengembalikan indikator ke tab yang aktif
   const resetIndicatorToActive = () => {
     const activeElement = tabsListRef.current?.querySelector('[data-state="active"]') as HTMLElement;
     moveIndicatorToElement(activeElement);
@@ -95,7 +86,6 @@ export default function SettingsPage() {
     fetchProfile();
   }, [user, db]);
 
-  // Update indikator saat tab aktif berubah
   useEffect(() => {
     const timer = setTimeout(resetIndicatorToActive, 50);
     return () => clearTimeout(timer);
@@ -154,31 +144,12 @@ export default function SettingsPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
-        {/* Mobile Navigation */}
-        <div className="md:hidden">
-          <Select value={activeTab} onValueChange={setActiveTab}>
-            <SelectTrigger className="w-full h-12 rounded-xl font-bold border-border bg-card shadow-sm">
-              <SelectValue placeholder="Pilih kategori" />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl border-border">
-              {TABS_CONFIG.map((tab) => (
-                <SelectItem key={tab.id} value={tab.id} className="font-bold py-3">
-                  <div className="flex items-center gap-3">
-                    <tab.icon className="h-4 w-4 text-muted-foreground" />
-                    {tab.label}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Desktop Navigation with Hover-Follow Underline */}
-        <div className="hidden md:block border-b border-border relative">
+        {/* Navigation with Hover-Follow Underline - Universal for Mobile and Desktop */}
+        <div className="border-b border-border relative overflow-x-auto no-scrollbar scroll-smooth">
           <TabsList 
             ref={tabsListRef} 
             onMouseLeave={resetIndicatorToActive}
-            className="bg-transparent h-auto p-0 flex gap-8 justify-start relative overflow-visible"
+            className="bg-transparent h-auto p-0 flex gap-6 md:gap-8 justify-start relative overflow-visible min-w-max"
           >
             {TABS_CONFIG.map((tab) => (
               <TabsTrigger 
@@ -188,7 +159,7 @@ export default function SettingsPage() {
                 className="rounded-none border-b-2 border-transparent bg-transparent px-0 py-4 font-bold text-sm text-muted-foreground hover:text-foreground data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2 relative z-10"
               >
                 <tab.icon className="h-4 w-4" />
-                {tab.label}
+                <span className="whitespace-nowrap">{tab.label}</span>
               </TabsTrigger>
             ))}
             
@@ -327,4 +298,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
