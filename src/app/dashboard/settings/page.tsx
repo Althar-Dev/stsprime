@@ -116,7 +116,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
+    <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-8">
       <div className="flex flex-col gap-1">
         <h1 className="font-headline text-3xl md:text-4xl font-black tracking-tight flex items-center gap-3">
           <Settings className="h-8 w-8 text-primary" />
@@ -127,38 +127,43 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      <div className="md:hidden">
-        <Select value={activeTab} onValueChange={setActiveTab}>
-          <SelectTrigger className="w-full h-12 rounded-xl font-bold border-border bg-card shadow-sm">
-            <SelectValue placeholder="Pilih kategori" />
-          </SelectTrigger>
-          <SelectContent className="rounded-xl border-border">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
+        {/* Mobile Navigation (Select) */}
+        <div className="md:hidden">
+          <Select value={activeTab} onValueChange={setActiveTab}>
+            <SelectTrigger className="w-full h-12 rounded-xl font-bold border-border bg-card shadow-sm">
+              <SelectValue placeholder="Pilih kategori" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl border-border">
+              {TABS_CONFIG.map((tab) => (
+                <SelectItem key={tab.id} value={tab.id} className="font-bold py-3">
+                  <div className="flex items-center gap-3">
+                    <tab.icon className="h-4 w-4 text-muted-foreground" />
+                    {tab.label}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Desktop Navigation (Horizontal Underlined Tabs) */}
+        <div className="hidden md:block border-b border-border">
+          <TabsList className="bg-transparent h-auto p-0 flex gap-8 justify-start">
             {TABS_CONFIG.map((tab) => (
-              <SelectItem key={tab.id} value={tab.id} className="font-bold py-3">
-                <div className="flex items-center gap-3">
-                  <tab.icon className="h-4 w-4 text-muted-foreground" />
-                  {tab.label}
-                </div>
-              </SelectItem>
+              <TabsTrigger 
+                key={tab.id}
+                value={tab.id} 
+                className="rounded-none border-b-2 border-transparent bg-transparent px-0 py-4 font-bold text-sm text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2"
+              >
+                <tab.icon className="h-4 w-4" />
+                {tab.label}
+              </TabsTrigger>
             ))}
-          </SelectContent>
-        </Select>
-      </div>
+          </TabsList>
+        </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col md:flex-row gap-8 items-start">
-        <TabsList className="hidden md:flex md:flex-col h-auto bg-transparent p-0 justify-start space-y-1 w-full md:w-64 shrink-0 sticky top-24">
-          {TABS_CONFIG.map((tab) => (
-            <TabsTrigger 
-              key={tab.id}
-              value={tab.id} 
-              className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-full border border-transparent data-[state=active]:border-primary/20"
-            >
-              <tab.icon className="h-4 w-4" /> {tab.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-
-        <div className="flex-1 w-full">
+        <div className="w-full pt-2">
           <TabsContent value="profile" className="space-y-6 mt-0 focus-visible:outline-none">
             <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
               <form onSubmit={handleUpdateProfile}>
