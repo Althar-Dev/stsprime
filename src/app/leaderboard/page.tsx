@@ -1,12 +1,17 @@
+
 "use client";
 
 import { Footer } from "@/components/footer";
-import { Crown, ShieldCheck, TrendingUp, ChevronRight, Star, Medal, Trophy } from "lucide-react";
+import { Crown, ShieldCheck, TrendingUp, ChevronRight, Star, Medal, Trophy, ChevronLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useUser } from "@/firebase";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/logo";
+import Link from "next/link";
 
 const TOP_THREE = [
   { id: 1, name: "Sultan_MLBB", points: "45,280", avatar: "https://picsum.photos/seed/u1/200/200", rank: 1, badge: "Legendary" },
@@ -26,12 +31,31 @@ const OTHER_RANKS = [
 
 export default function LeaderboardPage() {
   const { user } = useUser();
+  const router = useRouter();
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
       {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-[0.03] pointer-events-none" />
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+
+      {/* Navigation Header */}
+      <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/10">
+        <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
+          <Button 
+            variant="ghost" 
+            className="-ml-2 text-muted-foreground hover:text-foreground text-xs md:text-sm font-bold"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft className="mr-1 h-5 w-5" />
+            Kembali
+          </Button>
+          
+          <Link href="/" className="transition-transform hover:scale-105">
+            <Logo className="h-9 w-9 md:h-12 md:w-12" />
+          </Link>
+        </div>
+      </nav>
 
       <main className="flex-grow container mx-auto px-4 py-8 md:py-16 relative z-10">
         {/* Header Section */}
