@@ -29,7 +29,7 @@ export default function DashboardPage() {
           <div>
             <h1 className="font-headline text-3xl md:text-4xl font-black tracking-tight flex items-center gap-2">
               <LayoutDashboard className="h-8 w-8 text-primary" />
-              Gamer Dashboard
+              Dashboard
             </h1>
             <p className="text-xs md:text-sm text-muted-foreground mt-1 font-bold">
               Pantau aktivitas saldo koin, pengeluaran topup, dan status item digital Anda.
