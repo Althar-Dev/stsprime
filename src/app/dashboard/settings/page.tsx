@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useUser, useFirestore, useAuth } from "@/firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
@@ -138,7 +138,7 @@ export default function SettingsPage() {
     async function loadAvatars() {
       try {
         const files = await getAvatarFiles();
-        // Filter out any dev.png from the server response to avoid duplication
+        // Casing normalization: keep original but filter dev.png case-insensitively
         const filtered = files.filter(f => f.toLowerCase() !== 'dev.png');
         setAvatarFiles(filtered);
       } catch (err) {
@@ -159,12 +159,13 @@ export default function SettingsPage() {
         if (docSnap.exists()) {
           const data = docSnap.data();
           setDisplayName(data.displayName || user.displayName || "");
-          setPhotoURL(data.photoURL || user.photoURL || "");
+          // Penting: Prioritaskan photoURL dari Firestore untuk sinkronisasi grid
+          setPhotoURL(data.photoURL || "");
           setProfileBg(data.profileBg || "bg-muted/30");
           setIsDev(!!data.dev);
         } else {
           setDisplayName(user.displayName || "");
-          setPhotoURL(user.photoURL || "");
+          setPhotoURL("");
           setProfileBg("bg-muted/30");
           setIsDev(false);
         }
@@ -187,7 +188,12 @@ export default function SettingsPage() {
 
     setIsSaving(true);
     try {
-      await updateProfile(user, { displayName, photoURL });
+      // Jika photoURL kosong, biarkan updateProfile menggunakan default Auth (mungkin foto Google)
+      // Tapi simpan pilihan eksplisit ke Firestore
+      await updateProfile(user, { 
+        displayName, 
+        photoURL: photoURL || (isDev ? "/img/ava/dev.png" : user.photoURL) 
+      });
 
       const userDocRef = doc(db, "users", user.uid);
       const userData = {
@@ -225,11 +231,22 @@ export default function SettingsPage() {
 
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // displayPhotoURL is what we actually show in the preview
-  const displayPhotoURL = photoURL || (isDev ? "/img/ava/dev.png" : "");
+  // Logika Pratinjau: PhotoURL Firestore > Dev.png (jika dev) > PhotoURL Auth
+  const displayPhotoURL = useMemo(() => {
+    if (photoURL) return photoURL;
+    if (isDev) return "/img/ava/dev.png";
+    return user?.photoURL || "";
+  }, [photoURL, isDev, user?.photoURL]);
   
-  // availableAvatars includes dev.png ONLY if isDev is true
-  const availableAvatars = isDev ? ["dev.png", ...avatarFiles] : avatarFiles;
+  // Daftar Avatar Unik
+  const availableAvatars = useMemo(() => {
+    // Pastikan tidak ada dev.png ganda dari server
+    const base = avatarFiles.filter(f => f.toLowerCase() !== 'dev.png');
+    if (isDev) {
+      return ["dev.png", ...base];
+    }
+    return base;
+  }, [avatarFiles, isDev]);
 
   return (
     <div className="p-4 md:p-6 lg:p-10 space-y-8 md:space-y-12 w-full mx-auto">
@@ -320,7 +337,6 @@ export default function SettingsPage() {
                           </button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 modal-scrollbar scroll-smooth">
-                          {/* Sticky Header inside Modal */}
                           <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border p-3 md:p-4 flex flex-col items-center shrink-0">
                             <DialogClose className="absolute right-3 top-3 md:right-4 md:top-4 p-2 rounded-full hover:bg-muted/50 transition-colors z-40">
                               <X className="h-4 w-4 md:h-5 md:w-5" />
@@ -330,7 +346,6 @@ export default function SettingsPage() {
                               <DialogTitle className="font-black text-base md:text-lg text-center">Kustomisasi Avatar</DialogTitle>
                             </DialogHeader>
 
-                            {/* Compact Horizontal Preview */}
                             <div className="mt-2 flex items-center gap-4 py-2 px-5 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden">
                               <div className={cn(
                                 "h-12 w-12 md:h-16 md:w-16 rounded-full flex items-center justify-center p-0.5 transition-all duration-500 shrink-0",
@@ -347,7 +362,6 @@ export default function SettingsPage() {
                           </div>
                           
                           <div className="p-6 space-y-10">
-                            {/* Avatar Grid */}
                             <div className="space-y-4">
                               <div className="flex items-center gap-2">
                                 <User className="h-4 w-4 text-primary" />
@@ -357,7 +371,6 @@ export default function SettingsPage() {
                                 {availableAvatars.length > 0 ? (
                                   availableAvatars.map((file) => {
                                     const avatarPath = `/img/ava/${file}`;
-                                    // A path is selected if it matches displayPhotoURL
                                     const isSelected = avatarPath === displayPhotoURL;
                                     
                                     return (
@@ -398,7 +411,6 @@ export default function SettingsPage() {
 
                             <Separator />
 
-                            {/* Background Options Grid */}
                             <div className="space-y-4 pb-4">
                               <div className="flex items-center gap-2">
                                 <Layers className="h-4 w-4 text-primary" />
