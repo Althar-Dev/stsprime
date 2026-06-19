@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useUser, useFirestore, useAuth } from "@/firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
@@ -52,6 +52,10 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
   const [displayName, setDisplayName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Ref untuk sliding underline
+  const tabsListRef = useRef<HTMLDivElement>(null);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
   useEffect(() => {
     async function fetchProfile() {
@@ -74,6 +78,31 @@ export default function SettingsPage() {
 
     fetchProfile();
   }, [user, db]);
+
+  // Logika untuk menghitung posisi sliding underline
+  useEffect(() => {
+    const updateIndicator = () => {
+      const activeElement = tabsListRef.current?.querySelector('[data-state="active"]') as HTMLElement;
+      if (activeElement) {
+        setIndicatorStyle({
+          left: activeElement.offsetLeft,
+          width: activeElement.offsetWidth,
+        });
+      }
+    };
+
+    // Update posisi saat tab berubah atau jendela di-resize
+    updateIndicator();
+    window.addEventListener('resize', updateIndicator);
+    
+    // Gunakan timeout singkat untuk memastikan DOM sudah dirender dengan state aktif yang baru
+    const timer = setTimeout(updateIndicator, 50);
+    
+    return () => {
+      window.removeEventListener('resize', updateIndicator);
+      clearTimeout(timer);
+    };
+  }, [activeTab]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -147,19 +176,28 @@ export default function SettingsPage() {
           </Select>
         </div>
 
-        {/* Desktop Navigation (Horizontal Underlined Tabs) */}
-        <div className="hidden md:block border-b border-border">
-          <TabsList className="bg-transparent h-auto p-0 flex gap-8 justify-start">
+        {/* Desktop Navigation (Horizontal Tabs with Sliding Underline) */}
+        <div className="hidden md:block border-b border-border relative">
+          <TabsList ref={tabsListRef} className="bg-transparent h-auto p-0 flex gap-8 justify-start relative">
             {TABS_CONFIG.map((tab) => (
               <TabsTrigger 
                 key={tab.id}
                 value={tab.id} 
-                className="rounded-none border-b-2 border-transparent bg-transparent px-0 py-4 font-bold text-sm text-muted-foreground hover:text-foreground hover:border-muted-foreground/30 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2"
+                className="rounded-none border-b-2 border-transparent bg-transparent px-0 py-4 font-bold text-sm text-muted-foreground hover:text-foreground data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2 relative z-10"
               >
                 <tab.icon className="h-4 w-4" />
                 {tab.label}
               </TabsTrigger>
             ))}
+            
+            {/* Sliding Underline Indicator */}
+            <div 
+              className="absolute bottom-0 h-0.5 bg-primary transition-all duration-300 ease-in-out z-20"
+              style={{
+                left: indicatorStyle.left,
+                width: indicatorStyle.width
+              }}
+            />
           </TabsList>
         </div>
 
