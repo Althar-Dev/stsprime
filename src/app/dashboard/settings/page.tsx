@@ -53,15 +53,30 @@ const TABS_CONFIG = [
 ];
 
 const BACKGROUND_OPTIONS = [
+  // Solids
   { id: "default", name: "Netral", class: "bg-muted/30" },
   { id: "primary", name: "STS Gold", class: "bg-primary" },
   { id: "accent", name: "STS Blue", class: "bg-accent" },
   { id: "dark", name: "Obsidian", class: "bg-slate-900" },
+  { id: "slate-800", name: "Slate", class: "bg-slate-800" },
+  { id: "zinc-900", name: "Zinc", class: "bg-zinc-900" },
   { id: "rose", name: "Rose", class: "bg-rose-500" },
   { id: "emerald", name: "Emerald", class: "bg-emerald-500" },
-  { id: "grad-1", name: "Hyper", class: "bg-gradient-to-br from-primary to-accent" },
-  { id: "grad-2", name: "Legendary", class: "bg-gradient-to-br from-slate-900 via-primary/50 to-slate-900" },
-  { id: "grad-3", name: "Cosmic", class: "bg-gradient-to-br from-purple-600 to-blue-500" },
+  { id: "amber", name: "Amber", class: "bg-amber-500" },
+  { id: "cyan", name: "Cyan", class: "bg-cyan-500" },
+  { id: "violet", name: "Violet", class: "bg-violet-600" },
+  { id: "fuchsia", name: "Fuchsia", class: "bg-fuchsia-600" },
+  // Gradients
+  { id: "grad-hyper", name: "Hyper", class: "bg-gradient-to-br from-primary to-accent" },
+  { id: "grad-legendary", name: "Legendary", class: "bg-gradient-to-br from-slate-900 via-primary/50 to-slate-900" },
+  { id: "grad-cosmic", name: "Cosmic", class: "bg-gradient-to-br from-purple-600 to-blue-500" },
+  { id: "grad-sunset", name: "Sunset", class: "bg-gradient-to-br from-orange-500 to-rose-500" },
+  { id: "grad-ocean", name: "Ocean", class: "bg-gradient-to-br from-cyan-500 to-blue-500" },
+  { id: "grad-neon", name: "Neon", class: "bg-gradient-to-br from-green-400 to-blue-500" },
+  { id: "grad-mystic", name: "Mystic", class: "bg-gradient-to-br from-indigo-900 to-violet-800" },
+  { id: "grad-fire", name: "Inferno", class: "bg-gradient-to-br from-red-600 to-yellow-500" },
+  { id: "grad-glacier", name: "Glacier", class: "bg-gradient-to-br from-blue-100 to-blue-300" },
+  { id: "grad-midnight", name: "Midnight", class: "bg-gradient-to-br from-zinc-950 to-slate-900" },
 ];
 
 export default function SettingsPage() {
@@ -357,7 +372,7 @@ export default function SettingsPage() {
                                 <Layers className="h-4 w-4 text-primary" />
                                 <h4 className="font-black text-sm uppercase tracking-tight">Pilih Latar Belakang</h4>
                               </div>
-                              <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+                              <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-3">
                                 {BACKGROUND_OPTIONS.map((bg) => {
                                   const isSelected = profileBg === bg.class;
                                   return (
@@ -375,7 +390,7 @@ export default function SettingsPage() {
                                         bg.class
                                       )} />
                                       <span className={cn(
-                                        "text-[9px] font-black uppercase tracking-tighter",
+                                        "text-[9px] font-black uppercase tracking-tighter text-center",
                                         isSelected ? "text-primary" : "text-muted-foreground"
                                       )}>{bg.name}</span>
                                     </button>
