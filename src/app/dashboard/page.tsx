@@ -113,21 +113,21 @@ export default function DashboardPage() {
                 <Table>
                   <TableHeader className="border-b border-border/60">
                     <TableRow>
-                      <TableHead className="font-black text-xs tracking-wider text-muted-foreground">ID TRANSAKSI</TableHead>
-                      <TableHead className="font-black text-xs tracking-wider text-muted-foreground">PRODUK GAME</TableHead>
-                      <TableHead className="font-black text-xs tracking-wider text-muted-foreground">NOMINAL</TableHead>
-                      <TableHead className="font-black text-xs tracking-wider text-muted-foreground">TOTAL</TableHead>
-                      <TableHead className="font-black text-xs tracking-wider text-muted-foreground text-right">STATUS</TableHead>
+                      <TableHead className="font-black text-xs tracking-wider text-muted-foreground whitespace-nowrap">ID TRANSAKSI</TableHead>
+                      <TableHead className="font-black text-xs tracking-wider text-muted-foreground whitespace-nowrap">PRODUK GAME</TableHead>
+                      <TableHead className="font-black text-xs tracking-wider text-muted-foreground whitespace-nowrap">NOMINAL</TableHead>
+                      <TableHead className="font-black text-xs tracking-wider text-muted-foreground whitespace-nowrap">TOTAL</TableHead>
+                      <TableHead className="font-black text-xs tracking-wider text-muted-foreground text-right whitespace-nowrap">STATUS</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {RECENT_TRANSACTIONS.map((tx) => (
                       <TableRow key={tx.id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">
-                        <TableCell className="font-mono text-xs font-bold text-foreground">{tx.id}</TableCell>
-                        <TableCell className="text-xs font-black text-foreground">{tx.game}</TableCell>
-                        <TableCell className="text-xs font-bold text-muted-foreground">{tx.item}</TableCell>
-                        <TableCell className="text-xs font-black text-primary">{tx.price}</TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="font-mono text-xs font-bold text-foreground whitespace-nowrap">{tx.id}</TableCell>
+                        <TableCell className="text-xs font-black text-foreground whitespace-nowrap">{tx.game}</TableCell>
+                        <TableCell className="text-xs font-bold text-muted-foreground whitespace-nowrap">{tx.item}</TableCell>
+                        <TableCell className="text-xs font-black text-primary whitespace-nowrap">{tx.price}</TableCell>
+                        <TableCell className="text-right whitespace-nowrap">
                           <Badge className="bg-green-500/10 text-green-500 border border-green-500/20 text-[9px] font-black px-2 py-0.5">
                             {tx.status}
                           </Badge>
