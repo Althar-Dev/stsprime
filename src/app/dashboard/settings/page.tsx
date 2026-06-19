@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -309,30 +310,32 @@ export default function SettingsPage() {
                           </button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 modal-scrollbar scroll-smooth">
-                          <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border p-4 flex flex-col items-center shrink-0">
-                            <DialogClose className="absolute right-4 top-4 p-2 rounded-full hover:bg-muted/50 transition-colors">
-                              <X className="h-5 w-5" />
+                          {/* Sticky Header inside Modal */}
+                          <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border p-3 md:p-4 flex flex-col items-center shrink-0">
+                            <DialogClose className="absolute right-3 top-3 md:right-4 md:top-4 p-2 rounded-full hover:bg-muted/50 transition-colors z-40">
+                              <X className="h-4 w-4 md:h-5 md:w-5" />
                             </DialogClose>
                             
-                            <DialogHeader className="text-center px-8">
-                              <DialogTitle className="font-black text-lg">Kustomisasi Avatar</DialogTitle>
-                              <DialogDescription className="font-bold text-[10px]">
-                                Sesuaikan karakter dan latar belakang profil Anda.
-                              </DialogDescription>
+                            <DialogHeader className="text-center w-full flex flex-col items-center px-6">
+                              <DialogTitle className="font-black text-base md:text-lg sm:text-center">Kustomisasi Avatar</DialogTitle>
                             </DialogHeader>
 
-                            {/* Live Preview Inside Modal - Reduced Height */}
-                            <div className="mt-3 flex items-center justify-center py-2 px-6 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden relative w-full max-w-[120px]">
+                            {/* Compact Horizontal Preview */}
+                            <div className="mt-2 flex items-center gap-4 py-2 px-5 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden">
                               <div className={cn(
-                                "h-16 w-16 rounded-full flex items-center justify-center p-0.5 transition-all duration-500 shrink-0",
+                                "h-12 w-12 md:h-16 md:w-16 rounded-full flex items-center justify-center p-0.5 transition-all duration-500 shrink-0",
                                 profileBg
                               )}>
                                 <Avatar className="h-full w-full border border-background shadow-md">
                                   <AvatarImage src={photoURL} className="object-cover" />
-                                  <AvatarFallback className="bg-muted text-muted-foreground font-black text-xl">
+                                  <AvatarFallback className="bg-muted text-muted-foreground font-black text-lg">
                                     {userInitial}
                                   </AvatarFallback>
                                 </Avatar>
+                              </div>
+                              <div className="hidden sm:flex flex-col">
+                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Live Preview</p>
+                                <p className="text-xs font-bold text-foreground truncate max-w-[120px]">Karakter Anda</p>
                               </div>
                             </div>
                           </div>
