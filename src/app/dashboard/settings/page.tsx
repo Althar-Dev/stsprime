@@ -39,8 +39,7 @@ import {
   Save,
   KeyRound,
   Check,
-  Camera,
-  Pencil
+  Camera
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -262,7 +261,7 @@ export default function SettingsPage() {
                                       setIsAvatarModalOpen(false);
                                     }}
                                     className={cn(
-                                      "relative aspect-square rounded-2xl overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
+                                      "relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
                                       isSelected 
                                         ? "border-primary shadow-lg ring-2 ring-primary/20" 
                                         : "border-border/30 bg-muted/20 hover:border-primary/50"
