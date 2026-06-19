@@ -61,7 +61,10 @@ export default function LeaderboardPage() {
               </Avatar>
               <p className="font-black text-[10px] md:text-sm truncate w-24 md:w-32">{TOP_THREE[1].name}</p>
               <div className="mt-1 px-2 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
-                <span className="text-[9px] md:text-[11px] font-black">{TOP_THREE[1].points} <span className="text-primary">🔥</span></span>
+                <span className="text-[9px] md:text-[11px] font-black">
+                  {TOP_THREE[1].points} 
+                  <img src="/img/fire.gif" alt="fire" className="h-3 w-3 md:h-4 md:w-4 inline-block align-text-bottom ml-1" />
+                </span>
               </div>
             </div>
             <div className="w-full h-24 md:h-40 bg-gradient-to-b from-slate-400/30 to-slate-400/10 border-t-4 border-slate-400/50 rounded-t-xl flex items-center justify-center">
@@ -81,7 +84,10 @@ export default function LeaderboardPage() {
               </div>
               <p className="font-black text-xs md:text-lg truncate w-28 md:w-40">{TOP_THREE[0].name}</p>
               <div className="mt-1 px-3 py-1 bg-primary/10 rounded-full flex items-center gap-1 border border-primary/30">
-                <span className="text-[10px] md:text-sm font-black text-primary">{TOP_THREE[0].points} <span className="text-primary">🔥</span></span>
+                <span className="text-[10px] md:text-sm font-black text-primary">
+                  {TOP_THREE[0].points} 
+                  <img src="/img/fire.gif" alt="fire" className="h-4 w-4 md:h-5 md:w-5 inline-block align-text-bottom ml-1" />
+                </span>
               </div>
             </div>
             <div className="w-full h-32 md:h-56 bg-gradient-to-b from-primary/30 to-primary/5 border-t-4 border-primary rounded-t-xl flex items-center justify-center shadow-[0_-20px_50px_-12px_rgba(242,255,0,0.15)]">
@@ -98,7 +104,10 @@ export default function LeaderboardPage() {
               </Avatar>
               <p className="font-black text-[9px] md:text-xs truncate w-20 md:w-28">{TOP_THREE[2].name}</p>
               <div className="mt-1 px-2 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
-                <span className="text-[8px] md:text-[10px] font-black">{TOP_THREE[2].points} <span className="text-primary">🔥</span></span>
+                <span className="text-[8px] md:text-[10px] font-black">
+                  {TOP_THREE[2].points} 
+                  <img src="/img/fire.gif" alt="fire" className="h-3 w-3 md:h-4 md:w-4 inline-block align-text-bottom ml-1" />
+                </span>
               </div>
             </div>
             <div className="w-full h-16 md:h-28 bg-gradient-to-b from-orange-400/20 to-orange-400/5 border-t-4 border-orange-400/40 rounded-t-xl flex items-center justify-center">
