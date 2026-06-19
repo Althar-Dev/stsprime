@@ -96,74 +96,71 @@ export default function LeaderboardPage() {
         </div>
 
         {/* 3D Podium Section */}
-        <div className="flex items-end justify-center gap-2 md:gap-6 mb-20 md:mb-32 px-2 max-w-4xl mx-auto">
+        <div className="flex items-end justify-center gap-1 md:gap-6 mb-20 md:mb-32 px-1 max-w-4xl mx-auto">
           {/* Rank 2 */}
           <div className="flex flex-col items-center flex-1">
             <div className="flex flex-col items-center mb-4 text-center">
-              <div className="relative aspect-video w-32 md:w-48 flex items-center justify-center mb-2">
+              <div className="relative aspect-video w-24 md:w-48 flex items-center justify-center mb-2">
                 <Image src="/img/border/two.png" alt="Rank 2 Border" fill className="object-contain" />
-                <Avatar className="h-10 w-10 md:h-16 md:w-16 border-2 border-slate-400/50 shadow-xl">
+                <Avatar className="h-8 w-8 md:h-16 md:w-16 border-2 border-slate-400/50 shadow-xl">
                   <AvatarImage src={TOP_THREE[1].avatar} alt={TOP_THREE[1].name} />
                   <AvatarFallback>U2</AvatarFallback>
                 </Avatar>
               </div>
-              <p className="font-black text-[10px] md:text-sm truncate w-24 md:w-32">{TOP_THREE[1].name}</p>
-              <div className="mt-1 px-2 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
-                <span className="text-[9px] md:text-[11px] font-black">
+              <p className="font-black text-[9px] md:text-sm truncate w-20 md:w-32">{TOP_THREE[1].name}</p>
+              <div className="mt-1 px-1.5 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
+                <span className="text-[8px] md:text-[11px] font-black">
                   {TOP_THREE[1].points} 
-                  <img src="/img/fire.gif" alt="fire" className="h-3 w-3 md:h-4 md:w-4 inline-block align-text-bottom ml-1" />
                 </span>
               </div>
             </div>
-            <div className="w-full h-24 md:h-40 bg-gradient-to-b from-slate-400/30 to-slate-400/10 border-t-4 border-slate-400/50 rounded-t-xl flex items-center justify-center">
-              <span className="font-headline text-4xl md:text-6xl font-black text-slate-400/40">2</span>
+            <div className="w-full h-16 md:h-40 bg-gradient-to-b from-slate-400/30 to-slate-400/10 border-t-2 md:border-t-4 border-slate-400/50 rounded-t-lg md:rounded-t-xl flex items-center justify-center">
+              <span className="font-headline text-2xl md:text-6xl font-black text-slate-400/40">2</span>
             </div>
           </div>
 
           {/* Rank 1 */}
-          <div className="flex flex-col items-center flex-1 relative -top-4">
-            < Crown className="h-6 w-6 md:h-10 md:w-10 text-primary mb-2" />
+          <div className="flex flex-col items-center flex-1 relative -top-3 md:-top-4">
+            <Crown className="h-5 w-5 md:h-10 md:w-10 text-primary mb-1 md:mb-2" />
             <div className="flex flex-col items-center mb-4 text-center">
-              <div className="relative aspect-video w-40 md:w-64 flex items-center justify-center mb-2">
+              <div className="relative aspect-video w-32 md:w-64 flex items-center justify-center mb-2">
                 <Image src="/img/border/one.png" alt="Rank 1 Border" fill className="object-contain" />
-                <Avatar className="h-14 w-14 md:h-24 md:w-24 border-4 border-primary shadow-2xl">
+                <Avatar className="h-10 w-10 md:h-24 md:w-24 border-2 md:border-4 border-primary shadow-2xl">
                   <AvatarImage src={TOP_THREE[0].avatar} alt={TOP_THREE[0].name} />
                   <AvatarFallback>U1</AvatarFallback>
                 </Avatar>
               </div>
-              <p className="font-black text-xs md:text-lg truncate w-28 md:w-40">{TOP_THREE[0].name}</p>
-              <div className="mt-1 px-3 py-1 bg-primary/10 rounded-full flex items-center gap-1 border border-primary/30">
-                <span className="text-[10px] md:text-sm font-black text-primary">
+              <p className="font-black text-[11px] md:text-lg truncate w-24 md:w-40">{TOP_THREE[0].name}</p>
+              <div className="mt-1 px-2 py-0.5 md:px-3 md:py-1 bg-primary/10 rounded-full flex items-center gap-1 border border-primary/30">
+                <span className="text-[9px] md:text-sm font-black text-primary">
                   {TOP_THREE[0].points} 
-                  <img src="/img/fire.gif" alt="fire" className="h-4 w-4 md:h-5 md:w-5 inline-block align-text-bottom ml-1" />
                 </span>
               </div>
             </div>
-            <div className="w-full h-32 md:h-56 bg-gradient-to-b from-primary/30 to-primary/5 border-t-4 border-primary rounded-t-xl flex items-center justify-center shadow-[0_-20px_50px_-12px_rgba(242,255,0,0.15)]">
-              <span className="font-headline text-5xl md:text-8xl font-black text-primary/30">1</span>
+            <div className="w-full h-24 md:h-56 bg-gradient-to-b from-primary/30 to-primary/5 border-t-2 md:border-t-4 border-primary rounded-t-lg md:rounded-t-xl flex items-center justify-center shadow-[0_-10px_30px_-12px_rgba(242,255,0,0.15)] md:shadow-[0_-20px_50px_-12px_rgba(242,255,0,0.15)]">
+              <span className="font-headline text-3xl md:text-8xl font-black text-primary/30">1</span>
             </div>
           </div>
 
           {/* Rank 3 */}
           <div className="flex flex-col items-center flex-1">
             <div className="flex flex-col items-center mb-4 text-center">
-              <div className="relative aspect-video w-28 md:w-40 flex items-center justify-center mb-2">
+              <div className="relative aspect-video w-20 md:w-40 flex items-center justify-center mb-2">
                 <Image src="/img/border/three.png" alt="Rank 3 Border" fill className="object-contain" />
-                <Avatar className="h-8 w-8 md:h-12 md:w-12 border-2 border-orange-400/50 shadow-xl">
+                <Avatar className="h-7 w-7 md:h-12 md:w-12 border-2 border-orange-400/50 shadow-xl">
                   <AvatarImage src={TOP_THREE[2].avatar} alt={TOP_THREE[2].name} />
                   <AvatarFallback>U3</AvatarFallback>
                 </Avatar>
               </div>
-              <p className="font-black text-[9px] md:text-xs truncate w-20 md:w-28">{TOP_THREE[2].name}</p>
-              <div className="mt-1 px-2 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
-                <span className="text-[8px] md:text-[10px] font-black">
+              <p className="font-black text-[8px] md:text-xs truncate w-16 md:w-28">{TOP_THREE[2].name}</p>
+              <div className="mt-1 px-1 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
+                <span className="text-[7px] md:text-[10px] font-black">
                   {TOP_THREE[2].points} 
-                  <img src="/img/fire.gif" alt="fire" className="h-3 w-3 md:h-4 md:w-4 inline-block align-text-bottom ml-1" />
                 </span>
               </div>
             </div>
-            <div className="w-full h-16 md:h-28 bg-gradient-to-b from-orange-400/20 to-orange-400/5 border-t-4 border-orange-400/40 rounded-t-xl flex items-center justify-center">
-              <span className="font-headline text-3xl md:text-5xl font-black text-orange-400/30">3</span>
+            <div className="w-full h-12 md:h-28 bg-gradient-to-b from-orange-400/20 to-orange-400/5 border-t-2 md:border-t-4 border-orange-400/40 rounded-t-lg md:rounded-t-xl flex items-center justify-center">
+              <span className="font-headline text-xl md:text-5xl font-black text-orange-400/30">3</span>
             </div>
           </div>
         </div>
