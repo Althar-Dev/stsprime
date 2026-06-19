@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -23,7 +22,6 @@ import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -54,7 +52,6 @@ const TABS_CONFIG = [
 ];
 
 const BACKGROUND_OPTIONS = [
-  // Solids
   { id: "default", name: "Netral", class: "bg-muted/30" },
   { id: "primary", name: "STS Gold", class: "bg-primary" },
   { id: "accent", name: "STS Blue", class: "bg-accent" },
@@ -77,8 +74,6 @@ const BACKGROUND_OPTIONS = [
   { id: "yellow", name: "Lemon", class: "bg-yellow-400" },
   { id: "gray", name: "Stone", class: "bg-stone-500" },
   { id: "deep-blue", name: "Navy", class: "bg-blue-900" },
-
-  // Gradients
   { id: "grad-hyper", name: "Hyper", class: "bg-gradient-to-br from-primary to-accent" },
   { id: "grad-legendary", name: "Legendary", class: "bg-gradient-to-br from-slate-900 via-primary/50 to-slate-900" },
   { id: "grad-cosmic", name: "Cosmic", class: "bg-gradient-to-br from-purple-600 to-blue-500" },
@@ -138,11 +133,9 @@ export default function SettingsPage() {
     async function loadAvatars() {
       try {
         const files = await getAvatarFiles();
-        // Casing normalization: keep original but filter dev.png case-insensitively
-        const filtered = files.filter(f => f.toLowerCase() !== 'dev.png');
-        setAvatarFiles(filtered);
+        setAvatarFiles(files);
       } catch (err) {
-        // Fail silently
+        // Silent fail
       }
     }
     loadAvatars();
@@ -159,7 +152,6 @@ export default function SettingsPage() {
         if (docSnap.exists()) {
           const data = docSnap.data();
           setDisplayName(data.displayName || user.displayName || "");
-          // Penting: Prioritaskan photoURL dari Firestore untuk sinkronisasi grid
           setPhotoURL(data.photoURL || "");
           setProfileBg(data.profileBg || "bg-muted/30");
           setIsDev(!!data.dev);
@@ -170,7 +162,7 @@ export default function SettingsPage() {
           setIsDev(false);
         }
       } catch (error) {
-        // Fail silently
+        // Silent fail
       }
     }
 
@@ -188,11 +180,11 @@ export default function SettingsPage() {
 
     setIsSaving(true);
     try {
-      // Jika photoURL kosong, biarkan updateProfile menggunakan default Auth (mungkin foto Google)
-      // Tapi simpan pilihan eksplisit ke Firestore
+      const finalPhotoURL = photoURL || (isDev ? "/img/ava/dev.png" : (user.photoURL || ""));
+      
       await updateProfile(user, { 
         displayName, 
-        photoURL: photoURL || (isDev ? "/img/ava/dev.png" : user.photoURL) 
+        photoURL: finalPhotoURL
       });
 
       const userDocRef = doc(db, "users", user.uid);
@@ -231,21 +223,25 @@ export default function SettingsPage() {
 
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logika Pratinjau: PhotoURL Firestore > Dev.png (jika dev) > PhotoURL Auth
+  // Sumber kebenaran tunggal untuk pratinjau avatar
   const displayPhotoURL = useMemo(() => {
     if (photoURL) return photoURL;
     if (isDev) return "/img/ava/dev.png";
     return user?.photoURL || "";
   }, [photoURL, isDev, user?.photoURL]);
   
-  // Daftar Avatar Unik
+  // Daftar avatar unik yang akan ditampilkan di grid
   const availableAvatars = useMemo(() => {
-    // Pastikan tidak ada dev.png ganda dari server
-    const base = avatarFiles.filter(f => f.toLowerCase() !== 'dev.png');
+    // 1. Ambil file unik dari state dan pastikan dev.png tidak terbawa dari pembacaan folder
+    const baseFiles = Array.from(new Set(avatarFiles))
+      .filter(f => f.toLowerCase() !== 'dev.png');
+    
+    // 2. Jika pengembang, tambahkan dev.png secara eksklusif di urutan pertama
     if (isDev) {
-      return ["dev.png", ...base];
+      return ["dev.png", ...baseFiles];
     }
-    return base;
+    
+    return baseFiles;
   }, [avatarFiles, isDev]);
 
   return (
@@ -302,8 +298,6 @@ export default function SettingsPage() {
                   <CardTitle className="text-xl md:text-2xl font-black">Informasi Profil</CardTitle>
                 </CardHeader>
                 <CardContent className="px-6 md:px-10 space-y-12">
-                  
-                  {/* Avatar Picker Section */}
                   <div className="flex flex-col items-center sm:items-start gap-8">
                     <div className="relative group">
                       <div className={cn(
@@ -320,17 +314,11 @@ export default function SettingsPage() {
                       
                       <Dialog open={isAvatarModalOpen} onOpenChange={setIsAvatarModalOpen}>
                         <DialogTrigger asChild>
-                          <button 
-                            type="button"
-                            className="absolute inset-0 z-10"
-                          >
-                            {/* Hover Overlay */}
+                          <button type="button" className="absolute inset-0 z-10">
                             <div className="absolute inset-0 bg-black/40 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]">
                               <Camera className="h-8 w-8 text-white mb-2" />
                               <span className="text-[10px] text-white font-black tracking-widest uppercase">Ganti</span>
                             </div>
-                            
-                            {/* Floating Edit Button */}
                             <div className="absolute bottom-1 right-1 md:bottom-2 md:right-2 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-xl border-4 border-background transform transition-all group-hover:scale-110">
                               <Camera className="h-5 w-5" />
                             </div>
@@ -368,44 +356,38 @@ export default function SettingsPage() {
                                 <h4 className="font-black text-sm uppercase tracking-tight">Pilih Karakter</h4>
                               </div>
                               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
-                                {availableAvatars.length > 0 ? (
-                                  availableAvatars.map((file) => {
-                                    const avatarPath = `/img/ava/${file}`;
-                                    const isSelected = avatarPath === displayPhotoURL;
-                                    
-                                    return (
-                                      <button
-                                        key={file}
-                                        type="button"
-                                        onClick={() => setPhotoURL(avatarPath)}
-                                        className={cn(
-                                          "relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
-                                          isSelected 
-                                            ? "border-primary shadow-lg ring-2 ring-primary/20" 
-                                            : "border-border/30 bg-muted/20 hover:border-primary/50"
-                                        )}
-                                      >
-                                        <Image 
-                                          src={avatarPath} 
-                                          alt={`Avatar ${file}`} 
-                                          fill 
-                                          className="object-cover"
-                                          sizes="(max-width: 768px) 25vw, 10vw"
-                                        />
-                                        {isSelected && (
-                                          <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
-                                            <Check className="h-4 w-4 text-primary-foreground drop-shadow-md" />
-                                          </div>
-                                        )}
-                                      </button>
-                                    );
-                                  })
-                                ) : (
-                                  <div className="col-span-full py-8 text-center border border-dashed rounded-3xl bg-muted/10">
-                                    <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground mb-2" />
-                                    <p className="text-[10px] font-bold text-muted-foreground">Memuat karakter...</p>
-                                  </div>
-                                )}
+                                {availableAvatars.map((file) => {
+                                  const avatarPath = `/img/ava/${file}`;
+                                  // Logika perbandingan yang presisi untuk sinkronisasi pratinjau
+                                  const isSelected = avatarPath === displayPhotoURL;
+                                  
+                                  return (
+                                    <button
+                                      key={file}
+                                      type="button"
+                                      onClick={() => setPhotoURL(avatarPath)}
+                                      className={cn(
+                                        "relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
+                                        isSelected 
+                                          ? "border-primary shadow-lg ring-2 ring-primary/20" 
+                                          : "border-border/30 bg-muted/20 hover:border-primary/50"
+                                      )}
+                                    >
+                                      <Image 
+                                        src={avatarPath} 
+                                        alt={`Avatar ${file}`} 
+                                        fill 
+                                        className="object-cover"
+                                        sizes="(max-width: 768px) 25vw, 10vw"
+                                      />
+                                      {isSelected && (
+                                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
+                                          <Check className="h-4 w-4 text-primary-foreground drop-shadow-md" />
+                                        </div>
+                                      )}
+                                    </button>
+                                  );
+                                })}
                               </div>
                             </div>
 
@@ -454,12 +436,6 @@ export default function SettingsPage() {
                           </div>
                         </DialogContent>
                       </Dialog>
-                      
-                      {isDev && (
-                        <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground p-1.5 rounded-lg shadow-xl border-4 border-background pointer-events-none">
-                          <ShieldCheck className="h-5 w-5" />
-                        </div>
-                      )}
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-8 w-full">
