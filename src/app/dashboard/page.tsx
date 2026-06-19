@@ -115,7 +115,7 @@ export default function DashboardPage() {
                   <p className="text-[10px] text-muted-foreground font-black tracking-widest uppercase">Loyalty Reward</p>
                   <h3 className="font-headline text-2xl md:text-3xl font-black text-foreground">Saldo STS Coin</h3>
                 </div>
-                <div className="h-14 w-14 md:h-16 md:w-16 rounded-2xl bg-primary/10 flex items-center justify-center p-3 animate-pulse">
+                <div className="h-14 w-14 md:h-16 md:w-16 flex items-center justify-center">
                   <img src="/img/coin.png" alt="STS Coin" className="h-full w-full object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.1)]" />
                 </div>
               </div>
