@@ -3,31 +3,12 @@
 import { useUser } from "@/firebase";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
-import { Gamepad2, History, LayoutDashboard, Settings, ArrowUpRight, ShieldCheck, Zap, TrendingUp } from "lucide-react";
+import { Gamepad2, History, LayoutDashboard, ArrowUpRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-
-const CHART_DATA = [
-  { month: "Mei", spent: 45000 },
-  { month: "Jun", spent: 120000 },
-  { month: "Jul", spent: 85000 },
-  { month: "Agu", spent: 240000 },
-  { month: "Sep", spent: 150000 },
-  { month: "Okt", spent: 315000 },
-];
-
-const CHART_CONFIG = {
-  spent: {
-    label: "Total Topup (Rp)",
-    color: "hsl(var(--primary))",
-  },
-};
 
 const RECENT_TRANSACTIONS = [
   { id: "STS-9821-X", game: "Mobile Legends", item: "172 Diamonds", price: "Rp 38,000", status: "Success", date: "24 Okt 2023" },
@@ -36,7 +17,7 @@ const RECENT_TRANSACTIONS = [
 ];
 
 export default function DashboardPage() {
-  const { user, loading } = useUser();
+  const { user } = useUser();
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -114,48 +95,8 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Right Block: Charts & Transactions */}
+          {/* Right Block: Recent Transactions */}
           <div className="space-y-6 md:col-span-2">
-            {/* Analytics Chart Card */}
-            <Card className="border border-border bg-card/40 backdrop-blur-sm rounded-xl overflow-hidden shadow-sm">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <CardTitle className="font-headline text-lg font-black text-foreground flex items-center gap-2">
-                      <TrendingUp className="h-5 w-5 text-primary" />
-                      Analisis Pengeluaran
-                    </CardTitle>
-                    <CardDescription className="text-xs font-bold text-muted-foreground mt-0.5">
-                      Statistik pengisian voucher dan kredit digital 6 bulan terakhir.
-                    </CardDescription>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[10px] font-black text-muted-foreground tracking-widest">TOTAL SPENT</p>
-                    <p className="text-lg font-black text-primary">Rp 955,000</p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <ChartContainer config={CHART_CONFIG} className="h-[200px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={CHART_DATA} margin={{ left: -10, right: 10, top: 10, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorSpent" x1="0" x1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
-                          <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-border/40" vertical={false} />
-                      <XAxis dataKey="month" tickLine={false} axisLine={false} className="text-muted-foreground font-bold" />
-                      <YAxis tickLine={false} axisLine={false} className="text-muted-foreground font-bold" />
-                      <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-                      <Area type="monotone" dataKey="spent" stroke="hsl(var(--primary))" strokeWidth={3} fillOpacity={1} fill="url(#colorSpent)" />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-              </CardContent>
-            </Card>
-
             {/* Recent Digital Services Orders */}
             <div className="bento-card p-6">
               <div className="flex justify-between items-center mb-4">
