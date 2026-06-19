@@ -34,8 +34,8 @@ export function DashboardHeader() {
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic for developer avatar
-  const displayPhotoURL = profileData?.dev ? "/img/ava/dev.png" : (profileData?.photoURL || user?.photoURL || "");
+  // Logic for display photo: if no photoURL and isDev, show dev.png
+  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/ava/dev.png" : (user?.photoURL || ""));
 
   return (
     <header className="sticky top-0 z-40 flex h-16 md:h-20 shrink-0 items-center gap-2 border-b border-border bg-background px-4 md:px-8">
@@ -53,8 +53,8 @@ export function DashboardHeader() {
         
         <div className="flex items-center gap-2 md:gap-5 ml-auto sm:ml-0">
           <div className="flex items-center gap-2 md:gap-2.5 px-3 md:px-3.5 py-1.5 md:py-2 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
-            <img src="/img/coin.png" alt="Coin" className="h-5 w-5 md:h-6 md:w-6 group-hover:scale-110 transition-transform" />
-            <span className="text-xs md:text-sm font-black text-primary">0</span>
+            <img src="/img/coin.png" alt="Coin" className="h-6 w-6 md:h-8 md:w-8 group-hover:scale-110 transition-transform" />
+            <span className="text-sm md:text-base font-black text-primary">0</span>
           </div>
 
           <div className="hidden xs:block">
@@ -64,7 +64,9 @@ export function DashboardHeader() {
           <div className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 border-l border-border/50">
             <div className="hidden lg:flex flex-col items-end">
               <span className="text-xs font-black leading-none text-foreground">{user?.displayName || "Gamer"}</span>
-              <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black h-4 px-1.5 mt-1 rounded-sm">Terverifikasi</Badge>
+              <Badge className="bg-primary/10 text-primary border border-primary/20 text-[9px] font-black h-4 px-1.5 mt-1 rounded-sm">
+                {profileData?.dev ? "Developer" : "Terverifikasi"}
+              </Badge>
             </div>
             <div className={cn(
               "h-9 w-9 md:h-11 md:w-11 rounded-full flex items-center justify-center p-0.5",

@@ -41,8 +41,8 @@ export default function DashboardPage() {
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic for developer avatar
-  const displayPhotoURL = profileData?.dev ? "/img/ava/dev.png" : (profileData?.photoURL || user?.photoURL || "");
+  // Logic for display photo: if no photoURL and isDev, show dev.png
+  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/ava/dev.png" : (user?.photoURL || ""));
 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-10">
@@ -102,7 +102,7 @@ export default function DashboardPage() {
               {user?.email || "guest@stspedia.com"}
             </p>
             <Badge className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 text-[10px] font-black tracking-widest rounded-full uppercase">
-              Member Verified
+              {profileData?.dev ? "Developer Verified" : "Member Verified"}
             </Badge>
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function DashboardPage() {
                   <h3 className="font-headline text-2xl md:text-3xl font-black text-foreground">Saldo STS Coin</h3>
                 </div>
                 <div className="h-14 w-14 md:h-16 md:w-16 flex items-center justify-center">
-                  <img src="/img/coin.png" alt="STS Coin" className="h-full w-full object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.1)]" />
+                  <img src="/img/coin.png" alt="STS Coin" className="h-full w-full object-contain" />
                 </div>
               </div>
               

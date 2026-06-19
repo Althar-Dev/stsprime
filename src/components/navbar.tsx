@@ -138,8 +138,8 @@ export function Navbar() {
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic for developer avatar
-  const displayPhotoURL = profileData?.dev ? "/img/ava/dev.png" : (profileData?.photoURL || user?.photoURL || "");
+  // Logic for display photo: if no photoURL and isDev, show dev.png
+  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/ava/dev.png" : (user?.photoURL || ""));
 
   const handleLogout = async () => {
     if (auth) {
@@ -206,8 +206,8 @@ export function Navbar() {
                   {user ? (
                     <div className="flex items-center gap-2 md:gap-3">
                       <div className="flex items-center gap-2 md:gap-2.5 px-3 md:px-3.5 py-1.5 md:py-2 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
-                        <img src="/img/coin.png" alt="STS Coin" className="h-5 w-5 md:h-6 md:w-6 object-contain group-hover:scale-110 transition-transform" />
-                        <span className="text-xs md:text-sm font-black text-primary">0</span>
+                        <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-8 md:w-8 object-contain group-hover:scale-110 transition-transform" />
+                        <span className="text-sm md:text-base font-black text-primary">0</span>
                       </div>
                       
                       <DropdownMenu>
@@ -341,7 +341,7 @@ export function Navbar() {
                         {user && (
                           <div className="mb-4 p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
                             <div className="flex items-center gap-3">
-                              <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 object-contain" />
+                              <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-8 md:w-8 object-contain" />
                               <span className="text-xs font-black">STS Coin</span>
                             </div>
                             <span className="text-sm font-black text-primary">0</span>

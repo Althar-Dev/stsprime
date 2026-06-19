@@ -56,8 +56,8 @@ export default function LeaderboardPage() {
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic for developer avatar
-  const displayPhotoURL = profileData?.dev ? "/img/ava/dev.png" : (profileData?.photoURL || user?.photoURL || "");
+  // Logic for display photo: if no photoURL and isDev, show dev.png
+  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/ava/dev.png" : (user?.photoURL || ""));
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
