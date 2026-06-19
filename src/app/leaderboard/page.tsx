@@ -1,12 +1,11 @@
 "use client";
 
 import { Footer } from "@/components/footer";
-import { Crown, ShieldCheck, TrendingUp, ChevronRight, Star, Medal, Trophy, ChevronLeft } from "lucide-react";
+import { Crown, ShieldCheck, TrendingUp, Star, Medal, Trophy, ChevronLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useUser } from "@/firebase";
-import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
@@ -192,11 +191,6 @@ export default function LeaderboardPage() {
                     ))}
                   </TableBody>
                 </Table>
-              </div>
-              <div className="p-3 md:p-4 bg-muted/10 border-t border-border/20 text-center">
-                 <button className="text-[9px] md:text-[10px] font-black text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 mx-auto">
-                    LIHAT SEMUA PERINGKAT <ChevronRight className="h-2.5 w-2.5 md:h-3 md:w-3" />
-                 </button>
               </div>
             </div>
           </div>
