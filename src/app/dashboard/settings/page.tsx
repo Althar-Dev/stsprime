@@ -96,10 +96,6 @@ const BACKGROUND_OPTIONS = [
   { id: "grad-space", name: "Deep Space", class: "bg-gradient-to-bl from-gray-900 via-purple-900 to-violet-600" },
 ];
 
-// DAFTAR AVATAR SESUAI INSTRUKSI
-const STATIC_BOY_AVATARS = ["boy.png", "boy-1.png", "boy-2.png", "boy-3.png", "boy-4.png"];
-const STATIC_GIRL_AVATARS = ["girl.png", "girl-1.png", "girl-2.png", "girl-3.png"];
-
 export default function SettingsPage() {
   const { user } = useUser();
   const auth = useAuth();
@@ -181,7 +177,7 @@ export default function SettingsPage() {
       const userDocRef = doc(db, "users", user.uid);
       const userData = {
         displayName,
-        photoURL,
+        photoURL: finalPhotoURL,
         profileBg,
         email: user.email,
         updatedAt: new Date().toISOString(),
@@ -214,20 +210,23 @@ export default function SettingsPage() {
 
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Sumber kebenaran tunggal untuk pratinjau avatar
+  // Logic pratinjau yang konsisten
   const displayPhotoURL = useMemo(() => {
     if (photoURL) return photoURL;
     if (isDev) return "/img/ava/dev.png";
     return user?.photoURL || "";
   }, [photoURL, isDev, user?.photoURL]);
   
-  // DAFTAR AVATAR FIX (HARDCODED)
+  // DAFTAR AVATAR FIX (HARDCODED UNTUK MENCEGAH DUPLIKASI)
   const availableAvatars = useMemo(() => {
-    const base = [...STATIC_BOY_AVATARS, ...STATIC_GIRL_AVATARS];
+    const list = [
+      "boy.png", "boy-1.png", "boy-2.png", "boy-3.png", "boy-4.png",
+      "girl.png", "girl-1.png", "girl-2.png", "girl-3.png"
+    ];
     if (isDev) {
-      return ["dev.png", ...base];
+      return ["dev.png", ...list];
     }
-    return base;
+    return list;
   }, [isDev]);
 
   return (
@@ -344,6 +343,7 @@ export default function SettingsPage() {
                               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
                                 {availableAvatars.map((file) => {
                                   const avatarPath = `/img/ava/${file}`;
+                                  // Seleksi harus cocok persis dengan pratinjau
                                   const isSelected = avatarPath === displayPhotoURL;
                                   
                                   return (
