@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { cn } from "@/lib/utils";
@@ -99,10 +100,13 @@ export default function LeaderboardPage() {
           {/* Rank 2 */}
           <div className="flex flex-col items-center flex-1">
             <div className="flex flex-col items-center mb-4 text-center">
-              <Avatar className="h-14 w-14 md:h-20 md:w-20 border-2 border-slate-400/50 shadow-xl mb-2">
-                <AvatarImage src={TOP_THREE[1].avatar} alt={TOP_THREE[1].name} />
-                <AvatarFallback>U2</AvatarFallback>
-              </Avatar>
+              <div className="relative aspect-video w-32 md:w-48 flex items-center justify-center mb-2">
+                <Image src="/img/border/two.png" alt="Rank 2 Border" fill className="object-contain" />
+                <Avatar className="h-10 w-10 md:h-16 md:w-16 border-2 border-slate-400/50 shadow-xl">
+                  <AvatarImage src={TOP_THREE[1].avatar} alt={TOP_THREE[1].name} />
+                  <AvatarFallback>U2</AvatarFallback>
+                </Avatar>
+              </div>
               <p className="font-black text-[10px] md:text-sm truncate w-24 md:w-32">{TOP_THREE[1].name}</p>
               <div className="mt-1 px-2 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
                 <span className="text-[9px] md:text-[11px] font-black">
@@ -118,10 +122,11 @@ export default function LeaderboardPage() {
 
           {/* Rank 1 */}
           <div className="flex flex-col items-center flex-1 relative -top-4">
-            <Crown className="h-6 w-6 md:h-10 md:w-10 text-primary mb-2" />
+            < Crown className="h-6 w-6 md:h-10 md:w-10 text-primary mb-2" />
             <div className="flex flex-col items-center mb-4 text-center">
-              <div className="relative">
-                <Avatar className="h-18 w-18 md:h-28 md:w-28 border-4 border-primary shadow-2xl ring-4 ring-primary/20 mb-2">
+              <div className="relative aspect-video w-40 md:w-64 flex items-center justify-center mb-2">
+                <Image src="/img/border/one.png" alt="Rank 1 Border" fill className="object-contain" />
+                <Avatar className="h-14 w-14 md:h-24 md:w-24 border-4 border-primary shadow-2xl">
                   <AvatarImage src={TOP_THREE[0].avatar} alt={TOP_THREE[0].name} />
                   <AvatarFallback>U1</AvatarFallback>
                 </Avatar>
@@ -142,10 +147,13 @@ export default function LeaderboardPage() {
           {/* Rank 3 */}
           <div className="flex flex-col items-center flex-1">
             <div className="flex flex-col items-center mb-4 text-center">
-              <Avatar className="h-12 w-12 md:h-16 md:w-16 border-2 border-orange-400/50 shadow-xl mb-2">
-                <AvatarImage src={TOP_THREE[2].avatar} alt={TOP_THREE[2].name} />
-                <AvatarFallback>U3</AvatarFallback>
-              </Avatar>
+              <div className="relative aspect-video w-28 md:w-40 flex items-center justify-center mb-2">
+                <Image src="/img/border/three.png" alt="Rank 3 Border" fill className="object-contain" />
+                <Avatar className="h-8 w-8 md:h-12 md:w-12 border-2 border-orange-400/50 shadow-xl">
+                  <AvatarImage src={TOP_THREE[2].avatar} alt={TOP_THREE[2].name} />
+                  <AvatarFallback>U3</AvatarFallback>
+                </Avatar>
+              </div>
               <p className="font-black text-[9px] md:text-xs truncate w-20 md:w-28">{TOP_THREE[2].name}</p>
               <div className="mt-1 px-2 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
                 <span className="text-[8px] md:text-[10px] font-black">
