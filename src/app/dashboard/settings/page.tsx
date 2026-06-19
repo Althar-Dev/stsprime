@@ -16,6 +16,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { 
   User, 
   Settings, 
   ShieldCheck, 
@@ -30,6 +37,13 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const TABS_CONFIG = [
+  { id: "profile", label: "Profil akun", icon: User },
+  { id: "appearance", label: "Tampilan tema", icon: Palette },
+  { id: "security", label: "Keamanan & sandi", icon: KeyRound },
+  { id: "notifications", label: "Notifikasi", icon: Bell },
+];
+
 export default function SettingsPage() {
   const { user } = useUser();
   const auth = useAuth();
@@ -37,6 +51,7 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
 
+  const [activeTab, setActiveTab] = useState("profile");
   const [displayName, setDisplayName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -115,43 +130,47 @@ export default function SettingsPage() {
 
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
-      <div>
+      <div className="flex flex-col gap-1">
         <h1 className="font-headline text-3xl md:text-4xl font-black tracking-tight flex items-center gap-3">
           <Settings className="h-8 w-8 text-primary" />
           Pengaturan
         </h1>
-        <p className="text-sm text-muted-foreground mt-1 font-bold">
+        <p className="text-sm text-muted-foreground font-bold">
           Kelola informasi profil, keamanan akun, dan preferensi aplikasi Anda.
         </p>
       </div>
 
-      <Tabs defaultValue="profile" className="flex flex-col md:flex-row gap-8 items-start">
-        {/* Sidebar Tabs List */}
-        <TabsList className="flex md:flex-col h-auto bg-transparent p-0 justify-start space-x-2 md:space-x-0 md:space-y-1 w-full md:w-64 overflow-x-auto no-scrollbar shrink-0 flex-nowrap">
-          <TabsTrigger 
-            value="profile" 
-            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-auto md:w-full border border-transparent data-[state=active]:border-primary/20 shrink-0 whitespace-nowrap"
-          >
-            <User className="h-4 w-4" /> Profil akun
-          </TabsTrigger>
-          <TabsTrigger 
-            value="appearance" 
-            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-auto md:w-full border border-transparent data-[state=active]:border-primary/20 shrink-0 whitespace-nowrap"
-          >
-            <Palette className="h-4 w-4" /> Tampilan tema
-          </TabsTrigger>
-          <TabsTrigger 
-            value="security" 
-            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-auto md:w-full border border-transparent data-[state=active]:border-primary/20 shrink-0 whitespace-nowrap"
-          >
-            <KeyRound className="h-4 w-4" /> Keamanan & sandi
-          </TabsTrigger>
-          <TabsTrigger 
-            value="notifications" 
-            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-auto md:w-full border border-transparent data-[state=active]:border-primary/20 shrink-0 whitespace-nowrap"
-          >
-            <Bell className="h-4 w-4" /> Notifikasi
-          </TabsTrigger>
+      {/* Mobile Select Navigation */}
+      <div className="md:hidden">
+        <Select value={activeTab} onValueChange={setActiveTab}>
+          <SelectTrigger className="w-full h-12 rounded-xl font-bold border-border bg-card shadow-sm">
+            <SelectValue placeholder="Pilih kategori" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl border-border">
+            {TABS_CONFIG.map((tab) => (
+              <SelectItem key={tab.id} value={tab.id} className="font-bold py-3">
+                <div className="flex items-center gap-3">
+                  <tab.icon className="h-4 w-4 text-muted-foreground" />
+                  {tab.label}
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col md:flex-row gap-8 items-start">
+        {/* Sidebar Tabs List (Desktop Only) */}
+        <TabsList className="hidden md:flex md:flex-col h-auto bg-transparent p-0 justify-start space-y-1 w-full md:w-64 shrink-0">
+          {TABS_CONFIG.map((tab) => (
+            <TabsTrigger 
+              key={tab.id}
+              value={tab.id} 
+              className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-full border border-transparent data-[state=active]:border-primary/20"
+            >
+              <tab.icon className="h-4 w-4" /> {tab.label}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
         {/* Content Area */}
@@ -167,7 +186,7 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">Alamat email</Label>
+                    <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground">Alamat email</Label>
                     <Input 
                       id="email" 
                       value={user?.email || ""} 
@@ -177,7 +196,7 @@ export default function SettingsPage() {
                     <p className="text-[10px] text-muted-foreground font-bold italic">Email tidak dapat diubah untuk saat ini karena terhubung dengan akun utama.</p>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="displayName" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">Nama tampilan</Label>
+                    <Label htmlFor="displayName" className="text-[10px] font-black tracking-widest text-muted-foreground">Nama tampilan</Label>
                     <Input 
                       id="displayName" 
                       placeholder="Masukkan nama tampilan Anda" 
