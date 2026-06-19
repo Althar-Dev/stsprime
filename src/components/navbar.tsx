@@ -137,6 +137,9 @@ export function Navbar() {
 
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
+  
+  // Logic for developer avatar
+  const displayPhotoURL = profileData?.dev ? "/img/ava/dev.png" : (profileData?.photoURL || user?.photoURL || "");
 
   const handleLogout = async () => {
     if (auth) {
@@ -214,7 +217,7 @@ export function Navbar() {
                             profileBg
                           )}>
                             <Avatar className="h-full w-full border border-background">
-                              <AvatarImage src={user.photoURL || ""} alt={user.email || "User"} />
+                              <AvatarImage src={displayPhotoURL} alt={user.email || "User"} />
                               <AvatarFallback className="bg-muted text-muted-foreground font-black">
                                 {userInitial}
                               </AvatarFallback>

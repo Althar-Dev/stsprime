@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -43,8 +42,7 @@ import {
   Check,
   Camera,
   Layers,
-  X,
-  Sparkles
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -116,6 +114,7 @@ export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [avatarFiles, setAvatarFiles] = useState<string[]>([]);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+  const [isDev, setIsDev] = useState(false);
   
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
@@ -159,10 +158,12 @@ export default function SettingsPage() {
           setDisplayName(data.displayName || user.displayName || "");
           setPhotoURL(data.photoURL || user.photoURL || "");
           setProfileBg(data.profileBg || "bg-muted/30");
+          setIsDev(!!data.dev);
         } else {
           setDisplayName(user.displayName || "");
           setPhotoURL(user.photoURL || "");
           setProfileBg("bg-muted/30");
+          setIsDev(false);
         }
       } catch (error) {
         // Fail silently
@@ -220,6 +221,9 @@ export default function SettingsPage() {
   };
 
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
+  
+  // Logic for developer avatar
+  const displayPhotoURL = isDev ? "/img/ava/dev.png" : photoURL;
 
   return (
     <div className="p-4 md:p-6 lg:p-10 space-y-8 md:space-y-12 w-full mx-auto">
@@ -284,152 +288,160 @@ export default function SettingsPage() {
                         profileBg
                       )}>
                         <Avatar className="h-full w-full border-4 border-background shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
-                          <AvatarImage src={photoURL} className="object-cover" />
+                          <AvatarImage src={displayPhotoURL} className="object-cover" />
                           <AvatarFallback className="bg-muted text-muted-foreground font-black text-4xl">
                             {userInitial}
                           </AvatarFallback>
                         </Avatar>
                       </div>
                       
-                      <Dialog open={isAvatarModalOpen} onOpenChange={setIsAvatarModalOpen}>
-                        <DialogTrigger asChild>
-                          <button 
-                            type="button"
-                            className="absolute inset-0 z-10"
-                          >
-                            {/* Hover Overlay */}
-                            <div className="absolute inset-0 bg-black/40 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]">
-                              <Camera className="h-8 w-8 text-white mb-2" />
-                              <span className="text-[10px] text-white font-black tracking-widest uppercase">Ganti</span>
-                            </div>
-                            
-                            {/* Floating Edit Button */}
-                            <div className="absolute bottom-1 right-1 md:bottom-2 md:right-2 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-xl border-4 border-background transform transition-all group-hover:scale-110">
-                              <Camera className="h-5 w-5" />
-                            </div>
-                          </button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 modal-scrollbar scroll-smooth">
-                          {/* Sticky Header inside Modal */}
-                          <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border p-3 md:p-4 flex flex-col items-center shrink-0">
-                            <DialogClose className="absolute right-3 top-3 md:right-4 md:top-4 p-2 rounded-full hover:bg-muted/50 transition-colors z-40">
-                              <X className="h-4 w-4 md:h-5 md:w-5" />
-                            </DialogClose>
-                            
-                            <DialogHeader className="text-center w-full flex flex-col items-center px-6">
-                              <DialogTitle className="font-black text-base md:text-lg sm:text-center">Kustomisasi Avatar</DialogTitle>
-                            </DialogHeader>
+                      {!isDev && (
+                        <Dialog open={isAvatarModalOpen} onOpenChange={setIsAvatarModalOpen}>
+                          <DialogTrigger asChild>
+                            <button 
+                              type="button"
+                              className="absolute inset-0 z-10"
+                            >
+                              {/* Hover Overlay */}
+                              <div className="absolute inset-0 bg-black/40 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]">
+                                <Camera className="h-8 w-8 text-white mb-2" />
+                                <span className="text-[10px] text-white font-black tracking-widest uppercase">Ganti</span>
+                              </div>
+                              
+                              {/* Floating Edit Button */}
+                              <div className="absolute bottom-1 right-1 md:bottom-2 md:right-2 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-xl border-4 border-background transform transition-all group-hover:scale-110">
+                                <Camera className="h-5 w-5" />
+                              </div>
+                            </button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 modal-scrollbar scroll-smooth">
+                            {/* Sticky Header inside Modal */}
+                            <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border p-3 md:p-4 flex flex-col items-center shrink-0">
+                              <DialogClose className="absolute right-3 top-3 md:right-4 md:top-4 p-2 rounded-full hover:bg-muted/50 transition-colors z-40">
+                                <X className="h-4 w-4 md:h-5 md:w-5" />
+                              </DialogClose>
+                              
+                              <DialogHeader className="text-center w-full flex flex-col items-center px-6">
+                                <DialogTitle className="font-black text-base md:text-lg sm:text-center">Kustomisasi Avatar</DialogTitle>
+                              </DialogHeader>
 
-                            {/* Compact Horizontal Preview */}
-                            <div className="mt-2 flex items-center gap-4 py-2 px-5 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden">
-                              <div className={cn(
-                                "h-12 w-12 md:h-16 md:w-16 rounded-full flex items-center justify-center p-0.5 transition-all duration-500 shrink-0",
-                                profileBg
-                              )}>
-                                <Avatar className="h-full w-full border border-background shadow-md">
-                                  <AvatarImage src={photoURL} className="object-cover" />
-                                  <AvatarFallback className="bg-muted text-muted-foreground font-black text-lg">
-                                    {userInitial}
-                                  </AvatarFallback>
-                                </Avatar>
+                              {/* Compact Horizontal Preview */}
+                              <div className="mt-2 flex items-center gap-4 py-2 px-5 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden">
+                                <div className={cn(
+                                  "h-12 w-12 md:h-16 md:w-16 rounded-full flex items-center justify-center p-0.5 transition-all duration-500 shrink-0",
+                                  profileBg
+                                )}>
+                                  <Avatar className="h-full w-full border border-background shadow-md">
+                                    <AvatarImage src={displayPhotoURL} className="object-cover" />
+                                    <AvatarFallback className="bg-muted text-muted-foreground font-black text-lg">
+                                      {userInitial}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          
-                          <div className="p-6 space-y-10">
-                            {/* Avatar Grid */}
-                            <div className="space-y-4">
-                              <div className="flex items-center gap-2">
-                                <User className="h-4 w-4 text-primary" />
-                                <h4 className="font-black text-sm uppercase tracking-tight">Pilih Karakter</h4>
+                            
+                            <div className="p-6 space-y-10">
+                              {/* Avatar Grid */}
+                              <div className="space-y-4">
+                                <div className="flex items-center gap-2">
+                                  <User className="h-4 w-4 text-primary" />
+                                  <h4 className="font-black text-sm uppercase tracking-tight">Pilih Karakter</h4>
+                                </div>
+                                <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
+                                  {avatarFiles.length > 0 ? (
+                                    avatarFiles.map((file, i) => {
+                                      const avatarPath = `/img/ava/${file}`;
+                                      const isSelected = photoURL === avatarPath;
+                                      return (
+                                        <button
+                                          key={i}
+                                          type="button"
+                                          onClick={() => setPhotoURL(avatarPath)}
+                                          className={cn(
+                                            "relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
+                                            isSelected 
+                                              ? "border-primary shadow-lg ring-2 ring-primary/20" 
+                                              : "border-border/30 bg-muted/20 hover:border-primary/50"
+                                          )}
+                                        >
+                                          <Image 
+                                            src={avatarPath} 
+                                            alt={`Avatar ${file}`} 
+                                            fill 
+                                            className="object-cover"
+                                            sizes="(max-width: 768px) 25vw, 10vw"
+                                          />
+                                          {isSelected && (
+                                            <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
+                                              <Check className="h-4 w-4 text-primary-foreground drop-shadow-md" />
+                                            </div>
+                                          )}
+                                        </button>
+                                      );
+                                    })
+                                  ) : (
+                                    <div className="col-span-full py-8 text-center border border-dashed rounded-3xl bg-muted/10">
+                                      <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground mb-2" />
+                                      <p className="text-[10px] font-bold text-muted-foreground">Memuat karakter...</p>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
-                              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
-                                {avatarFiles.length > 0 ? (
-                                  avatarFiles.map((file, i) => {
-                                    const avatarPath = `/img/ava/${file}`;
-                                    const isSelected = photoURL === avatarPath;
+
+                              <Separator />
+
+                              {/* Background Options Grid */}
+                              <div className="space-y-4 pb-4">
+                                <div className="flex items-center gap-2">
+                                  <Layers className="h-4 w-4 text-primary" />
+                                  <h4 className="font-black text-sm uppercase tracking-tight">Pilih Latar Belakang</h4>
+                                </div>
+                                <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-3">
+                                  {BACKGROUND_OPTIONS.map((bg) => {
+                                    const isSelected = profileBg === bg.class;
                                     return (
                                       <button
-                                        key={i}
+                                        key={bg.id}
                                         type="button"
-                                        onClick={() => setPhotoURL(avatarPath)}
+                                        onClick={() => setProfileBg(bg.class)}
                                         className={cn(
-                                          "relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
-                                          isSelected 
-                                            ? "border-primary shadow-lg ring-2 ring-primary/20" 
-                                            : "border-border/30 bg-muted/20 hover:border-primary/50"
+                                          "flex flex-col items-center gap-2 p-2 rounded-xl border transition-all hover:bg-muted/30 group",
+                                          isSelected ? "border-primary bg-primary/5" : "border-border/40"
                                         )}
                                       >
-                                        <Image 
-                                          src={avatarPath} 
-                                          alt={`Avatar ${file}`} 
-                                          fill 
-                                          className="object-cover"
-                                          sizes="(max-width: 768px) 25vw, 10vw"
-                                        />
-                                        {isSelected && (
-                                          <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
-                                            <Check className="h-4 w-4 text-primary-foreground drop-shadow-md" />
-                                          </div>
-                                        )}
+                                        <div className={cn(
+                                          "h-8 w-8 rounded-full border border-background shadow-sm",
+                                          bg.class
+                                        )} />
+                                        <span className={cn(
+                                          "text-[9px] font-black uppercase tracking-tighter text-center",
+                                          isSelected ? "text-primary" : "text-muted-foreground"
+                                        )}>{bg.name}</span>
                                       </button>
                                     );
-                                  })
-                                ) : (
-                                  <div className="col-span-full py-8 text-center border border-dashed rounded-3xl bg-muted/10">
-                                    <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground mb-2" />
-                                    <p className="text-[10px] font-bold text-muted-foreground">Memuat karakter...</p>
-                                  </div>
-                                )}
+                                  })}
+                                </div>
                               </div>
                             </div>
 
-                            <Separator />
-
-                            {/* Background Options Grid */}
-                            <div className="space-y-4 pb-4">
-                              <div className="flex items-center gap-2">
-                                <Layers className="h-4 w-4 text-primary" />
-                                <h4 className="font-black text-sm uppercase tracking-tight">Pilih Latar Belakang</h4>
-                              </div>
-                              <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-3">
-                                {BACKGROUND_OPTIONS.map((bg) => {
-                                  const isSelected = profileBg === bg.class;
-                                  return (
-                                    <button
-                                      key={bg.id}
-                                      type="button"
-                                      onClick={() => setProfileBg(bg.class)}
-                                      className={cn(
-                                        "flex flex-col items-center gap-2 p-2 rounded-xl border transition-all hover:bg-muted/30 group",
-                                        isSelected ? "border-primary bg-primary/5" : "border-border/40"
-                                      )}
-                                    >
-                                      <div className={cn(
-                                        "h-8 w-8 rounded-full border border-background shadow-sm",
-                                        bg.class
-                                      )} />
-                                      <span className={cn(
-                                        "text-[9px] font-black uppercase tracking-tighter text-center",
-                                        isSelected ? "text-primary" : "text-muted-foreground"
-                                      )}>{bg.name}</span>
-                                    </button>
-                                  );
-                                })}
-                              </div>
+                            <div className="sticky bottom-0 z-30 bg-background border-t border-border p-4">
+                              <Button 
+                                onClick={() => setIsAvatarModalOpen(false)}
+                                className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs"
+                              >
+                                Terapkan Perubahan
+                              </Button>
                             </div>
-                          </div>
-
-                          <div className="sticky bottom-0 z-30 bg-background border-t border-border p-4">
-                            <Button 
-                              onClick={() => setIsAvatarModalOpen(false)}
-                              className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs"
-                            >
-                              Terapkan Perubahan
-                            </Button>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                      
+                      {isDev && (
+                        <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground p-1.5 rounded-lg shadow-xl border-4 border-background">
+                          <ShieldCheck className="h-5 w-5" />
+                        </div>
+                      )}
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-8 w-full">
@@ -474,7 +486,7 @@ export default function SettingsPage() {
                   <ShieldCheck className="h-8 w-8" />
                 </div>
                 <div>
-                  <p className="text-lg font-black">Status Member</p>
+                  <p className="text-lg font-black">Status Member {isDev && <span className="text-primary-foreground bg-primary px-2 py-0.5 rounded text-[10px] ml-2">DEVELOPER</span>}</p>
                   <p className="text-xs text-muted-foreground font-bold">Akun Anda telah terverifikasi sebagai member aktif.</p>
                 </div>
               </div>

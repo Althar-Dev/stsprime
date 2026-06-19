@@ -40,6 +40,9 @@ export default function DashboardPage() {
 
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
+  
+  // Logic for developer avatar
+  const displayPhotoURL = profileData?.dev ? "/img/ava/dev.png" : (profileData?.photoURL || user?.photoURL || "");
 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-10">
@@ -82,7 +85,7 @@ export default function DashboardPage() {
                 profileBg
               )}>
                 <Avatar className="h-full w-full border-4 border-background shadow-xl">
-                  <AvatarImage src={user?.photoURL || ""} alt={user?.displayName || "Gamer"} />
+                  <AvatarImage src={displayPhotoURL} alt={user?.displayName || "Gamer"} />
                   <AvatarFallback className="bg-muted text-muted-foreground font-black text-3xl">
                     {userInitial}
                   </AvatarFallback>

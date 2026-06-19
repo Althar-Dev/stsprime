@@ -33,6 +33,9 @@ export function DashboardHeader() {
 
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
+  
+  // Logic for developer avatar
+  const displayPhotoURL = profileData?.dev ? "/img/ava/dev.png" : (profileData?.photoURL || user?.photoURL || "");
 
   return (
     <header className="sticky top-0 z-40 flex h-16 md:h-20 shrink-0 items-center gap-2 border-b border-border bg-background px-4 md:px-8">
@@ -68,7 +71,7 @@ export function DashboardHeader() {
               profileBg
             )}>
               <Avatar className="h-full w-full border border-background shadow-sm shrink-0">
-                <AvatarImage src={user?.photoURL || ""} alt={user?.displayName || "User"} />
+                <AvatarImage src={displayPhotoURL} alt={user?.displayName || "User"} />
                 <AvatarFallback className="bg-muted text-muted-foreground font-black text-[10px] md:text-xs">
                   {userInitial}
                 </AvatarFallback>
