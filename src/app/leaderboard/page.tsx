@@ -39,8 +39,8 @@ export default function LeaderboardPage() {
       <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-[0.03] pointer-events-none" />
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Navigation Header */}
-      <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/10">
+      {/* Navigation Header - Transparent */}
+      <nav className="sticky top-0 z-50 w-full bg-transparent">
         <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
           <Button 
             variant="ghost" 
