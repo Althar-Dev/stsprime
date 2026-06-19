@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -9,7 +10,6 @@ import { useToast } from "@/hooks/use-toast";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 import Image from "next/image";
-import { getAvatarFiles } from "./actions";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,6 +96,10 @@ const BACKGROUND_OPTIONS = [
   { id: "grad-space", name: "Deep Space", class: "bg-gradient-to-bl from-gray-900 via-purple-900 to-violet-600" },
 ];
 
+// DAFTAR AVATAR SESUAI INSTRUKSI
+const STATIC_BOY_AVATARS = ["boy.png", "boy-1.png", "boy-2.png", "boy-3.png", "boy-4.png"];
+const STATIC_GIRL_AVATARS = ["girl.png", "girl-1.png", "girl-2.png", "girl-3.png"];
+
 export default function SettingsPage() {
   const { user } = useUser();
   const auth = useAuth();
@@ -108,7 +112,6 @@ export default function SettingsPage() {
   const [photoURL, setPhotoURL] = useState("");
   const [profileBg, setProfileBg] = useState("bg-muted/30");
   const [isSaving, setIsSaving] = useState(false);
-  const [avatarFiles, setAvatarFiles] = useState<string[]>([]);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [isDev, setIsDev] = useState(false);
   
@@ -128,18 +131,6 @@ export default function SettingsPage() {
     const activeElement = tabsListRef.current?.querySelector('[data-state="active"]') as HTMLElement;
     moveIndicatorToElement(activeElement);
   };
-
-  useEffect(() => {
-    async function loadAvatars() {
-      try {
-        const files = await getAvatarFiles();
-        setAvatarFiles(files);
-      } catch (err) {
-        // Silent fail
-      }
-    }
-    loadAvatars();
-  }, []);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -230,19 +221,14 @@ export default function SettingsPage() {
     return user?.photoURL || "";
   }, [photoURL, isDev, user?.photoURL]);
   
-  // Daftar avatar unik yang akan ditampilkan di grid
+  // DAFTAR AVATAR FIX (HARDCODED)
   const availableAvatars = useMemo(() => {
-    // 1. Ambil file unik dari state dan pastikan dev.png tidak terbawa dari pembacaan folder
-    const baseFiles = Array.from(new Set(avatarFiles))
-      .filter(f => f.toLowerCase() !== 'dev.png');
-    
-    // 2. Jika pengembang, tambahkan dev.png secara eksklusif di urutan pertama
+    const base = [...STATIC_BOY_AVATARS, ...STATIC_GIRL_AVATARS];
     if (isDev) {
-      return ["dev.png", ...baseFiles];
+      return ["dev.png", ...base];
     }
-    
-    return baseFiles;
-  }, [avatarFiles, isDev]);
+    return base;
+  }, [isDev]);
 
   return (
     <div className="p-4 md:p-6 lg:p-10 space-y-8 md:space-y-12 w-full mx-auto">
@@ -358,7 +344,6 @@ export default function SettingsPage() {
                               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
                                 {availableAvatars.map((file) => {
                                   const avatarPath = `/img/ava/${file}`;
-                                  // Logika perbandingan yang presisi untuk sinkronisasi pratinjau
                                   const isSelected = avatarPath === displayPhotoURL;
                                   
                                   return (
