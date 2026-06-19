@@ -213,7 +213,7 @@ export function Navbar() {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer font-bold gap-2" asChild>
-                          <Link href="/dashboard" className="flex items-center w-full">
+                          <Link href="/dashboard/settings" className="flex items-center w-full">
                             <Settings className="h-4 w-4" /> Settings
                           </Link>
                         </DropdownMenuItem>
@@ -292,7 +292,7 @@ export function Navbar() {
                                       <LayoutDashboard className="h-5 w-5" /> Dashboard
                                     </Button>
                                   </Link>
-                                  <Link href="/dashboard">
+                                  <Link href="/dashboard/settings">
                                     <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
                                       <Settings className="h-5 w-5" /> Settings
                                     </Button>
