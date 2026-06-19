@@ -172,7 +172,7 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground">Alamat email</Label>
+                    <Label htmlFor="email" className="text-[10px] font-bold tracking-tight text-muted-foreground">Alamat email</Label>
                     <Input 
                       id="email" 
                       value={user?.email || ""} 
@@ -181,7 +181,7 @@ export default function SettingsPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="displayName" className="text-[10px] font-black tracking-widest text-muted-foreground">Nama tampilan</Label>
+                    <Label htmlFor="displayName" className="text-[10px] font-bold tracking-tight text-muted-foreground">Nama tampilan</Label>
                     <Input 
                       id="displayName" 
                       placeholder="Masukkan nama tampilan Anda" 
@@ -296,7 +296,7 @@ export default function SettingsPage() {
                     <div className="absolute right-1 top-1 h-4 w-4 bg-white rounded-full" />
                   </div>
                 </div>
-              </div >
+              </CardContent>
             </Card>
           </TabsContent>
         </div>
