@@ -144,26 +144,25 @@ export default function SettingsPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
-        {/* Navigation with Hover-Follow Underline - Universal for Mobile and Desktop */}
         <div className="border-b border-border relative overflow-x-auto no-scrollbar scroll-smooth">
           <TabsList 
             ref={tabsListRef} 
             onMouseLeave={resetIndicatorToActive}
-            className="bg-transparent h-auto p-0 flex gap-6 md:gap-8 justify-start relative overflow-visible min-w-max"
+            className="bg-transparent h-auto p-0 flex gap-4 md:gap-8 justify-start relative overflow-visible min-w-max"
           >
             {TABS_CONFIG.map((tab) => (
               <TabsTrigger 
                 key={tab.id}
                 value={tab.id}
                 onMouseEnter={(e) => moveIndicatorToElement(e.currentTarget)}
-                className="rounded-none border-b-2 border-transparent bg-transparent px-0 py-4 font-bold text-sm text-muted-foreground hover:text-foreground data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2 relative z-10"
+                title={tab.label}
+                className="rounded-none border-b-2 border-transparent bg-transparent px-3 md:px-0 py-4 font-bold text-sm text-muted-foreground hover:text-foreground data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2 relative z-10"
               >
-                <tab.icon className="h-4 w-4" />
-                <span className="whitespace-nowrap">{tab.label}</span>
+                <tab.icon className="h-5 w-5 md:h-4 md:w-4" />
+                <span className="hidden md:inline whitespace-nowrap">{tab.label}</span>
               </TabsTrigger>
             ))}
             
-            {/* Sliding Underline Indicator */}
             <div 
               className="absolute bottom-0 h-0.5 bg-primary transition-all duration-300 ease-in-out z-20 pointer-events-none"
               style={{
