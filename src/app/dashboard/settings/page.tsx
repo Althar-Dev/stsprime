@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 import Image from "next/image";
+import { getAvatarFiles } from "./actions";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,17 +38,6 @@ const TABS_CONFIG = [
   { id: "security", label: "Keamanan & sandi", icon: KeyRound },
 ];
 
-// Daftar avatar yang tersedia. Anda bisa menambahkan nama file baru di sini.
-const ALL_AVATARS = [
-  "1.png", "2.png", "3.png", "4.png", "5.png", "6.png", 
-  "7.png", "8.png", "9.png", "10.png", "11.png", "12.png",
-  "13.png", "14.png", "15.png", "16.png", "17.png", "18.png",
-  "19.png", "20.png", "dev.png"
-];
-
-// Memfilter dev.png sesuai permintaan
-const AVATAR_FILES = ALL_AVATARS.filter(file => file !== "dev.png");
-
 export default function SettingsPage() {
   const { user } = useUser();
   const auth = useAuth();
@@ -59,6 +49,7 @@ export default function SettingsPage() {
   const [displayName, setDisplayName] = useState("");
   const [photoURL, setPhotoURL] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [avatarFiles, setAvatarFiles] = useState<string[]>([]);
   
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
@@ -76,6 +67,15 @@ export default function SettingsPage() {
     const activeElement = tabsListRef.current?.querySelector('[data-state="active"]') as HTMLElement;
     moveIndicatorToElement(activeElement);
   };
+
+  // Fetch daftar avatar dari server
+  useEffect(() => {
+    async function loadAvatars() {
+      const files = await getAvatarFiles();
+      setAvatarFiles(files);
+    }
+    loadAvatars();
+  }, []);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -148,7 +148,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 lg:p-10 space-y-8 md:space-y-12 max-w-7xl mx-auto">
+    <div className="p-4 md:p-6 lg:p-10 space-y-8 md:space-y-12 w-full mx-auto">
       <div className="flex flex-col gap-2">
         <h1 className="font-headline text-2xl md:text-4xl lg:text-5xl font-black tracking-tight flex items-center gap-4">
           <div className="h-10 w-10 md:h-14 md:w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
@@ -156,7 +156,7 @@ export default function SettingsPage() {
           </div>
           Pengaturan
         </h1>
-        <p className="text-sm md:text-base text-muted-foreground font-bold max-w-3xl opacity-75">
+        <p className="text-sm md:text-base text-muted-foreground font-bold opacity-75">
           Kelola informasi profil personal, preferensi tampilan tema aplikasi, serta tingkatkan keamanan akun Anda.
         </p>
       </div>
@@ -209,36 +209,42 @@ export default function SettingsPage() {
                   <div className="space-y-6">
                     <Label className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase">Pilih Avatar Profil</Label>
                     <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4">
-                      {AVATAR_FILES.map((file, i) => {
-                        const avatarPath = `/img/ava/${file}`;
-                        const isSelected = photoURL === avatarPath;
-                        return (
-                          <button
-                            key={i}
-                            type="button"
-                            onClick={() => setPhotoURL(avatarPath)}
-                            className={cn(
-                              "relative aspect-square rounded-2xl overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
-                              isSelected 
-                                ? "border-primary shadow-lg ring-4 ring-primary/20" 
-                                : "border-border/30 bg-muted/20 hover:border-primary/50"
-                            )}
-                          >
-                            <Image 
-                              src={avatarPath} 
-                              alt={`Avatar ${file}`} 
-                              fill 
-                              className="object-cover"
-                              sizes="(max-width: 768px) 25vw, 10vw"
-                            />
-                            {isSelected && (
-                              <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
-                                <Check className="h-6 w-6 text-primary-foreground drop-shadow-md" />
-                              </div>
-                            )}
-                          </button>
-                        );
-                      })}
+                      {avatarFiles.length > 0 ? (
+                        avatarFiles.map((file, i) => {
+                          const avatarPath = `/img/ava/${file}`;
+                          const isSelected = photoURL === avatarPath;
+                          return (
+                            <button
+                              key={i}
+                              type="button"
+                              onClick={() => setPhotoURL(avatarPath)}
+                              className={cn(
+                                "relative aspect-square rounded-2xl overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
+                                isSelected 
+                                  ? "border-primary shadow-lg ring-4 ring-primary/20" 
+                                  : "border-border/30 bg-muted/20 hover:border-primary/50"
+                              )}
+                            >
+                              <Image 
+                                src={avatarPath} 
+                                alt={`Avatar ${file}`} 
+                                fill 
+                                className="object-cover"
+                                sizes="(max-width: 768px) 25vw, 10vw"
+                              />
+                              {isSelected && (
+                                <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
+                                  <Check className="h-6 w-6 text-primary-foreground drop-shadow-md" />
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })
+                      ) : (
+                        <div className="col-span-full py-8 text-center border border-dashed rounded-2xl">
+                          <p className="text-xs font-bold text-muted-foreground">Tidak ada avatar ditemukan di /img/ava/</p>
+                        </div>
+                      )}
                     </div>
                   </div>
 
