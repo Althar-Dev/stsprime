@@ -322,7 +322,7 @@ export default function SettingsPage() {
                             </DialogHeader>
 
                             {/* Live Preview Inside Modal - Reduced Height */}
-                            <div className="mt-3 flex items-center gap-4 py-2 px-6 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden relative w-full max-w-sm">
+                            <div className="mt-3 flex items-center justify-center py-2 px-6 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden relative w-full max-w-[120px]">
                               <div className={cn(
                                 "h-16 w-16 rounded-full flex items-center justify-center p-0.5 transition-all duration-500 shrink-0",
                                 profileBg
@@ -333,10 +333,6 @@ export default function SettingsPage() {
                                     {userInitial}
                                   </AvatarFallback>
                                 </Avatar>
-                              </div>
-                              <div className="flex flex-col">
-                                <p className="text-[10px] font-black text-foreground uppercase tracking-wider">Pratinjau Profil</p>
-                                <p className="text-[9px] text-muted-foreground font-bold">Inilah tampilan Anda di platform.</p>
                               </div>
                             </div>
                           </div>
