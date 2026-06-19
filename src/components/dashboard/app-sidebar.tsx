@@ -78,8 +78,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props} className="border-r border-border bg-card">
-      <SidebarHeader className="p-4 md:p-6">
-        <Link href="/" className="flex items-center gap-3 px-1 transition-all hover:opacity-80">
+      <SidebarHeader className="p-4 group-data-[collapsible=icon]:p-2">
+        <Link href="/" className="flex items-center gap-3 px-1 transition-all hover:opacity-80 group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center">
           <Logo className="h-9 w-9 shrink-0 shadow-lg shadow-primary/10 rounded-xl" />
           <div className="flex flex-col group-data-[collapsible=icon]:hidden animate-in fade-in duration-300">
             <span className="font-headline text-base font-black tracking-tighter text-foreground leading-none">
@@ -92,21 +92,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </Link>
       </SidebarHeader>
 
-      <SidebarContent className="px-2">
-        <SidebarGroup>
-          <SidebarGroupLabel className="font-black text-[10px] text-muted-foreground/50 px-4 mb-2">
+      <SidebarContent className="px-2 group-data-[collapsible=icon]:px-1">
+        <SidebarGroup className="group-data-[collapsible=icon]:px-0">
+          <SidebarGroupLabel className="font-black text-[10px] text-muted-foreground/50 px-4 mb-2 group-data-[collapsible=icon]:hidden">
             Ikhtisar
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navMain.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.title} className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
                   <SidebarMenuButton
                     asChild
                     isActive={item.isActive}
                     tooltip={item.title}
                     className={cn(
-                      "font-bold rounded-xl h-11 px-4 transition-all duration-200 group-data-[collapsible=icon]:px-2",
+                      "font-bold rounded-xl h-11 px-4 transition-all duration-200",
+                      "group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center",
                       item.isActive 
                         ? "!bg-primary !text-primary-foreground shadow-md" 
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
@@ -114,7 +115,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   >
                     <Link href={item.url}>
                       <item.icon className={cn("h-5 w-5", item.isActive ? "!text-primary-foreground" : "text-muted-foreground")} />
-                      <span className="ml-1">{item.title}</span>
+                      <span className="ml-1 group-data-[collapsible=icon]:hidden">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -123,22 +124,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-4">
-          <SidebarGroupLabel className="font-black text-[10px] text-muted-foreground/50 px-4 mb-2">
+        <SidebarGroup className="mt-4 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:mt-2">
+          <SidebarGroupLabel className="font-black text-[10px] text-muted-foreground/50 px-4 mb-2 group-data-[collapsible=icon]:hidden">
             Dukungan
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navSecondary.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.title} className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
                   <SidebarMenuButton
                     asChild
                     tooltip={item.title}
-                    className="font-bold rounded-xl h-11 px-4 text-muted-foreground hover:bg-muted/50 hover:text-foreground group-data-[collapsible=icon]:px-2"
+                    className="font-bold rounded-xl h-11 px-4 text-muted-foreground hover:bg-muted/50 hover:text-foreground group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
                   >
                     <Link href={item.url}>
                       <item.icon className="h-5 w-5" />
-                      <span className="ml-1">{item.title}</span>
+                      <span className="ml-1 group-data-[collapsible=icon]:hidden">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -147,18 +148,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-auto mb-4">
+        <SidebarGroup className="mt-auto mb-4 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:mb-2">
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
+              <SidebarMenuItem className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
                 <SidebarMenuButton
                   asChild
                   tooltip="Belanja Sekarang"
-                  className="font-black rounded-xl h-12 px-4 bg-primary/10 text-primary hover:bg-primary/20 transition-all border border-primary/20 group-data-[collapsible=icon]:px-2"
+                  className="font-black rounded-xl h-12 px-4 bg-primary/10 text-primary hover:bg-primary/20 transition-all border border-primary/20 group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
                 >
                   <Link href="/">
                     <Gamepad2 className="h-5 w-5" />
-                    <span className="ml-1">Topup Game</span>
+                    <span className="ml-1 group-data-[collapsible=icon]:hidden">Topup Game</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -167,16 +168,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-border bg-muted/20">
+      <SidebarFooter className="p-4 border-t border-border bg-muted/20 group-data-[collapsible=icon]:p-1.5">
         <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenuItem className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
             <SidebarMenuButton
               onClick={handleLogout}
-              className="font-bold rounded-xl h-11 px-4 text-destructive hover:bg-destructive/10 hover:text-destructive transition-all group-data-[collapsible=icon]:px-2"
+              className="font-bold rounded-xl h-11 px-4 text-destructive hover:bg-destructive/10 hover:text-destructive transition-all group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
               tooltip="Keluar dari Akun"
             >
               <LogOut className="h-5 w-5" />
-              <span className="ml-1">Keluar</span>
+              <span className="ml-1 group-data-[collapsible=icon]:hidden">Keluar</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
