@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -53,9 +54,24 @@ export default function SettingsPage() {
   const [displayName, setDisplayName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   
-  // Ref untuk sliding underline
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+
+  // Fungsi untuk memindahkan indikator ke elemen tertentu
+  const moveIndicatorToElement = (element: HTMLElement | null) => {
+    if (element) {
+      setIndicatorStyle({
+        left: element.offsetLeft,
+        width: element.offsetWidth,
+      });
+    }
+  };
+
+  // Fungsi untuk mengembalikan indikator ke tab yang aktif
+  const resetIndicatorToActive = () => {
+    const activeElement = tabsListRef.current?.querySelector('[data-state="active"]') as HTMLElement;
+    moveIndicatorToElement(activeElement);
+  };
 
   useEffect(() => {
     async function fetchProfile() {
@@ -79,29 +95,10 @@ export default function SettingsPage() {
     fetchProfile();
   }, [user, db]);
 
-  // Logika untuk menghitung posisi sliding underline
+  // Update indikator saat tab aktif berubah
   useEffect(() => {
-    const updateIndicator = () => {
-      const activeElement = tabsListRef.current?.querySelector('[data-state="active"]') as HTMLElement;
-      if (activeElement) {
-        setIndicatorStyle({
-          left: activeElement.offsetLeft,
-          width: activeElement.offsetWidth,
-        });
-      }
-    };
-
-    // Update posisi saat tab berubah atau jendela di-resize
-    updateIndicator();
-    window.addEventListener('resize', updateIndicator);
-    
-    // Gunakan timeout singkat untuk memastikan DOM sudah dirender dengan state aktif yang baru
-    const timer = setTimeout(updateIndicator, 50);
-    
-    return () => {
-      window.removeEventListener('resize', updateIndicator);
-      clearTimeout(timer);
-    };
+    const timer = setTimeout(resetIndicatorToActive, 50);
+    return () => clearTimeout(timer);
   }, [activeTab]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -157,7 +154,7 @@ export default function SettingsPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
-        {/* Mobile Navigation (Select) */}
+        {/* Mobile Navigation */}
         <div className="md:hidden">
           <Select value={activeTab} onValueChange={setActiveTab}>
             <SelectTrigger className="w-full h-12 rounded-xl font-bold border-border bg-card shadow-sm">
@@ -176,13 +173,18 @@ export default function SettingsPage() {
           </Select>
         </div>
 
-        {/* Desktop Navigation (Horizontal Tabs with Sliding Underline) */}
+        {/* Desktop Navigation with Hover-Follow Underline */}
         <div className="hidden md:block border-b border-border relative">
-          <TabsList ref={tabsListRef} className="bg-transparent h-auto p-0 flex gap-8 justify-start relative">
+          <TabsList 
+            ref={tabsListRef} 
+            onMouseLeave={resetIndicatorToActive}
+            className="bg-transparent h-auto p-0 flex gap-8 justify-start relative overflow-visible"
+          >
             {TABS_CONFIG.map((tab) => (
               <TabsTrigger 
                 key={tab.id}
-                value={tab.id} 
+                value={tab.id}
+                onMouseEnter={(e) => moveIndicatorToElement(e.currentTarget)}
                 className="rounded-none border-b-2 border-transparent bg-transparent px-0 py-4 font-bold text-sm text-muted-foreground hover:text-foreground data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2 relative z-10"
               >
                 <tab.icon className="h-4 w-4" />
@@ -192,7 +194,7 @@ export default function SettingsPage() {
             
             {/* Sliding Underline Indicator */}
             <div 
-              className="absolute bottom-0 h-0.5 bg-primary transition-all duration-300 ease-in-out z-20"
+              className="absolute bottom-0 h-0.5 bg-primary transition-all duration-300 ease-in-out z-20 pointer-events-none"
               style={{
                 left: indicatorStyle.left,
                 width: indicatorStyle.width
@@ -325,3 +327,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+
