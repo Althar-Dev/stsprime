@@ -109,12 +109,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     className={cn(
                       "font-bold rounded-xl h-11 px-4 transition-all duration-200 group-data-[collapsible=icon]:px-2",
                       item.isActive 
-                        ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/90" 
+                        ? "bg-primary/10 text-primary hover:bg-primary/20" 
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                     )}
                   >
                     <Link href={item.url}>
-                      <item.icon className={cn("h-5 w-5", item.isActive ? "text-primary-foreground" : "text-muted-foreground")} />
+                      <item.icon className={cn("h-5 w-5", item.isActive ? "text-primary" : "text-muted-foreground")} />
                       <span className="ml-1">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
