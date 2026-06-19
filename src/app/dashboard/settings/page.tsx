@@ -27,7 +27,6 @@ import {
   Settings, 
   ShieldCheck, 
   Palette, 
-  Bell, 
   Moon, 
   Sun, 
   Monitor,
@@ -41,7 +40,6 @@ const TABS_CONFIG = [
   { id: "profile", label: "Profil akun", icon: User },
   { id: "appearance", label: "Tampilan tema", icon: Palette },
   { id: "security", label: "Keamanan & sandi", icon: KeyRound },
-  { id: "notifications", label: "Notifikasi", icon: Bell },
 ];
 
 export default function SettingsPage() {
@@ -70,7 +68,7 @@ export default function SettingsPage() {
           setDisplayName(user.displayName);
         }
       } catch (error) {
-        // Fail silently to avoid interrupting the UI
+        // Fail silently
       }
     }
 
@@ -148,7 +146,7 @@ export default function SettingsPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col md:flex-row gap-8 items-start">
-        <TabsList className="hidden md:flex md:flex-col h-auto bg-transparent p-0 justify-start space-y-1 w-full md:w-64 shrink-0">
+        <TabsList className="hidden md:flex md:flex-col h-auto bg-transparent p-0 justify-start space-y-1 w-full md:w-64 shrink-0 sticky top-24">
           {TABS_CONFIG.map((tab) => (
             <TabsTrigger 
               key={tab.id}
@@ -275,26 +273,6 @@ export default function SettingsPage() {
                   <Button variant="outline" className="font-black text-xs rounded-xl border-border h-11 px-6 hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all">
                     Ubah sandi
                   </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="notifications" className="space-y-6 mt-0 focus-visible:outline-none">
-            <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-xl font-black">Notifikasi aplikasi</CardTitle>
-                <CardDescription className="font-bold text-xs">Atur jenis pembaruan yang ingin Anda terima.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex items-center justify-between p-5 border-b border-border/30 last:border-0 hover:bg-muted/10 transition-colors rounded-xl">
-                  <div className="space-y-1">
-                    <p className="text-sm font-black text-foreground">Email transaksi</p>
-                    <p className="text-[10px] text-muted-foreground font-bold">Terima struk pembayaran otomatis melalui email.</p>
-                  </div>
-                  <div className="h-6 w-11 bg-primary rounded-full relative cursor-pointer shadow-sm">
-                    <div className="absolute right-1 top-1 h-4 w-4 bg-white rounded-full" />
-                  </div>
                 </div>
               </CardContent>
             </Card>
