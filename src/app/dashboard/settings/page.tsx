@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -18,6 +19,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
@@ -38,7 +40,8 @@ import {
   Save,
   KeyRound,
   Check,
-  Camera
+  Camera,
+  Layers
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -46,6 +49,18 @@ const TABS_CONFIG = [
   { id: "profile", label: "Profil", icon: User },
   { id: "appearance", label: "Tema", icon: Palette },
   { id: "security", label: "Keamanan", icon: KeyRound },
+];
+
+const BACKGROUND_OPTIONS = [
+  { id: "default", name: "Netral", class: "bg-muted/30" },
+  { id: "primary", name: "STS Gold", class: "bg-primary" },
+  { id: "accent", name: "STS Blue", class: "bg-accent" },
+  { id: "dark", name: "Obsidian", class: "bg-slate-900" },
+  { id: "rose", name: "Rose", class: "bg-rose-500" },
+  { id: "emerald", name: "Emerald", class: "bg-emerald-500" },
+  { id: "grad-1", name: "Hyper", class: "bg-gradient-to-br from-primary to-accent" },
+  { id: "grad-2", name: "Legendary", class: "bg-gradient-to-br from-slate-900 via-primary/50 to-slate-900" },
+  { id: "grad-3", name: "Cosmic", class: "bg-gradient-to-br from-purple-600 to-blue-500" },
 ];
 
 export default function SettingsPage() {
@@ -58,6 +73,7 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
   const [displayName, setDisplayName] = useState("");
   const [photoURL, setPhotoURL] = useState("");
+  const [profileBg, setProfileBg] = useState("bg-muted/30");
   const [isSaving, setIsSaving] = useState(false);
   const [avatarFiles, setAvatarFiles] = useState<string[]>([]);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
@@ -103,9 +119,11 @@ export default function SettingsPage() {
           const data = docSnap.data();
           setDisplayName(data.displayName || user.displayName || "");
           setPhotoURL(data.photoURL || user.photoURL || "");
+          setProfileBg(data.profileBg || "bg-muted/30");
         } else {
           setDisplayName(user.displayName || "");
           setPhotoURL(user.photoURL || "");
+          setProfileBg("bg-muted/30");
         }
       } catch (error) {
         // Fail silently
@@ -132,6 +150,7 @@ export default function SettingsPage() {
       const userData = {
         displayName,
         photoURL,
+        profileBg,
         email: user.email,
         updatedAt: new Date().toISOString(),
       };
@@ -221,12 +240,17 @@ export default function SettingsPage() {
                   {/* Avatar Picker Section */}
                   <div className="flex flex-col items-center sm:items-start gap-8">
                     <div className="relative group">
-                      <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-primary/20 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
-                        <AvatarImage src={photoURL} className="object-cover" />
-                        <AvatarFallback className="bg-primary text-primary-foreground font-black text-4xl">
-                          {userInitial}
-                        </AvatarFallback>
-                      </Avatar>
+                      <div className={cn(
+                        "h-32 w-32 md:h-40 md:w-40 rounded-full flex items-center justify-center p-1 transition-all duration-500",
+                        profileBg
+                      )}>
+                        <Avatar className="h-full w-full border-4 border-background shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
+                          <AvatarImage src={photoURL} className="object-cover" />
+                          <AvatarFallback className="bg-muted text-muted-foreground font-black text-4xl">
+                            {userInitial}
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
                       
                       <Dialog open={isAvatarModalOpen} onOpenChange={setIsAvatarModalOpen}>
                         <DialogTrigger asChild>
@@ -246,55 +270,123 @@ export default function SettingsPage() {
                             </div>
                           </button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-3xl border-border bg-background">
-                          <DialogHeader>
-                            <DialogTitle className="font-black text-xl">Pilih Avatar</DialogTitle>
-                            <DialogDescription className="font-bold">
-                              Gunakan karakter unik untuk profil digital Anda.
-                            </DialogDescription>
-                          </DialogHeader>
-                          
-                          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 py-6">
-                            {avatarFiles.length > 0 ? (
-                              avatarFiles.map((file, i) => {
-                                const avatarPath = `/img/ava/${file}`;
-                                const isSelected = photoURL === avatarPath;
-                                return (
-                                  <button
-                                    key={i}
-                                    type="button"
-                                    onClick={() => {
-                                      setPhotoURL(avatarPath);
-                                      setIsAvatarModalOpen(false);
-                                    }}
-                                    className={cn(
-                                      "relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
-                                      isSelected 
-                                        ? "border-primary shadow-lg ring-2 ring-primary/20" 
-                                        : "border-border/30 bg-muted/20 hover:border-primary/50"
-                                    )}
-                                  >
-                                    <Image 
-                                      src={avatarPath} 
-                                      alt={`Avatar ${file}`} 
-                                      fill 
-                                      className="object-cover"
-                                      sizes="(max-width: 768px) 33vw, 15vw"
-                                    />
-                                    {isSelected && (
-                                      <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
-                                        <Check className="h-6 w-6 text-primary-foreground drop-shadow-md" />
-                                      </div>
-                                    )}
-                                  </button>
-                                );
-                              })
-                            ) : (
-                              <div className="col-span-full py-12 text-center border border-dashed rounded-3xl bg-muted/10">
-                                <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground mb-3" />
-                                <p className="text-xs font-bold text-muted-foreground">Memuat koleksi...</p>
+                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 overflow-hidden">
+                          <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md border-b border-border p-6">
+                            <DialogHeader>
+                              <DialogTitle className="font-black text-xl">Kustomisasi Avatar</DialogTitle>
+                              <DialogDescription className="font-bold">
+                                Sesuaikan karakter dan latar belakang profil Anda.
+                              </DialogDescription>
+                            </DialogHeader>
+
+                            {/* Live Preview Inside Modal */}
+                            <div className="mt-6 flex flex-col items-center justify-center py-6 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden relative">
+                              <div className={cn(
+                                "h-24 w-24 md:h-32 md:w-32 rounded-full flex items-center justify-center p-1 transition-all duration-500 mb-2",
+                                profileBg
+                              )}>
+                                <Avatar className="h-full w-full border-2 border-background shadow-lg">
+                                  <AvatarImage src={photoURL} className="object-cover" />
+                                  <AvatarFallback className="bg-muted text-muted-foreground font-black text-3xl">
+                                    {userInitial}
+                                  </AvatarFallback>
+                                </Avatar>
                               </div>
-                            )}
+                              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Pratinjau Profil</p>
+                            </div>
+                          </div>
+                          
+                          <div className="p-6 space-y-8">
+                            {/* Avatar Grid */}
+                            <div className="space-y-4">
+                              <div className="flex items-center gap-2">
+                                <User className="h-4 w-4 text-primary" />
+                                <h4 className="font-black text-sm uppercase tracking-tight">Pilih Karakter</h4>
+                              </div>
+                              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
+                                {avatarFiles.length > 0 ? (
+                                  avatarFiles.map((file, i) => {
+                                    const avatarPath = `/img/ava/${file}`;
+                                    const isSelected = photoURL === avatarPath;
+                                    return (
+                                      <button
+                                        key={i}
+                                        type="button"
+                                        onClick={() => setPhotoURL(avatarPath)}
+                                        className={cn(
+                                          "relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
+                                          isSelected 
+                                            ? "border-primary shadow-lg ring-2 ring-primary/20" 
+                                            : "border-border/30 bg-muted/20 hover:border-primary/50"
+                                        )}
+                                      >
+                                        <Image 
+                                          src={avatarPath} 
+                                          alt={`Avatar ${file}`} 
+                                          fill 
+                                          className="object-cover"
+                                          sizes="(max-width: 768px) 25vw, 10vw"
+                                        />
+                                        {isSelected && (
+                                          <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
+                                            <Check className="h-4 w-4 text-primary-foreground drop-shadow-md" />
+                                          </div>
+                                        )}
+                                      </button>
+                                    );
+                                  })
+                                ) : (
+                                  <div className="col-span-full py-8 text-center border border-dashed rounded-3xl bg-muted/10">
+                                    <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground mb-2" />
+                                    <p className="text-[10px] font-bold text-muted-foreground">Memuat karakter...</p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            <Separator />
+
+                            {/* Background Options Grid */}
+                            <div className="space-y-4 pb-4">
+                              <div className="flex items-center gap-2">
+                                <Layers className="h-4 w-4 text-primary" />
+                                <h4 className="font-black text-sm uppercase tracking-tight">Pilih Latar Belakang</h4>
+                              </div>
+                              <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+                                {BACKGROUND_OPTIONS.map((bg) => {
+                                  const isSelected = profileBg === bg.class;
+                                  return (
+                                    <button
+                                      key={bg.id}
+                                      type="button"
+                                      onClick={() => setProfileBg(bg.class)}
+                                      className={cn(
+                                        "flex flex-col items-center gap-2 p-2 rounded-xl border transition-all hover:bg-muted/30 group",
+                                        isSelected ? "border-primary bg-primary/5" : "border-border/40"
+                                      )}
+                                    >
+                                      <div className={cn(
+                                        "h-8 w-8 rounded-full border border-background shadow-sm",
+                                        bg.class
+                                      )} />
+                                      <span className={cn(
+                                        "text-[9px] font-black uppercase tracking-tighter",
+                                        isSelected ? "text-primary" : "text-muted-foreground"
+                                      )}>{bg.name}</span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="sticky bottom-0 bg-background border-t border-border p-4">
+                            <Button 
+                              onClick={() => setIsAvatarModalOpen(false)}
+                              className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs"
+                            >
+                              Terapkan Perubahan
+                            </Button>
                           </div>
                         </DialogContent>
                       </Dialog>
