@@ -2,7 +2,7 @@
 
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { Trophy, ShieldCheck, TrendingUp, ChevronRight, Star, Medal } from "lucide-react";
+import { Crown, ShieldCheck, TrendingUp, ChevronRight, Star, Medal, Trophy } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -71,7 +71,7 @@ export default function LeaderboardPage() {
 
           {/* Rank 1 */}
           <div className="flex flex-col items-center flex-1 relative -top-4">
-            <Trophy className="h-6 w-6 md:h-10 md:w-10 text-primary mb-2 animate-bounce" />
+            <Crown className="h-6 w-6 md:h-10 md:w-10 text-primary mb-2" />
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative">
                 <Avatar className="h-18 w-18 md:h-28 md:w-28 border-4 border-primary shadow-2xl ring-4 ring-primary/20 mb-2">
