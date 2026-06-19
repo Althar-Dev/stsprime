@@ -50,10 +50,10 @@ export default function DashboardPage() {
         </div>
 
         {/* Dashboard Grid Layout */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 items-start">
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 items-start">
           
           {/* User Info Bento Card */}
-          <div className="md:col-span-1">
+          <div className="col-span-1">
             <div className="bento-card p-6 flex flex-col items-center text-center h-full">
               <Avatar className="h-20 w-20 border-2 border-primary/50 mb-4">
                 <AvatarImage src={user?.photoURL || ""} alt={user?.email || "Gamer"} />
@@ -74,7 +74,7 @@ export default function DashboardPage() {
           </div>
 
           {/* STS Coin Bento Card */}
-          <div className="md:col-span-1">
+          <div className="col-span-1">
             <div className="bento-card p-6 relative overflow-hidden border-primary/20 bg-card/50 h-full">
               <div className="relative z-10">
                 <div className="flex justify-between items-start mb-4">
@@ -97,7 +97,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Digital Services Orders */}
-          <div className="md:col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <div className="bento-card p-6 h-full">
               <div className="flex justify-between items-center mb-4">
                 <div>
