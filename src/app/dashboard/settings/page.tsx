@@ -333,10 +333,6 @@ export default function SettingsPage() {
                                   </AvatarFallback>
                                 </Avatar>
                               </div>
-                              <div className="hidden sm:flex flex-col">
-                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Live Preview</p>
-                                <p className="text-xs font-bold text-foreground truncate max-w-[120px]">Karakter Anda</p>
-                              </div>
                             </div>
                           </div>
                           

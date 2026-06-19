@@ -1,12 +1,15 @@
 "use client";
 
-import { useUser } from "@/firebase";
+import { useUser, useFirestore } from "@/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Gamepad2, History, LayoutDashboard, ArrowUpRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const RECENT_TRANSACTIONS = [
   { id: "STS-9821-X", game: "Mobile Legends", item: "172 Diamonds", price: "Rp 38,000", status: "Success", date: "24 Okt 2023" },
@@ -16,6 +19,27 @@ const RECENT_TRANSACTIONS = [
 
 export default function DashboardPage() {
   const { user } = useUser();
+  const db = useFirestore();
+  const [profileData, setProfileData] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchProfile() {
+      if (!user || !db) return;
+      try {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setProfileData(docSnap.data());
+        }
+      } catch (error) {
+        // Fail silently
+      }
+    }
+    fetchProfile();
+  }, [user, db]);
+
+  const profileBg = profileData?.profileBg || "bg-muted/30";
+  const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-10">
@@ -53,13 +77,18 @@ export default function DashboardPage() {
         <div className="md:col-span-5 lg:col-span-4">
           <div className="bento-card p-6 md:p-8 flex flex-col items-center text-center h-full bg-card/30 backdrop-blur-sm">
             <div className="relative mb-6">
-              <Avatar className="h-20 w-20 md:h-24 md:w-24 border-4 border-background shadow-xl ring-2 ring-primary/20">
-                <AvatarImage src={user?.photoURL || ""} alt={user?.email || "Gamer"} />
-                <AvatarFallback className="bg-primary text-primary-foreground font-black text-3xl">
-                  {user?.email?.charAt(0).toUpperCase() || "U"}
-                </AvatarFallback>
-              </Avatar>
-              <div className="absolute -bottom-2 -right-2 bg-background border border-border p-1.5 rounded-lg shadow-sm">
+              <div className={cn(
+                "h-24 w-24 md:h-28 md:w-28 rounded-full flex items-center justify-center p-1 transition-all duration-500",
+                profileBg
+              )}>
+                <Avatar className="h-full w-full border-4 border-background shadow-xl">
+                  <AvatarImage src={user?.photoURL || ""} alt={user?.displayName || "Gamer"} />
+                  <AvatarFallback className="bg-muted text-muted-foreground font-black text-3xl">
+                    {userInitial}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              <div className="absolute -bottom-1 -right-1 bg-background border border-border p-1.5 rounded-lg shadow-sm">
                 <ShieldCheck className="h-5 w-5 text-primary" />
               </div>
             </div>
