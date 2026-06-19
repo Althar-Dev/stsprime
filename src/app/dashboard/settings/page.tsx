@@ -18,6 +18,15 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { 
   User, 
   Settings, 
@@ -30,14 +39,15 @@ import {
   Save,
   KeyRound,
   Check,
-  Camera
+  Camera,
+  Pencil
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS_CONFIG = [
-  { id: "profile", label: "Profil akun", icon: User },
-  { id: "appearance", label: "Tampilan tema", icon: Palette },
-  { id: "security", label: "Keamanan & sandi", icon: KeyRound },
+  { id: "profile", label: "Profil", icon: User },
+  { id: "appearance", label: "Tema", icon: Palette },
+  { id: "security", label: "Keamanan", icon: KeyRound },
 ];
 
 export default function SettingsPage() {
@@ -52,6 +62,7 @@ export default function SettingsPage() {
   const [photoURL, setPhotoURL] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [avatarFiles, setAvatarFiles] = useState<string[]>([]);
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
@@ -70,14 +81,13 @@ export default function SettingsPage() {
     moveIndicatorToElement(activeElement);
   };
 
-  // Fetch daftar avatar dari server secara dinamis
   useEffect(() => {
     async function loadAvatars() {
       try {
         const files = await getAvatarFiles();
         setAvatarFiles(files);
       } catch (err) {
-        console.error("Gagal memuat daftar avatar");
+        // Fail silently
       }
     }
     loadAvatars();
@@ -139,19 +149,21 @@ export default function SettingsPage() {
         });
 
       toast({
-        title: "Profil diperbarui",
-        description: "Perubahan profil Anda telah berhasil disimpan.",
+        title: "Berhasil",
+        description: "Profil Anda telah diperbarui.",
       });
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Gagal memperbarui",
-        description: error.message || "Terjadi kesalahan saat menyimpan profil.",
+        title: "Gagal",
+        description: error.message || "Terjadi kesalahan.",
       });
     } finally {
       setIsSaving(false);
     }
   };
+
+  const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "G";
 
   return (
     <div className="p-4 md:p-6 lg:p-10 space-y-8 md:space-y-12 w-full mx-auto">
@@ -163,7 +175,7 @@ export default function SettingsPage() {
           Pengaturan
         </h1>
         <p className="text-sm md:text-base text-muted-foreground font-bold opacity-75">
-          Kelola informasi profil personal, preferensi tampilan tema aplikasi, serta tingkatkan keamanan akun Anda.
+          Kelola profil dan preferensi akun Anda.
         </p>
       </div>
 
@@ -204,100 +216,104 @@ export default function SettingsPage() {
             <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm overflow-hidden">
               <form onSubmit={handleUpdateProfile}>
                 <CardHeader className="p-6 md:p-10">
-                  <CardTitle className="text-xl md:text-2xl font-black">Informasi Dasar Akun</CardTitle>
-                  <CardDescription className="font-bold text-xs md:text-sm">
-                    Sesuaikan identitas digital Anda di STS Pedia agar lebih mudah dikenali.
-                  </CardDescription>
+                  <CardTitle className="text-xl md:text-2xl font-black">Informasi Profil</CardTitle>
                 </CardHeader>
                 <CardContent className="px-6 md:px-10 space-y-12">
                   
-                  {/* Avatar Picker & Preview Section */}
-                  <div className="flex flex-col lg:flex-row gap-10 items-start">
-                    {/* Current Preview */}
-                    <div className="flex flex-col items-center gap-4 shrink-0 mx-auto lg:mx-0">
-                      <Label className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase text-center w-full">Preview Avatar</Label>
-                      <div className="relative h-32 w-32 md:h-48 md:w-48 rounded-3xl overflow-hidden border-4 border-primary/20 shadow-2xl group">
-                        <Image 
-                          src={photoURL || "/img/icon.png"} 
-                          alt="Avatar Preview" 
-                          fill 
-                          className="object-cover transition-transform duration-500 group-hover:scale-110"
-                          priority
-                        />
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                           <Camera className="h-8 w-8 text-white" />
-                        </div>
-                      </div>
-                      <Badge variant="outline" className="border-primary/30 text-primary font-black text-[10px] px-3">
-                        {photoURL ? photoURL.split('/').pop() : 'Default'}
-                      </Badge>
-                    </div>
-
-                    {/* Selection Grid */}
-                    <div className="flex-1 space-y-4 w-full">
-                      <Label className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase">Koleksi Avatar (.png)</Label>
-                      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 xl:grid-cols-8 gap-3 max-h-[320px] overflow-y-auto pr-2 custom-scrollbar">
-                        {avatarFiles.length > 0 ? (
-                          avatarFiles.map((file, i) => {
-                            const avatarPath = `/img/ava/${file}`;
-                            const isSelected = photoURL === avatarPath;
-                            return (
-                              <button
-                                key={i}
-                                type="button"
-                                onClick={() => setPhotoURL(avatarPath)}
-                                className={cn(
-                                  "relative aspect-square rounded-xl overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
-                                  isSelected 
-                                    ? "border-primary shadow-lg ring-2 ring-primary/20" 
-                                    : "border-border/30 bg-muted/20 hover:border-primary/50"
-                                )}
-                              >
-                                <Image 
-                                  src={avatarPath} 
-                                  alt={`Avatar ${file}`} 
-                                  fill 
-                                  className="object-cover"
-                                  sizes="(max-width: 768px) 20vw, 10vw"
-                                />
-                                {isSelected && (
-                                  <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
-                                    <Check className="h-5 w-5 text-primary-foreground drop-shadow-md" />
-                                  </div>
-                                )}
-                              </button>
-                            );
-                          })
-                        ) : (
-                          <div className="col-span-full py-12 text-center border border-dashed rounded-3xl bg-muted/10">
-                            <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground mb-3" />
-                            <p className="text-xs font-bold text-muted-foreground">Memindai folder /img/ava/ ...</p>
+                  {/* Avatar Picker Section */}
+                  <div className="flex flex-col items-center sm:items-start gap-8">
+                    <div className="relative group">
+                      <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-primary/20 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
+                        <AvatarImage src={photoURL} className="object-cover" />
+                        <AvatarFallback className="bg-primary text-primary-foreground font-black text-4xl">
+                          {userInitial}
+                        </AvatarFallback>
+                      </Avatar>
+                      
+                      <Dialog open={isAvatarModalOpen} onOpenChange={setIsAvatarModalOpen}>
+                        <DialogTrigger asChild>
+                          <button 
+                            type="button"
+                            className="absolute inset-0 bg-black/40 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]"
+                          >
+                            <Camera className="h-8 w-8 text-white mb-2" />
+                            <span className="text-[10px] text-white font-black tracking-widest uppercase">Ganti</span>
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-3xl border-border bg-background">
+                          <DialogHeader>
+                            <DialogTitle className="font-black text-xl">Pilih Avatar</DialogTitle>
+                            <DialogDescription className="font-bold">
+                              Gunakan karakter unik untuk profil digital Anda.
+                            </DialogDescription>
+                          </DialogHeader>
+                          
+                          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 py-6">
+                            {avatarFiles.length > 0 ? (
+                              avatarFiles.map((file, i) => {
+                                const avatarPath = `/img/ava/${file}`;
+                                const isSelected = photoURL === avatarPath;
+                                return (
+                                  <button
+                                    key={i}
+                                    type="button"
+                                    onClick={() => {
+                                      setPhotoURL(avatarPath);
+                                      setIsAvatarModalOpen(false);
+                                    }}
+                                    className={cn(
+                                      "relative aspect-square rounded-2xl overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
+                                      isSelected 
+                                        ? "border-primary shadow-lg ring-2 ring-primary/20" 
+                                        : "border-border/30 bg-muted/20 hover:border-primary/50"
+                                    )}
+                                  >
+                                    <Image 
+                                      src={avatarPath} 
+                                      alt={`Avatar ${file}`} 
+                                      fill 
+                                      className="object-cover"
+                                      sizes="(max-width: 768px) 33vw, 15vw"
+                                    />
+                                    {isSelected && (
+                                      <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
+                                        <Check className="h-6 w-6 text-primary-foreground drop-shadow-md" />
+                                      </div>
+                                    )}
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="col-span-full py-12 text-center border border-dashed rounded-3xl bg-muted/10">
+                                <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground mb-3" />
+                                <p className="text-xs font-bold text-muted-foreground">Memuat koleksi...</p>
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      <p className="text-[10px] font-bold text-muted-foreground italic">Semua file .png di direktori /img/ava/ secara otomatis terdeteksi.</p>
+                        </DialogContent>
+                      </Dialog>
                     </div>
-                  </div>
 
-                  <div className="grid md:grid-cols-2 gap-8 pt-6 border-t border-border/40">
-                    <div className="space-y-3">
-                      <Label htmlFor="email" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase">Alamat Email</Label>
-                      <Input 
-                        id="email" 
-                        value={user?.email || ""} 
-                        disabled 
-                        className="bg-muted/30 font-bold border-border h-12 md:h-14 text-sm md:text-base cursor-not-allowed opacity-80 rounded-xl"
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="displayName" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase">Nama Tampilan</Label>
-                      <Input 
-                        id="displayName" 
-                        placeholder="Masukkan nama tampilan baru" 
-                        value={displayName}
-                        onChange={(e) => setDisplayName(e.target.value)}
-                        className="bg-background font-bold border-border h-12 md:h-14 text-sm md:text-base focus-visible:ring-primary focus-visible:border-primary rounded-xl"
-                      />
+                    <div className="grid md:grid-cols-2 gap-8 w-full">
+                      <div className="space-y-3">
+                        <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">Email</Label>
+                        <Input 
+                          id="email" 
+                          value={user?.email || ""} 
+                          disabled 
+                          className="bg-muted/30 font-bold border-border h-12 text-sm cursor-not-allowed opacity-80 rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <Label htmlFor="displayName" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">Nama Tampilan</Label>
+                        <Input 
+                          id="displayName" 
+                          placeholder="Nama Anda" 
+                          value={displayName}
+                          onChange={(e) => setDisplayName(e.target.value)}
+                          className="bg-background font-bold border-border h-12 text-sm focus-visible:ring-primary focus-visible:border-primary rounded-xl"
+                        />
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -305,7 +321,7 @@ export default function SettingsPage() {
                   <Button 
                     type="submit" 
                     disabled={isSaving}
-                    className="w-full md:w-auto bg-primary text-primary-foreground font-black text-sm md:text-base gap-3 rounded-2xl h-12 md:h-14 px-12 shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    className="w-full md:w-auto bg-primary text-primary-foreground font-black text-sm gap-3 rounded-2xl h-12 px-12 shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]"
                   >
                     {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
                     Simpan Perubahan
@@ -314,36 +330,32 @@ export default function SettingsPage() {
               </form>
             </Card>
 
-            <Card className="bento-card border-primary/20 bg-primary/5 shadow-sm p-2">
-              <CardContent className="p-6 md:p-10">
-                <div className="flex flex-col sm:flex-row items-center justify-between p-8 bg-background/50 rounded-3xl border border-primary/10 gap-8 text-center sm:text-left">
-                  <div className="flex flex-col sm:flex-row items-center gap-6">
-                    <div className="h-16 w-16 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-2xl shadow-primary/30 shrink-0">
-                      <ShieldCheck className="h-10 w-10" />
-                    </div>
-                    <div>
-                      <p className="text-lg md:text-xl font-black text-foreground">Status Keanggotaan</p>
-                      <p className="text-xs md:text-sm text-muted-foreground font-bold opacity-75">Akun Anda telah terverifikasi sebagai member STS Pedia.</p>
-                    </div>
-                  </div>
-                  <Badge className="bg-primary text-primary-foreground font-black text-[10px] md:text-xs px-8 py-3 uppercase tracking-widest rounded-xl shadow-lg shadow-primary/10">Verified Member</Badge>
+            <div className="p-8 bg-primary/5 rounded-3xl border border-primary/20 flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-6">
+                <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-xl shrink-0">
+                  <ShieldCheck className="h-8 w-8" />
                 </div>
-              </CardContent>
-            </Card>
+                <div>
+                  <p className="text-lg font-black">Status Member</p>
+                  <p className="text-xs text-muted-foreground font-bold">Akun Anda telah terverifikasi sebagai member aktif.</p>
+                </div>
+              </div>
+              <Badge className="bg-primary text-primary-foreground font-black px-6 py-2 rounded-xl">Verified Member</Badge>
+            </div>
           </TabsContent>
 
           <TabsContent value="appearance" className="space-y-8 mt-0 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-500">
             <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
               <CardHeader className="p-6 md:p-10">
-                <CardTitle className="text-xl md:text-2xl font-black">Tema Antarmuka</CardTitle>
-                <CardDescription className="font-bold text-xs md:text-sm">Sesuaikan gaya visual aplikasi agar lebih nyaman bagi mata Anda.</CardDescription>
+                <CardTitle className="text-xl md:text-2xl font-black">Tema Visual</CardTitle>
+                <CardDescription className="font-bold">Pilih gaya yang paling nyaman untuk Anda.</CardDescription>
               </CardHeader>
               <CardContent className="px-6 md:px-10 pb-10">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                   {[
                     { id: 'light', name: 'Mode Terang', icon: Sun },
                     { id: 'dark', name: 'Mode Gelap', icon: Moon },
-                    { id: 'system', name: 'Sistem Default', icon: Monitor },
+                    { id: 'system', name: 'Sistem', icon: Monitor },
                   ].map((t) => (
                     <button
                       key={t.id}
@@ -356,10 +368,10 @@ export default function SettingsPage() {
                       )}
                     >
                       <t.icon className={cn(
-                        "h-12 w-12 md:h-14 md:w-14 transition-colors",
+                        "h-12 w-12 transition-colors",
                         theme === t.id ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
                       )} />
-                      <span className="font-black text-xs md:text-sm uppercase tracking-tighter">{t.name}</span>
+                      <span className="font-black text-xs uppercase tracking-tighter">{t.name}</span>
                       {theme === t.id && (
                         <div className="absolute top-4 right-4 animate-in zoom-in duration-300">
                            <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
@@ -377,16 +389,15 @@ export default function SettingsPage() {
           <TabsContent value="security" className="space-y-8 mt-0 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-500">
             <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
               <CardHeader className="p-6 md:p-10">
-                <CardTitle className="text-xl md:text-2xl font-black">Keamanan Akun & Sandi</CardTitle>
-                <CardDescription className="font-bold text-xs md:text-sm">Lindungi aset digital Anda dengan memperbarui informasi keamanan.</CardDescription>
+                <CardTitle className="text-xl md:text-2xl font-black">Keamanan Akun</CardTitle>
               </CardHeader>
               <CardContent className="px-6 md:px-10 pb-10 space-y-6">
                 <div className="p-8 bg-muted/30 rounded-3xl border border-border/30 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left">
                   <div className="flex flex-col gap-2">
-                    <p className="text-base md:text-lg font-black text-foreground">Ganti Kata Sandi</p>
-                    <p className="text-xs md:text-sm text-muted-foreground font-bold italic opacity-75">Tautan aman untuk mereset sandi akan dikirimkan ke alamat email terdaftar Anda.</p>
+                    <p className="text-lg font-black">Ganti Kata Sandi</p>
+                    <p className="text-xs text-muted-foreground font-bold">Link reset sandi akan dikirim ke email terdaftar.</p>
                   </div>
-                  <Button variant="outline" className="w-full sm:w-auto font-black text-[10px] md:text-xs uppercase tracking-widest rounded-2xl border-border h-12 md:h-14 px-10 hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all shadow-sm">
+                  <Button variant="outline" className="w-full sm:w-auto font-black text-xs uppercase tracking-widest rounded-2xl h-12 px-10 border-border hover:bg-primary/10">
                     Kirim Link Reset
                   </Button>
                 </div>
