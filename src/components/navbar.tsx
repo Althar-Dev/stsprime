@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef, Suspense } from "react";
@@ -202,51 +201,51 @@ export function Navbar() {
                   </div>
                   
                   {user ? (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className={cn(
-                          "relative h-10 w-10 rounded-full flex items-center justify-center p-0.5 transition-all duration-300",
-                          profileBg
-                        )}>
-                          <Avatar className="h-full w-full border border-background">
-                            <AvatarImage src={user.photoURL || ""} alt={user.email || "User"} />
-                            <AvatarFallback className="bg-muted text-muted-foreground font-black">
-                              {userInitial}
-                            </AvatarFallback>
-                          </Avatar>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-56 rounded-xl border-border" align="end" forceMount>
-                        <DropdownMenuLabel className="font-normal">
-                          <div className="flex flex-col space-y-1">
-                            <p className="text-sm font-black leading-none">{user.displayName || "Gamer"}</p>
-                            <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
-                          </div>
-                        </DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem className="cursor-default font-bold gap-2 flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 object-contain" />
-                            <span>STSCoin</span>
-                          </div>
-                          <span className="text-primary">0</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem className="cursor-pointer font-bold gap-2" asChild>
-                          <Link href="/dashboard" className="flex items-center w-full">
-                            <LayoutDashboard className="h-4 w-4" /> Dashboard
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer font-bold gap-2" asChild>
-                          <Link href="/dashboard/settings" className="flex items-center w-full">
-                            <Settings className="h-4 w-4" /> Settings
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer font-bold gap-2 text-destructive focus:text-destructive" onClick={handleLogout}>
-                          <LogOut className="h-4 w-4" /> Keluar
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <div className="flex items-center gap-2 md:gap-2.5 px-3 md:px-3.5 py-1.5 md:py-2 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
+                        <img src="/img/coin.png" alt="STS Coin" className="h-5 w-5 md:h-6 md:w-6 object-contain group-hover:scale-110 transition-transform" />
+                        <span className="text-xs md:text-sm font-black text-primary">0</span>
+                      </div>
+                      
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className={cn(
+                            "relative h-10 w-10 md:h-11 md:w-11 rounded-full flex items-center justify-center p-0.5 transition-all duration-300",
+                            profileBg
+                          )}>
+                            <Avatar className="h-full w-full border border-background">
+                              <AvatarImage src={user.photoURL || ""} alt={user.email || "User"} />
+                              <AvatarFallback className="bg-muted text-muted-foreground font-black">
+                                {userInitial}
+                              </AvatarFallback>
+                            </Avatar>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56 rounded-xl border-border" align="end" forceMount>
+                          <DropdownMenuLabel className="font-normal">
+                            <div className="flex flex-col space-y-1">
+                              <p className="text-sm font-black leading-none">{user.displayName || "Gamer"}</p>
+                              <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
+                            </div>
+                          </DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="cursor-pointer font-bold gap-2" asChild>
+                            <Link href="/dashboard" className="flex items-center w-full">
+                              <LayoutDashboard className="h-4 w-4" /> Dashboard
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="cursor-pointer font-bold gap-2" asChild>
+                            <Link href="/dashboard/settings" className="flex items-center w-full">
+                              <Settings className="h-4 w-4" /> Settings
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="cursor-pointer font-bold gap-2 text-destructive focus:text-destructive" onClick={handleLogout}>
+                            <LogOut className="h-4 w-4" /> Keluar
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   ) : (
                     <Button 
                       onClick={() => setIsLoginModalOpen(true)}
@@ -339,7 +338,7 @@ export function Navbar() {
                         {user && (
                           <div className="mb-4 p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
                             <div className="flex items-center gap-3">
-                              <img src="/img/coin.png" alt="STS Coin" className="h-5 w-5 object-contain" />
+                              <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 object-contain" />
                               <span className="text-xs font-black">STS Coin</span>
                             </div>
                             <span className="text-sm font-black text-primary">0</span>

@@ -49,9 +49,9 @@ export function DashboardHeader() {
         </div>
         
         <div className="flex items-center gap-2 md:gap-5 ml-auto sm:ml-0">
-          <div className="flex items-center gap-1.5 md:gap-2.5 px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
-            <img src="/img/coin.png" alt="Coin" className="h-3.5 w-3.5 md:h-5 md:w-5 group-hover:scale-110 transition-transform" />
-            <span className="text-[10px] md:text-sm font-black text-primary">0</span>
+          <div className="flex items-center gap-2 md:gap-2.5 px-3 md:px-3.5 py-1.5 md:py-2 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
+            <img src="/img/coin.png" alt="Coin" className="h-5 w-5 md:h-6 md:w-6 group-hover:scale-110 transition-transform" />
+            <span className="text-xs md:text-sm font-black text-primary">0</span>
           </div>
 
           <div className="hidden xs:block">
