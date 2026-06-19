@@ -114,6 +114,27 @@ export default function SettingsPage() {
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
+  // DAFTAR AVATAR STATIS - TIDAK BOLEH BERUBAH DAN TIDAK BOLEH DOUBLE
+  const availableAvatars = useMemo(() => {
+    const list = [
+      "boy.png", 
+      "boy-1.png", 
+      "boy-2.png", 
+      "boy-3.png", 
+      "boy-4.png",
+      "girl.png", 
+      "girl-1.png", 
+      "girl-2.png", 
+      "girl-3.png"
+    ];
+
+    // dev.png hanya ditambahkan secara manual di depan jika user adalah Developer
+    if (isDev) {
+      return ["dev.png", ...list];
+    }
+    return list;
+  }, [isDev]);
+
   const moveIndicatorToElement = (element: HTMLElement | null) => {
     if (element) {
       setIndicatorStyle({
@@ -167,6 +188,7 @@ export default function SettingsPage() {
 
     setIsSaving(true);
     try {
+      // Logic: Prioritas pilihan photoURL, jika kosong dan dev gunakan dev.png, jika tidak gunakan foto auth
       const finalPhotoURL = photoURL || (isDev ? "/img/ava/dev.png" : (user.photoURL || ""));
       
       await updateProfile(user, { 
@@ -210,24 +232,12 @@ export default function SettingsPage() {
 
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic pratinjau yang konsisten
+  // Logic pratinjau utama - KONSISTEN
   const displayPhotoURL = useMemo(() => {
     if (photoURL) return photoURL;
     if (isDev) return "/img/ava/dev.png";
     return user?.photoURL || "";
   }, [photoURL, isDev, user?.photoURL]);
-  
-  // DAFTAR AVATAR FIX (HARDCODED UNTUK MENCEGAH DUPLIKASI)
-  const availableAvatars = useMemo(() => {
-    const list = [
-      "boy.png", "boy-1.png", "boy-2.png", "boy-3.png", "boy-4.png",
-      "girl.png", "girl-1.png", "girl-2.png", "girl-3.png"
-    ];
-    if (isDev) {
-      return ["dev.png", ...list];
-    }
-    return list;
-  }, [isDev]);
 
   return (
     <div className="p-4 md:p-6 lg:p-10 space-y-8 md:space-y-12 w-full mx-auto">
@@ -343,7 +353,7 @@ export default function SettingsPage() {
                               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
                                 {availableAvatars.map((file) => {
                                   const avatarPath = `/img/ava/${file}`;
-                                  // Seleksi harus cocok persis dengan pratinjau
+                                  // Seleksi harus cocok persis dengan yang tampil di pratinjau utama
                                   const isSelected = avatarPath === displayPhotoURL;
                                   
                                   return (
