@@ -54,7 +54,6 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
   const [displayName, setDisplayName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -67,13 +66,11 @@ export default function SettingsPage() {
         if (docSnap.exists()) {
           const data = docSnap.data();
           setDisplayName(data.displayName || user.displayName || "");
-        } else {
-          setDisplayName(user.displayName || "");
+        } else if (user.displayName) {
+          setDisplayName(user.displayName);
         }
       } catch (error) {
-        console.error("Error fetching profile:", error);
-      } finally {
-        setIsLoading(false);
+        // Fail silently to avoid interrupting the UI
       }
     }
 
@@ -120,14 +117,6 @@ export default function SettingsPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex h-[calc(100vh-80px)] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8">
       <div className="flex flex-col gap-1">
@@ -140,7 +129,6 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      {/* Mobile Select Navigation */}
       <div className="md:hidden">
         <Select value={activeTab} onValueChange={setActiveTab}>
           <SelectTrigger className="w-full h-12 rounded-xl font-bold border-border bg-card shadow-sm">
@@ -160,7 +148,6 @@ export default function SettingsPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col md:flex-row gap-8 items-start">
-        {/* Sidebar Tabs List (Desktop Only) */}
         <TabsList className="hidden md:flex md:flex-col h-auto bg-transparent p-0 justify-start space-y-1 w-full md:w-64 shrink-0">
           {TABS_CONFIG.map((tab) => (
             <TabsTrigger 
@@ -173,7 +160,6 @@ export default function SettingsPage() {
           ))}
         </TabsList>
 
-        {/* Content Area */}
         <div className="flex-1 w-full">
           <TabsContent value="profile" className="space-y-6 mt-0 focus-visible:outline-none">
             <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
@@ -193,7 +179,6 @@ export default function SettingsPage() {
                       disabled 
                       className="bg-muted/30 font-bold border-border h-11"
                     />
-                    <p className="text-[10px] text-muted-foreground font-bold italic">Email tidak dapat diubah untuk saat ini karena terhubung dengan akun utama.</p>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="displayName" className="text-[10px] font-black tracking-widest text-muted-foreground">Nama tampilan</Label>
@@ -231,7 +216,7 @@ export default function SettingsPage() {
                     </div>
                     <div>
                       <p className="text-sm font-black text-foreground">Anggota terverifikasi</p>
-                      <p className="text-[10px] text-muted-foreground font-bold">Terdaftar sejak {user?.metadata.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : "-"}</p>
+                      <p className="text-[10px] text-muted-foreground font-bold">Terdaftar aktif di STS Pedia</p>
                     </div>
                   </div>
                   <Badge className="bg-primary text-primary-foreground font-black text-[10px] px-4 py-1">Aktif</Badge>
@@ -285,24 +270,12 @@ export default function SettingsPage() {
                 <div className="p-5 bg-muted/30 rounded-2xl border border-border/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div>
                     <p className="text-sm font-black text-foreground">Kata sandi akun</p>
-                    <p className="text-[10px] text-muted-foreground font-bold italic">Terakhir diperbarui: belum pernah</p>
+                    <p className="text-[10px] text-muted-foreground font-bold italic">Kelola keamanan sandi Anda di sini</p>
                   </div>
                   <Button variant="outline" className="font-black text-xs rounded-xl border-border h-11 px-6 hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all">
                     Ubah sandi
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bento-card border-destructive/20 bg-destructive/5 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-xl font-black text-destructive">Zona bahaya</CardTitle>
-                <CardDescription className="font-bold text-xs">Tindakan ini bersifat permanen dan tidak dapat dibatalkan.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="destructive" className="font-black text-xs rounded-xl w-full sm:w-auto h-11 px-8 shadow-lg shadow-destructive/10">
-                  Hapus akun selamanya
-                </Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -323,16 +296,7 @@ export default function SettingsPage() {
                     <div className="absolute right-1 top-1 h-4 w-4 bg-white rounded-full" />
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-5 border-b border-border/30 last:border-0 hover:bg-muted/10 transition-colors rounded-xl">
-                  <div className="space-y-1">
-                    <p className="text-sm font-black text-foreground">Promo & penawaran</p>
-                    <p className="text-[10px] text-muted-foreground font-bold">Dapatkan info flash sale dan diskon eksklusif member.</p>
-                  </div>
-                  <div className="h-6 w-11 bg-muted rounded-full relative cursor-pointer border border-border/50">
-                    <div className="absolute left-1 top-1 h-4 w-4 bg-white rounded-full" />
-                  </div>
-                </div>
-              </CardContent>
+              </div >
             </Card>
           </TabsContent>
         </div>
