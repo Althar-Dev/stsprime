@@ -6,8 +6,6 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useUser } from "@/firebase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Bell, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export function DashboardHeader() {
   const { user } = useUser();
@@ -31,15 +29,6 @@ export function DashboardHeader() {
             <span className="text-xs md:text-sm font-black text-primary">0</span>
           </div>
 
-          <div className="hidden sm:flex items-center gap-1 border-x border-border/50 px-2 md:px-4">
-             <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground rounded-xl">
-               <Search className="h-4 w-4" />
-             </Button>
-             <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground rounded-xl">
-               <Bell className="h-4 w-4" />
-             </Button>
-          </div>
-          
           <ThemeToggle />
           
           <div className="flex items-center gap-3 pl-2 md:pl-4 border-l border-border/50">
