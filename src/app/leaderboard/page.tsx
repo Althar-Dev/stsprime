@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Footer } from "@/components/footer";
@@ -141,62 +140,62 @@ export default function LeaderboardPage() {
           {/* Main Table Section */}
           <div className="lg:col-span-2 space-y-6">
             <div className="bento-card p-0 overflow-hidden border-border/40 bg-card/30 backdrop-blur-sm">
-              <div className="p-5 md:p-6 border-b border-border/40 bg-muted/20 flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <Medal className="h-5 w-5 text-primary" />
+              <div className="p-4 md:p-6 border-b border-border/40 bg-muted/20 flex justify-between items-center">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="h-8 w-8 md:h-10 md:w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Medal className="h-4 w-4 md:h-5 md:w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-headline font-black text-lg">Peringkat Global</h3>
-                    <p className="text-[10px] text-muted-foreground font-bold">10 Kontributor Teratas</p>
+                    <h3 className="font-headline font-black text-sm md:text-lg">Peringkat Global</h3>
+                    <p className="text-[9px] md:text-[10px] text-muted-foreground font-bold">10 Kontributor Teratas</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-green-500 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
-                   <TrendingUp className="h-4 w-4" />
-                   <span className="text-[10px] font-black">LIVE</span>
+                <div className="flex items-center gap-1.5 md:gap-2 text-green-500 bg-green-500/10 px-2 md:px-3 py-1 rounded-full border border-green-500/20">
+                   <TrendingUp className="h-3 w-3 md:h-4 md:w-4" />
+                   <span className="text-[8px] md:text-[10px] font-black">LIVE</span>
                 </div>
               </div>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader className="bg-muted/30">
                     <TableRow className="hover:bg-transparent border-border/30">
-                      <TableHead className="font-black text-[10px] tracking-widest text-muted-foreground w-16 text-center">RANK</TableHead>
-                      <TableHead className="font-black text-[10px] tracking-widest text-muted-foreground">GAMER</TableHead>
-                      <TableHead className="font-black text-[10px] tracking-widest text-muted-foreground text-right pr-6">SCORE</TableHead>
+                      <TableHead className="font-black text-[9px] md:text-[10px] tracking-widest text-muted-foreground w-12 md:w-16 text-center">RANK</TableHead>
+                      <TableHead className="font-black text-[9px] md:text-[10px] tracking-widest text-muted-foreground">GAMER</TableHead>
+                      <TableHead className="font-black text-[9px] md:text-[10px] tracking-widest text-muted-foreground text-right pr-4 md:pr-6">SCORE</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {OTHER_RANKS.map((item) => (
                       <TableRow key={item.id} className="border-border/20 hover:bg-muted/30 transition-all group">
-                        <TableCell className="text-center">
-                          <span className="font-black text-sm text-muted-foreground group-hover:text-foreground transition-colors">{item.rank}</span>
+                        <TableCell className="text-center p-3 md:p-4">
+                          <span className="font-black text-xs md:text-sm text-muted-foreground group-hover:text-foreground transition-colors">{item.rank}</span>
                         </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-9 w-9 border border-border/60">
+                        <TableCell className="p-3 md:p-4">
+                          <div className="flex items-center gap-2 md:gap-3">
+                            <Avatar className="h-7 w-7 md:h-9 md:w-9 border border-border/60">
                               <AvatarImage src={item.avatar} />
-                              <AvatarFallback className="bg-muted">U</AvatarFallback>
+                              <AvatarFallback className="bg-muted text-[10px]">U</AvatarFallback>
                             </Avatar>
                             <div className="min-w-0">
-                              <p className="font-black text-sm flex items-center gap-1.5 truncate">
+                              <p className="font-black text-xs md:text-sm flex items-center gap-1 truncate">
                                 {item.name}
-                                <ShieldCheck className="h-3.5 w-3.5 text-primary shrink-0" />
+                                <ShieldCheck className="h-3 w-3 md:h-3.5 md:w-3.5 text-primary shrink-0" />
                               </p>
-                              <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">Verified Player</p>
+                              <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">Verified Player</p>
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell className="text-right pr-6">
-                          <span className="font-black text-sm text-primary tabular-nums">{item.points}</span>
+                        <TableCell className="text-right pr-4 md:pr-6 p-3 md:p-4">
+                          <span className="font-black text-xs md:text-sm text-primary tabular-nums">{item.points}</span>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
               </div>
-              <div className="p-4 bg-muted/10 border-t border-border/20 text-center">
-                 <button className="text-[10px] font-black text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 mx-auto">
-                    LIHAT SEMUA PERINGKAT <ChevronRight className="h-3 w-3" />
+              <div className="p-3 md:p-4 bg-muted/10 border-t border-border/20 text-center">
+                 <button className="text-[9px] md:text-[10px] font-black text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 mx-auto">
+                    LIHAT SEMUA PERINGKAT <ChevronRight className="h-2.5 w-2.5 md:h-3 md:w-3" />
                  </button>
               </div>
             </div>
