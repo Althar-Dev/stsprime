@@ -210,7 +210,7 @@ export default function LeaderboardPage() {
                   <Avatar className="h-16 w-16 md:h-20 md:w-20 border-2 border-primary shadow-xl">
                     <AvatarImage src={user?.photoURL || ""} />
                     <AvatarFallback className="bg-primary text-primary-foreground font-black text-xl">
-                      {user?.displayName?.charAt(0) || user?.email?.charAt(0) || "G"}
+                      {user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-1 -right-1 bg-background border border-primary/30 p-1 rounded-lg">

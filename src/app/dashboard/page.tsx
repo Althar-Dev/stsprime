@@ -56,7 +56,7 @@ export default function DashboardPage() {
               <Avatar className="h-20 w-20 md:h-24 md:w-24 border-4 border-background shadow-xl ring-2 ring-primary/20">
                 <AvatarImage src={user?.photoURL || ""} alt={user?.email || "Gamer"} />
                 <AvatarFallback className="bg-primary text-primary-foreground font-black text-3xl">
-                  {user?.email?.charAt(0).toUpperCase() || "G"}
+                  {user?.email?.charAt(0).toUpperCase() || "U"}
                 </AvatarFallback>
               </Avatar>
               <div className="absolute -bottom-2 -right-2 bg-background border border-border p-1.5 rounded-lg shadow-sm">
