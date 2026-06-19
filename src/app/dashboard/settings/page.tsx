@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -28,7 +29,8 @@ import {
   Loader2,
   Save,
   KeyRound,
-  Check
+  Check,
+  Camera
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -68,11 +70,15 @@ export default function SettingsPage() {
     moveIndicatorToElement(activeElement);
   };
 
-  // Fetch daftar avatar dari server
+  // Fetch daftar avatar dari server secara dinamis
   useEffect(() => {
     async function loadAvatars() {
-      const files = await getAvatarFiles();
-      setAvatarFiles(files);
+      try {
+        const files = await getAvatarFiles();
+        setAvatarFiles(files);
+      } catch (err) {
+        console.error("Gagal memuat daftar avatar");
+      }
     }
     loadAvatars();
   }, []);
@@ -203,54 +209,79 @@ export default function SettingsPage() {
                     Sesuaikan identitas digital Anda di STS Pedia agar lebih mudah dikenali.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="px-6 md:px-10 space-y-10">
+                <CardContent className="px-6 md:px-10 space-y-12">
                   
-                  {/* Avatar Picker Section */}
-                  <div className="space-y-6">
-                    <Label className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase">Pilih Avatar Profil</Label>
-                    <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4">
-                      {avatarFiles.length > 0 ? (
-                        avatarFiles.map((file, i) => {
-                          const avatarPath = `/img/ava/${file}`;
-                          const isSelected = photoURL === avatarPath;
-                          return (
-                            <button
-                              key={i}
-                              type="button"
-                              onClick={() => setPhotoURL(avatarPath)}
-                              className={cn(
-                                "relative aspect-square rounded-2xl overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
-                                isSelected 
-                                  ? "border-primary shadow-lg ring-4 ring-primary/20" 
-                                  : "border-border/30 bg-muted/20 hover:border-primary/50"
-                              )}
-                            >
-                              <Image 
-                                src={avatarPath} 
-                                alt={`Avatar ${file}`} 
-                                fill 
-                                className="object-cover"
-                                sizes="(max-width: 768px) 25vw, 10vw"
-                              />
-                              {isSelected && (
-                                <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
-                                  <Check className="h-6 w-6 text-primary-foreground drop-shadow-md" />
-                                </div>
-                              )}
-                            </button>
-                          );
-                        })
-                      ) : (
-                        <div className="col-span-full py-8 text-center border border-dashed rounded-2xl">
-                          <p className="text-xs font-bold text-muted-foreground">Tidak ada avatar ditemukan di /img/ava/</p>
+                  {/* Avatar Picker & Preview Section */}
+                  <div className="flex flex-col lg:flex-row gap-10 items-start">
+                    {/* Current Preview */}
+                    <div className="flex flex-col items-center gap-4 shrink-0 mx-auto lg:mx-0">
+                      <Label className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase text-center w-full">Preview Avatar</Label>
+                      <div className="relative h-32 w-32 md:h-48 md:w-48 rounded-3xl overflow-hidden border-4 border-primary/20 shadow-2xl group">
+                        <Image 
+                          src={photoURL || "/img/icon.png"} 
+                          alt="Avatar Preview" 
+                          fill 
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                          priority
+                        />
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                           <Camera className="h-8 w-8 text-white" />
                         </div>
-                      )}
+                      </div>
+                      <Badge variant="outline" className="border-primary/30 text-primary font-black text-[10px] px-3">
+                        {photoURL ? photoURL.split('/').pop() : 'Default'}
+                      </Badge>
+                    </div>
+
+                    {/* Selection Grid */}
+                    <div className="flex-1 space-y-4 w-full">
+                      <Label className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase">Koleksi Avatar (.png)</Label>
+                      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 xl:grid-cols-8 gap-3 max-h-[320px] overflow-y-auto pr-2 custom-scrollbar">
+                        {avatarFiles.length > 0 ? (
+                          avatarFiles.map((file, i) => {
+                            const avatarPath = `/img/ava/${file}`;
+                            const isSelected = photoURL === avatarPath;
+                            return (
+                              <button
+                                key={i}
+                                type="button"
+                                onClick={() => setPhotoURL(avatarPath)}
+                                className={cn(
+                                  "relative aspect-square rounded-xl overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
+                                  isSelected 
+                                    ? "border-primary shadow-lg ring-2 ring-primary/20" 
+                                    : "border-border/30 bg-muted/20 hover:border-primary/50"
+                                )}
+                              >
+                                <Image 
+                                  src={avatarPath} 
+                                  alt={`Avatar ${file}`} 
+                                  fill 
+                                  className="object-cover"
+                                  sizes="(max-width: 768px) 20vw, 10vw"
+                                />
+                                {isSelected && (
+                                  <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
+                                    <Check className="h-5 w-5 text-primary-foreground drop-shadow-md" />
+                                  </div>
+                                )}
+                              </button>
+                            );
+                          })
+                        ) : (
+                          <div className="col-span-full py-12 text-center border border-dashed rounded-3xl bg-muted/10">
+                            <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground mb-3" />
+                            <p className="text-xs font-bold text-muted-foreground">Memindai folder /img/ava/ ...</p>
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-[10px] font-bold text-muted-foreground italic">Semua file .png di direktori /img/ava/ secara otomatis terdeteksi.</p>
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-8">
+                  <div className="grid md:grid-cols-2 gap-8 pt-6 border-t border-border/40">
                     <div className="space-y-3">
-                      <Label htmlFor="email" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase">Alamat Email Terdaftar</Label>
+                      <Label htmlFor="email" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase">Alamat Email</Label>
                       <Input 
                         id="email" 
                         value={user?.email || ""} 
@@ -259,7 +290,7 @@ export default function SettingsPage() {
                       />
                     </div>
                     <div className="space-y-3">
-                      <Label htmlFor="displayName" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase">Nama Tampilan Publik</Label>
+                      <Label htmlFor="displayName" className="text-[10px] md:text-xs font-black tracking-widest text-muted-foreground uppercase">Nama Tampilan</Label>
                       <Input 
                         id="displayName" 
                         placeholder="Masukkan nama tampilan baru" 
