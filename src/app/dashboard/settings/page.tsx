@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -132,23 +131,25 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 space-y-8">
-      <div className="flex flex-col gap-1">
-        <h1 className="font-headline text-3xl md:text-4xl font-black tracking-tight flex items-center gap-3">
-          <Settings className="h-8 w-8 text-primary" />
+    <div className="p-4 md:p-6 lg:p-8 space-y-8 max-w-5xl mx-auto">
+      <div className="flex flex-col gap-2">
+        <h1 className="font-headline text-2xl md:text-3xl lg:text-4xl font-black tracking-tight flex items-center gap-3">
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <Settings className="h-6 w-6 text-primary" />
+          </div>
           Pengaturan
         </h1>
-        <p className="text-sm text-muted-foreground font-bold">
-          Kelola informasi profil, keamanan akun, dan preferensi aplikasi Anda.
+        <p className="text-[11px] md:text-sm text-muted-foreground font-bold max-w-2xl opacity-75">
+          Kelola informasi profil personal, preferensi keamanan akun, serta sesuaikan tampilan aplikasi sesuai kenyamanan Anda.
         </p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
-        <div className="border-b border-border relative overflow-x-auto no-scrollbar scroll-smooth">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-8">
+        <div className="border-b border-border/60 relative overflow-x-auto no-scrollbar scroll-smooth w-full">
           <TabsList 
             ref={tabsListRef} 
             onMouseLeave={resetIndicatorToActive}
-            className="bg-transparent h-auto p-0 flex gap-4 md:gap-8 justify-start relative overflow-visible min-w-max"
+            className="bg-transparent h-auto p-0 flex gap-1 md:gap-8 justify-between md:justify-start relative overflow-visible min-w-full md:min-w-max"
           >
             {TABS_CONFIG.map((tab) => (
               <TabsTrigger 
@@ -156,7 +157,7 @@ export default function SettingsPage() {
                 value={tab.id}
                 onMouseEnter={(e) => moveIndicatorToElement(e.currentTarget)}
                 title={tab.label}
-                className="rounded-none border-b-2 border-transparent bg-transparent px-3 md:px-0 py-4 font-bold text-sm text-muted-foreground hover:text-foreground data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2 relative z-10"
+                className="rounded-none border-b-2 border-transparent bg-transparent flex-1 md:flex-none px-4 md:px-0 py-4 font-bold text-sm text-muted-foreground hover:text-foreground data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2 relative z-10"
               >
                 <tab.icon className="h-5 w-5 md:h-4 md:w-4" />
                 <span className="hidden md:inline whitespace-nowrap">{tab.label}</span>
@@ -173,89 +174,86 @@ export default function SettingsPage() {
           </TabsList>
         </div>
 
-        <div className="w-full pt-2">
-          <TabsContent value="profile" className="space-y-6 mt-0 focus-visible:outline-none">
-            <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
+        <div className="w-full">
+          <TabsContent value="profile" className="space-y-6 mt-0 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm overflow-hidden">
               <form onSubmit={handleUpdateProfile}>
-                <CardHeader>
-                  <CardTitle className="text-xl font-black">Informasi dasar</CardTitle>
-                  <CardDescription className="font-bold text-xs">
-                    Nama ini akan terlihat oleh pengguna lain di papan peringkat global.
+                <CardHeader className="p-6 md:p-8">
+                  <CardTitle className="text-lg md:text-xl font-black">Informasi Dasar Akun</CardTitle>
+                  <CardDescription className="font-bold text-[11px] md:text-xs">
+                    Kelola nama publik Anda yang akan terlihat di Leaderboard STS Pedia.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="px-6 md:px-8 space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-[10px] font-bold tracking-tight text-muted-foreground">Alamat email</Label>
+                    <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">Alamat Email Terdaftar</Label>
                     <Input 
                       id="email" 
                       value={user?.email || ""} 
                       disabled 
-                      className="bg-muted/30 font-bold border-border h-11"
+                      className="bg-muted/30 font-bold border-border h-12 md:h-11 text-sm cursor-not-allowed opacity-80"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="displayName" className="text-[10px] font-bold tracking-tight text-muted-foreground">Nama tampilan</Label>
+                    <Label htmlFor="displayName" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">Nama Tampilan Publik</Label>
                     <Input 
                       id="displayName" 
-                      placeholder="Masukkan nama tampilan Anda" 
+                      placeholder="Masukkan nama tampilan baru" 
                       value={displayName}
                       onChange={(e) => setDisplayName(e.target.value)}
-                      className="bg-background font-bold border-border h-11 focus-visible:ring-primary"
+                      className="bg-background font-bold border-border h-12 md:h-11 text-sm focus-visible:ring-primary focus-visible:border-primary"
                     />
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-end bg-muted/10 border-t border-border/30 pt-6">
+                <CardFooter className="flex justify-end bg-muted/10 border-t border-border/30 p-6 md:p-8">
                   <Button 
                     type="submit" 
                     disabled={isSaving}
-                    className="bg-primary text-primary-foreground font-black text-xs gap-2 rounded-xl h-11 px-8 shadow-lg shadow-primary/10 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    className="w-full md:w-auto bg-primary text-primary-foreground font-black text-xs gap-2 rounded-xl h-12 md:h-11 px-10 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
                   >
                     {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                    Simpan perubahan
+                    Simpan Perubahan
                   </Button>
                 </CardFooter>
               </form>
             </Card>
 
-            <Card className="bento-card border-primary/20 bg-primary/5 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-xl font-black">Status keanggotaan</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between p-5 bg-background/50 rounded-2xl border border-primary/10">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-                      <ShieldCheck className="h-7 w-7" />
+            <Card className="bento-card border-primary/20 bg-primary/5 shadow-sm p-2">
+              <CardContent className="p-6 md:p-8">
+                <div className="flex flex-col sm:flex-row items-center justify-between p-6 bg-background/50 rounded-2xl border border-primary/10 gap-6 text-center sm:text-left">
+                  <div className="flex flex-col sm:flex-row items-center gap-5">
+                    <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-xl shadow-primary/20 shrink-0">
+                      <ShieldCheck className="h-8 w-8" />
                     </div>
                     <div>
-                      <p className="text-sm font-black text-foreground">Anggota terverifikasi</p>
-                      <p className="text-[10px] text-muted-foreground font-bold">Terdaftar aktif di STS Pedia</p>
+                      <p className="text-base font-black text-foreground">Status Keanggotaan</p>
+                      <p className="text-[11px] md:text-xs text-muted-foreground font-bold opacity-75">Akun Anda telah terverifikasi secara resmi.</p>
                     </div>
                   </div>
-                  <Badge className="bg-primary text-primary-foreground font-black text-[10px] px-4 py-1">Aktif</Badge>
+                  <Badge className="bg-primary text-primary-foreground font-black text-[10px] px-6 py-2 uppercase tracking-widest rounded-lg">Verified</Badge>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="appearance" className="space-y-6 mt-0 focus-visible:outline-none">
+          <TabsContent value="appearance" className="space-y-6 mt-0 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-300">
             <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-xl font-black">Tema aplikasi</CardTitle>
-                <CardDescription className="font-bold text-xs">Pilih bagaimana antarmuka STS Pedia terlihat di perangkat Anda.</CardDescription>
+              <CardHeader className="p-6 md:p-8">
+                <CardTitle className="text-lg md:text-xl font-black">Tema Antarmuka</CardTitle>
+                <CardDescription className="font-bold text-[11px] md:text-xs">Personalisasi tampilan aplikasi sesuai preferensi cahaya Anda.</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="px-6 md:px-8 pb-8">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
-                    { id: 'light', name: 'Mode terang', icon: Sun },
-                    { id: 'dark', name: 'Mode gelap', icon: Moon },
-                    { id: 'system', name: 'Sistem', icon: Monitor },
+                    { id: 'light', name: 'Mode Terang', icon: Sun },
+                    { id: 'dark', name: 'Mode Gelap', icon: Moon },
+                    { id: 'system', name: 'Sistem Default', icon: Monitor },
                   ].map((t) => (
                     <button
                       key={t.id}
                       onClick={() => setTheme(t.id)}
                       className={cn(
-                        "flex flex-col items-center gap-4 p-8 rounded-2xl border-2 transition-all group",
+                        "flex flex-col items-center gap-4 p-8 rounded-2xl border-2 transition-all group relative",
                         theme === t.id 
                           ? "border-primary bg-primary/5 shadow-inner" 
                           : "border-border bg-background hover:border-primary/30 hover:bg-muted/30"
@@ -265,7 +263,12 @@ export default function SettingsPage() {
                         "h-10 w-10 transition-colors",
                         theme === t.id ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
                       )} />
-                      <span className="font-black text-xs">{t.name}</span>
+                      <span className="font-black text-xs uppercase tracking-tighter">{t.name}</span>
+                      {theme === t.id && (
+                        <div className="absolute top-2 right-2">
+                           <ShieldCheck className="h-4 w-4 text-primary" />
+                        </div>
+                      )}
                     </button>
                   ))}
                 </div>
@@ -273,20 +276,20 @@ export default function SettingsPage() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="security" className="space-y-6 mt-0 focus-visible:outline-none">
+          <TabsContent value="security" className="space-y-6 mt-0 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-300">
             <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-xl font-black">Keamanan akun</CardTitle>
-                <CardDescription className="font-bold text-xs">Kelola kata sandi dan pengaturan keamanan akses Anda.</CardDescription>
+              <CardHeader className="p-6 md:p-8">
+                <CardTitle className="text-lg md:text-xl font-black">Keamanan Akun & Sandi</CardTitle>
+                <CardDescription className="font-bold text-[11px] md:text-xs">Pastikan akun Anda tetap aman dengan memperbarui kata sandi secara berkala.</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-5 bg-muted/30 rounded-2xl border border-border/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-black text-foreground">Kata sandi akun</p>
-                    <p className="text-[10px] text-muted-foreground font-bold italic">Kelola keamanan sandi Anda di sini</p>
+              <CardContent className="px-6 md:px-8 pb-8 space-y-4">
+                <div className="p-6 bg-muted/30 rounded-2xl border border-border/30 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+                  <div className="flex flex-col gap-1">
+                    <p className="text-sm md:text-base font-black text-foreground">Ganti Kata Sandi</p>
+                    <p className="text-[11px] md:text-xs text-muted-foreground font-bold italic opacity-75">Tautan reset sandi akan dikirimkan ke email Anda.</p>
                   </div>
-                  <Button variant="outline" className="font-black text-xs rounded-xl border-border h-11 px-6 hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all">
-                    Ubah sandi
+                  <Button variant="outline" className="w-full sm:w-auto font-black text-[10px] uppercase tracking-widest rounded-xl border-border h-12 md:h-11 px-8 hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all">
+                    Update Sandi
                   </Button>
                 </div>
               </CardContent>
