@@ -19,13 +19,12 @@ export function DashboardHeader() {
       
       <div className="flex flex-1 items-center justify-between">
         <div className="hidden sm:flex items-center gap-2">
-          <span className="text-[10px] font-black tracking-widest text-muted-foreground/60">PAGES</span>
+          <span className="text-[10px] font-black text-muted-foreground/60">Halaman</span>
           <Separator orientation="vertical" className="h-2 opacity-30" />
-          <span className="text-xs font-bold text-foreground">Dashboard</span>
+          <span className="text-xs font-bold text-foreground">Pengaturan</span>
         </div>
         
         <div className="flex items-center gap-2 md:gap-5 ml-auto sm:ml-0">
-          {/* STS Coin Display */}
           <div className="flex items-center gap-1.5 md:gap-2.5 px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
             <img src="/img/coin.png" alt="Coin" className="h-3.5 w-3.5 md:h-5 md:w-5 group-hover:scale-110 transition-transform" />
             <span className="text-[10px] md:text-sm font-black text-primary">0</span>
@@ -38,7 +37,7 @@ export function DashboardHeader() {
           <div className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 border-l border-border/50">
             <div className="hidden lg:flex flex-col items-end">
               <span className="text-xs font-black leading-none text-foreground">{user?.displayName || "Gamer"}</span>
-              <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black h-4 px-1.5 mt-1 rounded-sm">VERIFIED</Badge>
+              <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black h-4 px-1.5 mt-1 rounded-sm">Terverifikasi</Badge>
             </div>
             <Avatar className="h-8 w-8 md:h-10 md:w-10 border border-border shadow-sm shrink-0">
               <AvatarImage src={user?.photoURL || ""} alt={user?.email || "User"} />

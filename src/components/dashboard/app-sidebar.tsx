@@ -94,8 +94,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarContent className="px-2">
         <SidebarGroup>
-          <SidebarGroupLabel className="font-black text-[10px] tracking-[0.2em] text-muted-foreground/50 px-4 mb-2">
-            OVERVIEW
+          <SidebarGroupLabel className="font-black text-[10px] text-muted-foreground/50 px-4 mb-2">
+            Ikhtisar
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -124,8 +124,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
 
         <SidebarGroup className="mt-4">
-          <SidebarGroupLabel className="font-black text-[10px] tracking-[0.2em] text-muted-foreground/50 px-4 mb-2">
-            SUPPORT
+          <SidebarGroupLabel className="font-black text-[10px] text-muted-foreground/50 px-4 mb-2">
+            Dukungan
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>

@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { 
   User, 
@@ -70,10 +69,8 @@ export default function SettingsPage() {
 
     setIsSaving(true);
     try {
-      // Update Auth Profile
       await updateProfile(user, { displayName });
 
-      // Update Firestore Profile
       const userDocRef = doc(db, "users", user.uid);
       const userData = {
         displayName,
@@ -115,11 +112,11 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="p-4 md:p-8 max-w-4xl mx-auto">
-      <div className="mb-8">
+    <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-8">
+      <div>
         <h1 className="font-headline text-3xl md:text-4xl font-black tracking-tight flex items-center gap-2">
           <Settings className="h-8 w-8 text-primary" />
-          Settings
+          Pengaturan
         </h1>
         <p className="text-xs md:text-sm text-muted-foreground mt-1 font-bold">
           Kelola informasi profil, keamanan akun, dan preferensi aplikasi Anda.
@@ -148,12 +145,12 @@ export default function SettingsPage() {
               <CardHeader>
                 <CardTitle className="text-xl font-black">Informasi Dasar</CardTitle>
                 <CardDescription className="font-bold text-xs">
-                  Nama ini akan terlihat oleh pengguna lain di Leaderboard.
+                  Nama ini akan terlihat oleh pengguna lain di papan peringkat.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground">EMAIL</Label>
+                  <Label htmlFor="email" className="text-[10px] font-black text-muted-foreground">Email</Label>
                   <Input 
                     id="email" 
                     value={user?.email || ""} 
@@ -163,7 +160,7 @@ export default function SettingsPage() {
                   <p className="text-[10px] text-muted-foreground font-bold italic">Email tidak dapat diubah untuk saat ini.</p>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="displayName" className="text-[10px] font-black tracking-widest text-muted-foreground">NAMA TAMPILAN</Label>
+                  <Label htmlFor="displayName" className="text-[10px] font-black text-muted-foreground">Nama Tampilan</Label>
                   <Input 
                     id="displayName" 
                     placeholder="Masukkan nama Anda" 
@@ -173,11 +170,11 @@ export default function SettingsPage() {
                   />
                 </div>
               </CardContent>
-              <CardFooter className="flex justify-end bg-muted/20 border-t border-border pt-6">
+              <CardFooter className="flex justify-end bg-muted/10 border-t border-border pt-6">
                 <Button 
                   type="submit" 
                   disabled={isSaving}
-                  className="bg-primary text-primary-foreground font-black text-xs gap-2 rounded-xl"
+                  className="bg-primary text-primary-foreground font-black text-xs gap-2 rounded-xl h-11 px-6"
                 >
                   {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                   Simpan Perubahan
@@ -197,11 +194,11 @@ export default function SettingsPage() {
                     <ShieldCheck className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="text-sm font-black">Verified Member</p>
+                    <p className="text-sm font-black">Anggota Terverifikasi</p>
                     <p className="text-[10px] text-muted-foreground font-bold">Terdaftar sejak {user?.metadata.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString() : "-"}</p>
                   </div>
                 </div>
-                <Badge className="bg-primary text-primary-foreground font-black text-[10px]">ACTIVE</Badge>
+                <Badge className="bg-primary text-primary-foreground font-black text-[10px] px-3">Aktif</Badge>
               </div>
             </CardContent>
           </Card>
@@ -211,7 +208,7 @@ export default function SettingsPage() {
           <Card className="bento-card border-none shadow-sm">
             <CardHeader>
               <CardTitle className="text-xl font-black">Tema Aplikasi</CardTitle>
-              <CardDescription className="font-bold text-xs">Pilih bagaimana STS Pedia terlihat di perangkat Anda.</CardDescription>
+              <CardDescription className="font-bold text-xs">Pilih bagaimana sts pedia terlihat di perangkat anda.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -222,7 +219,7 @@ export default function SettingsPage() {
                   }`}
                 >
                   <Sun className={`h-8 w-8 ${theme === "light" ? "text-primary" : "text-muted-foreground"}`} />
-                  <span className="font-black text-xs">Light Mode</span>
+                  <span className="font-black text-xs">Mode Terang</span>
                 </button>
                 <button
                   onClick={() => setTheme("dark")}
@@ -231,7 +228,7 @@ export default function SettingsPage() {
                   }`}
                 >
                   <Moon className={`h-8 w-8 ${theme === "dark" ? "text-primary" : "text-muted-foreground"}`} />
-                  <span className="font-black text-xs">Dark Mode</span>
+                  <span className="font-black text-xs">Mode Gelap</span>
                 </button>
                 <button
                   onClick={() => setTheme("system")}
@@ -240,7 +237,7 @@ export default function SettingsPage() {
                   }`}
                 >
                   <Monitor className={`h-8 w-8 ${theme === "system" ? "text-primary" : "text-muted-foreground"}`} />
-                  <span className="font-black text-xs">System Default</span>
+                  <span className="font-black text-xs">Sistem</span>
                 </button>
               </div>
             </CardContent>
@@ -251,7 +248,7 @@ export default function SettingsPage() {
           <Card className="bento-card border-none shadow-sm">
             <CardHeader>
               <CardTitle className="text-xl font-black">Kata Sandi</CardTitle>
-              <CardDescription className="font-bold text-xs">Ubah kata sandi Anda secara berkala untuk menjaga keamanan akun.</CardDescription>
+              <CardDescription className="font-bold text-xs">Ubah kata sandi anda secara berkala untuk menjaga keamanan akun.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="p-4 bg-muted/30 rounded-xl border border-border flex items-center justify-between">
@@ -259,7 +256,7 @@ export default function SettingsPage() {
                   <p className="text-sm font-black">Kata Sandi Terakhir Diubah</p>
                   <p className="text-[10px] text-muted-foreground font-bold italic">Belum pernah diubah</p>
                 </div>
-                <Button variant="outline" className="font-black text-xs rounded-xl border-border">
+                <Button variant="outline" className="font-black text-xs rounded-xl border-border h-10">
                   Ganti Password
                 </Button>
               </div>
@@ -268,11 +265,11 @@ export default function SettingsPage() {
           
           <Card className="bento-card border-destructive/20 bg-destructive/5 shadow-sm">
             <CardHeader>
-              <CardTitle className="text-xl font-black text-destructive">Danger Zone</CardTitle>
+              <CardTitle className="text-xl font-black text-destructive">Zona Bahaya</CardTitle>
               <CardDescription className="font-bold text-xs">Tindakan ini tidak dapat dibatalkan.</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button variant="destructive" className="font-black text-xs rounded-xl w-full sm:w-auto">
+              <Button variant="destructive" className="font-black text-xs rounded-xl w-full sm:w-auto h-11">
                 Hapus Akun Selamanya
               </Button>
             </CardContent>
@@ -283,7 +280,7 @@ export default function SettingsPage() {
           <Card className="bento-card border-none shadow-sm">
             <CardHeader>
               <CardTitle className="text-xl font-black">Pengaturan Notifikasi</CardTitle>
-              <CardDescription className="font-bold text-xs">Kelola bagaimana Anda menerima pembaruan dari STS Pedia.</CardDescription>
+              <CardDescription className="font-bold text-xs">Kelola bagaimana anda menerima pembaruan dari sts pedia.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between p-4 border-b border-border">
@@ -291,16 +288,16 @@ export default function SettingsPage() {
                   <p className="text-sm font-black">Email Transaksi</p>
                   <p className="text-[10px] text-muted-foreground font-bold">Terima struk pembayaran melalui email.</p>
                 </div>
-                <div className="h-6 w-10 bg-primary rounded-full relative">
+                <div className="h-6 w-10 bg-primary rounded-full relative cursor-pointer">
                   <div className="absolute right-1 top-1 h-4 w-4 bg-white rounded-full" />
                 </div>
               </div>
               <div className="flex items-center justify-between p-4 border-b border-border">
                 <div>
                   <p className="text-sm font-black">Promo & Event</p>
-                  <p className="text-[10px] text-muted-foreground font-bold">Dapatkan info Flash Sale dan diskon eksklusif.</p>
+                  <p className="text-[10px] text-muted-foreground font-bold">Dapatkan info flash sale dan diskon eksklusif.</p>
                 </div>
-                <div className="h-6 w-10 bg-muted rounded-full relative">
+                <div className="h-6 w-10 bg-muted rounded-full relative cursor-pointer">
                   <div className="absolute left-1 top-1 h-4 w-4 bg-white rounded-full" />
                 </div>
               </div>
