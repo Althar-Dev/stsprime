@@ -233,10 +233,18 @@ export default function SettingsPage() {
                         <DialogTrigger asChild>
                           <button 
                             type="button"
-                            className="absolute inset-0 bg-black/40 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]"
+                            className="absolute inset-0 z-10"
                           >
-                            <Camera className="h-8 w-8 text-white mb-2" />
-                            <span className="text-[10px] text-white font-black tracking-widest uppercase">Ganti</span>
+                            {/* Hover Overlay */}
+                            <div className="absolute inset-0 bg-black/40 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]">
+                              <Camera className="h-8 w-8 text-white mb-2" />
+                              <span className="text-[10px] text-white font-black tracking-widest uppercase">Ganti</span>
+                            </div>
+                            
+                            {/* Floating Edit Button (Always visible as a hint) */}
+                            <div className="absolute bottom-1 right-1 md:bottom-2 md:right-2 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-xl border-4 border-background transform transition-all group-hover:scale-110">
+                              <Camera className="h-5 w-5" />
+                            </div>
                           </button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto rounded-3xl border-border bg-background">
