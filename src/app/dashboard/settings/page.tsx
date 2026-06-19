@@ -42,7 +42,8 @@ import {
   Check,
   Camera,
   Layers,
-  X
+  X,
+  Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -53,7 +54,7 @@ const TABS_CONFIG = [
 ];
 
 const BACKGROUND_OPTIONS = [
-  // Solids
+  // Solids (Original)
   { id: "default", name: "Netral", class: "bg-muted/30" },
   { id: "primary", name: "STS Gold", class: "bg-primary" },
   { id: "accent", name: "STS Blue", class: "bg-accent" },
@@ -66,7 +67,20 @@ const BACKGROUND_OPTIONS = [
   { id: "cyan", name: "Cyan", class: "bg-cyan-500" },
   { id: "violet", name: "Violet", class: "bg-violet-600" },
   { id: "fuchsia", name: "Fuchsia", class: "bg-fuchsia-600" },
-  // Gradients
+  
+  // New Solids (Added 10)
+  { id: "teal", name: "Teal", class: "bg-teal-500" },
+  { id: "indigo", name: "Indigo", class: "bg-indigo-600" },
+  { id: "lime", name: "Lime", class: "bg-lime-500" },
+  { id: "orange", name: "Orange", class: "bg-orange-500" },
+  { id: "pink", name: "Pink", class: "bg-pink-500" },
+  { id: "sky", name: "Sky", class: "bg-sky-400" },
+  { id: "red", name: "Crimson", class: "bg-red-600" },
+  { id: "yellow", name: "Lemon", class: "bg-yellow-400" },
+  { id: "gray", name: "Stone", class: "bg-stone-500" },
+  { id: "deep-blue", name: "Navy", class: "bg-blue-900" },
+
+  // Gradients (Original)
   { id: "grad-hyper", name: "Hyper", class: "bg-gradient-to-br from-primary to-accent" },
   { id: "grad-legendary", name: "Legendary", class: "bg-gradient-to-br from-slate-900 via-primary/50 to-slate-900" },
   { id: "grad-cosmic", name: "Cosmic", class: "bg-gradient-to-br from-purple-600 to-blue-500" },
@@ -77,6 +91,18 @@ const BACKGROUND_OPTIONS = [
   { id: "grad-fire", name: "Inferno", class: "bg-gradient-to-br from-red-600 to-yellow-500" },
   { id: "grad-glacier", name: "Glacier", class: "bg-gradient-to-br from-blue-100 to-blue-300" },
   { id: "grad-midnight", name: "Midnight", class: "bg-gradient-to-br from-zinc-950 to-slate-900" },
+
+  // New Gradients (Added 10)
+  { id: "grad-aurora", name: "Aurora", class: "bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600" },
+  { id: "grad-lava", name: "Lava", class: "bg-gradient-to-r from-red-800 via-orange-600 to-yellow-500" },
+  { id: "grad-forest", name: "Forest", class: "bg-gradient-to-b from-emerald-900 to-green-700" },
+  { id: "grad-candy", name: "Candy", class: "bg-gradient-to-br from-pink-400 to-purple-400" },
+  { id: "grad-dawn", name: "Dawn", class: "bg-gradient-to-r from-blue-700 to-orange-400" },
+  { id: "grad-dusk", name: "Dusk", class: "bg-gradient-to-tr from-slate-900 to-slate-700" },
+  { id: "grad-mint", name: "Minty", class: "bg-gradient-to-br from-teal-200 to-teal-500" },
+  { id: "grad-royal", name: "Royal", class: "bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500" },
+  { id: "grad-cherry", name: "Cherry", class: "bg-gradient-to-b from-rose-400 to-rose-700" },
+  { id: "grad-space", name: "Deep Space", class: "bg-gradient-to-bl from-gray-900 via-purple-900 to-violet-600" },
 ];
 
 export default function SettingsPage() {
@@ -280,7 +306,7 @@ export default function SettingsPage() {
                               <span className="text-[10px] text-white font-black tracking-widest uppercase">Ganti</span>
                             </div>
                             
-                            {/* Floating Edit Button (Always visible as a hint) */}
+                            {/* Floating Edit Button */}
                             <div className="absolute bottom-1 right-1 md:bottom-2 md:right-2 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-xl border-4 border-background transform transition-all group-hover:scale-110">
                               <Camera className="h-5 w-5" />
                             </div>
