@@ -50,12 +50,11 @@ export default function DashboardPage() {
         </div>
 
         {/* Dashboard Grid Layout */}
-        <div className="grid gap-6 md:grid-cols-3 items-start">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 items-start">
           
-          {/* Left Block: Profile & Coins */}
-          <div className="space-y-6 md:col-span-1">
-            {/* User Info Bento Card */}
-            <div className="bento-card p-6 flex flex-col items-center text-center">
+          {/* User Info Bento Card */}
+          <div className="md:col-span-1">
+            <div className="bento-card p-6 flex flex-col items-center text-center h-full">
               <Avatar className="h-20 w-20 border-2 border-primary/50 mb-4">
                 <AvatarImage src={user?.photoURL || ""} alt={user?.email || "Gamer"} />
                 <AvatarFallback className="bg-primary text-primary-foreground font-black text-2xl">
@@ -72,9 +71,11 @@ export default function DashboardPage() {
                 MEMBER VERIFIED
               </Badge>
             </div>
+          </div>
 
-            {/* STS Coin Bento Card */}
-            <div className="bento-card p-6 relative overflow-hidden border-primary/20 bg-card/50">
+          {/* STS Coin Bento Card */}
+          <div className="md:col-span-1">
+            <div className="bento-card p-6 relative overflow-hidden border-primary/20 bg-card/50 h-full">
               <div className="relative z-10">
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -95,10 +96,9 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Right Block: Recent Transactions */}
-          <div className="space-y-6 md:col-span-2">
-            {/* Recent Digital Services Orders */}
-            <div className="bento-card p-6">
+          {/* Recent Digital Services Orders */}
+          <div className="md:col-span-2">
+            <div className="bento-card p-6 h-full">
               <div className="flex justify-between items-center mb-4">
                 <div>
                   <h3 className="font-headline text-base font-black text-foreground">Transaksi Terakhir</h3>
@@ -138,8 +138,8 @@ export default function DashboardPage() {
                 </Table>
               </div>
             </div>
-
           </div>
+
         </div>
       </main>
 
