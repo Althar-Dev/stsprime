@@ -271,22 +271,21 @@ export default function SettingsPage() {
                             </div>
                           </button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 scrollbar-thin scrollbar-thumb-border">
-                          <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border p-6">
-                            <div className="flex items-start justify-between">
-                              <DialogHeader className="pr-12">
-                                <DialogTitle className="font-black text-xl">Kustomisasi Avatar</DialogTitle>
-                                <DialogDescription className="font-bold">
-                                  Sesuaikan karakter dan latar belakang profil Anda.
-                                </DialogDescription>
-                              </DialogHeader>
-                              <DialogClose className="absolute right-4 top-4 p-2 rounded-full hover:bg-muted/50 transition-colors">
-                                <X className="h-6 w-6" />
-                              </DialogClose>
-                            </div>
+                        <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 modal-scrollbar scroll-smooth">
+                          <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border p-6 flex flex-col items-center">
+                            <DialogClose className="absolute right-4 top-4 p-2 rounded-full hover:bg-muted/50 transition-colors">
+                              <X className="h-6 w-6" />
+                            </DialogClose>
+                            
+                            <DialogHeader className="text-center">
+                              <DialogTitle className="font-black text-xl">Kustomisasi Avatar</DialogTitle>
+                              <DialogDescription className="font-bold">
+                                Sesuaikan karakter dan latar belakang profil Anda.
+                              </DialogDescription>
+                            </DialogHeader>
 
                             {/* Live Preview Inside Modal */}
-                            <div className="mt-6 flex flex-col items-center justify-center py-6 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden relative">
+                            <div className="mt-6 flex flex-col items-center justify-center py-6 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden relative w-full max-w-md">
                               <div className={cn(
                                 "h-24 w-24 md:h-32 md:w-32 rounded-full flex items-center justify-center p-1 transition-all duration-500 mb-2",
                                 profileBg
