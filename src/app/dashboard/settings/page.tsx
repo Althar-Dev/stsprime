@@ -26,6 +26,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { 
   User, 
@@ -40,7 +41,8 @@ import {
   KeyRound,
   Check,
   Camera,
-  Layers
+  Layers,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -270,13 +272,18 @@ export default function SettingsPage() {
                           </button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 scrollbar-thin scrollbar-thumb-border">
-                          <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md border-b border-border p-6">
-                            <DialogHeader>
-                              <DialogTitle className="font-black text-xl">Kustomisasi Avatar</DialogTitle>
-                              <DialogDescription className="font-bold">
-                                Sesuaikan karakter dan latar belakang profil Anda.
-                              </DialogDescription>
-                            </DialogHeader>
+                          <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border p-6">
+                            <div className="flex items-start justify-between">
+                              <DialogHeader className="pr-12">
+                                <DialogTitle className="font-black text-xl">Kustomisasi Avatar</DialogTitle>
+                                <DialogDescription className="font-bold">
+                                  Sesuaikan karakter dan latar belakang profil Anda.
+                                </DialogDescription>
+                              </DialogHeader>
+                              <DialogClose className="absolute right-4 top-4 p-2 rounded-full hover:bg-muted/50 transition-colors">
+                                <X className="h-6 w-6" />
+                              </DialogClose>
+                            </div>
 
                             {/* Live Preview Inside Modal */}
                             <div className="mt-6 flex flex-col items-center justify-center py-6 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden relative">
@@ -379,7 +386,7 @@ export default function SettingsPage() {
                             </div>
                           </div>
 
-                          <div className="sticky bottom-0 bg-background border-t border-border p-4">
+                          <div className="sticky bottom-0 z-30 bg-background border-t border-border p-4">
                             <Button 
                               onClick={() => setIsAvatarModalOpen(false)}
                               className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs"
