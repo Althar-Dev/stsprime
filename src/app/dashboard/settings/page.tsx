@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -270,7 +269,7 @@ export default function SettingsPage() {
                             </div>
                           </button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 overflow-hidden">
+                        <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 scrollbar-thin scrollbar-thumb-border">
                           <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md border-b border-border p-6">
                             <DialogHeader>
                               <DialogTitle className="font-black text-xl">Kustomisasi Avatar</DialogTitle>
@@ -296,7 +295,7 @@ export default function SettingsPage() {
                             </div>
                           </div>
                           
-                          <div className="p-6 space-y-8">
+                          <div className="p-6 space-y-10">
                             {/* Avatar Grid */}
                             <div className="space-y-4">
                               <div className="flex items-center gap-2">
