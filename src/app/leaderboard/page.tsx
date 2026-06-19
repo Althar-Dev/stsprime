@@ -101,8 +101,8 @@ export default function LeaderboardPage() {
           <div className="flex flex-col items-center flex-1">
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-24 md:w-48 flex items-center justify-center mb-2">
-                <Image src="/img/border/two.png" alt="Rank 2 Border" fill className="object-contain" />
-                <Avatar className="h-8 w-8 md:h-16 md:w-16 border-2 border-slate-400/50 shadow-xl">
+                <Image src="/img/border/two.png" alt="Rank 2 Border" fill className="object-contain z-0" />
+                <Avatar className="h-8 w-8 md:h-16 md:w-16 border-2 border-slate-400/50 shadow-xl relative z-10">
                   <AvatarImage src={TOP_THREE[1].avatar} alt={TOP_THREE[1].name} />
                   <AvatarFallback>U2</AvatarFallback>
                 </Avatar>
@@ -124,8 +124,8 @@ export default function LeaderboardPage() {
             <Crown className="h-5 w-5 md:h-10 md:w-10 text-primary mb-1 md:mb-2" />
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-32 md:w-64 flex items-center justify-center mb-2">
-                <Image src="/img/border/one.png" alt="Rank 1 Border" fill className="object-contain" />
-                <Avatar className="h-10 w-10 md:h-24 md:w-24 border-2 md:border-4 border-primary shadow-2xl">
+                <Image src="/img/border/one.png" alt="Rank 1 Border" fill className="object-contain z-0" priority />
+                <Avatar className="h-10 w-10 md:h-24 md:w-24 border-2 md:border-4 border-primary shadow-2xl relative z-10">
                   <AvatarImage src={TOP_THREE[0].avatar} alt={TOP_THREE[0].name} />
                   <AvatarFallback>U1</AvatarFallback>
                 </Avatar>
@@ -146,8 +146,8 @@ export default function LeaderboardPage() {
           <div className="flex flex-col items-center flex-1">
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-20 md:w-40 flex items-center justify-center mb-2">
-                <Image src="/img/border/three.png" alt="Rank 3 Border" fill className="object-contain" />
-                <Avatar className="h-7 w-7 md:h-12 md:w-12 border-2 border-orange-400/50 shadow-xl">
+                <Image src="/img/border/three.png" alt="Rank 3 Border" fill className="object-contain z-0" />
+                <Avatar className="h-7 w-7 md:h-12 md:w-12 border-2 border-orange-400/50 shadow-xl relative z-10">
                   <AvatarImage src={TOP_THREE[2].avatar} alt={TOP_THREE[2].name} />
                   <AvatarFallback>U3</AvatarFallback>
                 </Avatar>
