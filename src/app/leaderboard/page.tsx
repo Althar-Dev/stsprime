@@ -1,6 +1,5 @@
 "use client";
 
-import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Crown, ShieldCheck, TrendingUp, ChevronRight, Star, Medal, Trophy } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -34,8 +33,6 @@ export default function LeaderboardPage() {
       <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-[0.03] pointer-events-none" />
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
-      <Navbar />
-      
       <main className="flex-grow container mx-auto px-4 py-8 md:py-16 relative z-10">
         {/* Header Section */}
         <div className="text-center mb-12 md:mb-20">
