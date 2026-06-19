@@ -57,9 +57,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
     {
       title: "Pengaturan Akun",
-      url: "/dashboard", // Placeholder
+      url: "/dashboard/settings",
       icon: Settings,
-      isActive: pathname === "/settings",
+      isActive: pathname === "/dashboard/settings",
     },
   ];
 
