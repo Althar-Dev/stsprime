@@ -2,7 +2,7 @@
 
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { Trophy, Crown, Medal, TrendingUp, ShieldCheck, Star, ChevronRight } from "lucide-react";
+import { Trophy, ShieldCheck, TrendingUp, ChevronRight, Star, Medal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -33,81 +33,84 @@ export default function LeaderboardPage() {
       {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-[0.03] pointer-events-none" />
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
 
       <Navbar />
       
       <main className="flex-grow container mx-auto px-4 py-8 md:py-16 relative z-10">
         {/* Header Section */}
-        <div className="text-center mb-10 md:mb-16 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div className="text-center mb-12 md:mb-20">
           <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 px-4 py-1.5 text-[10px] md:text-xs font-black tracking-[0.2em] rounded-full">
             SEASON 4: THE ULTIMATE WHALE
           </Badge>
-          <h1 className="font-headline text-4xl md:text-7xl font-black mb-4 tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+          <h1 className="font-headline text-4xl md:text-7xl font-black mb-4 tracking-tighter">
             Hall of Fame
           </h1>
           <p className="text-xs md:text-lg text-muted-foreground max-w-2xl mx-auto font-bold opacity-80 leading-relaxed px-4">
-            Jadilah legenda di jagat STS Pedia. Kumpulkan poin dari setiap transaksi dan ukir namamu di puncak klasemen global!
+            Kumpulkan poin dari setiap transaksi dan ukir namamu di puncak klasemen global!
           </p>
         </div>
 
-        {/* Podium Top 3 - Refined for Mobile */}
-        <div className="flex flex-col md:flex-row items-center md:items-end justify-center gap-6 md:gap-4 mb-16 md:mb-24">
-          {/* Rank 2 - Appears first on Desktop, second on Mobile */}
-          <div className="order-2 md:order-1 w-full max-w-[280px] group">
-            <div className="bento-card p-6 flex flex-col items-center text-center border-border/40 bg-card/40 backdrop-blur-sm transition-all group-hover:border-slate-400/50 group-hover:translate-y-[-5px]">
-              <div className="relative mb-4">
-                <Avatar className="h-20 w-20 md:h-24 md:w-24 border-4 border-slate-400/50 shadow-xl">
-                  <AvatarImage src={TOP_THREE[1].avatar} alt={TOP_THREE[1].name} />
-                  <AvatarFallback className="bg-slate-500 text-white">U2</AvatarFallback>
-                </Avatar>
-                <div className="absolute -bottom-2 -right-2 bg-slate-400 text-white h-8 w-8 rounded-full flex items-center justify-center font-black shadow-lg border-2 border-background">2</div>
+        {/* 3D Podium Section */}
+        <div className="flex items-end justify-center gap-2 md:gap-6 mb-20 md:mb-32 px-2 max-w-4xl mx-auto">
+          {/* Rank 2 */}
+          <div className="flex flex-col items-center flex-1">
+            <div className="flex flex-col items-center mb-4 text-center">
+              <Avatar className="h-14 w-14 md:h-20 md:w-20 border-2 border-slate-400/50 shadow-xl mb-2">
+                <AvatarImage src={TOP_THREE[1].avatar} alt={TOP_THREE[1].name} />
+                <AvatarFallback>U2</AvatarFallback>
+              </Avatar>
+              <p className="font-black text-[10px] md:text-sm truncate w-24 md:w-32">{TOP_THREE[1].name}</p>
+              <div className="mt-1 px-2 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
+                <span className="text-[9px] md:text-[11px] font-black">{TOP_THREE[1].points} <span className="text-primary">🔥</span></span>
               </div>
-              <h3 className="font-black text-lg truncate w-full group-hover:text-primary transition-colors">{TOP_THREE[1].name}</h3>
-              <p className="text-primary font-black text-sm">{TOP_THREE[1].points} pts</p>
-              <Badge variant="outline" className="mt-3 border-slate-400/30 text-slate-400 text-[9px] font-black uppercase tracking-widest">{TOP_THREE[1].badge}</Badge>
+            </div>
+            <div className="w-full h-24 md:h-40 bg-gradient-to-b from-slate-400/30 to-slate-400/10 border-t-4 border-slate-400/50 rounded-t-xl flex items-center justify-center">
+              <span className="font-headline text-4xl md:text-6xl font-black text-slate-400/40">2</span>
             </div>
           </div>
 
-          {/* Rank 1 - Center Piece */}
-          <div className="order-1 md:order-2 w-full max-w-[320px] relative">
-            <div className="absolute inset-0 bg-primary/20 blur-[40px] rounded-full animate-pulse pointer-events-none" />
-            <div className="bento-card p-8 flex flex-col items-center text-center border-primary/40 bg-card/60 backdrop-blur-md shadow-2xl scale-105 md:scale-110 relative z-10 transition-transform hover:scale-[1.08] md:hover:scale-[1.12]">
-              <Crown className="h-12 w-12 text-primary absolute -top-8 animate-bounce" />
-              <div className="relative mb-4">
-                <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-primary shadow-2xl ring-4 ring-primary/10">
+          {/* Rank 1 */}
+          <div className="flex flex-col items-center flex-1 relative -top-4">
+            <Trophy className="h-6 w-6 md:h-10 md:w-10 text-primary mb-2 animate-bounce" />
+            <div className="flex flex-col items-center mb-4 text-center">
+              <div className="relative">
+                <Avatar className="h-18 w-18 md:h-28 md:w-28 border-4 border-primary shadow-2xl ring-4 ring-primary/20 mb-2">
                   <AvatarImage src={TOP_THREE[0].avatar} alt={TOP_THREE[0].name} />
-                  <AvatarFallback className="bg-primary text-primary-foreground">U1</AvatarFallback>
+                  <AvatarFallback>U1</AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground h-10 w-10 rounded-full flex items-center justify-center font-black text-lg shadow-lg border-2 border-background">1</div>
               </div>
-              <h3 className="font-black text-xl md:text-2xl truncate w-full">{TOP_THREE[0].name}</h3>
-              <p className="text-primary font-black text-lg md:text-xl tracking-tight">{TOP_THREE[0].points} pts</p>
-              <Badge className="mt-3 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest px-4">{TOP_THREE[0].badge}</Badge>
+              <p className="font-black text-xs md:text-lg truncate w-28 md:w-40">{TOP_THREE[0].name}</p>
+              <div className="mt-1 px-3 py-1 bg-primary/10 rounded-full flex items-center gap-1 border border-primary/30">
+                <span className="text-[10px] md:text-sm font-black text-primary">{TOP_THREE[0].points} <span className="text-primary">🔥</span></span>
+              </div>
+            </div>
+            <div className="w-full h-32 md:h-56 bg-gradient-to-b from-primary/30 to-primary/5 border-t-4 border-primary rounded-t-xl flex items-center justify-center shadow-[0_-20px_50px_-12px_rgba(242,255,0,0.15)]">
+              <span className="font-headline text-5xl md:text-8xl font-black text-primary/30">1</span>
             </div>
           </div>
 
-          {/* Rank 3 - Appears third on Desktop and Mobile */}
-          <div className="order-3 w-full max-w-[280px] group">
-            <div className="bento-card p-6 flex flex-col items-center text-center border-border/40 bg-card/40 backdrop-blur-sm transition-all group-hover:border-orange-400/50 group-hover:translate-y-[-5px]">
-              <div className="relative mb-4">
-                <Avatar className="h-20 w-20 md:h-24 md:w-24 border-4 border-orange-400/50 shadow-xl">
-                  <AvatarImage src={TOP_THREE[2].avatar} alt={TOP_THREE[2].name} />
-                  <AvatarFallback className="bg-orange-500 text-white">U3</AvatarFallback>
-                </Avatar>
-                <div className="absolute -bottom-2 -right-2 bg-orange-400 text-white h-8 w-8 rounded-full flex items-center justify-center font-black shadow-lg border-2 border-background">3</div>
+          {/* Rank 3 */}
+          <div className="flex flex-col items-center flex-1">
+            <div className="flex flex-col items-center mb-4 text-center">
+              <Avatar className="h-12 w-12 md:h-16 md:w-16 border-2 border-orange-400/50 shadow-xl mb-2">
+                <AvatarImage src={TOP_THREE[2].avatar} alt={TOP_THREE[2].name} />
+                <AvatarFallback>U3</AvatarFallback>
+              </Avatar>
+              <p className="font-black text-[9px] md:text-xs truncate w-20 md:w-28">{TOP_THREE[2].name}</p>
+              <div className="mt-1 px-2 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
+                <span className="text-[8px] md:text-[10px] font-black">{TOP_THREE[2].points} <span className="text-primary">🔥</span></span>
               </div>
-              <h3 className="font-black text-lg truncate w-full group-hover:text-primary transition-colors">{TOP_THREE[2].name}</h3>
-              <p className="text-primary font-black text-sm">{TOP_THREE[2].points} pts</p>
-              <Badge variant="outline" className="mt-3 border-orange-400/30 text-orange-400 text-[9px] font-black uppercase tracking-widest">{TOP_THREE[2].badge}</Badge>
+            </div>
+            <div className="w-full h-16 md:h-28 bg-gradient-to-b from-orange-400/20 to-orange-400/5 border-t-4 border-orange-400/40 rounded-t-xl flex items-center justify-center">
+              <span className="font-headline text-3xl md:text-5xl font-black text-orange-400/30">3</span>
             </div>
           </div>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8 items-start">
           {/* Main Table Section */}
-          <div className="lg:col-span-2 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <div className="bento-card p-0 overflow-hidden border-border/40 shadow-xl bg-card/30 backdrop-blur-sm">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bento-card p-0 overflow-hidden border-border/40 bg-card/30 backdrop-blur-sm">
               <div className="p-5 md:p-6 border-b border-border/40 bg-muted/20 flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -140,7 +143,7 @@ export default function LeaderboardPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-3">
-                            <Avatar className="h-9 w-9 border border-border/60 shadow-sm transition-transform group-hover:scale-110">
+                            <Avatar className="h-9 w-9 border border-border/60">
                               <AvatarImage src={item.avatar} />
                               <AvatarFallback className="bg-muted">U</AvatarFallback>
                             </Avatar>
@@ -170,7 +173,7 @@ export default function LeaderboardPage() {
           </div>
 
           {/* User Stats Sidebar */}
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-1000">
+          <div className="space-y-6">
             <div className="bento-card p-6 border-primary/30 bg-primary/5 backdrop-blur-md relative overflow-hidden group">
               <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all" />
               
@@ -233,15 +236,6 @@ export default function LeaderboardPage() {
                   <div>
                     <p className="text-xs font-black mb-1">Daily Quest</p>
                     <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">Login 7 hari berturut-turut untuk bonus 500 poin instan.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4 group cursor-help">
-                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                    <Medal className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-black mb-1">Badge Spesial</p>
-                    <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">Dapatkan lencana eksklusif yang meningkatkan pengganda poin.</p>
                   </div>
                 </div>
               </div>
