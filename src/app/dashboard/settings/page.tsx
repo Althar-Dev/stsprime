@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -137,7 +138,9 @@ export default function SettingsPage() {
     async function loadAvatars() {
       try {
         const files = await getAvatarFiles();
-        setAvatarFiles(files);
+        // Filter out any dev.png from the server response to avoid duplication
+        const filtered = files.filter(f => f.toLowerCase() !== 'dev.png');
+        setAvatarFiles(filtered);
       } catch (err) {
         // Fail silently
       }
@@ -222,10 +225,10 @@ export default function SettingsPage() {
 
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic for display photo: if no photoURL and isDev, show dev.png
+  // displayPhotoURL is what we actually show in the preview
   const displayPhotoURL = photoURL || (isDev ? "/img/ava/dev.png" : "");
   
-  // Combine avatar files: if dev, add dev.png to the list manually
+  // availableAvatars includes dev.png ONLY if isDev is true
   const availableAvatars = isDev ? ["dev.png", ...avatarFiles] : avatarFiles;
 
   return (
@@ -324,7 +327,7 @@ export default function SettingsPage() {
                             </DialogClose>
                             
                             <DialogHeader className="text-center w-full flex flex-col items-center px-6">
-                              <DialogTitle className="font-black text-base md:text-lg sm:text-center">Kustomisasi Avatar</DialogTitle>
+                              <DialogTitle className="font-black text-base md:text-lg text-center">Kustomisasi Avatar</DialogTitle>
                             </DialogHeader>
 
                             {/* Compact Horizontal Preview */}
@@ -352,12 +355,14 @@ export default function SettingsPage() {
                               </div>
                               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
                                 {availableAvatars.length > 0 ? (
-                                  availableAvatars.map((file, i) => {
+                                  availableAvatars.map((file) => {
                                     const avatarPath = `/img/ava/${file}`;
-                                    const isSelected = photoURL === avatarPath;
+                                    // A path is selected if it matches displayPhotoURL
+                                    const isSelected = avatarPath === displayPhotoURL;
+                                    
                                     return (
                                       <button
-                                        key={i}
+                                        key={file}
                                         type="button"
                                         onClick={() => setPhotoURL(avatarPath)}
                                         className={cn(
