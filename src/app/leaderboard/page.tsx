@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Footer } from "@/components/footer";
@@ -5,11 +6,14 @@ import { Crown, ShieldCheck, TrendingUp, Star, Medal, Trophy, ChevronLeft } from
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useUser } from "@/firebase";
+import { useUser, useFirestore } from "@/firebase";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { cn } from "@/lib/utils";
 
 const TOP_THREE = [
   { id: 1, name: "Sultan_MLBB", points: "45,280", avatar: "https://picsum.photos/seed/u1/200/200", rank: 1, badge: "Legendary" },
@@ -29,7 +33,28 @@ const OTHER_RANKS = [
 
 export default function LeaderboardPage() {
   const { user } = useUser();
+  const db = useFirestore();
   const router = useRouter();
+  const [profileData, setProfileData] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchProfile() {
+      if (!user || !db) return;
+      try {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setProfileData(docSnap.data());
+        }
+      } catch (error) {
+        // Fail silently
+      }
+    }
+    fetchProfile();
+  }, [user, db]);
+
+  const profileBg = profileData?.profileBg || "bg-muted/30";
+  const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
@@ -207,12 +232,17 @@ export default function LeaderboardPage() {
               
               <div className="flex items-center gap-4 mb-8">
                 <div className="relative">
-                  <Avatar className="h-16 w-16 md:h-20 md:w-20 border-2 border-primary shadow-xl">
-                    <AvatarImage src={user?.photoURL || ""} />
-                    <AvatarFallback className="bg-primary text-primary-foreground font-black text-xl">
-                      {user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className={cn(
+                    "h-16 w-16 md:h-20 md:w-20 rounded-full flex items-center justify-center p-1 transition-all duration-300",
+                    profileBg
+                  )}>
+                    <Avatar className="h-full w-full border-2 border-background shadow-xl">
+                      <AvatarImage src={user?.photoURL || ""} />
+                      <AvatarFallback className="bg-primary text-primary-foreground font-black text-xl">
+                        {userInitial}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
                   <div className="absolute -bottom-1 -right-1 bg-background border border-primary/30 p-1 rounded-lg">
                      <ShieldCheck className="h-4 w-4 text-primary" />
                   </div>

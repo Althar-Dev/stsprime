@@ -14,8 +14,9 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LoginModal } from "@/components/auth/login-modal";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
-import { useUser, useAuth } from "@/firebase";
+import { useUser, useAuth, useFirestore } from "@/firebase";
 import { signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -116,6 +117,27 @@ export function Navbar() {
   
   const { user } = useUser();
   const auth = useAuth();
+  const db = useFirestore();
+  const [profileData, setProfileData] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchProfile() {
+      if (!user || !db) return;
+      try {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setProfileData(docSnap.data());
+        }
+      } catch (error) {
+        // Fail silently
+      }
+    }
+    fetchProfile();
+  }, [user, db]);
+
+  const profileBg = profileData?.profileBg || "bg-muted/30";
+  const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
 
   const handleLogout = async () => {
     if (auth) {
@@ -182,11 +204,14 @@ export function Navbar() {
                   {user ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                          <Avatar className="h-10 w-10 border border-border">
+                        <Button variant="ghost" className={cn(
+                          "relative h-10 w-10 rounded-full flex items-center justify-center p-0.5 transition-all duration-300",
+                          profileBg
+                        )}>
+                          <Avatar className="h-full w-full border border-background">
                             <AvatarImage src={user.photoURL || ""} alt={user.email || "User"} />
-                            <AvatarFallback className="bg-primary text-primary-foreground font-black">
-                              {user.email?.charAt(0).toUpperCase() || "U"}
+                            <AvatarFallback className="bg-muted text-muted-foreground font-black">
+                              {userInitial}
                             </AvatarFallback>
                           </Avatar>
                         </Button>
