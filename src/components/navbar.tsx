@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Gamepad2, History, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft, LogOut, Settings } from "lucide-react";
+import { Gamepad2, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft, LogOut, Settings, Trophy, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
@@ -147,19 +147,25 @@ export function Navbar() {
                   <Link href="/">
                     <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground font-bold">
                       <Gamepad2 className="h-4 w-4" />
-                      Games
-                    </Button>
-                  </Link>
-                  <Link href="/history">
-                    <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground font-bold">
-                      <History className="h-4 w-4" />
-                      Riwayat
+                      Topup
                     </Button>
                   </Link>
                   <Link href="/status">
                     <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground font-bold">
-                      <LayoutDashboard className="h-4 w-4" />
-                      Lacak
+                      <Search className="h-4 w-4" />
+                      Cek Transaksi
+                    </Button>
+                  </Link>
+                  <Link href="/leaderboard">
+                    <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground font-bold">
+                      <Trophy className="h-4 w-4" />
+                      Leaderboard
+                    </Button>
+                  </Link>
+                  <Link href="/benefit">
+                    <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground font-bold">
+                      <Gift className="h-4 w-4" />
+                      Benefit
                     </Button>
                   </Link>
                 </div>
@@ -253,17 +259,22 @@ export function Navbar() {
                             <div className="space-y-1">
                               <Link href="/">
                                 <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                  <Gamepad2 className="h-5 w-5" /> Games
-                                </Button>
-                              </Link>
-                              <Link href="/history">
-                                <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                  <History className="h-5 w-5" /> Riwayat Transaksi
+                                  <Gamepad2 className="h-5 w-5" /> Topup
                                 </Button>
                               </Link>
                               <Link href="/status">
                                 <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                  <LayoutDashboard className="h-5 w-5" /> Lacak Pesanan
+                                  <Search className="h-5 w-5" /> Cek Transaksi
+                                </Button>
+                              </Link>
+                              <Link href="/leaderboard">
+                                <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                  <Trophy className="h-5 w-5" /> Leaderboard
+                                </Button>
+                              </Link>
+                              <Link href="/benefit">
+                                <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                  <Gift className="h-5 w-5" /> Benefit
                                 </Button>
                               </Link>
                             </div>
