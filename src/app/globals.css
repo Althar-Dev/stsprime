@@ -24,12 +24,22 @@
     --input: 0 0% 90%;
     --ring: 45 95% 55%;
     --radius: 0.75rem;
+
+    /* Sidebar Variables */
+    --sidebar-background: 0 0% 97%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 45 95% 55%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 92%;
+    --sidebar-accent-foreground: 0 0% 9%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 45 95% 55%;
   }
 
   .dark {
-    --background: 0 0% 9%; /* #181818 */
+    --background: 0 0% 9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 19%; /* #303030 */
+    --card: 0 0% 12%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 15%;
     --popover-foreground: 0 0% 98%;
@@ -37,15 +47,25 @@
     --primary-foreground: 0 0% 0%;
     --secondary: 45 95% 55%;
     --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 25%;
+    --muted: 0 0% 20%;
     --muted-foreground: 0 0% 70%;
     --accent: 227 77% 58%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 25%;
-    --input: 0 0% 25%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
     --ring: 45 95% 55%;
+
+    /* Sidebar Variables Dark */
+    --sidebar-background: 0 0% 12%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 45 95% 55%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 18%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 45 95% 55%;
   }
 }
 
@@ -64,7 +84,6 @@
     @apply font-headline tracking-tight;
   }
 
-  /* Global Scrollbar Reset */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -72,8 +91,6 @@
   
   ::-webkit-scrollbar-button {
     display: none !important;
-    width: 0 !important;
-    height: 0 !important;
   }
   
   ::-webkit-scrollbar-track {
@@ -92,7 +109,6 @@
 }
 
 @layer utilities {
-  /* Flash Sale Scrollbar */
   .flash-sale-scrollbar::-webkit-scrollbar {
     height: 6px;
   }
@@ -151,5 +167,5 @@
 }
 
 .bento-card {
-  @apply relative overflow-hidden rounded-xl border border-border bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-card/80;
+  @apply relative overflow-hidden rounded-xl border border-border bg-card transition-all hover:border-primary/50;
 }

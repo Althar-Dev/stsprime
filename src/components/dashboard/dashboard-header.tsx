@@ -11,9 +11,11 @@ export function DashboardHeader() {
   const { user } = useUser();
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 md:h-20 shrink-0 items-center gap-2 border-b border-border/50 bg-background/80 backdrop-blur-md px-4 md:px-8">
-      <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-primary transition-colors" />
-      <Separator orientation="vertical" className="mx-2 h-4 opacity-30" />
+    <header className="sticky top-0 z-40 flex h-16 md:h-20 shrink-0 items-center gap-2 border-b border-border bg-background px-4 md:px-8">
+      <div className="flex items-center gap-1 md:gap-2">
+        <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-primary transition-colors" />
+        <Separator orientation="vertical" className="hidden xs:block mx-1 md:mx-2 h-4 opacity-30" />
+      </div>
       
       <div className="flex flex-1 items-center justify-between">
         <div className="hidden sm:flex items-center gap-2">
@@ -22,23 +24,25 @@ export function DashboardHeader() {
           <span className="text-xs font-bold text-foreground">Dashboard</span>
         </div>
         
-        <div className="flex items-center gap-3 md:gap-5">
+        <div className="flex items-center gap-2 md:gap-5 ml-auto sm:ml-0">
           {/* STS Coin Display */}
-          <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
-            <img src="/img/coin.png" alt="Coin" className="h-4 w-4 md:h-5 md:w-5 group-hover:scale-110 transition-transform" />
-            <span className="text-xs md:text-sm font-black text-primary">0</span>
+          <div className="flex items-center gap-1.5 md:gap-2.5 px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
+            <img src="/img/coin.png" alt="Coin" className="h-3.5 w-3.5 md:h-5 md:w-5 group-hover:scale-110 transition-transform" />
+            <span className="text-[10px] md:text-sm font-black text-primary">0</span>
           </div>
 
-          <ThemeToggle />
+          <div className="hidden xs:block">
+            <ThemeToggle />
+          </div>
           
-          <div className="flex items-center gap-3 pl-2 md:pl-4 border-l border-border/50">
+          <div className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 border-l border-border/50">
             <div className="hidden lg:flex flex-col items-end">
               <span className="text-xs font-black leading-none text-foreground">{user?.displayName || "Gamer"}</span>
-              <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black h-4 px-1.5 mt-1 rounded-sm">VERIFIED MEMBER</Badge>
+              <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black h-4 px-1.5 mt-1 rounded-sm">VERIFIED</Badge>
             </div>
-            <Avatar className="h-9 w-9 md:h-10 md:w-10 border-2 border-border/50 shadow-sm">
+            <Avatar className="h-8 w-8 md:h-10 md:w-10 border border-border shadow-sm shrink-0">
               <AvatarImage src={user?.photoURL || ""} alt={user?.email || "User"} />
-              <AvatarFallback className="bg-primary text-primary-foreground font-black text-xs">
+              <AvatarFallback className="bg-primary text-primary-foreground font-black text-[10px] md:text-xs">
                 {user?.email?.charAt(0).toUpperCase() || "U"}
               </AvatarFallback>
             </Avatar>

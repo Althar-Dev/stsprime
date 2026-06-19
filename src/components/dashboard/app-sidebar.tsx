@@ -7,7 +7,6 @@ import {
   LayoutDashboard,
   Settings,
   LogOut,
-  ChevronLeft,
   LifeBuoy,
   Send,
 } from "lucide-react";
@@ -78,7 +77,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   ];
 
   return (
-    <Sidebar collapsible="icon" {...props} className="border-r border-border/50 bg-card/30 backdrop-blur-xl">
+    <Sidebar collapsible="icon" {...props} className="border-r border-border bg-card">
       <SidebarHeader className="p-4 md:p-6">
         <Link href="/" className="flex items-center gap-3 px-1 transition-all hover:opacity-80">
           <Logo className="h-9 w-9 shrink-0 shadow-lg shadow-primary/10 rounded-xl" />
@@ -109,7 +108,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     className={cn(
                       "font-bold rounded-xl h-11 px-4 transition-all duration-200 group-data-[collapsible=icon]:px-2",
                       item.isActive 
-                        ? "!bg-primary !text-primary-foreground hover:!bg-primary/90 shadow-lg shadow-primary/20" 
+                        ? "!bg-primary !text-primary-foreground shadow-md" 
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                     )}
                   >
@@ -168,7 +167,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-border/50 bg-muted/20">
+      <SidebarFooter className="p-4 border-t border-border bg-muted/20">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
