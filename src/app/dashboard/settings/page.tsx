@@ -26,7 +26,6 @@ import {
   Monitor,
   Loader2,
   Save,
-  CreditCard,
   KeyRound
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -128,28 +127,28 @@ export default function SettingsPage() {
 
       <Tabs defaultValue="profile" className="flex flex-col md:flex-row gap-8 items-start">
         {/* Sidebar Tabs List */}
-        <TabsList className="flex md:flex-col h-auto bg-transparent p-0 justify-start space-x-2 md:space-x-0 md:space-y-1 w-full md:w-64 overflow-x-auto no-scrollbar shrink-0">
+        <TabsList className="flex md:flex-col h-auto bg-transparent p-0 justify-start space-x-2 md:space-x-0 md:space-y-1 w-full md:w-64 overflow-x-auto no-scrollbar shrink-0 flex-nowrap">
           <TabsTrigger 
             value="profile" 
-            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-full md:w-full border border-transparent data-[state=active]:border-primary/20"
+            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-auto md:w-full border border-transparent data-[state=active]:border-primary/20 shrink-0 whitespace-nowrap"
           >
             <User className="h-4 w-4" /> Profil akun
           </TabsTrigger>
           <TabsTrigger 
             value="appearance" 
-            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-full md:w-full border border-transparent data-[state=active]:border-primary/20"
+            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-auto md:w-full border border-transparent data-[state=active]:border-primary/20 shrink-0 whitespace-nowrap"
           >
             <Palette className="h-4 w-4" /> Tampilan tema
           </TabsTrigger>
           <TabsTrigger 
             value="security" 
-            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-full md:w-full border border-transparent data-[state=active]:border-primary/20"
+            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-auto md:w-full border border-transparent data-[state=active]:border-primary/20 shrink-0 whitespace-nowrap"
           >
             <KeyRound className="h-4 w-4" /> Keamanan & sandi
           </TabsTrigger>
           <TabsTrigger 
             value="notifications" 
-            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-full md:w-full border border-transparent data-[state=active]:border-primary/20"
+            className="rounded-xl font-bold text-xs gap-3 py-3 px-4 justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all w-auto md:w-full border border-transparent data-[state=active]:border-primary/20 shrink-0 whitespace-nowrap"
           >
             <Bell className="h-4 w-4" /> Notifikasi
           </TabsTrigger>
