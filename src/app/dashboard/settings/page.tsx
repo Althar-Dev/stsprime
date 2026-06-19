@@ -37,13 +37,16 @@ const TABS_CONFIG = [
   { id: "security", label: "Keamanan & sandi", icon: KeyRound },
 ];
 
-// List avatar yang tersedia di /img/ava/ (Asumsi penomoran 1-12)
-// Sesuai instruksi: dev.png tidak ditampilkan
-const AVATAR_FILES = [
+// Daftar avatar yang tersedia. Anda bisa menambahkan nama file baru di sini.
+const ALL_AVATARS = [
   "1.png", "2.png", "3.png", "4.png", "5.png", "6.png", 
   "7.png", "8.png", "9.png", "10.png", "11.png", "12.png",
-  "dev.png" // Akan difilter keluar
-].filter(file => file !== "dev.png");
+  "13.png", "14.png", "15.png", "16.png", "17.png", "18.png",
+  "19.png", "20.png", "dev.png"
+];
+
+// Memfilter dev.png sesuai permintaan
+const AVATAR_FILES = ALL_AVATARS.filter(file => file !== "dev.png");
 
 export default function SettingsPage() {
   const { user } = useUser();
@@ -154,7 +157,7 @@ export default function SettingsPage() {
           Pengaturan
         </h1>
         <p className="text-sm md:text-base text-muted-foreground font-bold max-w-3xl opacity-75">
-          Kelola informasi profil personal, preferensi tampilan tema aplikasi, serta tingkatkan keamanan akun Anda untuk pengalaman terbaik.
+          Kelola informasi profil personal, preferensi tampilan tema aplikasi, serta tingkatkan keamanan akun Anda.
         </p>
       </div>
 
@@ -197,7 +200,7 @@ export default function SettingsPage() {
                 <CardHeader className="p-6 md:p-10">
                   <CardTitle className="text-xl md:text-2xl font-black">Informasi Dasar Akun</CardTitle>
                   <CardDescription className="font-bold text-xs md:text-sm">
-                    Sesuaikan identitas digital Anda di STS Pedia agar lebih mudah dikenali oleh komunitas.
+                    Sesuaikan identitas digital Anda di STS Pedia agar lebih mudah dikenali.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="px-6 md:px-10 space-y-10">
@@ -283,7 +286,7 @@ export default function SettingsPage() {
                     </div>
                     <div>
                       <p className="text-lg md:text-xl font-black text-foreground">Status Keanggotaan</p>
-                      <p className="text-xs md:text-sm text-muted-foreground font-bold opacity-75">Akun Anda telah terverifikasi secara resmi sebagai member STS Pedia.</p>
+                      <p className="text-xs md:text-sm text-muted-foreground font-bold opacity-75">Akun Anda telah terverifikasi sebagai member STS Pedia.</p>
                     </div>
                   </div>
                   <Badge className="bg-primary text-primary-foreground font-black text-[10px] md:text-xs px-8 py-3 uppercase tracking-widest rounded-xl shadow-lg shadow-primary/10">Verified Member</Badge>
@@ -296,7 +299,7 @@ export default function SettingsPage() {
             <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
               <CardHeader className="p-6 md:p-10">
                 <CardTitle className="text-xl md:text-2xl font-black">Tema Antarmuka</CardTitle>
-                <CardDescription className="font-bold text-xs md:text-sm">Sesuaikan gaya visual aplikasi agar lebih nyaman bagi mata Anda saat berbelanja.</CardDescription>
+                <CardDescription className="font-bold text-xs md:text-sm">Sesuaikan gaya visual aplikasi agar lebih nyaman bagi mata Anda.</CardDescription>
               </CardHeader>
               <CardContent className="px-6 md:px-10 pb-10">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -338,13 +341,13 @@ export default function SettingsPage() {
             <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
               <CardHeader className="p-6 md:p-10">
                 <CardTitle className="text-xl md:text-2xl font-black">Keamanan Akun & Sandi</CardTitle>
-                <CardDescription className="font-bold text-xs md:text-sm">Lindungi aset digital Anda dengan memperbarui informasi keamanan secara berkala.</CardDescription>
+                <CardDescription className="font-bold text-xs md:text-sm">Lindungi aset digital Anda dengan memperbarui informasi keamanan.</CardDescription>
               </CardHeader>
               <CardContent className="px-6 md:px-10 pb-10 space-y-6">
                 <div className="p-8 bg-muted/30 rounded-3xl border border-border/30 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left">
                   <div className="flex flex-col gap-2">
                     <p className="text-base md:text-lg font-black text-foreground">Ganti Kata Sandi</p>
-                    <p className="text-xs md:text-sm text-muted-foreground font-bold italic opacity-75">Tautan aman untuk mereset sandi akan segera dikirimkan ke alamat email terdaftar Anda.</p>
+                    <p className="text-xs md:text-sm text-muted-foreground font-bold italic opacity-75">Tautan aman untuk mereset sandi akan dikirimkan ke alamat email terdaftar Anda.</p>
                   </div>
                   <Button variant="outline" className="w-full sm:w-auto font-black text-[10px] md:text-xs uppercase tracking-widest rounded-2xl border-border h-12 md:h-14 px-10 hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all shadow-sm">
                     Kirim Link Reset
