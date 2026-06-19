@@ -167,7 +167,7 @@ export default function LeaderboardPage() {
                     {OTHER_RANKS.map((item) => (
                       <TableRow key={item.id} className="border-border/20 hover:bg-muted/30 transition-all group">
                         <TableCell className="text-center p-3 md:p-4">
-                          <span className="font-black text-xs md:text-sm text-muted-foreground group-hover:text-foreground transition-colors">{item.rank}</span>
+                          <span className="font-black text-xs md:text-sm text-muted-foreground group-hover:text-foreground transition-colors">#{item.rank}</span>
                         </TableCell>
                         <TableCell className="p-3 md:p-4">
                           <div className="flex items-center gap-2 md:gap-3">
