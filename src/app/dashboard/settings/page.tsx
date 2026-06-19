@@ -132,7 +132,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-8">
+    <div className="p-4 md:p-8 space-y-8">
       <div className="flex flex-col gap-1">
         <h1 className="font-headline text-3xl md:text-4xl font-black tracking-tight flex items-center gap-3">
           <Settings className="h-8 w-8 text-primary" />
