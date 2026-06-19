@@ -50,7 +50,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Dashboard Grid Layout */}
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 items-start">
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
           
           {/* User Info Bento Card */}
           <div className="col-span-1">
