@@ -154,7 +154,7 @@ export default function SettingsPage() {
               <TabsTrigger 
                 key={tab.id}
                 value={tab.id} 
-                className="rounded-none border-b-2 border-transparent bg-transparent px-0 py-4 font-bold text-sm text-muted-foreground hover:text-foreground data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2"
+                className="rounded-none border-b-2 border-transparent bg-transparent px-0 py-4 font-bold text-sm text-muted-foreground hover:text-foreground hover:border-muted-foreground/30 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2"
               >
                 <tab.icon className="h-4 w-4" />
                 {tab.label}
