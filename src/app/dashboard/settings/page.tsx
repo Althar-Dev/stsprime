@@ -95,13 +95,15 @@ const BACKGROUND_OPTIONS = [
   { id: "grad-space", name: "Deep Space", class: "bg-gradient-to-bl from-gray-900 via-purple-900 to-violet-600" },
 ];
 
-// LIST AVATAR STATIS - URUTAN SESUAI INSTRUKSI
-const STATIC_AVATAR_LIST = [
+const STATIC_BOY_AVATARS = [
   "boy.png",
   "boy-1.png",
   "boy-2.png",
   "boy-3.png",
-  "boy-4.png",
+  "boy-4.png"
+];
+
+const STATIC_GIRL_AVATARS = [
   "girl.png",
   "girl-1.png",
   "girl-2.png",
@@ -117,7 +119,7 @@ export default function SettingsPage() {
 
   const [activeTab, setActiveTab] = useState("profile");
   const [displayName, setDisplayName] = useState("");
-  const [photoURL, setPhotoURL] = useState(""); // State untuk pilihan avatar klik aktif
+  const [photoURL, setPhotoURL] = useState("");
   const [profileBg, setProfileBg] = useState("bg-muted/30");
   const [isSaving, setIsSaving] = useState(false);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
@@ -127,12 +129,13 @@ export default function SettingsPage() {
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
-  // Urutan final: dev.png (jika dev), lalu boy list, lalu girl list
   const availableAvatars = useMemo(() => {
-    const list = [...STATIC_AVATAR_LIST];
+    const list = [];
     if (isDev) {
-      return ["dev.png", ...list];
+      list.push("dev.png");
     }
+    list.push(...STATIC_BOY_AVATARS);
+    list.push(...STATIC_GIRL_AVATARS);
     return list;
   }, [isDev]);
 
@@ -183,12 +186,11 @@ export default function SettingsPage() {
     return () => clearTimeout(timer);
   }, [activeTab]);
 
-  // LOGIKA PRATINJAU UTAMA - HARUS KONSISTEN DENGAN PILIHAN GRID
   const displayPhotoURL = useMemo(() => {
-    if (photoURL) return photoURL; // Apa yang baru saja diklik
-    if (firestorePhotoURL) return firestorePhotoURL; // Apa yang ada di DB
-    if (isDev) return "/img/avas/dev.png"; // Fallback dev
-    return user?.photoURL || ""; // Fallback auth
+    if (photoURL) return photoURL;
+    if (firestorePhotoURL) return firestorePhotoURL;
+    if (isDev) return "/img/ava/dev.png";
+    return user?.photoURL || "";
   }, [photoURL, firestorePhotoURL, isDev, user?.photoURL]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -197,8 +199,7 @@ export default function SettingsPage() {
 
     setIsSaving(true);
     try {
-      // Prioritas: photoURL (state klik) > firestorePhotoURL > dev.png (jika dev) > auth photo
-      const finalPhotoURL = photoURL || firestorePhotoURL || (isDev ? "/img/avas/dev.png" : (user.photoURL || ""));
+      const finalPhotoURL = photoURL || firestorePhotoURL || (isDev ? "/img/ava/dev.png" : (user.photoURL || ""));
       
       await updateProfile(user, { 
         displayName, 
@@ -225,7 +226,7 @@ export default function SettingsPage() {
         });
 
       setFirestorePhotoURL(finalPhotoURL);
-      setPhotoURL(""); // Reset state klik setelah simpan
+      setPhotoURL("");
       toast({
         title: "Berhasil",
         description: "Profil Anda telah diperbarui.",
@@ -356,7 +357,7 @@ export default function SettingsPage() {
                               </div>
                               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
                                 {availableAvatars.map((file) => {
-                                  const avatarPath = `/img/avas/${file}`;
+                                  const avatarPath = `/img/ava/${file}`;
                                   const isSelected = avatarPath === displayPhotoURL;
                                   
                                   return (
@@ -471,19 +472,6 @@ export default function SettingsPage() {
                 </CardFooter>
               </form>
             </Card>
-
-            <div className="p-8 bg-primary/5 rounded-3xl border border-primary/20 flex flex-col sm:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-6">
-                <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-xl shrink-0">
-                  <ShieldCheck className="h-8 w-8" />
-                </div>
-                <div>
-                  <p className="text-lg font-black">Status Member {isDev && <span className="text-primary-foreground bg-primary px-2 py-0.5 rounded text-[10px] ml-2">DEVELOPER</span>}</p>
-                  <p className="text-xs text-muted-foreground font-bold">Akun Anda telah terverifikasi sebagai member aktif.</p>
-                </div>
-              </div>
-              <Badge className="bg-primary text-primary-foreground font-black px-6 py-2 rounded-xl">Verified Member</Badge>
-            </div>
           </TabsContent>
 
           <TabsContent value="appearance" className="space-y-8 mt-0 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-500">
