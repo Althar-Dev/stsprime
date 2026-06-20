@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useUser, useFirestore } from "@/firebase";
@@ -186,15 +187,6 @@ export default function DashboardPage() {
                   </TableBody>
                 </Table>
               </div>
-            </div>
-            
-            <div className="mt-8 p-5 bg-muted/20 rounded-2xl border border-dashed border-border flex flex-col sm:flex-row items-center justify-center gap-3 text-center sm:text-left">
-              <div className="h-10 w-10 rounded-full bg-background flex items-center justify-center border border-border shrink-0">
-                <ShieldCheck className="h-5 w-5 text-primary" />
-              </div>
-              <p className="text-[11px] md:text-xs font-bold text-muted-foreground italic">
-                Seluruh transaksi diproses otomatis oleh sistem StarVale secara real-time. Hubungi dukungan jika pesanan belum diterima dalam 5 menit.
-              </p>
             </div>
           </div>
         </div>
