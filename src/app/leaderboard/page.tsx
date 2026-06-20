@@ -14,8 +14,8 @@ import Image from "next/image";
 import { useState, useEffect, useMemo } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { cn } from "@/lib/utils";
+import { LeaderboardSkeleton } from "@/components/leaderboard-skeleton";
 
-// Placeholder data with random local avatars from /img/avas/
 const PLACEHOLDERS = [
   { id: "p1", name: "Sultan_MLBB", points: 45280, avatar: "/img/avas/boy-1.png", isPlaceholder: true },
   { id: "p2", name: "RiotGamer99", points: 38150, avatar: "/img/avas/boy-2.png", isPlaceholder: true },
@@ -30,14 +30,18 @@ const PLACEHOLDERS = [
 ];
 
 export default function LeaderboardPage() {
-  const { user } = useUser();
+  const { user, loading: authLoading } = useUser();
   const db = useFirestore();
   const router = useRouter();
   const [profileData, setProfileData] = useState<any>(null);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfile() {
-      if (!user || !db) return;
+      if (!user || !db) {
+        if (!authLoading) setIsInitialLoading(false);
+        return;
+      }
       try {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
@@ -46,18 +50,18 @@ export default function LeaderboardPage() {
         }
       } catch (error) {
         // Fail silently
+      } finally {
+        setIsInitialLoading(false);
       }
     }
     fetchProfile();
-  }, [user, db]);
+  }, [user, db, authLoading]);
 
   const userPoints = profileData?.points || 0;
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic for display photo: if no photoURL and isDev, show dev.png
   const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
 
-  // Calculate dynamic rankings
   const leaderboardData = useMemo(() => {
     let list = [...PLACEHOLDERS];
     
@@ -75,7 +79,6 @@ export default function LeaderboardPage() {
       });
     }
 
-    // Sort by points descending
     return list.sort((a, b) => b.points - a.points).map((item, index) => ({
       ...item,
       rank: index + 1
@@ -88,6 +91,10 @@ export default function LeaderboardPage() {
   const myRank = leaderboardData.find(item => item.id === user?.uid)?.rank || 0;
   const rookieGoal = 2000;
   const progressPercent = Math.min((userPoints / rookieGoal) * 100, 100);
+
+  if (isInitialLoading || authLoading) {
+    return <LeaderboardSkeleton />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
