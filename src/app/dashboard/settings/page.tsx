@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -42,7 +41,6 @@ import {
   Camera,
   X,
   Sparkles,
-  Trophy,
   Medal,
   Mail,
   Type,
@@ -76,7 +74,7 @@ const STATIC_AVATARS = [
 
 const BADGE_OPTIONS = [
   { id: "verified", name: "Verified", icon: ShieldCheck, color: "text-primary", desc: "Badge verifikasi standar member." },
-  { id: "pro", name: "Pro Gamer", icon: Trophy, color: "text-accent", desc: "Badge khusus pemain profesional." },
+  { id: "pro", name: "Pro Gamer", icon: Sparkles, color: "text-accent", desc: "Badge khusus pemain profesional." },
   { id: "elite", name: "Elite", icon: Medal, color: "text-purple-500", desc: "Badge eksklusif member elit." },
 ];
 
@@ -121,6 +119,26 @@ const FONT_OPTIONS = [
   { id: "f38", name: "Kanit", class: "font-sans" },
   { id: "f39", name: "Oxygen", class: "font-sans" },
   { id: "f40", name: "Bitter", class: "font-serif" },
+  { id: "f41", name: "Fredoka", class: "font-sans" },
+  { id: "f42", name: "Righteous", class: "font-sans" },
+  { id: "f43", name: "Permanent Marker", class: "font-sans" },
+  { id: "f44", name: "Metal Mania", class: "font-sans" },
+  { id: "f45", name: "Pirata Gothic", class: "font-serif" },
+  { id: "f46", name: "Cinzel", class: "font-serif" },
+  { id: "f47", name: "Sacramento", class: "font-serif" },
+  { id: "f48", name: "Bungee", class: "font-sans" },
+  { id: "f49", name: "Creepster", class: "font-sans" },
+  { id: "f50", name: "Monoton", class: "font-sans" },
+  { id: "f51", name: "Faster One", class: "font-sans" },
+  { id: "f52", name: "Bangers", class: "font-sans" },
+  { id: "f53", name: "Luckiest Guy", class: "font-sans" },
+  { id: "f54", name: "Press Start 2P", class: "font-mono" },
+  { id: "f55", name: "Silkscreen", class: "font-mono" },
+  { id: "f56", name: "Kalam", class: "font-sans" },
+  { id: "f57", name: "Handlee", class: "font-sans" },
+  { id: "f58", name: "Courgette", class: "font-serif" },
+  { id: "f59", name: "Marck Script", class: "font-serif" },
+  { id: "f60", name: "Cookie", class: "font-serif" },
 ];
 
 const GRADIENT_COLORS = [
@@ -214,8 +232,8 @@ export default function SettingsPage() {
     return isDev ? "/img/avas/dev.png" : (user?.photoURL || "");
   }, [photoURL, firestorePhotoURL, isDev, user?.photoURL]);
 
-  const activeFontClass = FONT_OPTIONS.find(f => f.id === selectedFontId)?.class || "font-sans";
-  const activeColorClass = GRADIENT_COLORS.find(c => c.id === selectedColorId)?.class || "bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent";
+  const activeFont = useMemo(() => FONT_OPTIONS.find(f => f.id === selectedFontId), [selectedFontId]);
+  const activeColorClass = useMemo(() => GRADIENT_COLORS.find(c => c.id === selectedColorId)?.class || "bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent", [selectedColorId]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -233,7 +251,7 @@ export default function SettingsPage() {
         profileBg,
         fontId: selectedFontId,
         colorId: selectedColorId,
-        fontFamily: activeFontClass,
+        fontFamily: activeFont?.name || "Inter",
         nameColor: activeColorClass,
         badgeId: selectedBadgeId,
         email: user.email,
@@ -418,11 +436,10 @@ export default function SettingsPage() {
                       {/* Name Preview */}
                       <div className="p-8 rounded-3xl bg-muted/10 border border-border/50 flex flex-col items-center justify-center gap-4 text-center">
                          <span className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">Pratinjau Nama</span>
-                         <h4 className={cn(
-                           "text-3xl md:text-5xl font-black transition-all duration-300",
-                           activeFontClass,
-                           activeColorClass
-                         )}>
+                         <h4 
+                           className={cn("text-3xl md:text-5xl font-black transition-all duration-300", activeColorClass)}
+                           style={{ fontFamily: activeFont?.name || "Inter" }}
+                         >
                             {displayName || "Gamer Pro"}
                          </h4>
                       </div>
@@ -430,7 +447,7 @@ export default function SettingsPage() {
                       {/* Font Selection */}
                       <div className="space-y-4">
                          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-                            <FontIcon className="h-4 w-4" /> Pilih Font
+                            <FontIcon className="h-4 w-4" /> Pilih Font (Total 60)
                          </div>
                          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
                             {FONT_OPTIONS.map((font) => (
@@ -444,7 +461,7 @@ export default function SettingsPage() {
                                     : "border-border/50 hover:border-primary/20"
                                 )}
                               >
-                                <span className={font.class}>{font.name}</span>
+                                <span style={{ fontFamily: font.name }}>{font.name}</span>
                               </button>
                             ))}
                          </div>
