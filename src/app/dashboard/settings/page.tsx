@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useUser, useFirestore, useAuth } from "@/firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
-import { useTheme } from "next-themes";
 import { useToast } from "@/hooks/use-toast";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
@@ -32,9 +31,6 @@ import {
   Settings, 
   ShieldCheck, 
   Wand2, 
-  Moon, 
-  Sun, 
-  Monitor,
   Loader2,
   Save,
   KeyRound,
@@ -44,7 +40,10 @@ import {
   X,
   Sparkles,
   Trophy,
-  Medal
+  Medal,
+  ChevronRight,
+  Mail,
+  Type
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -99,32 +98,19 @@ const BACKGROUND_OPTIONS = [
   { id: "grad-space", name: "Deep Space", class: "bg-gradient-to-bl from-gray-900 via-purple-900 to-violet-600" },
 ];
 
-const STATIC_BOY_AVATARS = [
-  "boy.png",
-  "boy-1.png",
-  "boy-2.png",
-  "boy-3.png",
-  "boy-4.png"
-];
-
-const STATIC_GIRL_AVATARS = [
-  "girl.png",
-  "girl-1.png",
-  "girl-2.png",
-  "girl-3.png"
-];
+const STATIC_BOY_AVATARS = ["boy.png", "boy-1.png", "boy-2.png", "boy-3.png", "boy-4.png"];
+const STATIC_GIRL_AVATARS = ["girl.png", "girl-1.png", "girl-2.png", "girl-3.png"];
 
 const BADGE_OPTIONS = [
-  { id: "verified", name: "Verified", icon: ShieldCheck, color: "text-primary" },
-  { id: "pro", name: "Pro Gamer", icon: Trophy, color: "text-accent" },
-  { id: "elite", name: "Elite", icon: Medal, color: "text-purple-500" },
+  { id: "verified", name: "Verified", icon: ShieldCheck, color: "text-primary", desc: "Badge verifikasi standar member." },
+  { id: "pro", name: "Pro Gamer", icon: Trophy, color: "text-accent", desc: "Badge khusus pemain profesional." },
+  { id: "elite", name: "Elite", icon: Medal, color: "text-purple-500", desc: "Badge eksklusif member elit." },
 ];
 
 export default function SettingsPage() {
   const { user } = useUser();
   const auth = useAuth();
   const db = useFirestore();
-  const { theme, setTheme } = useTheme();
   const { toast } = useToast();
 
   const [activeTab, setActiveTab] = useState("profile");
@@ -135,8 +121,6 @@ export default function SettingsPage() {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [isDev, setIsDev] = useState(false);
   const [firestorePhotoURL, setFirestorePhotoURL] = useState("");
-  
-  // Customization state
   const [nameGlow, setNameGlow] = useState(false);
   const [selectedBadgeId, setSelectedBadgeId] = useState("verified");
   
@@ -145,9 +129,7 @@ export default function SettingsPage() {
 
   const availableAvatars = useMemo(() => {
     const list = [];
-    if (isDev) {
-      list.push("dev.png");
-    }
+    if (isDev) list.push("dev.png");
     list.push(...STATIC_BOY_AVATARS);
     list.push(...STATIC_GIRL_AVATARS);
     return list;
@@ -170,11 +152,9 @@ export default function SettingsPage() {
   useEffect(() => {
     async function fetchProfile() {
       if (!user || !db) return;
-      
       try {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
-        
         if (docSnap.exists()) {
           const data = docSnap.data();
           setDisplayName(data.displayName || user.displayName || "");
@@ -183,19 +163,9 @@ export default function SettingsPage() {
           setIsDev(!!data.dev);
           setNameGlow(!!data.nameGlow);
           setSelectedBadgeId(data.badgeId || "verified");
-        } else {
-          setDisplayName(user.displayName || "");
-          setFirestorePhotoURL("");
-          setProfileBg("bg-muted/30");
-          setIsDev(false);
-          setNameGlow(false);
-          setSelectedBadgeId("verified");
         }
-      } catch (error) {
-        // Silent fail
-      }
+      } catch (error) {}
     }
-
     fetchProfile();
   }, [user, db]);
 
@@ -218,11 +188,7 @@ export default function SettingsPage() {
     setIsSaving(true);
     try {
       const finalPhotoURL = photoURL || firestorePhotoURL || (isDev ? "/img/ava/dev.png" : (user.photoURL || ""));
-      
-      await updateProfile(user, { 
-        displayName, 
-        photoURL: finalPhotoURL
-      });
+      await updateProfile(user, { displayName, photoURL: finalPhotoURL });
 
       const userDocRef = doc(db, "users", user.uid);
       const userData = {
@@ -235,28 +201,20 @@ export default function SettingsPage() {
         updatedAt: new Date().toISOString(),
       };
 
-      await setDoc(userDocRef, userData, { merge: true })
-        .catch(async (serverError) => {
-          const permissionError = new FirestorePermissionError({
-            path: userDocRef.path,
-            operation: 'update',
-            requestResourceData: userData,
-          } satisfies SecurityRuleContext);
-          errorEmitter.emit('permission-error', permissionError);
-        });
+      await setDoc(userDocRef, userData, { merge: true }).catch(async (serverError) => {
+        const permissionError = new FirestorePermissionError({
+          path: userDocRef.path,
+          operation: 'update',
+          requestResourceData: userData,
+        } satisfies SecurityRuleContext);
+        errorEmitter.emit('permission-error', permissionError);
+      });
 
       setFirestorePhotoURL(finalPhotoURL);
       setPhotoURL("");
-      toast({
-        title: "Berhasil",
-        description: "Perubahan Anda telah disimpan.",
-      });
+      toast({ title: "Berhasil", description: "Perubahan Anda telah disimpan." });
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Gagal",
-        description: error.message || "Terjadi kesalahan.",
-      });
+      toast({ variant: "destructive", title: "Gagal", description: error.message || "Terjadi kesalahan." });
     } finally {
       setIsSaving(false);
     }
@@ -265,7 +223,7 @@ export default function SettingsPage() {
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
 
   return (
-    <div className="p-4 md:p-6 lg:p-10 space-y-8 md:space-y-12 w-full mx-auto">
+    <div className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-12 w-full max-w-6xl mx-auto">
       <div className="flex flex-col gap-2">
         <h1 className="font-headline text-2xl md:text-4xl lg:text-5xl font-black tracking-tight flex items-center gap-4">
           <div className="h-10 w-10 md:h-14 md:w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
@@ -274,11 +232,11 @@ export default function SettingsPage() {
           Pengaturan
         </h1>
         <p className="text-sm md:text-base text-muted-foreground font-bold opacity-75">
-          Kelola profil dan preferensi kustomisasi akun Anda.
+          Kelola informasi identitas dan kustomisasi tampilan profil Anda.
         </p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-8 md:space-y-12">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-8 md:space-y-10">
         <div className="border-b border-border/60 relative overflow-x-auto no-scrollbar scroll-smooth w-full">
           <TabsList 
             ref={tabsListRef} 
@@ -292,351 +250,203 @@ export default function SettingsPage() {
                 onMouseEnter={(e) => moveIndicatorToElement(e.currentTarget)}
                 className="rounded-none border-b-2 border-transparent bg-transparent flex-1 md:flex-none px-4 md:px-0 py-5 font-bold text-sm md:text-base text-muted-foreground hover:text-foreground data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-3 relative z-10 group"
               >
-                <tab.icon className={cn(
-                  "h-6 w-6 md:h-5 md:w-5 transition-transform group-hover:scale-110",
-                  activeTab === tab.id && "text-primary"
-                )} />
+                <tab.icon className={cn("h-6 w-6 md:h-5 md:w-5 transition-transform group-hover:scale-110", activeTab === tab.id && "text-primary")} />
                 <span className="hidden md:inline whitespace-nowrap">{tab.label}</span>
               </TabsTrigger>
             ))}
-            
             <div 
               className="absolute bottom-0 h-0.5 bg-primary transition-all duration-300 ease-in-out z-20 pointer-events-none"
-              style={{
-                left: indicatorStyle.left,
-                width: indicatorStyle.width
-              }}
+              style={{ left: indicatorStyle.left, width: indicatorStyle.width }}
             />
           </TabsList>
         </div>
 
         <div className="w-full">
-          <TabsContent value="profile" className="space-y-8 mt-0 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm overflow-hidden">
+          {/* PROFILE TAB */}
+          <TabsContent value="profile" className="animate-in fade-in slide-in-from-bottom-2 duration-500 mt-0">
+            <Card className="border-none bg-transparent shadow-none">
               <form onSubmit={handleUpdateProfile}>
-                <CardHeader className="p-6 md:p-10">
-                  <CardTitle className="text-xl md:text-2xl font-black">Informasi Profil</CardTitle>
-                </CardHeader>
-                <CardContent className="px-6 md:px-10 space-y-12">
-                  <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12">
-                    {/* Avatar Section */}
+                <CardContent className="p-0 space-y-10">
+                  <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-16">
                     <div className="relative group shrink-0">
-                      <div className={cn(
-                        "h-32 w-32 md:h-40 md:w-40 rounded-full flex items-center justify-center p-1 transition-all duration-500",
-                        profileBg
-                      )}>
-                        <Avatar className="h-full w-full border-4 border-background shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
+                      <div className={cn("h-36 w-36 md:h-48 md:w-48 rounded-full flex items-center justify-center p-1.5 transition-all duration-500", profileBg)}>
+                        <Avatar className="h-full w-full border-4 border-background shadow-2xl">
                           <AvatarImage src={displayPhotoURL} className="object-cover" />
-                          <AvatarFallback className="bg-muted text-muted-foreground font-black text-4xl">
-                            {userInitial}
-                          </AvatarFallback>
+                          <AvatarFallback className="bg-muted text-muted-foreground font-black text-5xl">{userInitial}</AvatarFallback>
                         </Avatar>
                       </div>
-                      
                       <Dialog open={isAvatarModalOpen} onOpenChange={setIsAvatarModalOpen}>
                         <DialogTrigger asChild>
                           <button type="button" className="absolute inset-0 z-10">
                             <div className="absolute inset-0 bg-black/40 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]">
                               <Camera className="h-8 w-8 text-white mb-2" />
-                              <span className="text-[10px] text-white font-black tracking-widest uppercase">Ganti</span>
+                              <span className="text-[10px] text-white font-black tracking-widest uppercase">Ganti Avatar</span>
                             </div>
-                            <div className="absolute bottom-1 right-1 md:bottom-2 md:right-2 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-xl border-4 border-background transform transition-all group-hover:scale-110">
+                            <div className="absolute bottom-2 right-2 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-xl border-4 border-background transform transition-all group-hover:scale-110">
                               <Camera className="h-5 w-5" />
                             </div>
                           </button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 modal-scrollbar scroll-smooth">
-                          <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border p-3 md:p-4 flex flex-col items-center shrink-0">
-                            <DialogClose className="absolute right-3 top-3 md:right-4 md:top-4 p-2 rounded-full hover:bg-muted/50 transition-colors z-40">
-                              <X className="h-4 w-4 md:h-5 md:w-5" />
-                            </DialogClose>
-                            
-                            <DialogHeader className="text-center w-full flex flex-col items-center px-6">
-                              <DialogTitle className="font-black text-base md:text-lg text-center">Kustomisasi Avatar</DialogTitle>
-                            </DialogHeader>
-
-                            <div className="mt-2 flex items-center gap-4 py-2 px-5 bg-muted/20 rounded-2xl border border-dashed border-border overflow-hidden">
-                              <div className={cn(
-                                "h-12 w-12 md:h-16 md:w-16 rounded-full flex items-center justify-center p-0.5 transition-all duration-500 shrink-0",
-                                profileBg
-                              )}>
-                                <Avatar className="h-full w-full border border-background shadow-md">
-                                  <AvatarImage src={displayPhotoURL} className="object-cover" />
-                                  <AvatarFallback className="bg-muted text-muted-foreground font-black text-lg">
-                                    {userInitial}
-                                  </AvatarFallback>
-                                </Avatar>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div className="p-6 space-y-10">
-                            <div className="space-y-4">
-                              <div className="flex items-center gap-2">
-                                <User className="h-4 w-4 text-primary" />
-                                <h4 className="font-black text-sm uppercase tracking-tight">Pilih Karakter</h4>
-                              </div>
-                              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
-                                {availableAvatars.map((file) => {
-                                  const avatarPath = `/img/ava/${file}`;
-                                  const isSelected = avatarPath === displayPhotoURL;
-                                  
-                                  return (
-                                    <button
-                                      key={file}
-                                      type="button"
-                                      onClick={() => setPhotoURL(avatarPath)}
-                                      className={cn(
-                                        "relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110 active:scale-95 group",
-                                        isSelected 
-                                          ? "border-primary shadow-lg ring-2 ring-primary/20" 
-                                          : "border-border/30 bg-muted/20 hover:border-primary/50"
-                                      )}
-                                    >
-                                      <Image 
-                                        src={avatarPath} 
-                                        alt={`Avatar ${file}`} 
-                                        fill 
-                                        className="object-cover"
-                                        sizes="(max-width: 768px) 25vw, 10vw"
-                                      />
-                                      {isSelected && (
-                                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in duration-300">
-                                          <Check className="h-4 w-4 text-primary-foreground drop-shadow-md" />
-                                        </div>
-                                      )}
+                        <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 modal-scrollbar">
+                           {/* MODAL CONTENT SAME AS BEFORE BUT CLEANED */}
+                           <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border p-5 flex items-center justify-between shrink-0">
+                              <DialogTitle className="font-black text-lg">Sesuaikan Avatar</DialogTitle>
+                              <DialogClose className="p-2 rounded-full hover:bg-muted/50 transition-colors"><X className="h-5 w-5" /></DialogClose>
+                           </div>
+                           <div className="p-6 space-y-8">
+                             <div className="flex justify-center py-4">
+                                <div className={cn("h-24 w-24 md:h-32 md:w-32 rounded-full flex items-center justify-center p-1 transition-all duration-500", profileBg)}>
+                                  <Avatar className="h-full w-full border border-background shadow-lg">
+                                    <AvatarImage src={displayPhotoURL} className="object-cover" />
+                                    <AvatarFallback className="bg-muted text-muted-foreground font-black text-2xl">{userInitial}</AvatarFallback>
+                                  </Avatar>
+                                </div>
+                             </div>
+                             <div className="space-y-4">
+                                <Label className="text-[10px] font-black uppercase tracking-widest opacity-60">Pilih Karakter</Label>
+                                <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
+                                  {availableAvatars.map((file) => {
+                                    const avatarPath = `/img/ava/${file}`;
+                                    const isSelected = avatarPath === displayPhotoURL;
+                                    return (
+                                      <button key={file} type="button" onClick={() => setPhotoURL(avatarPath)} className={cn("relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110", isSelected ? "border-primary shadow-lg ring-2 ring-primary/20" : "border-border/30 bg-muted/20")}>
+                                        <Image src={avatarPath} alt={file} fill className="object-cover" sizes="80px" />
+                                        {isSelected && <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in"><Check className="h-4 w-4 text-primary-foreground" /></div>}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                             </div>
+                             <Separator />
+                             <div className="space-y-4 pb-4">
+                                <Label className="text-[10px] font-black uppercase tracking-widest opacity-60">Latar Belakang</Label>
+                                <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-3">
+                                  {BACKGROUND_OPTIONS.map((bg) => (
+                                    <button key={bg.id} type="button" onClick={() => setProfileBg(bg.class)} className={cn("flex flex-col items-center gap-2 p-2 rounded-xl border transition-all", profileBg === bg.class ? "border-primary bg-primary/5" : "border-border/40")}>
+                                      <div className={cn("h-8 w-8 rounded-full border border-background shadow-sm", bg.class)} />
+                                      <span className="text-[9px] font-black uppercase tracking-tighter text-center truncate w-full">{bg.name}</span>
                                     </button>
-                                  );
-                                })}
-                              </div>
-                            </div>
-
-                            <Separator />
-
-                            <div className="space-y-4 pb-4">
-                              <div className="flex items-center gap-2">
-                                <Layers className="h-4 w-4 text-primary" />
-                                <h4 className="font-black text-sm uppercase tracking-tight">Pilih Latar Belakang</h4>
-                              </div>
-                              <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-3">
-                                {BACKGROUND_OPTIONS.map((bg) => {
-                                  const isSelected = profileBg === bg.class;
-                                  return (
-                                    <button
-                                      key={bg.id}
-                                      type="button"
-                                      onClick={() => setProfileBg(bg.class)}
-                                      className={cn(
-                                        "flex flex-col items-center gap-2 p-2 rounded-xl border transition-all hover:bg-muted/30 group",
-                                        isSelected ? "border-primary bg-primary/5" : "border-border/40"
-                                      )}
-                                    >
-                                      <div className={cn(
-                                        "h-8 w-8 rounded-full border border-background shadow-sm",
-                                        bg.class
-                                      )} />
-                                      <span className={cn(
-                                        "text-[9px] font-black uppercase tracking-tighter text-center",
-                                        isSelected ? "text-primary" : "text-muted-foreground"
-                                      )}>{bg.name}</span>
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="sticky bottom-0 z-30 bg-background border-t border-border p-4">
-                            <Button 
-                              onClick={() => setIsAvatarModalOpen(false)}
-                              className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black uppercase tracking-widest text-xs"
-                            >
-                              Terapkan Perubahan
-                            </Button>
-                          </div>
+                                  ))}
+                                </div>
+                             </div>
+                           </div>
+                           <div className="sticky bottom-0 z-30 bg-background border-t border-border p-4">
+                              <Button onClick={() => setIsAvatarModalOpen(false)} className="w-full h-11 rounded-xl font-black uppercase tracking-widest text-xs">Simpan Pilihan</Button>
+                           </div>
                         </DialogContent>
                       </Dialog>
                     </div>
 
-                    {/* Inputs Section */}
-                    <div className="grid grid-cols-1 gap-6 md:gap-8 w-full flex-1">
-                      <div className="space-y-3">
-                        <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">Email</Label>
-                        <Input 
-                          id="email" 
-                          value={user?.email || ""} 
-                          disabled 
-                          className="bg-muted/30 font-bold border-border h-12 text-sm cursor-not-allowed opacity-80 rounded-xl"
-                        />
+                    <div className="flex-1 w-full space-y-8">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                        <div className="space-y-3">
+                          <Label className="text-[10px] font-black tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+                             <Mail className="h-3 w-3" /> Email
+                          </Label>
+                          <Input value={user?.email || ""} disabled className="bg-muted/30 font-bold h-12 rounded-xl opacity-70" />
+                        </div>
+                        <div className="space-y-3">
+                          <Label className="text-[10px] font-black tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+                             <Type className="h-3 w-3" /> Nama Tampilan
+                          </Label>
+                          <Input placeholder="Nama Anda" value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="font-bold h-12 rounded-xl" />
+                        </div>
                       </div>
-                      <div className="space-y-3">
-                        <Label htmlFor="displayName" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">Nama Tampilan</Label>
-                        <Input 
-                          id="displayName" 
-                          placeholder="Nama Anda" 
-                          value={displayName}
-                          onChange={(e) => setDisplayName(e.target.value)}
-                          className="bg-background font-bold border-border h-12 text-sm focus-visible:ring-primary focus-visible:border-primary rounded-xl"
-                        />
+                      <div className="pt-4 flex justify-center lg:justify-start">
+                        <Button type="submit" disabled={isSaving} className="w-full sm:w-auto h-12 px-12 rounded-2xl font-black gap-3 shadow-xl shadow-primary/20">
+                          {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
+                          Simpan Profil
+                        </Button>
                       </div>
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-end bg-muted/10 border-t border-border/30 p-6 md:p-10">
-                  <Button 
-                    type="submit" 
-                    disabled={isSaving}
-                    className="w-full md:w-auto bg-primary text-primary-foreground font-black text-sm gap-3 rounded-2xl h-12 px-12 shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]"
-                  >
-                    {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-                    Simpan Perubahan
-                  </Button>
-                </CardFooter>
               </form>
             </Card>
           </TabsContent>
 
-          <TabsContent value="customize" className="space-y-8 mt-0 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm overflow-hidden">
-              <CardHeader className="p-6 md:p-10">
-                <CardTitle className="text-xl md:text-2xl font-black">Costumize Profil</CardTitle>
-                <CardDescription className="font-bold">Sesuaikan tampilan nama, badge, dan tema aplikasi Anda.</CardDescription>
-              </CardHeader>
-              <CardContent className="px-6 md:px-10 pb-10 space-y-12">
-                
-                {/* Name Styling Section */}
+          {/* CUSTOMIZE TAB - PROFESSIONAL REDESIGN */}
+          <TabsContent value="customize" className="animate-in fade-in slide-in-from-bottom-2 duration-500 mt-0">
+             <div className="space-y-12 max-w-4xl">
                 <div className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <Sparkles className="h-5 w-5 text-primary" />
-                    <h3 className="font-black text-base uppercase tracking-tight">Desain Nama</h3>
-                  </div>
-                  <div className="p-6 bg-muted/20 rounded-3xl border border-border/40 flex items-center justify-between gap-4">
-                    <div className="space-y-1">
-                      <p className="font-black text-sm">Efek Kilau Nama (Name Glow)</p>
-                      <p className="text-xs text-muted-foreground font-bold">Memberikan efek bercahaya pada nama Anda di papan peringkat.</p>
-                    </div>
-                    <Switch 
-                      checked={nameGlow} 
-                      onCheckedChange={(val) => {
-                        setNameGlow(val);
-                        // Auto-save logic can be added here or via save button
-                      }}
-                    />
-                  </div>
+                   <div className="flex items-center gap-3">
+                      <Sparkles className="h-5 w-5 text-primary" />
+                      <h3 className="font-black text-lg tracking-tight">Kustomisasi Penampilan</h3>
+                   </div>
+                   
+                   <div className="space-y-1">
+                      <div className="flex items-center justify-between p-6 rounded-2xl border border-border/50 bg-card/30 hover:bg-card/50 transition-colors group">
+                         <div className="space-y-1">
+                            <p className="font-black text-sm">Efek Kilau Nama (Name Glow)</p>
+                            <p className="text-xs text-muted-foreground font-bold">Memberikan efek neon/cahaya pada nama Anda di papan peringkat.</p>
+                         </div>
+                         <Switch checked={nameGlow} onCheckedChange={setNameGlow} />
+                      </div>
+                   </div>
                 </div>
 
-                <Separator className="opacity-40" />
-
-                {/* Badge Selection Section */}
                 <div className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <Medal className="h-5 w-5 text-primary" />
-                    <h3 className="font-black text-base uppercase tracking-tight">Pilih Badge</h3>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {BADGE_OPTIONS.map((badge) => {
-                      const isSelected = selectedBadgeId === badge.id;
-                      return (
-                        <button
-                          key={badge.id}
-                          onClick={() => setSelectedBadgeId(badge.id)}
-                          className={cn(
-                            "flex flex-col items-center gap-4 p-6 rounded-3xl border-2 transition-all group relative",
-                            isSelected 
-                              ? "border-primary bg-primary/5 shadow-inner scale-[1.02]" 
-                              : "border-border bg-background hover:border-primary/30 hover:bg-muted/30"
-                          )}
-                        >
-                          <badge.icon className={cn(
-                            "h-8 w-8 transition-colors",
-                            badge.color,
-                            !isSelected && "opacity-60 group-hover:opacity-100"
-                          )} />
-                          <span className="font-black text-xs uppercase tracking-tighter">{badge.name}</span>
-                          {isSelected && (
-                            <div className="absolute top-3 right-3 animate-in zoom-in duration-300">
-                               <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
-                                  <Check className="h-3 w-3 text-primary-foreground" />
-                               </div>
+                   <div className="flex items-center gap-3">
+                      <Medal className="h-5 w-5 text-primary" />
+                      <h3 className="font-black text-lg tracking-tight">Koleksi Badge Akun</h3>
+                   </div>
+                   
+                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {BADGE_OPTIONS.map((badge) => {
+                        const isSelected = selectedBadgeId === badge.id;
+                        return (
+                          <button
+                            key={badge.id}
+                            onClick={() => setSelectedBadgeId(badge.id)}
+                            className={cn(
+                              "flex flex-col p-6 rounded-2xl border transition-all text-left relative overflow-hidden group",
+                              isSelected 
+                                ? "border-primary bg-primary/5 ring-1 ring-primary/20" 
+                                : "border-border bg-card/20 hover:border-primary/30 hover:bg-card/40"
+                            )}
+                          >
+                            <div className={cn("h-10 w-10 rounded-xl bg-background flex items-center justify-center mb-4 shadow-sm border border-border/50", badge.color)}>
+                               <badge.icon className="h-5 w-5" />
                             </div>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
+                            <p className="font-black text-sm mb-1">{badge.name}</p>
+                            <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">{badge.desc}</p>
+                            {isSelected && (
+                               <div className="absolute top-4 right-4 h-6 w-6 rounded-full bg-primary flex items-center justify-center animate-in zoom-in">
+                                  <Check className="h-3.5 w-3.5 text-primary-foreground" />
+                               </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                   </div>
                 </div>
 
-                <Separator className="opacity-40" />
-
-                {/* Theme Selection Section (Moved here) */}
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <Layers className="h-5 w-5 text-primary" />
-                    <h3 className="font-black text-base uppercase tracking-tight">Tema Sistem</h3>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    {[
-                      { id: 'light', name: 'Mode Terang', icon: Sun },
-                      { id: 'dark', name: 'Mode Gelap', icon: Moon },
-                      { id: 'system', name: 'Sistem', icon: Monitor },
-                    ].map((t) => (
-                      <button
-                        key={t.id}
-                        onClick={() => setTheme(t.id)}
-                        className={cn(
-                          "flex flex-col items-center gap-6 p-8 rounded-3xl border-2 transition-all group relative",
-                          theme === t.id 
-                            ? "border-primary bg-primary/5 shadow-inner" 
-                            : "border-border bg-background hover:border-primary/30 hover:bg-muted/30"
-                        )}
-                      >
-                        <t.icon className={cn(
-                          "h-10 w-10 transition-colors",
-                          theme === t.id ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
-                        )} />
-                        <span className="font-black text-xs uppercase tracking-tighter">{t.name}</span>
-                        {theme === t.id && (
-                          <div className="absolute top-4 right-4 animate-in zoom-in duration-300">
-                             <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
-                                <Check className="h-3.5 w-3.5 text-primary-foreground" />
-                             </div>
-                          </div>
-                        )}
-                      </button>
-                    ))}
-                  </div>
+                <div className="pt-6">
+                   <Button onClick={handleUpdateProfile} disabled={isSaving} className="w-full sm:w-auto h-12 px-12 rounded-2xl font-black gap-3 shadow-xl shadow-primary/20">
+                     {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
+                     Terapkan Kustomisasi
+                   </Button>
                 </div>
-              </CardContent>
-              <CardFooter className="flex justify-end bg-muted/10 border-t border-border/30 p-6 md:p-10">
-                <Button 
-                  onClick={handleUpdateProfile} 
-                  disabled={isSaving}
-                  className="w-full md:w-auto bg-primary text-primary-foreground font-black text-sm gap-3 rounded-2xl h-12 px-12 shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]"
-                >
-                  {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-                  Simpan Kustomisasi
-                </Button>
-              </CardFooter>
-            </Card>
+             </div>
           </TabsContent>
 
-          <TabsContent value="security" className="space-y-8 mt-0 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
-              <CardHeader className="p-6 md:p-10">
-                <CardTitle className="text-xl md:text-2xl font-black">Keamanan Akun</CardTitle>
-              </CardHeader>
-              <CardContent className="px-6 md:px-10 pb-10 space-y-6">
-                <div className="p-8 bg-muted/30 rounded-3xl border border-border/30 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left">
-                  <div className="flex flex-col gap-2">
-                    <p className="text-lg font-black">Ganti Kata Sandi</p>
-                    <p className="text-xs text-muted-foreground font-bold">Link reset sandi akan dikirim ke email terdaftar.</p>
-                  </div>
-                  <Button variant="outline" className="w-full sm:w-auto font-black text-xs uppercase tracking-widest rounded-2xl h-12 px-10 border-border hover:bg-primary/10">
-                    Kirim Link Reset
-                  </Button>
+          {/* SECURITY TAB */}
+          <TabsContent value="security" className="animate-in fade-in slide-in-from-bottom-2 duration-500 mt-0">
+             <div className="max-w-4xl space-y-8">
+                <div className="flex items-center gap-3 mb-6">
+                   <ShieldCheck className="h-5 w-5 text-primary" />
+                   <h3 className="font-black text-lg tracking-tight">Privasi & Keamanan</h3>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="p-8 rounded-3xl border border-border/50 bg-card/30 flex flex-col md:flex-row items-center justify-between gap-8 group">
+                   <div className="space-y-1 text-center md:text-left">
+                      <p className="text-lg font-black">Ganti Kata Sandi</p>
+                      <p className="text-sm text-muted-foreground font-bold">Gunakan tautan aman untuk memperbarui akses masuk Anda.</p>
+                   </div>
+                   <Button variant="outline" className="w-full md:w-auto h-12 px-10 rounded-xl font-black text-xs uppercase tracking-widest border-border group-hover:border-primary/50 transition-colors">
+                      Kirim Link Reset
+                   </Button>
+                </div>
+             </div>
           </TabsContent>
         </div>
       </Tabs>
