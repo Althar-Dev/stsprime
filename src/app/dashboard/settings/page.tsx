@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -12,9 +13,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -36,12 +36,10 @@ import {
   KeyRound,
   Check,
   Camera,
-  Layers,
   X,
   Sparkles,
   Trophy,
   Medal,
-  ChevronRight,
   Mail,
   Type
 } from "lucide-react";
@@ -182,7 +180,7 @@ export default function SettingsPage() {
   }, [photoURL, firestorePhotoURL, isDev, user?.photoURL]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!user || !db || !auth) return;
 
     setIsSaving(true);
@@ -288,7 +286,6 @@ export default function SettingsPage() {
                           </button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-3xl border-border bg-background p-0 modal-scrollbar">
-                           {/* MODAL CONTENT SAME AS BEFORE BUT CLEANED */}
                            <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border p-5 flex items-center justify-between shrink-0">
                               <DialogTitle className="font-black text-lg">Sesuaikan Avatar</DialogTitle>
                               <DialogClose className="p-2 rounded-full hover:bg-muted/50 transition-colors"><X className="h-5 w-5" /></DialogClose>
@@ -365,9 +362,9 @@ export default function SettingsPage() {
             </Card>
           </TabsContent>
 
-          {/* CUSTOMIZE TAB - PROFESSIONAL REDESIGN */}
+          {/* CUSTOMIZE TAB */}
           <TabsContent value="customize" className="animate-in fade-in slide-in-from-bottom-2 duration-500 mt-0">
-             <div className="space-y-12 max-w-4xl">
+             <div className="max-w-4xl space-y-12">
                 <div className="space-y-6">
                    <div className="flex items-center gap-3">
                       <Sparkles className="h-5 w-5 text-primary" />
@@ -391,7 +388,7 @@ export default function SettingsPage() {
                       <h3 className="font-black text-lg tracking-tight">Koleksi Badge Akun</h3>
                    </div>
                    
-                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                   <div className="space-y-3">
                       {BADGE_OPTIONS.map((badge) => {
                         const isSelected = selectedBadgeId === badge.id;
                         return (
@@ -399,22 +396,27 @@ export default function SettingsPage() {
                             key={badge.id}
                             onClick={() => setSelectedBadgeId(badge.id)}
                             className={cn(
-                              "flex flex-col p-6 rounded-2xl border transition-all text-left relative overflow-hidden group",
+                              "w-full flex items-center justify-between p-4 rounded-2xl border transition-all text-left",
                               isSelected 
-                                ? "border-primary bg-primary/5 ring-1 ring-primary/20" 
-                                : "border-border bg-card/20 hover:border-primary/30 hover:bg-card/40"
+                                ? "border-primary bg-primary/5 shadow-sm" 
+                                : "border-border bg-card/10 hover:border-primary/30"
                             )}
                           >
-                            <div className={cn("h-10 w-10 rounded-xl bg-background flex items-center justify-center mb-4 shadow-sm border border-border/50", badge.color)}>
-                               <badge.icon className="h-5 w-5" />
+                            <div className="flex items-center gap-4">
+                              <div className={cn("h-10 w-10 rounded-xl bg-background flex items-center justify-center shadow-sm border border-border/50", badge.color)}>
+                                 <badge.icon className="h-5 w-5" />
+                              </div>
+                              <div>
+                                <p className="font-black text-sm">{badge.name}</p>
+                                <p className="text-[10px] text-muted-foreground font-bold leading-none mt-1">{badge.desc}</p>
+                              </div>
                             </div>
-                            <p className="font-black text-sm mb-1">{badge.name}</p>
-                            <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">{badge.desc}</p>
-                            {isSelected && (
-                               <div className="absolute top-4 right-4 h-6 w-6 rounded-full bg-primary flex items-center justify-center animate-in zoom-in">
-                                  <Check className="h-3.5 w-3.5 text-primary-foreground" />
-                               </div>
-                            )}
+                            <div className={cn(
+                              "h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all",
+                              isSelected ? "border-primary bg-primary" : "border-muted-foreground/30"
+                            )}>
+                              {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
+                            </div>
                           </button>
                         );
                       })}
@@ -422,7 +424,7 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="pt-6">
-                   <Button onClick={handleUpdateProfile} disabled={isSaving} className="w-full sm:w-auto h-12 px-12 rounded-2xl font-black gap-3 shadow-xl shadow-primary/20">
+                   <Button onClick={() => handleUpdateProfile(null as any)} disabled={isSaving} className="w-full sm:w-auto h-12 px-12 rounded-2xl font-black gap-3 shadow-xl shadow-primary/20">
                      {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
                      Terapkan Kustomisasi
                    </Button>
