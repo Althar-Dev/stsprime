@@ -16,20 +16,18 @@ import { useState, useEffect, useMemo } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { cn } from "@/lib/utils";
 
-const TOP_THREE = [
-  { id: 1, name: "Sultan_MLBB", points: "45,280", avatar: "https://picsum.photos/seed/u1/200/200", rank: 1, badge: "Legendary" },
-  { id: 2, name: "RiotGamer99", points: "38,150", avatar: "https://picsum.photos/seed/u2/200/200", rank: 2, badge: "Elite" },
-  { id: 3, name: "GenshinSimp", points: "32,900", avatar: "https://picsum.photos/seed/u3/200/200", rank: 3, badge: "Elite" },
-];
-
-const OTHER_RANKS = [
-  { id: 4, name: "ProPlayer_ID", points: "28,400", avatar: "https://picsum.photos/seed/u4/100/100", rank: 4 },
-  { id: 5, name: "Vand_Points", points: "25,120", avatar: "https://picsum.photos/seed/u5/100/100", rank: 5 },
-  { id: 6, name: "Alucard_Main", points: "22,800", avatar: "https://picsum.photos/seed/u6/100/100", rank: 6 },
-  { id: 7, name: "Primogem_Hunter", points: "19,550", avatar: "https://picsum.photos/seed/u7/100/100", rank: 7 },
-  { id: 8, name: "ValorantBoy", points: "15,200", avatar: "https://picsum.photos/seed/u8/100/100", rank: 8 },
-  { id: 9, name: "F2P_God", points: "12,400", avatar: "https://picsum.photos/seed/u9/100/100", rank: 9 },
-  { id: 10, name: "Newbie_Topup", points: "10,100", avatar: "https://picsum.photos/seed/u10/100/100", rank: 10 },
+// Placeholder data with numeric points for calculation
+const PLACEHOLDERS = [
+  { id: "p1", name: "Sultan_MLBB", points: 45280, avatar: "https://picsum.photos/seed/u1/200/200", badge: "Legendary", isPlaceholder: true },
+  { id: "p2", name: "RiotGamer99", points: 38150, avatar: "https://picsum.photos/seed/u2/200/200", badge: "Elite", isPlaceholder: true },
+  { id: "p3", name: "GenshinSimp", points: 32900, avatar: "https://picsum.photos/seed/u3/200/200", badge: "Elite", isPlaceholder: true },
+  { id: "p4", name: "ProPlayer_ID", points: 28400, avatar: "https://picsum.photos/seed/u4/100/100", isPlaceholder: true },
+  { id: "p5", name: "Vand_Points", points: 25120, avatar: "https://picsum.photos/seed/u5/100/100", isPlaceholder: true },
+  { id: "p6", name: "Alucard_Main", points: 22800, avatar: "https://picsum.photos/seed/u6/100/100", isPlaceholder: true },
+  { id: "p7", name: "Primogem_Hunter", points: 19550, avatar: "https://picsum.photos/seed/u7/100/100", isPlaceholder: true },
+  { id: "p8", name: "ValorantBoy", points: 15200, avatar: "https://picsum.photos/seed/u8/100/100", isPlaceholder: true },
+  { id: "p9", name: "F2P_God", points: 12400, avatar: "https://picsum.photos/seed/u9/100/100", isPlaceholder: true },
+  { id: "p10", name: "Newbie_Topup", points: 10100, avatar: "https://picsum.photos/seed/u10/100/100", isPlaceholder: true },
 ];
 
 export default function LeaderboardPage() {
@@ -54,12 +52,40 @@ export default function LeaderboardPage() {
     fetchProfile();
   }, [user, db]);
 
-  const profileBg = profileData?.profileBg || "bg-muted/30";
+  const userPoints = profileData?.points || 0;
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
-  
   const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
 
-  const userPoints = profileData?.points || 0;
+  // Calculate dynamic rankings
+  const leaderboardData = useMemo(() => {
+    let list = [...PLACEHOLDERS];
+    
+    if (user) {
+      list.push({
+        id: user.uid,
+        name: user.displayName || "Gamer Pro",
+        points: userPoints,
+        avatar: displayPhotoURL,
+        badge: profileData?.vip ? "VIP" : "",
+        isPlaceholder: false,
+        fontFamily: profileData?.fontFamily,
+        nameColor: profileData?.nameColor,
+        vip: profileData?.vip,
+        profileBg: profileData?.profileBg
+      });
+    }
+
+    // Sort by points descending
+    return list.sort((a, b) => b.points - a.points).map((item, index) => ({
+      ...item,
+      rank: index + 1
+    }));
+  }, [user, userPoints, profileData, displayPhotoURL]);
+
+  const TOP_THREE = leaderboardData.slice(0, 3);
+  const OTHER_RANKS = leaderboardData.slice(3, 11); // Show top 10 total after top 3
+
+  const myRank = leaderboardData.find(item => item.id === user?.uid)?.rank || 0;
   const rookieGoal = 2000;
   const progressPercent = Math.min((userPoints / rookieGoal) * 100, 100);
 
@@ -98,20 +124,27 @@ export default function LeaderboardPage() {
           </p>
         </div>
 
+        {/* Dynamic Podium */}
         <div className="flex items-end justify-center gap-1 md:gap-6 mb-20 md:mb-32 px-1 max-w-4xl mx-auto">
+          {/* RANK 2 */}
           <div className="flex flex-col items-center flex-1">
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-24 md:w-48 flex items-center justify-center mb-2">
                 <Image src="/img/border/two.png" alt="Rank 2 Border" fill className="object-contain z-20" unoptimized />
-                <Avatar className="h-8 w-8 md:h-16 md:w-16 shadow-xl relative z-10">
-                  <AvatarImage src={TOP_THREE[1].avatar} alt={TOP_THREE[1].name} />
-                  <AvatarFallback>U2</AvatarFallback>
+                <Avatar className="h-8 w-8 md:h-16 md:w-16 shadow-xl relative z-10 border-2 border-slate-400/30">
+                  <AvatarImage src={TOP_THREE[1]?.avatar} alt={TOP_THREE[1]?.name} />
+                  <AvatarFallback className="bg-muted text-[10px]">{TOP_THREE[1]?.name?.charAt(0)}</AvatarFallback>
                 </Avatar>
               </div>
-              <p className="font-black text-[9px] md:text-sm truncate w-20 md:w-32">{TOP_THREE[1].name}</p>
+              <p 
+                className={cn("font-black text-[9px] md:text-sm truncate w-20 md:w-32", !TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.nameColor)}
+                style={!TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.fontFamily ? { fontFamily: TOP_THREE[1].fontFamily } : {}}
+              >
+                {TOP_THREE[1]?.name}
+              </p>
               <div className="mt-1 px-1.5 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
                 <span className="text-[8px] md:text-[11px] font-black">
-                  {TOP_THREE[1].points} 
+                  {TOP_THREE[1]?.points?.toLocaleString()} 
                 </span>
               </div>
             </div>
@@ -120,20 +153,26 @@ export default function LeaderboardPage() {
             </div>
           </div>
 
+          {/* RANK 1 */}
           <div className="flex flex-col items-center flex-1 relative -top-3 md:-top-4">
             <Crown className="h-5 w-5 md:h-10 md:w-10 text-primary mb-1 md:mb-2" />
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-32 md:w-64 flex items-center justify-center mb-2">
                 <Image src="/img/border/one.png" alt="Rank 1 Border" fill className="object-contain z-20" priority unoptimized />
-                <Avatar className="h-12 w-12 md:h-24 md:w-24 md:border-4 shadow-2xl relative z-10">
-                  <AvatarImage src={TOP_THREE[0].avatar} alt={TOP_THREE[0].name} />
-                  <AvatarFallback>U1</AvatarFallback>
+                <Avatar className="h-12 w-12 md:h-24 md:w-24 md:border-4 shadow-2xl relative z-10 border-primary/30">
+                  <AvatarImage src={TOP_THREE[0]?.avatar} alt={TOP_THREE[0]?.name} />
+                  <AvatarFallback className="bg-primary/20 text-primary font-black">{TOP_THREE[0]?.name?.charAt(0)}</AvatarFallback>
                 </Avatar>
               </div>
-              <p className="font-black text-[11px] md:text-lg truncate w-24 md:w-40">{TOP_THREE[0].name}</p>
+              <p 
+                className={cn("font-black text-[11px] md:text-lg truncate w-24 md:w-40", !TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.nameColor)}
+                style={!TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.fontFamily ? { fontFamily: TOP_THREE[0].fontFamily } : {}}
+              >
+                {TOP_THREE[0]?.name}
+              </p>
               <div className="mt-1 px-2 py-0.5 md:px-3 md:py-1 bg-primary/10 rounded-full flex items-center gap-1 border border-primary/30">
                 <span className="text-[9px] md:text-sm font-black text-primary">
-                  {TOP_THREE[0].points} 
+                  {TOP_THREE[0]?.points?.toLocaleString()} 
                 </span>
               </div>
             </div>
@@ -142,19 +181,25 @@ export default function LeaderboardPage() {
             </div>
           </div>
 
+          {/* RANK 3 */}
           <div className="flex flex-col items-center flex-1">
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-20 md:w-40 flex items-center justify-center mb-2">
                 <Image src="/img/border/three.png" alt="Rank 3 Border" fill className="object-contain z-20" unoptimized />
-                <Avatar className="h-7 w-7 md:h-12 md:w-12 shadow-xl relative z-10">
-                  <AvatarImage src={TOP_THREE[2].avatar} alt={TOP_THREE[2].name} />
-                  <AvatarFallback>U3</AvatarFallback>
+                <Avatar className="h-7 w-7 md:h-12 md:w-12 shadow-xl relative z-10 border-2 border-orange-400/30">
+                  <AvatarImage src={TOP_THREE[2]?.avatar} alt={TOP_THREE[2]?.name} />
+                  <AvatarFallback className="bg-muted text-[10px]">{TOP_THREE[2]?.name?.charAt(0)}</AvatarFallback>
                 </Avatar>
               </div>
-              <p className="font-black text-[8px] md:text-xs truncate w-16 md:w-28">{TOP_THREE[2].name}</p>
+              <p 
+                className={cn("font-black text-[8px] md:text-xs truncate w-16 md:w-28", !TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.nameColor)}
+                style={!TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.fontFamily ? { fontFamily: TOP_THREE[2].fontFamily } : {}}
+              >
+                {TOP_THREE[2]?.name}
+              </p>
               <div className="mt-1 px-1 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
                 <span className="text-[7px] md:text-[10px] font-black">
-                  {TOP_THREE[2].points} 
+                  {TOP_THREE[2]?.points?.toLocaleString()} 
                 </span>
               </div>
             </div>
@@ -174,7 +219,7 @@ export default function LeaderboardPage() {
                   </div>
                   <div>
                     <h3 className="font-headline font-black text-sm md:text-lg">Peringkat Global</h3>
-                    <p className="text-[9px] md:text-[10px] text-muted-foreground font-bold">10 Kontributor Teratas</p>
+                    <p className="text-[9px] md:text-[10px] text-muted-foreground font-bold">Pemain Teratas Musim Ini</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 md:gap-2 text-green-500 bg-green-500/10 px-2 md:px-3 py-1 rounded-full border border-green-500/20">
@@ -193,7 +238,7 @@ export default function LeaderboardPage() {
                   </TableHeader>
                   <TableBody>
                     {OTHER_RANKS.map((item) => (
-                      <TableRow key={item.id} className="border-border/20 hover:bg-muted/30 transition-all group">
+                      <TableRow key={item.id} className={cn("border-border/20 transition-all group", !item.isPlaceholder ? "bg-primary/5 hover:bg-primary/10" : "hover:bg-muted/30")}>
                         <TableCell className="text-center p-3 md:p-4">
                           <span className="font-black text-xs md:text-sm text-muted-foreground group-hover:text-foreground transition-colors">#{item.rank}</span>
                         </TableCell>
@@ -201,19 +246,24 @@ export default function LeaderboardPage() {
                           <div className="flex items-center gap-2 md:gap-3">
                             <Avatar className="h-7 w-7 md:h-9 md:w-9 border border-border/60">
                               <AvatarImage src={item.avatar} />
-                              <AvatarFallback className="bg-muted text-[10px]">U</AvatarFallback>
+                              <AvatarFallback className="bg-muted text-[10px]">{item.name?.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div className="min-w-0">
-                              <p className="font-black text-xs md:text-sm flex items-center gap-1 truncate">
+                              <p 
+                                className={cn("font-black text-xs md:text-sm flex items-center gap-1 truncate", !item.isPlaceholder && item.nameColor)}
+                                style={!item.isPlaceholder && item.fontFamily ? { fontFamily: item.fontFamily } : {}}
+                              >
                                 {item.name}
-                                <ShieldCheck className="h-3 w-3 md:h-3.5 md:w-3.5 text-primary shrink-0" />
+                                {!item.isPlaceholder && <ShieldCheck className="h-3 w-3 md:h-3.5 md:w-3.5 text-primary shrink-0" />}
                               </p>
-                              <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">Verified Player</p>
+                              <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">
+                                {item.isPlaceholder ? "Verified Player" : "Your Account"}
+                              </p>
                             </div>
                           </div>
                         </TableCell>
                         <TableCell className="text-right pr-4 md:pr-6 p-3 md:p-4">
-                          <span className="font-black text-xs md:text-sm text-primary tabular-nums">{item.points}</span>
+                          <span className="font-black text-xs md:text-sm text-primary tabular-nums">{item.points.toLocaleString()}</span>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -236,7 +286,7 @@ export default function LeaderboardPage() {
                 <div className="relative">
                   <div className={cn(
                     "h-16 w-16 md:h-20 md:w-20 rounded-full flex items-center justify-center p-1 transition-all duration-300",
-                    profileBg
+                    profileData?.profileBg || "bg-muted/30"
                   )}>
                     <Avatar className="h-full w-full border-2 border-background shadow-xl">
                       <AvatarImage src={displayPhotoURL} />
@@ -262,7 +312,9 @@ export default function LeaderboardPage() {
                     )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-primary text-primary-foreground text-[8px] font-black h-5">RANK #854</Badge>
+                    <Badge className="bg-primary text-primary-foreground text-[8px] font-black h-5 uppercase tracking-tighter">
+                      RANK #{myRank || "---"}
+                    </Badge>
                   </div>
                 </div>
               </div>
