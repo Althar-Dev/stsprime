@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Footer } from "@/components/footer";
@@ -83,7 +82,7 @@ export default function LeaderboardPage() {
   }, [user, userPoints, profileData, displayPhotoURL]);
 
   const TOP_THREE = leaderboardData.slice(0, 3);
-  const OTHER_RANKS = leaderboardData.slice(3, 11);
+  const TABLE_DATA = leaderboardData.slice(3, 10);
 
   const myRank = leaderboardData.find(item => item.id === user?.uid)?.rank || 0;
   const rookieGoal = 2000;
@@ -148,7 +147,7 @@ export default function LeaderboardPage() {
                 >
                   {TOP_THREE[1]?.name}
                 </p>
-                {!TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.vip && (
+                {TOP_THREE[1]?.vip && (
                   <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0" />
                 )}
               </div>
@@ -186,7 +185,7 @@ export default function LeaderboardPage() {
                 >
                   {TOP_THREE[0]?.name}
                 </p>
-                {!TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.vip && (
+                {TOP_THREE[0]?.vip && (
                   <Image src="/img/badge/vip.png" alt="VIP" width={18} height={18} className="shrink-0" />
                 )}
               </div>
@@ -223,7 +222,7 @@ export default function LeaderboardPage() {
                 >
                   {TOP_THREE[2]?.name}
                 </p>
-                {!TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.vip && (
+                {TOP_THREE[2]?.vip && (
                   <Image src="/img/badge/vip.png" alt="VIP" width={12} height={12} className="shrink-0" />
                 )}
               </div>
@@ -267,7 +266,7 @@ export default function LeaderboardPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {leaderboardData.slice(0, 10).map((item) => (
+                    {TABLE_DATA.map((item) => (
                       <TableRow key={item.id} className={cn("border-border/20 transition-all group", item.id === user?.uid ? "bg-primary/5 hover:bg-primary/10" : "hover:bg-muted/30")}>
                         <TableCell className="text-center p-3 md:p-4">
                           <span className="font-black text-xs md:text-sm text-muted-foreground group-hover:text-foreground transition-colors">#{item.rank}</span>
@@ -294,9 +293,11 @@ export default function LeaderboardPage() {
                                 {item.id === user?.uid && <ShieldCheck className="h-3 w-3 md:h-3.5 md:w-3.5 text-primary shrink-0" />}
                                 {item.vip && <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0" />}
                               </div>
-                              <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">
-                                {item.isPlaceholder ? "Verified Player" : "Your Account"}
-                              </p>
+                              {!item.isPlaceholder && (
+                                <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">
+                                  Your Account
+                                </p>
+                              )}
                             </div>
                           </div>
                         </TableCell>
