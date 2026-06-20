@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Footer } from "@/components/footer";
@@ -5,6 +6,12 @@ import { Crown, ShieldCheck, TrendingUp, Star, Medal, Trophy, ChevronLeft } from
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useUser, useFirestore } from "@/firebase";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -156,7 +163,14 @@ export default function LeaderboardPage() {
                   {TOP_THREE[1]?.name}
                 </p>
                 {TOP_THREE[1]?.vip && (
-                  <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0" />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0 cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-[10px] font-black">Member VIP Eksklusif</p>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
               </div>
               <div className="mt-1 px-1.5 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
@@ -194,7 +208,14 @@ export default function LeaderboardPage() {
                   {TOP_THREE[0]?.name}
                 </p>
                 {TOP_THREE[0]?.vip && (
-                  <Image src="/img/badge/vip.png" alt="VIP" width={18} height={18} className="shrink-0" />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Image src="/img/badge/vip.png" alt="VIP" width={18} height={18} className="shrink-0 cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-[10px] font-black">Member VIP Eksklusif</p>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
               </div>
               <div className="mt-1 px-2 py-0.5 md:px-3 md:py-1 bg-primary/10 rounded-full flex items-center gap-1 border border-primary/30">
@@ -231,7 +252,14 @@ export default function LeaderboardPage() {
                   {TOP_THREE[2]?.name}
                 </p>
                 {TOP_THREE[2]?.vip && (
-                  <Image src="/img/badge/vip.png" alt="VIP" width={12} height={12} className="shrink-0" />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Image src="/img/badge/vip.png" alt="VIP" width={12} height={12} className="shrink-0 cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-[10px] font-black">Member VIP Eksklusif</p>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
               </div>
               <div className="mt-1 px-1 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
@@ -299,7 +327,16 @@ export default function LeaderboardPage() {
                                   {item.name}
                                 </p>
                                 {item.id === user?.uid && <ShieldCheck className="h-3 w-3 md:h-3.5 md:w-3.5 text-primary shrink-0" />}
-                                {item.vip && <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0" />}
+                                {item.vip && (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0 cursor-help" />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p className="text-[10px] font-black">Member VIP Eksklusif</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                )}
                               </div>
                               {!item.isPlaceholder && (
                                 <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">
@@ -355,7 +392,14 @@ export default function LeaderboardPage() {
                       {user?.displayName || "Gamer Pro"}
                     </p>
                     {profileData?.vip && (
-                      <Image src="/img/badge/vip.png" alt="VIP" width={20} height={20} className="shrink-0" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Image src="/img/badge/vip.png" alt="VIP" width={20} height={20} className="shrink-0 cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs font-black">Member VIP Eksklusif</p>
+                        </TooltipContent>
+                      </Tooltip>
                     )}
                   </div>
                   <div className="flex items-center gap-2">

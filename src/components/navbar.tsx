@@ -27,6 +27,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function SearchInput({ isMobile, closeSearch }: { isMobile?: boolean, closeSearch?: () => void }) {
   const router = useRouter();
@@ -235,7 +241,14 @@ export function Navbar() {
                                   {user.displayName || "Gamer"}
                                 </p>
                                 {profileData?.vip && (
-                                  <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} className="shrink-0 cursor-help" />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p className="text-[10px] font-black">Member VIP STS Pedia</p>
+                                    </TooltipContent>
+                                  </Tooltip>
                                 )}
                               </div>
                               <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>

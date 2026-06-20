@@ -9,6 +9,12 @@ import { doc, getDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -72,7 +78,14 @@ export function DashboardHeader() {
                   {user?.displayName || "Gamer"}
                 </span>
                 {profileData?.vip && (
-                  <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} className="shrink-0 cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-[10px] font-black">Member VIP Eksklusif</p>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
               </div>
               <Badge className="bg-primary/10 text-primary border border-primary/20 text-[9px] font-black h-4 px-1.5 mt-1 rounded-sm">

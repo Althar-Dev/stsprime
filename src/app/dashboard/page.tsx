@@ -8,6 +8,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Gamepad2, History, LayoutDashboard, ArrowUpRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -43,7 +49,6 @@ export default function DashboardPage() {
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic for display photo: if no photoURL and isDev, show dev.png
   const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
 
   return (
@@ -108,7 +113,14 @@ export default function DashboardPage() {
                 {user?.displayName || "Gamer Pro"}
               </h2>
               {profileData?.vip && (
-                <Image src="/img/badge/vip.png" alt="VIP" width={24} height={24} className="shrink-0" />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Image src="/img/badge/vip.png" alt="VIP" width={24} height={24} className="shrink-0 cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs font-black">VIP Member STS Pedia</p>
+                  </TooltipContent>
+                </Tooltip>
               )}
             </div>
             <p className="text-xs text-muted-foreground font-bold truncate max-w-full mb-6 opacity-70">
