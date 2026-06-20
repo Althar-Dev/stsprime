@@ -315,7 +315,7 @@ export default function SettingsPage() {
                 className="rounded-none border-b-2 border-transparent bg-transparent flex-1 md:flex-none px-4 md:px-0 py-4 md:py-5 font-bold text-xs md:text-base text-muted-foreground hover:text-foreground data-[state=active]:text-primary data-[state=active]:bg-transparent shadow-none transition-all gap-2 md:gap-3 relative z-10 group"
               >
                 <tab.icon className={cn("h-5 w-5 md:h-5 md:w-5 transition-transform group-hover:scale-110", activeTab === tab.id && "text-primary")} />
-                <span className="whitespace-nowrap">{tab.label}</span>
+                <span className="whitespace-nowrap hidden md:block">{tab.label}</span>
               </TabsTrigger>
             ))}
             <div 
