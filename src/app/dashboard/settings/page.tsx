@@ -46,6 +46,8 @@ import {
   Type,
   CircleHelp,
   Type as FontIcon,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -182,6 +184,9 @@ export default function SettingsPage() {
   const [selectedFontId, setSelectedFontId] = useState("f1");
   const [selectedColorId, setSelectedColorId] = useState("g1");
   const [selectedBadgeId, setSelectedBadgeId] = useState("verified");
+
+  const [showAllFonts, setShowAllFonts] = useState(false);
+  const [showAllColors, setShowAllColors] = useState(false);
   
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
@@ -234,6 +239,20 @@ export default function SettingsPage() {
 
   const activeFont = useMemo(() => FONT_OPTIONS.find(f => f.id === selectedFontId), [selectedFontId]);
   const activeColorClass = useMemo(() => GRADIENT_COLORS.find(c => c.id === selectedColorId)?.class || "bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent", [selectedColorId]);
+
+  const visibleFonts = useMemo(() => {
+    if (showAllFonts) return FONT_OPTIONS;
+    const current = FONT_OPTIONS.find(f => f.id === selectedFontId);
+    const others = FONT_OPTIONS.filter(f => f.id !== selectedFontId).slice(0, 3);
+    return current ? [current, ...others] : FONT_OPTIONS.slice(0, 4);
+  }, [showAllFonts, selectedFontId]);
+
+  const visibleColors = useMemo(() => {
+    if (showAllColors) return GRADIENT_COLORS;
+    const current = GRADIENT_COLORS.find(c => c.id === selectedColorId);
+    const others = GRADIENT_COLORS.filter(c => c.id !== selectedColorId).slice(0, 3);
+    return current ? [current, ...others] : GRADIENT_COLORS.slice(0, 4);
+  }, [showAllColors, selectedColorId]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -446,11 +465,21 @@ export default function SettingsPage() {
 
                       {/* Font Selection */}
                       <div className="space-y-4">
-                         <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-                            <FontIcon className="h-4 w-4" /> Pilih Font (Total 60)
+                         <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+                               <FontIcon className="h-4 w-4" /> Pilih Font
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => setShowAllFonts(!showAllFonts)}
+                              className="text-[10px] font-black text-primary hover:bg-primary/10 gap-1 h-7"
+                            >
+                               {showAllFonts ? <><ChevronUp className="h-3 w-3" /> Sembunyikan</> : <><ChevronDown className="h-3 w-3" /> Tampilkan Lainnya</>}
+                            </Button>
                          </div>
                          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
-                            {FONT_OPTIONS.map((font) => (
+                            {visibleFonts.map((font) => (
                               <button
                                 key={font.id}
                                 onClick={() => setSelectedFontId(font.id)}
@@ -469,11 +498,21 @@ export default function SettingsPage() {
 
                       {/* Gradient Color Selection */}
                       <div className="space-y-4">
-                         <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-                            <Sparkles className="h-4 w-4" /> Pilih Warna (Gradient)
+                         <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+                               <Sparkles className="h-4 w-4" /> Pilih Warna (Gradient)
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => setShowAllColors(!showAllColors)}
+                              className="text-[10px] font-black text-primary hover:bg-primary/10 gap-1 h-7"
+                            >
+                               {showAllColors ? <><ChevronUp className="h-3 w-3" /> Sembunyikan</> : <><ChevronDown className="h-3 w-3" /> Tampilkan Lainnya</>}
+                            </Button>
                          </div>
                          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
-                            {GRADIENT_COLORS.map((grad) => (
+                            {visibleColors.map((grad) => (
                               <button
                                 key={grad.id}
                                 onClick={() => setSelectedColorId(grad.id)}
