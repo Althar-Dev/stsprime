@@ -187,7 +187,7 @@ export default function SettingsPage() {
   const displayPhotoURL = useMemo(() => {
     if (photoURL) return photoURL; // Apa yang baru saja diklik
     if (firestorePhotoURL) return firestorePhotoURL; // Apa yang ada di DB
-    if (isDev) return "/img/ava/dev.png"; // Fallback dev
+    if (isDev) return "/img/avas/dev.png"; // Fallback dev
     return user?.photoURL || ""; // Fallback auth
   }, [photoURL, firestorePhotoURL, isDev, user?.photoURL]);
 
@@ -198,7 +198,7 @@ export default function SettingsPage() {
     setIsSaving(true);
     try {
       // Prioritas: photoURL (state klik) > firestorePhotoURL > dev.png (jika dev) > auth photo
-      const finalPhotoURL = photoURL || firestorePhotoURL || (isDev ? "/img/ava/dev.png" : (user.photoURL || ""));
+      const finalPhotoURL = photoURL || firestorePhotoURL || (isDev ? "/img/avas/dev.png" : (user.photoURL || ""));
       
       await updateProfile(user, { 
         displayName, 
@@ -356,7 +356,7 @@ export default function SettingsPage() {
                               </div>
                               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
                                 {availableAvatars.map((file) => {
-                                  const avatarPath = `/img/ava/${file}`;
+                                  const avatarPath = `/img/avas/${file}`;
                                   const isSelected = avatarPath === displayPhotoURL;
                                   
                                   return (

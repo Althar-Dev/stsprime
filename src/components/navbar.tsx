@@ -138,7 +138,6 @@ export function Navbar() {
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic for display photo: if no photoURL and isDev, show dev.png
   const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/ava/dev.png" : (user?.photoURL || ""));
 
   const handleLogout = async () => {
@@ -151,7 +150,6 @@ export function Navbar() {
     <>
       <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto px-4 flex flex-col">
-          {/* Main Navbar Row */}
           <div className="flex h-16 items-center justify-between">
             {isSearchOpen ? (
               <Suspense fallback={<div className="h-10 w-full bg-muted rounded-full animate-pulse" />}>
@@ -205,9 +203,9 @@ export function Navbar() {
                   
                   {user ? (
                     <div className="flex items-center gap-2 md:gap-3">
-                      <div className="flex items-center gap-2 md:gap-2.5 px-3 md:px-3.5 py-1.5 md:py-2 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
-                        <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-8 md:w-8 object-contain group-hover:scale-110 transition-transform" />
-                        <span className="text-sm md:text-base font-black text-primary">0</span>
+                      <div className="flex items-center gap-2 md:gap-1.5 px-3 md:px-2.5 py-1.5 md:py-1 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
+                        <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-5 md:w-5 object-contain group-hover:scale-110 transition-transform" />
+                        <span className="text-sm md:text-sm font-black text-primary">0</span>
                       </div>
                       
                       <DropdownMenu>
@@ -375,7 +373,6 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Mobile Search Bar Row (Only shown when not in full search mode) */}
           {!isSearchOpen && (
             <div className="lg:hidden pb-4 pt-1 animate-in fade-in slide-in-from-top-2 duration-300 flex items-center gap-2">
               <div 

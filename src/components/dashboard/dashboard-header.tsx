@@ -34,7 +34,6 @@ export function DashboardHeader() {
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic for display photo: if no photoURL and isDev, show dev.png
   const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/ava/dev.png" : (user?.photoURL || ""));
 
   return (
@@ -52,9 +51,9 @@ export function DashboardHeader() {
         </div>
         
         <div className="flex items-center gap-2 md:gap-5 ml-auto sm:ml-0">
-          <div className="flex items-center gap-2 md:gap-2.5 px-3 md:px-3.5 py-1.5 md:py-2 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
-            <img src="/img/coin.png" alt="Coin" className="h-6 w-6 md:h-8 md:w-8 group-hover:scale-110 transition-transform" />
-            <span className="text-sm md:text-base font-black text-primary">0</span>
+          <div className="flex items-center gap-2 md:gap-1.5 px-3 md:px-2.5 py-1.5 md:py-1 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
+            <img src="/img/coin.png" alt="Coin" className="h-6 w-6 md:h-5 md:w-5 group-hover:scale-110 transition-transform" />
+            <span className="text-sm md:text-sm font-black text-primary">0</span>
           </div>
 
           <div className="hidden xs:block">
