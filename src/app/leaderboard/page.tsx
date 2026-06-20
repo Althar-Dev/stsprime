@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Footer } from "@/components/footer";
@@ -9,7 +8,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useUser, useFirestore } from "@/firebase";
@@ -168,7 +166,7 @@ export default function LeaderboardPage() {
                       <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0 cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className="text-[10px] font-black">Member VIP Eksklusif</p>
+                      <p className="text-[10px] font-black">Member VIP STS Pedia</p>
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -213,7 +211,7 @@ export default function LeaderboardPage() {
                       <Image src="/img/badge/vip.png" alt="VIP" width={18} height={18} className="shrink-0 cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className="text-[10px] font-black">Member VIP Eksklusif</p>
+                      <p className="text-[10px] font-black">Member VIP STS Pedia</p>
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -257,7 +255,7 @@ export default function LeaderboardPage() {
                       <Image src="/img/badge/vip.png" alt="VIP" width={12} height={12} className="shrink-0 cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className="text-[10px] font-black">Member VIP Eksklusif</p>
+                      <p className="text-[10px] font-black">Member VIP STS Pedia</p>
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -333,7 +331,7 @@ export default function LeaderboardPage() {
                                       <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0 cursor-help" />
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                      <p className="text-[10px] font-black">Member VIP Eksklusif</p>
+                                      <p className="text-[10px] font-black">Member VIP STS Pedia</p>
                                     </TooltipContent>
                                   </Tooltip>
                                 )}
@@ -397,7 +395,7 @@ export default function LeaderboardPage() {
                           <Image src="/img/badge/vip.png" alt="VIP" width={20} height={20} className="shrink-0 cursor-help" />
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p className="text-xs font-black">Member VIP Eksklusif</p>
+                          <p className="text-xs font-black">Member VIP STS Pedia</p>
                         </TooltipContent>
                       </Tooltip>
                     )}
