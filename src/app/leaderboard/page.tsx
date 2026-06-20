@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Footer } from "@/components/footer";
@@ -18,11 +17,12 @@ import { Logo } from "@/components/logo";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useMemo } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import { cn } from "@/lib/utils";
 import { LeaderboardSkeleton } from "@/components/leaderboard-skeleton";
 
-const PLACEHOLDERS = [
+// Backup placeholders if database is empty or has few users
+const BACKUP_PLACEHOLDERS = [
   { id: "p1", name: "Sultan_MLBB", points: 45280, avatar: "/img/avas/boy-1.png", isPlaceholder: true },
   { id: "p2", name: "RiotGamer99", points: 38150, avatar: "/img/avas/boy-2.png", isPlaceholder: true },
   { id: "p3", name: "GenshinSimp", points: 32900, avatar: "/img/avas/girl-1.png", isPlaceholder: true },
@@ -39,64 +39,64 @@ export default function LeaderboardPage() {
   const { user, loading: authLoading } = useUser();
   const db = useFirestore();
   const router = useRouter();
-  const [profileData, setProfileData] = useState<any>(null);
+  const [realUsers, setRealUsers] = useState<any[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchProfile() {
-      if (!user || !db) {
-        if (!authLoading) setIsInitialLoading(false);
-        return;
-      }
+    async function fetchGlobalLeaderboard() {
+      if (!db) return;
+      
       try {
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setProfileData(docSnap.data());
-        }
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, orderBy("points", "desc"), limit(20));
+        const querySnapshot = await getDocs(q);
+        
+        const fetchedUsers = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          isPlaceholder: false
+        }));
+        
+        setRealUsers(fetchedUsers);
       } catch (error) {
-        // Fail silently
+        console.error("Error fetching leaderboard:", error);
       } finally {
         setIsInitialLoading(false);
       }
     }
-    fetchProfile();
-  }, [user, db, authLoading]);
 
-  const userPoints = profileData?.points || 0;
-  const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
-  
-  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
+    fetchGlobalLeaderboard();
+  }, [db]);
 
   const leaderboardData = useMemo(() => {
-    let list = [...PLACEHOLDERS];
+    // Merge real users with placeholders to ensure a full list of at least 10
+    let combined = [...realUsers];
     
-    if (user) {
-      list.push({
-        id: user.uid,
-        name: user.displayName || "Gamer Pro",
-        points: userPoints,
-        avatar: displayPhotoURL,
-        isPlaceholder: false,
-        fontFamily: profileData?.fontFamily,
-        nameColor: profileData?.nameColor,
-        vip: profileData?.vip,
-        profileBg: profileData?.profileBg || "bg-muted/30"
-      });
+    // Add placeholders if we have fewer than 10 users to keep the "Hall of Fame" populated
+    if (combined.length < 10) {
+      const needed = 10 - combined.length;
+      const placeholdersToAdd = BACKUP_PLACEHOLDERS.slice(0, needed);
+      combined = [...combined, ...placeholdersToAdd];
     }
 
-    return list.sort((a, b) => b.points - a.points).map((item, index) => ({
+    // Sort again by points to ensure consistency
+    return combined.sort((a, b) => b.points - a.points).map((item, index) => ({
       ...item,
       rank: index + 1
     }));
-  }, [user, userPoints, profileData, displayPhotoURL]);
+  }, [realUsers]);
 
   const TOP_THREE = leaderboardData.slice(0, 3);
   const TABLE_DATA = leaderboardData.slice(3, 10);
 
-  const myRank = leaderboardData.find(item => item.id === user?.uid)?.rank || 0;
+  const currentUserData = leaderboardData.find(item => item.id === user?.uid);
+  const userPoints = currentUserData?.points || 0;
+  const myRank = currentUserData?.rank || 0;
+  
   const rookieGoal = 2000;
   const progressPercent = Math.min((userPoints / rookieGoal) * 100, 100);
+  const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
+  const displayPhotoURL = currentUserData?.photoURL || (currentUserData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
 
   if (isInitialLoading || authLoading) {
     return <LeaderboardSkeleton />;
@@ -133,7 +133,7 @@ export default function LeaderboardPage() {
             Hall of Fame
           </h1>
           <p className="text-xs md:text-lg text-muted-foreground max-w-2xl mx-auto font-bold opacity-80 leading-relaxed px-4">
-            Kumpulkan poin dari setiap transaksi dan ukir namamu di puncak klasemen global!
+            Siapa pun yang memegang poin tertinggi akan bertahta di puncak klasemen global STS Pedia!
           </p>
         </div>
 
@@ -146,20 +146,20 @@ export default function LeaderboardPage() {
                 <Image src="/img/border/two.png" alt="Rank 2 Border" fill className="object-contain z-20" unoptimized />
                 <div className={cn(
                   "h-10 w-10 md:h-20 md:w-20 rounded-full flex items-center justify-center p-0.5 md:p-1 shadow-xl relative z-10",
-                  !TOP_THREE[1]?.isPlaceholder ? (TOP_THREE[1]?.profileBg || "bg-muted/20") : "bg-muted/20"
+                  TOP_THREE[1]?.profileBg || "bg-muted/20"
                 )}>
                   <Avatar className="h-full w-full border border-background">
-                    <AvatarImage src={TOP_THREE[1]?.avatar} alt={TOP_THREE[1]?.name} />
-                    <AvatarFallback className="bg-muted text-[10px]">{TOP_THREE[1]?.name?.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={TOP_THREE[1]?.photoURL || TOP_THREE[1]?.avatar} alt={TOP_THREE[1]?.name || TOP_THREE[1]?.displayName} />
+                    <AvatarFallback className="bg-muted text-[10px]">{ (TOP_THREE[1]?.displayName || TOP_THREE[1]?.name)?.charAt(0) }</AvatarFallback>
                   </Avatar>
                 </div>
               </div>
               <div className="flex items-center gap-1 justify-center w-full">
                 <p 
-                  className={cn("font-black text-[9px] md:text-sm truncate max-w-[80px] md:max-w-[120px]", !TOP_THREE[1]?.isPlaceholder ? (TOP_THREE[1]?.nameColor || "text-foreground") : "text-foreground")}
-                  style={!TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.fontFamily ? { fontFamily: TOP_THREE[1].fontFamily } : {}}
+                  className={cn("font-black text-[9px] md:text-sm truncate max-w-[80px] md:max-w-[120px]", TOP_THREE[1]?.nameColor || "text-foreground")}
+                  style={TOP_THREE[1]?.fontFamily ? { fontFamily: TOP_THREE[1].fontFamily } : {}}
                 >
-                  {TOP_THREE[1]?.name}
+                  {TOP_THREE[1]?.displayName || TOP_THREE[1]?.name}
                 </p>
                 {TOP_THREE[1]?.vip && (
                   <Popover>
@@ -191,20 +191,20 @@ export default function LeaderboardPage() {
                 <Image src="/img/border/one.png" alt="Rank 1 Border" fill className="object-contain z-20" priority unoptimized />
                 <div className={cn(
                   "h-12 w-12 md:h-24 md:w-24 rounded-full flex items-center justify-center p-0.5 md:p-1.5 shadow-2xl relative z-10",
-                  !TOP_THREE[0]?.isPlaceholder ? (TOP_THREE[0]?.profileBg || "bg-muted/20") : "bg-muted/20"
+                  TOP_THREE[0]?.profileBg || "bg-muted/20"
                 )}>
                   <Avatar className="h-full w-full border border-background">
-                    <AvatarImage src={TOP_THREE[0]?.avatar} alt={TOP_THREE[0]?.name} />
-                    <AvatarFallback className="bg-primary/20 text-primary font-black">{TOP_THREE[0]?.name?.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={TOP_THREE[0]?.photoURL || TOP_THREE[0]?.avatar} alt={TOP_THREE[0]?.name || TOP_THREE[0]?.displayName} />
+                    <AvatarFallback className="bg-primary/20 text-primary font-black">{ (TOP_THREE[0]?.displayName || TOP_THREE[0]?.name)?.charAt(0) }</AvatarFallback>
                   </Avatar>
                 </div>
               </div>
               <div className="flex items-center gap-1 justify-center w-full">
                 <p 
-                  className={cn("font-black text-[11px] md:text-lg truncate max-w-[100px] md:max-w-[160px]", !TOP_THREE[0]?.isPlaceholder ? (TOP_THREE[0]?.nameColor || "text-foreground") : "text-foreground")}
-                  style={!TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.fontFamily ? { fontFamily: TOP_THREE[0].fontFamily } : {}}
+                  className={cn("font-black text-[11px] md:text-lg truncate max-w-[100px] md:max-w-[160px]", TOP_THREE[0]?.nameColor || "text-foreground")}
+                  style={TOP_THREE[0]?.fontFamily ? { fontFamily: TOP_THREE[0].fontFamily } : {}}
                 >
-                  {TOP_THREE[0]?.name}
+                  {TOP_THREE[0]?.displayName || TOP_THREE[0]?.name}
                 </p>
                 {TOP_THREE[0]?.vip && (
                   <Popover>
@@ -235,20 +235,20 @@ export default function LeaderboardPage() {
                 <Image src="/img/border/three.png" alt="Rank 3 Border" fill className="object-contain z-20" unoptimized />
                 <div className={cn(
                   "h-9 w-9 md:h-16 md:w-16 rounded-full flex items-center justify-center p-0.5 md:p-1 shadow-xl relative z-10",
-                  !TOP_THREE[2]?.isPlaceholder ? (TOP_THREE[2]?.profileBg || "bg-muted/20") : "bg-muted/20"
+                  TOP_THREE[2]?.profileBg || "bg-muted/20"
                 )}>
                   <Avatar className="h-full w-full border border-background">
-                    <AvatarImage src={TOP_THREE[2]?.avatar} alt={TOP_THREE[2]?.name} />
-                    <AvatarFallback className="bg-muted text-[10px]">{TOP_THREE[2]?.name?.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={TOP_THREE[2]?.photoURL || TOP_THREE[2]?.avatar} alt={TOP_THREE[2]?.name || TOP_THREE[2]?.displayName} />
+                    <AvatarFallback className="bg-muted text-[10px]">{ (TOP_THREE[2]?.displayName || TOP_THREE[2]?.name)?.charAt(0) }</AvatarFallback>
                   </Avatar>
                 </div>
               </div>
               <div className="flex items-center gap-1 justify-center w-full">
                 <p 
-                  className={cn("font-black text-[8px] md:text-xs truncate max-w-[70px] md:max-w-[100px]", !TOP_THREE[2]?.isPlaceholder ? (TOP_THREE[2]?.nameColor || "text-foreground") : "text-foreground")}
-                  style={!TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.fontFamily ? { fontFamily: TOP_THREE[2].fontFamily } : {}}
+                  className={cn("font-black text-[8px] md:text-xs truncate max-w-[70px] md:max-w-[100px]", TOP_THREE[2]?.nameColor || "text-foreground")}
+                  style={TOP_THREE[2]?.fontFamily ? { fontFamily: TOP_THREE[2].fontFamily } : {}}
                 >
-                  {TOP_THREE[2]?.name}
+                  {TOP_THREE[2]?.displayName || TOP_THREE[2]?.name}
                 </p>
                 {TOP_THREE[2]?.vip && (
                   <Popover>
@@ -310,20 +310,20 @@ export default function LeaderboardPage() {
                           <div className="flex items-center gap-2 md:gap-3">
                             <div className={cn(
                               "h-7 w-7 md:h-9 md:w-9 rounded-full flex items-center justify-center p-0.5",
-                              !item.isPlaceholder ? (item.profileBg || "bg-muted/30") : "bg-muted/20"
+                              item.profileBg || "bg-muted/30"
                             )}>
                               <Avatar className="h-full w-full border border-background">
-                                <AvatarImage src={item.avatar} />
-                                <AvatarFallback className="bg-muted text-[10px]">{item.name?.charAt(0)}</AvatarFallback>
+                                <AvatarImage src={item.photoURL || item.avatar} />
+                                <AvatarFallback className="bg-muted text-[10px]">{ (item.displayName || item.name)?.charAt(0) }</AvatarFallback>
                               </Avatar>
                             </div>
                             <div className="min-w-0">
                               <div className="flex items-center gap-1.5">
                                 <p 
-                                  className={cn("font-black text-xs md:text-sm truncate", !item.isPlaceholder ? (item.nameColor || "text-foreground") : "text-foreground")}
-                                  style={!item.isPlaceholder && item.fontFamily ? { fontFamily: item.fontFamily } : {}}
+                                  className={cn("font-black text-xs md:text-sm truncate", item.nameColor || "text-foreground")}
+                                  style={item.fontFamily ? { fontFamily: item.fontFamily } : {}}
                                 >
-                                  {item.name}
+                                  {item.displayName || item.name}
                                 </p>
                                 {item.id === user?.uid && <ShieldCheck className="h-3 w-3 md:h-3.5 md:w-3.5 text-primary shrink-0" />}
                                 {item.vip && (
@@ -337,7 +337,7 @@ export default function LeaderboardPage() {
                                   </Popover>
                                 )}
                               </div>
-                              {!item.isPlaceholder && (
+                              {item.id === user?.uid && (
                                 <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">
                                   Your Account
                                 </p>
@@ -346,7 +346,7 @@ export default function LeaderboardPage() {
                           </div>
                         </TableCell>
                         <TableCell className="text-right pr-4 md:pr-6 p-3 md:p-4">
-                          <span className="font-black text-xs md:text-sm text-primary tabular-nums">{item.points.toLocaleString()}</span>
+                          <span className="font-black text-xs md:text-sm text-primary tabular-nums">{item.points?.toLocaleString()}</span>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -369,7 +369,7 @@ export default function LeaderboardPage() {
                 <div className="relative">
                   <div className={cn(
                     "h-16 w-16 md:h-20 md:w-20 rounded-full flex items-center justify-center p-1 transition-all duration-300",
-                    profileData?.profileBg || "bg-muted/30"
+                    currentUserData?.profileBg || "bg-muted/30"
                   )}>
                     <Avatar className="h-full w-full border-2 border-background shadow-xl">
                       <AvatarImage src={displayPhotoURL} />
@@ -378,19 +378,21 @@ export default function LeaderboardPage() {
                       </AvatarFallback>
                     </Avatar>
                   </div>
-                  <div className="absolute -bottom-1 -right-1 bg-background border border-primary/30 p-1 rounded-lg">
-                     <ShieldCheck className="h-4 w-4 text-primary" />
-                  </div>
+                  {user && (
+                    <div className="absolute -bottom-1 -right-1 bg-background border border-primary/30 p-1 rounded-lg">
+                       <ShieldCheck className="h-4 w-4 text-primary" />
+                    </div>
+                  )}
                 </div>
                 <div className="min-w-0 overflow-hidden">
                   <div className="flex items-center gap-1.5 mb-2">
                     <p 
-                      className={cn("font-black text-lg md:text-xl leading-none truncate max-w-[140px]", profileData?.nameColor || "text-foreground")}
-                      style={profileData?.fontFamily ? { fontFamily: profileData.fontFamily } : {}}
+                      className={cn("font-black text-lg md:text-xl leading-none truncate max-w-[140px]", currentUserData?.nameColor || "text-foreground")}
+                      style={currentUserData?.fontFamily ? { fontFamily: currentUserData.fontFamily } : {}}
                     >
                       {user?.displayName || "Gamer Pro"}
                     </p>
-                    {profileData?.vip && (
+                    {currentUserData?.vip && (
                       <Popover>
                         <PopoverTrigger asChild>
                           <Image src="/img/badge/vip.png" alt="VIP" width={20} height={20} className="shrink-0 cursor-pointer" />
