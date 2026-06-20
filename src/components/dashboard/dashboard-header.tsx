@@ -34,7 +34,7 @@ export function DashboardHeader() {
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/ava/dev.png" : (user?.photoURL || ""));
+  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
 
   return (
     <header className="sticky top-0 z-40 flex h-16 md:h-20 shrink-0 items-center gap-2 border-b border-border bg-background px-4 md:px-8">

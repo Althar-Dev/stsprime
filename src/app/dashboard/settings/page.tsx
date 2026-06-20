@@ -101,6 +101,26 @@ const FONT_OPTIONS = [
   { id: "f18", name: "Lucida Console", class: "font-mono" },
   { id: "f19", name: "Impact", class: "font-sans uppercase" },
   { id: "f20", name: "Comic Sans MS", class: "font-sans" },
+  { id: "f21", name: "Montserrat", class: "font-sans" },
+  { id: "f22", name: "Lato", class: "font-sans" },
+  { id: "f23", name: "Open Sans", class: "font-sans" },
+  { id: "f24", name: "Oswald", class: "font-sans uppercase" },
+  { id: "f25", name: "Raleway", class: "font-sans" },
+  { id: "f26", name: "Playfair Display", class: "font-serif italic" },
+  { id: "f27", name: "Merriweather", class: "font-serif" },
+  { id: "f28", name: "Ubuntu", class: "font-sans" },
+  { id: "f29", name: "Lora", class: "font-serif" },
+  { id: "f30", name: "Nunito", class: "font-sans" },
+  { id: "f31", name: "PT Sans", class: "font-sans" },
+  { id: "f32", name: "PT Serif", class: "font-serif" },
+  { id: "f33", name: "Roboto Slab", class: "font-serif" },
+  { id: "f34", name: "Josefin Sans", class: "font-sans" },
+  { id: "f35", name: "Arvo", class: "font-serif" },
+  { id: "f36", name: "Cabin", class: "font-sans" },
+  { id: "f37", name: "Dosis", class: "font-sans" },
+  { id: "f38", name: "Kanit", class: "font-sans" },
+  { id: "f39", name: "Oxygen", class: "font-sans" },
+  { id: "f40", name: "Bitter", class: "font-serif" },
 ];
 
 const GRADIENT_COLORS = [
@@ -191,7 +211,7 @@ export default function SettingsPage() {
   const displayPhotoURL = useMemo(() => {
     if (photoURL) return photoURL;
     if (firestorePhotoURL) return firestorePhotoURL;
-    return isDev ? "/img/ava/dev.png" : (user?.photoURL || "");
+    return isDev ? "/img/avas/dev.png" : (user?.photoURL || "");
   }, [photoURL, firestorePhotoURL, isDev, user?.photoURL]);
 
   const activeFontClass = FONT_OPTIONS.find(f => f.id === selectedFontId)?.class || "font-sans";
@@ -203,7 +223,7 @@ export default function SettingsPage() {
 
     setIsSaving(true);
     try {
-      const finalPhotoURL = photoURL || firestorePhotoURL || (isDev ? "/img/ava/dev.png" : (user.photoURL || ""));
+      const finalPhotoURL = photoURL || firestorePhotoURL || (isDev ? "/img/avas/dev.png" : (user.photoURL || ""));
       await updateProfile(user, { displayName, photoURL: finalPhotoURL });
 
       const userDocRef = doc(db, "users", user.uid);
@@ -326,7 +346,7 @@ export default function SettingsPage() {
                                 <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
                                   {STATIC_AVATARS.map((file) => {
                                     if (file === "dev.png" && !isDev) return null;
-                                    const avatarPath = `/img/ava/${file}`;
+                                    const avatarPath = `/img/avas/${file}`;
                                     const isSelected = avatarPath === displayPhotoURL;
                                     return (
                                       <button key={file} type="button" onClick={() => setPhotoURL(avatarPath)} className={cn("relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110", isSelected ? "border-primary shadow-lg ring-2 ring-primary/20" : "border-border/30 bg-muted/20")}>

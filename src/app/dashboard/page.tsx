@@ -43,7 +43,7 @@ export default function DashboardPage() {
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
   // Logic for display photo: if no photoURL and isDev, show dev.png
-  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/ava/dev.png" : (user?.photoURL || ""));
+  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-10">

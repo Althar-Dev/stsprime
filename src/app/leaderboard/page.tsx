@@ -57,7 +57,7 @@ export default function LeaderboardPage() {
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
   // Logic for display photo: if no photoURL and isDev, show dev.png
-  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/ava/dev.png" : (user?.photoURL || ""));
+  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">

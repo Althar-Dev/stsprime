@@ -138,7 +138,7 @@ export function Navbar() {
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/ava/dev.png" : (user?.photoURL || ""));
+  const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
 
   const handleLogout = async () => {
     if (auth) {
