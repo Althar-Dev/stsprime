@@ -19,6 +19,30 @@
           "type": "string",
           "format": "date-time",
           "description": "Waktu pembuatan akun."
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "URL foto profil pengguna."
+        },
+        "profileBg": {
+          "type": "string",
+          "description": "Kelas latar belakang profil."
+        },
+        "nameGlow": {
+          "type": "boolean",
+          "description": "Apakah nama memiliki efek kilau."
+        },
+        "fontFamily": {
+          "type": "string",
+          "description": "Jenis font untuk nama."
+        },
+        "nameColor": {
+          "type": "string",
+          "description": "Warna hex atau kelas tailwind untuk nama."
+        },
+        "badgeId": {
+          "type": "string",
+          "description": "ID badge yang dipilih."
         }
       },
       "required": ["email"]
