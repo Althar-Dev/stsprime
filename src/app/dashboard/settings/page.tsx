@@ -49,7 +49,8 @@ import {
   Type,
   CircleHelp,
   Palette,
-  Type as FontIcon
+  Type as FontIcon,
+  ChevronRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -83,21 +84,72 @@ const BADGE_OPTIONS = [
 ];
 
 const FONT_OPTIONS = [
-  { id: "font-sans", name: "Default (Sans)", class: "font-sans" },
-  { id: "font-headline", name: "Headline (Space)", class: "font-headline" },
-  { id: "font-serif", name: "Classic (Serif)", class: "font-serif" },
-  { id: "font-mono", name: "Code (Mono)", class: "font-mono" },
+  { id: "f1", name: "Inter", class: "font-sans" },
+  { id: "f2", name: "Space Grotesk", class: "font-headline" },
+  { id: "f3", name: "Roboto", class: "font-sans" },
+  { id: "f4", name: "Helvetica", class: "font-sans" },
+  { id: "f5", name: "Arial", class: "font-sans" },
+  { id: "f6", name: "Verdana", class: "font-sans" },
+  { id: "f7", name: "Tahoma", class: "font-sans" },
+  { id: "f8", name: "Trebuchet MS", class: "font-sans" },
+  { id: "f9", name: "Lucida Sans", class: "font-sans" },
+  { id: "f10", name: "Gill Sans", class: "font-sans" },
+  { id: "f11", name: "Times New Roman", class: "font-serif" },
+  { id: "f12", name: "Georgia", class: "font-serif" },
+  { id: "f13", name: "Palatino", class: "font-serif" },
+  { id: "f14", name: "Garamond", class: "font-serif" },
+  { id: "f15", name: "Bookman", class: "font-serif" },
+  { id: "f16", name: "Courier New", class: "font-mono" },
+  { id: "f17", name: "Monaco", class: "font-mono" },
+  { id: "f18", name: "Lucida Console", class: "font-mono" },
+  { id: "f19", name: "Impact", class: "font-sans uppercase" },
+  { id: "f20", name: "Comic Sans MS", class: "font-sans" },
 ];
 
-const COLOR_OPTIONS = [
-  { id: "default", name: "Default", class: "text-foreground" },
-  { id: "gold", name: "STS Gold", class: "text-primary" },
-  { id: "blue", name: "STS Blue", class: "text-accent" },
-  { id: "red", name: "Crimson", class: "text-red-500" },
-  { id: "green", name: "Emerald", class: "text-emerald-500" },
-  { id: "purple", name: "Violet", class: "text-purple-500" },
-  { id: "pink", name: "Rose", class: "text-pink-500" },
-  { id: "cyan", name: "Cyan", class: "text-cyan-500" },
+const SOLID_COLORS = [
+  { id: "s1", name: "White", class: "text-foreground" },
+  { id: "s2", name: "STS Gold", class: "text-primary" },
+  { id: "s3", name: "STS Blue", class: "text-accent" },
+  { id: "s4", name: "Red", class: "text-red-500" },
+  { id: "s5", name: "Rose", class: "text-rose-500" },
+  { id: "s6", name: "Pink", class: "text-pink-500" },
+  { id: "s7", name: "Fuchsia", class: "text-fuchsia-500" },
+  { id: "s8", name: "Purple", class: "text-purple-500" },
+  { id: "s9", name: "Violet", class: "text-violet-500" },
+  { id: "s10", name: "Indigo", class: "text-indigo-500" },
+  { id: "s11", name: "Blue", class: "text-blue-500" },
+  { id: "s12", name: "Sky", class: "text-sky-500" },
+  { id: "s13", name: "Cyan", class: "text-cyan-500" },
+  { id: "s14", name: "Teal", class: "text-teal-500" },
+  { id: "s15", name: "Emerald", class: "text-emerald-500" },
+  { id: "s16", name: "Green", class: "text-green-500" },
+  { id: "s17", name: "Lime", class: "text-lime-500" },
+  { id: "s18", name: "Yellow", class: "text-yellow-500" },
+  { id: "s19", name: "Amber", class: "text-amber-500" },
+  { id: "s20", name: "Orange", class: "text-orange-500" },
+];
+
+const GRADIENT_COLORS = [
+  { id: "g1", name: "Hyper", class: "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent" },
+  { id: "g2", name: "Oceanic", class: "bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent" },
+  { id: "g3", name: "Sunset", class: "bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent" },
+  { id: "g4", name: "Forest", class: "bg-gradient-to-r from-emerald-500 to-lime-500 bg-clip-text text-transparent" },
+  { id: "g5", name: "Cosmic", class: "bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent" },
+  { id: "g6", name: "Rose", class: "bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent" },
+  { id: "g7", name: "Twilight", class: "bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent" },
+  { id: "g8", name: "Gold Rush", class: "bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent" },
+  { id: "g9", name: "Neon", class: "bg-gradient-to-r from-lime-400 to-cyan-500 bg-clip-text text-transparent" },
+  { id: "g10", name: "Lava", class: "bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent" },
+  { id: "g11", name: "Royal", class: "bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent" },
+  { id: "g12", name: "Candy", class: "bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" },
+  { id: "g13", name: "Minty", class: "bg-gradient-to-r from-teal-400 to-green-500 bg-clip-text text-transparent" },
+  { id: "g14", name: "Deep Sea", class: "bg-gradient-to-r from-slate-600 to-blue-800 bg-clip-text text-transparent" },
+  { id: "g15", name: "Morning", class: "bg-gradient-to-r from-sky-300 to-white bg-clip-text text-transparent" },
+  { id: "g16", name: "Aurora", class: "bg-gradient-to-r from-green-400 to-purple-500 bg-clip-text text-transparent" },
+  { id: "g17", name: "Fire", class: "bg-gradient-to-r from-yellow-500 to-red-500 bg-clip-text text-transparent" },
+  { id: "g18", name: "Gem", class: "bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent" },
+  { id: "g19", name: "Space", class: "bg-gradient-to-r from-slate-900 to-slate-500 bg-clip-text text-transparent" },
+  { id: "g20", name: "Bubblegum", class: "bg-gradient-to-r from-pink-300 to-indigo-400 bg-clip-text text-transparent" },
 ];
 
 export default function SettingsPage() {
@@ -256,8 +308,8 @@ export default function SettingsPage() {
           <TabsContent value="profile" className="animate-in fade-in slide-in-from-bottom-2 duration-500 mt-0">
             <Card className="border-none bg-transparent shadow-none">
               <form onSubmit={handleUpdateProfile}>
-                <CardContent className="p-0 space-y-10">
-                  <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-16">
+                <CardContent className="p-0">
+                  <div className="flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-16">
                     <div className="relative group shrink-0">
                       <div className={cn("h-36 w-36 md:h-48 md:w-48 rounded-full flex items-center justify-center p-1.5 transition-all duration-500", profileBg)}>
                         <Avatar className="h-full w-full border-4 border-background shadow-2xl">
@@ -327,27 +379,25 @@ export default function SettingsPage() {
                       </Dialog>
                     </div>
 
-                    <div className="flex-1 w-full flex flex-col gap-8">
-                      <div className="grid md:grid-cols-2 gap-8 w-full">
-                        <div className="space-y-3">
+                    <div className="flex-1 w-full space-y-8">
+                        <div className="space-y-4">
                           <Label className="text-[10px] font-black tracking-widest text-muted-foreground uppercase flex items-center gap-2">
                              <Mail className="h-3.5 w-3.5" /> Alamat Email
                           </Label>
                           <Input value={user?.email || ""} disabled className="bg-muted/30 font-bold h-12 rounded-xl opacity-70 border-border/50" />
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                           <Label className="text-[10px] font-black tracking-widest text-muted-foreground uppercase flex items-center gap-2">
                              <Type className="h-3.5 w-3.5" /> Nama Tampilan
                           </Label>
                           <Input placeholder="Nama Anda" value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="font-bold h-12 rounded-xl border-border/50 focus:border-primary" />
                         </div>
-                      </div>
-                      <div className="flex justify-center lg:justify-start">
-                        <Button type="submit" disabled={isSaving} className="w-full sm:w-auto h-12 px-12 rounded-2xl font-black gap-3 shadow-xl shadow-primary/20 hover:scale-105 transition-transform active:scale-95">
-                          {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-                          Simpan Profil
-                        </Button>
-                      </div>
+                        <div className="pt-2">
+                          <Button type="submit" disabled={isSaving} className="w-full md:w-auto h-12 px-12 rounded-2xl font-black gap-3 shadow-xl shadow-primary/20 hover:scale-105 transition-transform active:scale-95">
+                            {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
+                            Simpan Profil
+                          </Button>
+                        </div>
                     </div>
                   </div>
                 </CardContent>
@@ -357,7 +407,7 @@ export default function SettingsPage() {
 
           {/* CUSTOMIZE TAB */}
           <TabsContent value="customize" className="animate-in fade-in slide-in-from-bottom-2 duration-500 mt-0">
-             <div className="max-w-4xl space-y-12">
+             <div className="max-w-5xl space-y-12">
                 {/* NAME CUSTOM SECTION */}
                 <div className="space-y-8">
                    <div className="flex items-center gap-3">
@@ -365,15 +415,15 @@ export default function SettingsPage() {
                       <h3 className="font-black text-xl tracking-tight">Name Custom</h3>
                    </div>
                    
-                   <div className="space-y-8 pl-4 border-l-2 border-primary/20">
+                   <div className="space-y-10 pl-4 border-l-2 border-primary/20">
                       {/* Name Preview */}
-                      <div className="p-6 rounded-2xl bg-muted/20 border border-border/50 flex flex-col items-center justify-center gap-4 text-center">
-                         <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Pratinjau Nama</span>
+                      <div className="p-8 rounded-3xl bg-muted/10 border border-border/50 flex flex-col items-center justify-center gap-4 text-center">
+                         <span className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">Pratinjau Nama</span>
                          <h4 className={cn(
-                           "text-3xl font-black transition-all duration-300",
+                           "text-3xl md:text-5xl font-black transition-all duration-300",
                            fontFamily,
                            nameColor,
-                           nameGlow && "drop-shadow-[0_0_10px_currentColor]"
+                           nameGlow && "drop-shadow-[0_0_12px_currentColor]"
                          )}>
                             {displayName || "Gamer Pro"}
                          </h4>
@@ -382,15 +432,15 @@ export default function SettingsPage() {
                       {/* Font Selection */}
                       <div className="space-y-4">
                          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-                            <FontIcon className="h-4 w-4" /> Jenis Font
+                            <FontIcon className="h-4 w-4" /> Pilih Font
                          </div>
-                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
                             {FONT_OPTIONS.map((font) => (
                               <button
                                 key={font.id}
                                 onClick={() => setFontFamily(font.class)}
                                 className={cn(
-                                  "p-3 rounded-xl border text-sm font-bold transition-all",
+                                  "p-3 rounded-xl border text-sm font-bold transition-all h-12 flex items-center justify-center",
                                   fontFamily === font.class 
                                     ? "border-primary bg-primary/10 shadow-sm" 
                                     : "border-border/50 hover:border-primary/20"
@@ -402,19 +452,19 @@ export default function SettingsPage() {
                          </div>
                       </div>
 
-                      {/* Color Selection */}
+                      {/* Solid Color Selection */}
                       <div className="space-y-4">
                          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-                            <Palette className="h-4 w-4" /> Warna Nama
+                            <Palette className="h-4 w-4" /> Warna Solid
                          </div>
-                         <div className="flex flex-wrap gap-3">
-                            {COLOR_OPTIONS.map((color) => (
+                         <div className="grid grid-cols-5 sm:grid-cols-10 gap-3">
+                            {SOLID_COLORS.map((color) => (
                               <button
                                 key={color.id}
                                 onClick={() => setNameColor(color.class)}
                                 title={color.name}
                                 className={cn(
-                                  "h-10 w-10 rounded-full border-2 transition-all flex items-center justify-center relative",
+                                  "h-10 w-10 rounded-full border-2 transition-all flex items-center justify-center relative mx-auto",
                                   nameColor === color.class ? "border-primary scale-110" : "border-transparent"
                                 )}
                               >
@@ -425,8 +475,31 @@ export default function SettingsPage() {
                          </div>
                       </div>
 
+                      {/* Gradient Color Selection */}
+                      <div className="space-y-4">
+                         <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+                            <Sparkles className="h-4 w-4" /> Warna Gradient
+                         </div>
+                         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
+                            {GRADIENT_COLORS.map((grad) => (
+                              <button
+                                key={grad.id}
+                                onClick={() => setNameColor(grad.class)}
+                                className={cn(
+                                  "p-3 rounded-xl border text-xs font-black transition-all h-12 flex items-center justify-center",
+                                  nameColor === grad.class 
+                                    ? "border-primary bg-primary/10 shadow-sm" 
+                                    : "border-border/50 hover:border-primary/20"
+                                )}
+                              >
+                                <span className={grad.class}>{grad.name}</span>
+                              </button>
+                            ))}
+                         </div>
+                      </div>
+
                       {/* Glow Effect */}
-                      <div className="flex items-center justify-between p-5 rounded-2xl border border-border/50 bg-card/10">
+                      <div className="flex items-center justify-between p-6 rounded-2xl border border-border/50 bg-card/10 max-w-md">
                          <div className="space-y-1">
                             <p className="font-black text-sm">Efek Kilau Nama (Name Glow)</p>
                             <p className="text-[10px] text-muted-foreground font-bold">Memberikan cahaya neon sesuai warna pilihan Anda.</p>
