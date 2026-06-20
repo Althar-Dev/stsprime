@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { LeaderboardSkeleton } from "@/components/leaderboard-skeleton";
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
+import { LoginModal } from "@/components/auth/login-modal";
 
 // Backup placeholders with local assets
 const BACKUP_PLACEHOLDERS = [
@@ -43,6 +44,7 @@ export default function LeaderboardPage() {
   const router = useRouter();
   const [realUsers, setRealUsers] = useState<any[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchGlobalLeaderboard() {
@@ -368,68 +370,88 @@ export default function LeaderboardPage() {
                 MY STATS
               </h3>
               
-              <div className="flex items-center gap-4 mb-8">
-                <div className="relative">
-                  <div className={cn(
-                    "h-16 w-16 md:h-20 md:w-20 rounded-full flex items-center justify-center p-1 transition-all duration-300",
-                    currentUserData?.profileBg || "bg-muted/30"
-                  )}>
-                    <Avatar className="h-full w-full border-2 border-background shadow-xl">
-                      <AvatarImage src={displayPhotoURL} />
-                      <AvatarFallback className="bg-primary text-primary-foreground font-black text-xl">
-                        {userInitial}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                  {user && (
-                    <div className="absolute -bottom-1 -right-1 bg-background border border-primary/30 p-1 rounded-lg">
-                       <ShieldCheck className="h-4 w-4 text-primary" />
+              {user ? (
+                <>
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="relative">
+                      <div className={cn(
+                        "h-16 w-16 md:h-20 md:w-20 rounded-full flex items-center justify-center p-1 transition-all duration-300",
+                        currentUserData?.profileBg || "bg-muted/30"
+                      )}>
+                        <Avatar className="h-full w-full border-2 border-background shadow-xl">
+                          <AvatarImage src={displayPhotoURL} />
+                          <AvatarFallback className="bg-primary text-primary-foreground font-black text-xl">
+                            {userInitial}
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                      <div className="absolute -bottom-1 -right-1 bg-background border border-primary/30 p-1 rounded-lg">
+                         <ShieldCheck className="h-4 w-4 text-primary" />
+                      </div>
                     </div>
-                  )}
-                </div>
-                <div className="min-w-0 overflow-hidden">
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <p 
-                      className={cn("font-black text-lg md:text-xl leading-none truncate max-w-[140px]", currentUserData?.nameColor || "text-foreground")}
-                      style={currentUserData?.fontFamily ? { fontFamily: currentUserData.fontFamily } : {}}
-                    >
-                      {user?.displayName || "Gamer Pro"}
-                    </p>
-                    {currentUserData?.vip && (
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Image src="/img/badge/vip.png" alt="VIP" width={20} height={20} className="shrink-0 cursor-pointer" />
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-2">
-                          <p className="text-[10px] font-black">VIP Member</p>
-                        </PopoverContent>
-                      </Popover>
-                    )}
+                    <div className="min-w-0 overflow-hidden">
+                      <div className="flex items-center gap-1.5 mb-2">
+                        <p 
+                          className={cn("font-black text-lg md:text-xl leading-none truncate max-w-[140px]", currentUserData?.nameColor || "text-foreground")}
+                          style={currentUserData?.fontFamily ? { fontFamily: currentUserData.fontFamily } : {}}
+                        >
+                          {user?.displayName || "Gamer Pro"}
+                        </p>
+                        {currentUserData?.vip && (
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Image src="/img/badge/vip.png" alt="VIP" width={20} height={20} className="shrink-0 cursor-pointer" />
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-2">
+                              <p className="text-[10px] font-black">VIP Member</p>
+                            </PopoverContent>
+                          </Popover>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-primary text-primary-foreground text-[8px] font-black h-5 uppercase tracking-tighter">
+                          RANK #{myRank || "---"}
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-primary text-primary-foreground text-[8px] font-black h-5 uppercase tracking-tighter">
-                      RANK #{myRank || "---"}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
 
-              <div className="space-y-4">
-                <div className="flex justify-between text-xs font-black">
-                  <span className="text-muted-foreground tracking-widest uppercase text-[10px]">Your Points</span>
-                  <span className="text-primary text-sm">{userPoints.toLocaleString()} pts</span>
+                  <div className="space-y-4">
+                    <div className="flex justify-between text-xs font-black">
+                      <span className="text-muted-foreground tracking-widest uppercase text-[10px]">Your Points</span>
+                      <span className="text-primary text-sm">{userPoints.toLocaleString()} pts</span>
+                    </div>
+                    <div className="relative h-2.5 w-full bg-muted rounded-full overflow-hidden border border-border/30">
+                      <div 
+                        className="absolute top-0 left-0 bg-primary h-full rounded-full shadow-[0_0_10px_rgba(242,255,0,0.5)] transition-all duration-1000" 
+                        style={{ width: `${progressPercent}%` }}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between text-[9px] font-bold text-muted-foreground italic">
+                       <span>Newbie</span>
+                       <span>{Math.max(0, rookieGoal - userPoints).toLocaleString()} pts to Rookie</span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 text-center space-y-5 animate-in fade-in slide-in-from-bottom-2 duration-700">
+                  <div className="h-16 w-16 rounded-3xl bg-primary/10 flex items-center justify-center border border-primary/20 rotate-3">
+                    <ShieldCheck className="h-8 w-8 text-primary" />
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-sm font-black text-foreground uppercase tracking-tight">Data Terkunci</p>
+                    <p className="text-[10px] text-muted-foreground font-bold leading-relaxed max-w-[200px] mx-auto opacity-70">
+                      Silakan masuk ke akun Anda untuk melihat statistik poin dan peringkat pribadi di Hall of Fame.
+                    </p>
+                  </div>
+                  <Button 
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="h-10 px-8 rounded-xl bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all"
+                  >
+                    Masuk Sekarang
+                  </Button>
                 </div>
-                <div className="relative h-2.5 w-full bg-muted rounded-full overflow-hidden border border-border/30">
-                  <div 
-                    className="absolute top-0 left-0 bg-primary h-full rounded-full shadow-[0_0_10px_rgba(242,255,0,0.5)] transition-all duration-1000" 
-                    style={{ width: `${progressPercent}%` }}
-                  />
-                </div>
-                <div className="flex items-center justify-between text-[9px] font-bold text-muted-foreground italic">
-                   <span>Newbie</span>
-                   <span>{Math.max(0, rookieGoal - userPoints).toLocaleString()} pts to Rookie</span>
-                </div>
-              </div>
+              )}
             </div>
 
             <div className="bento-card p-6 bg-card/40 backdrop-blur-sm border-border/40">
@@ -460,6 +482,11 @@ export default function LeaderboardPage() {
       </main>
 
       <Footer />
+
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onOpenChange={setIsLoginModalOpen} 
+      />
     </div>
   );
 }
