@@ -70,7 +70,6 @@ const BACKGROUND_OPTIONS = [
   { id: "grad-cosmic", name: "Cosmic", class: "bg-gradient-to-br from-purple-600 to-blue-500" },
 ];
 
-// URUTAN AVATAR SESUAI PERMINTAAN
 const STATIC_AVATARS = [
   "dev.png",
   "boy.png", "boy-1.png", "boy-2.png", "boy-3.png", "boy-4.png",
@@ -106,45 +105,22 @@ const FONT_OPTIONS = [
   { id: "f20", name: "Comic Sans MS", class: "font-sans" },
 ];
 
-const SOLID_COLORS = [
-  { id: "s1", name: "White", class: "text-foreground" },
-  { id: "s2", name: "STS Gold", class: "text-primary" },
-  { id: "s3", name: "STS Blue", class: "text-accent" },
-  { id: "s4", name: "Red", class: "text-red-500" },
-  { id: "s5", name: "Rose", class: "text-rose-500" },
-  { id: "s6", name: "Pink", class: "text-pink-500" },
-  { id: "s7", name: "Fuchsia", class: "text-fuchsia-500" },
-  { id: "s8", name: "Purple", class: "text-purple-500" },
-  { id: "s9", name: "Violet", class: "text-violet-500" },
-  { id: "s10", name: "Indigo", class: "text-indigo-500" },
-  { id: "s11", name: "Blue", class: "text-blue-500" },
-  { id: "s12", name: "Sky", class: "text-sky-500" },
-  { id: "s13", name: "Cyan", class: "text-cyan-500" },
-  { id: "s14", name: "Teal", class: "text-teal-500" },
-  { id: "s15", name: "Emerald", class: "text-emerald-500" },
-  { id: "s16", name: "Green", class: "text-green-500" },
-  { id: "s17", name: "Lime", class: "text-lime-500" },
-  { id: "s18", name: "Yellow", class: "text-yellow-500" },
-  { id: "s19", name: "Amber", class: "text-amber-500" },
-  { id: "s20", name: "Orange", class: "text-orange-500" },
-];
-
 const GRADIENT_COLORS = [
-  { id: "g1", name: "Hyper", class: "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent" },
+  { id: "g1", name: "Hyper Gold", class: "bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent" },
   { id: "g2", name: "Oceanic", class: "bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent" },
   { id: "g3", name: "Sunset", class: "bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent" },
   { id: "g4", name: "Forest", class: "bg-gradient-to-r from-emerald-500 to-lime-500 bg-clip-text text-transparent" },
   { id: "g5", name: "Cosmic", class: "bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent" },
-  { id: "g6", name: "Rose", class: "bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent" },
+  { id: "g6", name: "Rose Bloom", class: "bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent" },
   { id: "g7", name: "Twilight", class: "bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent" },
   { id: "g8", name: "Gold Rush", class: "bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent" },
-  { id: "g9", name: "Neon", class: "bg-gradient-to-r from-lime-400 to-cyan-500 bg-clip-text text-transparent" },
+  { id: "g9", name: "Neon Lime", class: "bg-gradient-to-r from-lime-400 to-cyan-500 bg-clip-text text-transparent" },
   { id: "g10", name: "Lava", class: "bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent" },
-  { id: "g11", name: "Royal", class: "bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent" },
-  { id: "g12", name: "Candy", class: "bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" },
+  { id: "g11", name: "Royal Blue", class: "bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent" },
+  { id: "g12", name: "Cotton Candy", class: "bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" },
   { id: "g13", name: "Minty", class: "bg-gradient-to-r from-teal-400 to-green-500 bg-clip-text text-transparent" },
   { id: "g14", name: "Deep Sea", class: "bg-gradient-to-r from-slate-600 to-blue-800 bg-clip-text text-transparent" },
-  { id: "g15", name: "Morning", class: "bg-gradient-to-r from-sky-300 to-white bg-clip-text text-transparent" },
+  { id: "g15", name: "Morning Sky", class: "bg-gradient-to-r from-sky-300 to-white bg-clip-text text-transparent" },
   { id: "g16", name: "Aurora", class: "bg-gradient-to-r from-green-400 to-purple-500 bg-clip-text text-transparent" },
   { id: "g17", name: "Fire", class: "bg-gradient-to-r from-yellow-500 to-red-500 bg-clip-text text-transparent" },
   { id: "g18", name: "Gem", class: "bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent" },
@@ -170,7 +146,7 @@ export default function SettingsPage() {
   
   // States menggunakan ID untuk seleksi tunggal yang akurat
   const [selectedFontId, setSelectedFontId] = useState("f1");
-  const [selectedColorId, setSelectedColorId] = useState("s1");
+  const [selectedColorId, setSelectedColorId] = useState("g1");
   const [selectedBadgeId, setSelectedBadgeId] = useState("verified");
   
   const tabsListRef = useRef<HTMLDivElement>(null);
@@ -204,7 +180,7 @@ export default function SettingsPage() {
           setIsDev(!!data.dev);
           setNameGlow(!!data.nameGlow);
           setSelectedFontId(data.fontId || "f1");
-          setSelectedColorId(data.colorId || "s1");
+          setSelectedColorId(data.colorId || "g1");
           setSelectedBadgeId(data.badgeId || "verified");
         }
       } catch (error) {}
@@ -225,7 +201,7 @@ export default function SettingsPage() {
 
   // Ambil kelas aktif berdasarkan ID yang dipilih
   const activeFontClass = FONT_OPTIONS.find(f => f.id === selectedFontId)?.class || "font-sans";
-  const activeColorClass = [...SOLID_COLORS, ...GRADIENT_COLORS].find(c => c.id === selectedColorId)?.class || "text-foreground";
+  const activeColorClass = GRADIENT_COLORS.find(c => c.id === selectedColorId)?.class || "bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent";
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -244,8 +220,8 @@ export default function SettingsPage() {
         nameGlow,
         fontId: selectedFontId,
         colorId: selectedColorId,
-        fontFamily: activeFontClass, // Simpan kelas untuk kemudahan render di tempat lain
-        nameColor: activeColorClass,   // Simpan kelas untuk kemudahan render di tempat lain
+        fontFamily: activeFontClass,
+        nameColor: activeColorClass,
         badgeId: selectedBadgeId,
         email: user.email,
         updatedAt: new Date().toISOString(),
@@ -358,7 +334,6 @@ export default function SettingsPage() {
                                   {STATIC_AVATARS.map((file) => {
                                     if (file === "dev.png" && !isDev) return null;
                                     const avatarPath = `/img/ava/${file}`;
-                                    // SINKRONISASI PRATINJAU: Bandingkan path secara absolut
                                     const isSelected = avatarPath === displayPhotoURL;
                                     return (
                                       <button key={file} type="button" onClick={() => setPhotoURL(avatarPath)} className={cn("relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110", isSelected ? "border-primary shadow-lg ring-2 ring-primary/20" : "border-border/30 bg-muted/20")}>
@@ -440,7 +415,7 @@ export default function SettingsPage() {
                          </h4>
                       </div>
 
-                      {/* Font Selection - MENGGUNAKAN ID UNTUK SELEKSI TUNGGAL */}
+                      {/* Font Selection */}
                       <div className="space-y-4">
                          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                             <FontIcon className="h-4 w-4" /> Pilih Font
@@ -463,33 +438,10 @@ export default function SettingsPage() {
                          </div>
                       </div>
 
-                      {/* Solid Color Selection - MENGGUNAKAN ID UNTUK SELEKSI TUNGGAL */}
+                      {/* Gradient Color Selection */}
                       <div className="space-y-4">
                          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-                            <Palette className="h-4 w-4" /> Warna Solid
-                         </div>
-                         <div className="grid grid-cols-5 sm:grid-cols-10 gap-3">
-                            {SOLID_COLORS.map((color) => (
-                              <button
-                                key={color.id}
-                                onClick={() => setSelectedColorId(color.id)}
-                                title={color.name}
-                                className={cn(
-                                  "h-10 w-10 rounded-full border-2 transition-all flex items-center justify-center relative mx-auto",
-                                  selectedColorId === color.id ? "border-primary scale-110" : "border-transparent"
-                                )}
-                              >
-                                <div className={cn("h-7 w-7 rounded-full", color.class.replace("text-", "bg-"))} />
-                                {selectedColorId === color.id && <Check className="h-4 w-4 text-white absolute" />}
-                              </button>
-                            ))}
-                         </div>
-                      </div>
-
-                      {/* Gradient Color Selection - MENGGUNAKAN ID UNTUK SELEKSI TUNGGAL */}
-                      <div className="space-y-4">
-                         <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-                            <Sparkles className="h-4 w-4" /> Warna Gradient
+                            <Sparkles className="h-4 w-4" /> Pilih Warna (Gradient)
                          </div>
                          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
                             {GRADIENT_COLORS.map((grad) => (
