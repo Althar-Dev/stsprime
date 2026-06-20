@@ -151,10 +151,10 @@ export default function DashboardPage() {
               
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl md:text-6xl lg:text-7xl font-black text-primary tracking-tighter">
+                  <span className="text-3xl md:text-4xl lg:text-5xl font-black text-primary tracking-tighter">
                     {(profileData?.coins || 0).toLocaleString()}
                   </span>
-                  <span className="text-sm md:text-lg text-muted-foreground font-black uppercase tracking-widest">Coins</span>
+                  <span className="text-xs md:text-sm text-muted-foreground font-black uppercase tracking-widest">Coins</span>
                 </div>
                 <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-4 border-t border-border/40 pt-6">
                   <p className="text-[11px] md:text-xs text-muted-foreground font-bold flex items-center gap-2 max-w-md italic">
