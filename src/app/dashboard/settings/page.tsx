@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -81,66 +82,66 @@ const BADGE_OPTIONS = [
 ];
 
 const FONT_OPTIONS = [
-  { id: "f1", name: "Inter", class: "font-sans" },
-  { id: "f2", name: "Space Grotesk", class: "font-headline" },
-  { id: "f3", name: "Roboto", class: "font-sans" },
-  { id: "f4", name: "Helvetica", class: "font-sans" },
-  { id: "f5", name: "Arial", class: "font-sans" },
-  { id: "f6", name: "Verdana", class: "font-sans" },
-  { id: "f7", name: "Tahoma", class: "font-sans" },
-  { id: "f8", name: "Trebuchet MS", class: "font-sans" },
-  { id: "f9", name: "Lucida Sans", class: "font-sans" },
-  { id: "f10", name: "Gill Sans", class: "font-sans" },
-  { id: "f11", name: "Times New Roman", class: "font-serif" },
-  { id: "f12", name: "Georgia", class: "font-serif" },
-  { id: "f13", name: "Palatino", class: "font-serif" },
-  { id: "f14", name: "Garamond", class: "font-serif" },
-  { id: "f15", name: "Bookman", class: "font-serif" },
-  { id: "f16", name: "Courier New", class: "font-mono" },
-  { id: "f17", name: "Monaco", class: "font-mono" },
-  { id: "f18", name: "Lucida Console", class: "font-mono" },
-  { id: "f19", name: "Impact", class: "font-sans uppercase" },
-  { id: "f20", name: "Comic Sans MS", class: "font-sans" },
-  { id: "f21", name: "Montserrat", class: "font-sans" },
-  { id: "f22", name: "Lato", class: "font-sans" },
-  { id: "f23", name: "Open Sans", class: "font-sans" },
-  { id: "f24", name: "Oswald", class: "font-sans uppercase" },
-  { id: "f25", name: "Raleway", class: "font-sans" },
-  { id: "f26", name: "Playfair Display", class: "font-serif italic" },
-  { id: "f27", name: "Merriweather", class: "font-serif" },
-  { id: "f28", name: "Ubuntu", class: "font-sans" },
-  { id: "f29", name: "Lora", class: "font-serif" },
-  { id: "f30", name: "Nunito", class: "font-sans" },
-  { id: "f31", name: "PT Sans", class: "font-sans" },
-  { id: "f32", name: "PT Serif", class: "font-serif" },
-  { id: "f33", name: "Roboto Slab", class: "font-serif" },
-  { id: "f34", name: "Josefin Sans", class: "font-sans" },
-  { id: "f35", name: "Arvo", class: "font-serif" },
-  { id: "f36", name: "Cabin", class: "font-sans" },
-  { id: "f37", name: "Dosis", class: "font-sans" },
-  { id: "f38", name: "Kanit", class: "font-sans" },
-  { id: "f39", name: "Oxygen", class: "font-sans" },
-  { id: "f40", name: "Bitter", class: "font-serif" },
-  { id: "f41", name: "Fredoka", class: "font-sans" },
-  { id: "f42", name: "Righteous", class: "font-sans" },
-  { id: "f43", name: "Permanent Marker", class: "font-sans" },
-  { id: "f44", name: "Metal Mania", class: "font-sans" },
-  { id: "f45", name: "Pirata Gothic", class: "font-serif" },
-  { id: "f46", name: "Cinzel", class: "font-serif" },
-  { id: "f47", name: "Sacramento", class: "font-serif" },
-  { id: "f48", name: "Bungee", class: "font-sans" },
-  { id: "f49", name: "Creepster", class: "font-sans" },
-  { id: "f50", name: "Monoton", class: "font-sans" },
-  { id: "f51", name: "Faster One", class: "font-sans" },
-  { id: "f52", name: "Bangers", class: "font-sans" },
-  { id: "f53", name: "Luckiest Guy", class: "font-sans" },
-  { id: "f54", name: "Press Start 2P", class: "font-mono" },
-  { id: "f55", name: "Silkscreen", class: "font-mono" },
-  { id: "f56", name: "Kalam", class: "font-sans" },
-  { id: "f57", name: "Handlee", class: "font-sans" },
-  { id: "f58", name: "Courgette", class: "font-serif" },
-  { id: "f59", name: "Marck Script", class: "font-serif" },
-  { id: "f60", name: "Cookie", class: "font-serif" },
+  { id: "f1", name: "Inter" },
+  { id: "f2", name: "Space Grotesk" },
+  { id: "f3", name: "Roboto" },
+  { id: "f4", name: "Helvetica" },
+  { id: "f5", name: "Arial" },
+  { id: "f6", name: "Verdana" },
+  { id: "f7", name: "Tahoma" },
+  { id: "f8", name: "Trebuchet MS" },
+  { id: "f9", name: "Lucida Sans" },
+  { id: "f10", name: "Gill Sans" },
+  { id: "f11", name: "Times New Roman" },
+  { id: "f12", name: "Georgia" },
+  { id: "f13", name: "Palatino" },
+  { id: "f14", name: "Garamond" },
+  { id: "f15", name: "Bookman" },
+  { id: "f16", name: "Courier New" },
+  { id: "f17", name: "Monaco" },
+  { id: "f18", name: "Lucida Console" },
+  { id: "f19", name: "Impact" },
+  { id: "f20", name: "Comic Sans MS" },
+  { id: "f21", name: "Montserrat" },
+  { id: "f22", name: "Lato" },
+  { id: "f23", name: "Open Sans" },
+  { id: "f24", name: "Oswald" },
+  { id: "f25", name: "Raleway" },
+  { id: "f26", name: "Playfair Display" },
+  { id: "f27", name: "Merriweather" },
+  { id: "f28", name: "Ubuntu" },
+  { id: "f29", name: "Lora" },
+  { id: "f30", name: "Nunito" },
+  { id: "f31", name: "PT Sans" },
+  { id: "f32", name: "PT Serif" },
+  { id: "f33", name: "Roboto Slab" },
+  { id: "f34", name: "Josefin Sans" },
+  { id: "f35", name: "Arvo" },
+  { id: "f36", name: "Cabin" },
+  { id: "f37", name: "Dosis" },
+  { id: "f38", name: "Kanit" },
+  { id: "f39", name: "Oxygen" },
+  { id: "f40", name: "Bitter" },
+  { id: "f41", name: "Fredoka" },
+  { id: "f42", name: "Righteous" },
+  { id: "f43", name: "Permanent Marker" },
+  { id: "f44", name: "Metal Mania" },
+  { id: "f45", name: "Pirata Gothic" },
+  { id: "f46", name: "Cinzel" },
+  { id: "f47", name: "Sacramento" },
+  { id: "f48", name: "Bungee" },
+  { id: "f49", name: "Creepster" },
+  { id: "f50", name: "Monoton" },
+  { id: "f51", name: "Faster One" },
+  { id: "f52", name: "Bangers" },
+  { id: "f53", name: "Luckiest Guy" },
+  { id: "f54", name: "Press Start 2P" },
+  { id: "f55", name: "Silkscreen" },
+  { id: "f56", name: "Kalam" },
+  { id: "f57", name: "Handlee" },
+  { id: "f58", name: "Courgette" },
+  { id: "f59", name: "Marck Script" },
+  { id: "f60", name: "Cookie" },
 ];
 
 const GRADIENT_COLORS = [
@@ -179,6 +180,7 @@ export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [isDev, setIsDev] = useState(false);
+  const [isVip, setIsVip] = useState(false);
   const [firestorePhotoURL, setFirestorePhotoURL] = useState("");
   
   const [selectedFontId, setSelectedFontId] = useState("f1");
@@ -217,6 +219,7 @@ export default function SettingsPage() {
           setFirestorePhotoURL(data.photoURL || "");
           setProfileBg(data.profileBg || "bg-muted/30");
           setIsDev(!!data.dev);
+          setIsVip(!!data.vip);
           setSelectedFontId(data.fontId || "f1");
           setSelectedColorId(data.colorId || "g1");
           setSelectedBadgeId(data.badgeId || "verified");
@@ -529,6 +532,35 @@ export default function SettingsPage() {
                    </div>
                    
                    <div className="flex flex-wrap gap-4 md:gap-5 pl-3 md:pl-4">
+                      {/* VIP Badge - Only visible if isVip is true */}
+                      {isVip && (
+                        <div className="relative group">
+                          <div className={cn(
+                            "h-16 w-16 md:h-20 md:w-20 rounded-2xl border-2 border-primary bg-primary/10 flex items-center justify-center transition-all relative scale-105 shadow-lg shadow-primary/20"
+                          )}>
+                            <Image src="/img/badge/vip.png" alt="VIP" width={48} height={48} className="object-contain" />
+                            <div className="absolute -top-1.5 -right-1.5 h-6 w-6 md:h-7 md:w-7 rounded-full bg-primary flex items-center justify-center border-2 border-background shadow-md">
+                              <Check className="h-3 w-3 md:h-4 md:w-4 text-primary-foreground" />
+                            </div>
+                          </div>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <button type="button" className="absolute -bottom-1 -right-1 h-5 w-5 md:h-6 md:w-6 rounded-full bg-muted border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm">
+                                <CircleHelp className="h-3 w-3 md:h-3.5 md:w-3.5" />
+                              </button>
+                            </PopoverTrigger>
+                            <PopoverContent side="bottom" className="rounded-xl border-primary/20 bg-background px-4 py-3 w-56 shadow-2xl animate-in zoom-in-95 duration-200">
+                              <div className="space-y-1">
+                                <p className="text-xs font-black flex items-center gap-2">
+                                   VIP Member
+                                </p>
+                                <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">Badge eksklusif untuk member VIP.</p>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      )}
+
                       {BADGE_OPTIONS.map((badge) => {
                         const isSelected = selectedBadgeId === badge.id;
                         return (

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Gamepad2, History, LayoutDashboard, ArrowUpRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 const RECENT_TRANSACTIONS = [
@@ -96,14 +97,19 @@ export default function DashboardPage() {
                 <ShieldCheck className="h-5 w-5 text-primary" />
               </div>
             </div>
-            <h2 className="font-headline text-xl md:text-2xl font-black tracking-tight text-foreground line-clamp-1">
-              {user?.displayName || "Gamer Pro"}
-            </h2>
-            <p className="text-xs text-muted-foreground font-bold truncate max-w-full mt-1 mb-6 opacity-70">
+            <div className="flex items-center gap-2 justify-center mb-1">
+              <h2 className="font-headline text-xl md:text-2xl font-black tracking-tight text-foreground line-clamp-1">
+                {user?.displayName || "Gamer Pro"}
+              </h2>
+              {profileData?.vip && (
+                <Image src="/img/badge/vip.png" alt="VIP" width={24} height={24} className="shrink-0" />
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground font-bold truncate max-w-full mb-6 opacity-70">
               {user?.email || "guest@stspedia.com"}
             </p>
             <Badge className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 text-[10px] font-black tracking-widest rounded-full uppercase">
-              {profileData?.dev ? "Developer Verified" : "Member Verified"}
+              {profileData?.dev ? "Developer Verified" : (profileData?.vip ? "VIP Member" : "Member Verified")}
             </Badge>
           </div>
         </div>

@@ -28,9 +28,13 @@
           "type": "string",
           "description": "Kelas latar belakang profil."
         },
-        "nameGlow": {
-          "type": "boolean",
-          "description": "Apakah nama memiliki efek kilau."
+        "fontId": {
+          "type": "string",
+          "description": "ID font yang dipilih."
+        },
+        "colorId": {
+          "type": "string",
+          "description": "ID warna yang dipilih."
         },
         "fontFamily": {
           "type": "string",
@@ -43,6 +47,10 @@
         "badgeId": {
           "type": "string",
           "description": "ID badge yang dipilih."
+        },
+        "vip": {
+          "type": "boolean",
+          "description": "Apakah pengguna adalah member VIP."
         }
       },
       "required": ["email"]

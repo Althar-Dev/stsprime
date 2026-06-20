@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Footer } from "@/components/footer";
@@ -255,7 +256,12 @@ export default function LeaderboardPage() {
                   </div>
                 </div>
                 <div>
-                  <p className="font-black text-lg md:text-xl leading-none mb-2 truncate max-w-[140px]">{user?.displayName || "Gamer Pro"}</p>
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <p className="font-black text-lg md:text-xl leading-none truncate max-w-[140px]">{user?.displayName || "Gamer Pro"}</p>
+                    {profileData?.vip && (
+                      <Image src="/img/badge/vip.png" alt="VIP" width={20} height={20} className="shrink-0" />
+                    )}
+                  </div>
                   <div className="flex items-center gap-2">
                     <Badge className="bg-primary text-primary-foreground text-[8px] font-black h-5">RANK #854</Badge>
                   </div>

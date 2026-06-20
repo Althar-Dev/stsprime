@@ -1,3 +1,4 @@
+
 "use client";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -8,6 +9,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export function DashboardHeader() {
@@ -62,9 +64,14 @@ export function DashboardHeader() {
           
           <div className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 border-l border-border/50">
             <div className="hidden lg:flex flex-col items-end">
-              <span className="text-xs font-black leading-none text-foreground">{user?.displayName || "Gamer"}</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-black leading-none text-foreground">{user?.displayName || "Gamer"}</span>
+                {profileData?.vip && (
+                  <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
+                )}
+              </div>
               <Badge className="bg-primary/10 text-primary border border-primary/20 text-[9px] font-black h-4 px-1.5 mt-1 rounded-sm">
-                {profileData?.dev ? "Developer" : "Terverifikasi"}
+                {profileData?.dev ? "Developer" : (profileData?.vip ? "VIP Member" : "Terverifikasi")}
               </Badge>
             </div>
             <div className={cn(

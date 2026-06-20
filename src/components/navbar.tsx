@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef, Suspense } from "react";
@@ -16,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { useUser, useAuth, useFirestore } from "@/firebase";
 import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -225,7 +227,12 @@ export function Navbar() {
                         <DropdownMenuContent className="w-56 rounded-xl border-border" align="end" forceMount>
                           <DropdownMenuLabel className="font-normal">
                             <div className="flex flex-col space-y-1">
-                              <p className="text-sm font-black leading-none">{user.displayName || "Gamer"}</p>
+                              <div className="flex items-center gap-1.5">
+                                <p className="text-sm font-black leading-none">{user.displayName || "Gamer"}</p>
+                                {profileData?.vip && (
+                                  <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
+                                )}
+                              </div>
                               <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
                             </div>
                           </DropdownMenuLabel>
@@ -271,7 +278,12 @@ export function Navbar() {
                         <div className="flex items-center gap-3">
                           <Logo className="h-10 w-10" />
                           <div>
-                            <h3 className="font-headline font-black text-base tracking-tight leading-none">STS Pedia</h3>
+                            <div className="flex items-center gap-1.5">
+                              <h3 className="font-headline font-black text-base tracking-tight leading-none">STS Pedia</h3>
+                              {profileData?.vip && (
+                                <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
+                              )}
+                            </div>
                             <p className="text-[9px] text-muted-foreground font-bold mt-1">from StarVale</p>
                           </div>
                         </div>
