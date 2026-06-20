@@ -49,7 +49,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 
 const TABS_CONFIG = [
   { id: "profile", label: "Profil", icon: User },
@@ -300,18 +300,6 @@ export default function SettingsPage() {
 
   return (
     <div className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-12 w-full max-w-6xl mx-auto">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-headline text-2xl md:text-4xl lg:text-5xl font-black tracking-tight flex items-center gap-4">
-          <div className="h-10 w-10 md:h-14 md:w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Settings className="h-6 w-6 md:h-8 md:w-8 text-primary" />
-          </div>
-          Pengaturan
-        </h1>
-        <p className="text-sm md:text-base text-muted-foreground font-bold opacity-75">
-          Kelola informasi identitas dan kustomisasi tampilan profil Anda.
-        </p>
-      </div>
-
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-8 md:space-y-10">
         <div className="border-b border-border/60 relative overflow-x-auto no-scrollbar scroll-smooth w-full">
           <TabsList 
