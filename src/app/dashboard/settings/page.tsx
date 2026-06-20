@@ -96,6 +96,19 @@ const BACKGROUND_OPTIONS = [
   { id: "grad-space", name: "Deep Space", class: "bg-gradient-to-bl from-gray-900 via-purple-900 to-violet-600" },
 ];
 
+// LIST AVATAR STATIS - SESUAI INSTRUKSI (boy.png, boy-1 s/d 4, girl.png, girl-1 s/d 3)
+const STATIC_AVATAR_LIST = [
+  "boy.png",
+  "boy-1.png",
+  "boy-2.png",
+  "boy-3.png",
+  "boy-4.png",
+  "girl.png",
+  "girl-1.png",
+  "girl-2.png",
+  "girl-3.png"
+];
+
 export default function SettingsPage() {
   const { user } = useUser();
   const auth = useAuth();
@@ -105,30 +118,21 @@ export default function SettingsPage() {
 
   const [activeTab, setActiveTab] = useState("profile");
   const [displayName, setDisplayName] = useState("");
-  const [photoURL, setPhotoURL] = useState("");
+  const [photoURL, setPhotoURL] = useState(""); // State untuk pilihan avatar aktif
   const [profileBg, setProfileBg] = useState("bg-muted/30");
   const [isSaving, setIsSaving] = useState(false);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [isDev, setIsDev] = useState(false);
+  const [firestorePhotoURL, setFirestorePhotoURL] = useState("");
   
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
-  // DAFTAR AVATAR STATIS - TIDAK BOLEH BERUBAH DAN TIDAK BOLEH DOUBLE
+  // Daftar avatar yang akan ditampilkan di grid - DIJAMIN UNIK & STATIS
   const availableAvatars = useMemo(() => {
-    const list = [
-      "boy.png", 
-      "boy-1.png", 
-      "boy-2.png", 
-      "boy-3.png", 
-      "boy-4.png",
-      "girl.png", 
-      "girl-1.png", 
-      "girl-2.png", 
-      "girl-3.png"
-    ];
-
-    // dev.png hanya ditambahkan secara manual di depan jika user adalah Developer
+    // Selalu mulai dengan list bersih untuk mencegah duplikasi
+    const list = [...STATIC_AVATAR_LIST];
+    // Tambahkan dev.png di awal HANYA jika user adalah Developer
     if (isDev) {
       return ["dev.png", ...list];
     }
@@ -160,12 +164,12 @@ export default function SettingsPage() {
         if (docSnap.exists()) {
           const data = docSnap.data();
           setDisplayName(data.displayName || user.displayName || "");
-          setPhotoURL(data.photoURL || "");
+          setFirestorePhotoURL(data.photoURL || "");
           setProfileBg(data.profileBg || "bg-muted/30");
           setIsDev(!!data.dev);
         } else {
           setDisplayName(user.displayName || "");
-          setPhotoURL("");
+          setFirestorePhotoURL("");
           setProfileBg("bg-muted/30");
           setIsDev(false);
         }
@@ -188,8 +192,8 @@ export default function SettingsPage() {
 
     setIsSaving(true);
     try {
-      // Logic: Prioritas pilihan photoURL, jika kosong dan dev gunakan dev.png, jika tidak gunakan foto auth
-      const finalPhotoURL = photoURL || (isDev ? "/img/ava/dev.png" : (user.photoURL || ""));
+      // Prioritas: photoURL (state klik) > firestorePhotoURL > dev.png (jika dev) > auth photo
+      const finalPhotoURL = photoURL || firestorePhotoURL || (isDev ? "/img/ava/dev.png" : (user.photoURL || ""));
       
       await updateProfile(user, { 
         displayName, 
@@ -215,6 +219,8 @@ export default function SettingsPage() {
           errorEmitter.emit('permission-error', permissionError);
         });
 
+      setFirestorePhotoURL(finalPhotoURL);
+      setPhotoURL(""); // Reset state klik setelah simpan
       toast({
         title: "Berhasil",
         description: "Profil Anda telah diperbarui.",
@@ -232,12 +238,13 @@ export default function SettingsPage() {
 
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic pratinjau utama - KONSISTEN
+  // LOGIKA PRATINJAU UTAMA - HARUS KONSISTEN DENGAN PILIHAN GRID
   const displayPhotoURL = useMemo(() => {
-    if (photoURL) return photoURL;
-    if (isDev) return "/img/ava/dev.png";
-    return user?.photoURL || "";
-  }, [photoURL, isDev, user?.photoURL]);
+    if (photoURL) return photoURL; // Apa yang baru saja diklik
+    if (firestorePhotoURL) return firestorePhotoURL; // Apa yang ada di DB
+    if (isDev) return "/img/ava/dev.png"; // Fallback dev
+    return user?.photoURL || ""; // Fallback auth
+  }, [photoURL, firestorePhotoURL, isDev, user?.photoURL]);
 
   return (
     <div className="p-4 md:p-6 lg:p-10 space-y-8 md:space-y-12 w-full mx-auto">
@@ -353,7 +360,7 @@ export default function SettingsPage() {
                               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
                                 {availableAvatars.map((file) => {
                                   const avatarPath = `/img/ava/${file}`;
-                                  // Seleksi harus cocok persis dengan yang tampil di pratinjau utama
+                                  // PERBANDINGAN HARUS EKSAK DENGAN displayPhotoURL AGAR HIGHLIGHT BENAR
                                   const isSelected = avatarPath === displayPhotoURL;
                                   
                                   return (
