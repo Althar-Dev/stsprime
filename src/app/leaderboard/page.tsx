@@ -20,8 +20,10 @@ import { useState, useEffect, useMemo } from "react";
 import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import { cn } from "@/lib/utils";
 import { LeaderboardSkeleton } from "@/components/leaderboard-skeleton";
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
-// Backup placeholders if database is empty or has few users
+// Backup placeholders with local assets
 const BACKUP_PLACEHOLDERS = [
   { id: "p1", name: "Sultan_MLBB", points: 45280, avatar: "/img/avas/boy-1.png", isPlaceholder: true },
   { id: "p2", name: "RiotGamer99", points: 38150, avatar: "/img/avas/boy-2.png", isPlaceholder: true },
@@ -46,41 +48,43 @@ export default function LeaderboardPage() {
     async function fetchGlobalLeaderboard() {
       if (!db) return;
       
-      try {
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, orderBy("points", "desc"), limit(20));
-        const querySnapshot = await getDocs(q);
-        
-        const fetchedUsers = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          isPlaceholder: false
-        }));
-        
-        setRealUsers(fetchedUsers);
-      } catch (error) {
-        console.error("Error fetching leaderboard:", error);
-      } finally {
-        setIsInitialLoading(false);
-      }
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, orderBy("points", "desc"), limit(20));
+      
+      getDocs(q)
+        .then((querySnapshot) => {
+          const fetchedUsers = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            isPlaceholder: false
+          }));
+          setRealUsers(fetchedUsers);
+          setIsInitialLoading(false);
+        })
+        .catch(async (serverError) => {
+          const permissionError = new FirestorePermissionError({
+            path: 'users',
+            operation: 'list',
+          } satisfies SecurityRuleContext);
+
+          errorEmitter.emit('permission-error', permissionError);
+          setIsInitialLoading(false);
+        });
     }
 
     fetchGlobalLeaderboard();
   }, [db]);
 
   const leaderboardData = useMemo(() => {
-    // Merge real users with placeholders to ensure a full list of at least 10
     let combined = [...realUsers];
     
-    // Add placeholders if we have fewer than 10 users to keep the "Hall of Fame" populated
     if (combined.length < 10) {
       const needed = 10 - combined.length;
       const placeholdersToAdd = BACKUP_PLACEHOLDERS.slice(0, needed);
       combined = [...combined, ...placeholdersToAdd];
     }
 
-    // Sort again by points to ensure consistency
-    return combined.sort((a, b) => b.points - a.points).map((item, index) => ({
+    return combined.sort((a, b) => (b.points || 0) - (a.points || 0)).map((item, index) => ({
       ...item,
       rank: index + 1
     }));
@@ -137,7 +141,6 @@ export default function LeaderboardPage() {
           </p>
         </div>
 
-        {/* Dynamic Podium */}
         <div className="flex items-end justify-center gap-1 md:gap-6 mb-20 md:mb-32 px-1 max-w-4xl mx-auto">
           {/* RANK 2 */}
           <div className="flex flex-col items-center flex-1">
@@ -283,7 +286,7 @@ export default function LeaderboardPage() {
                   </div>
                   <div>
                     <h3 className="font-headline font-black text-sm md:text-lg text-foreground">Peringkat Global</h3>
-                    <p className="text-[9px] md:text-[10px] text-muted-foreground font-bold">Pemain Teratas Musim Ini</p>
+                    <p className="text-[9px] md:text-[10px] text-muted-foreground font-bold">Peringkat #4 - #10 Musim Ini</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 md:gap-2 text-green-500 bg-green-500/10 px-2 md:px-3 py-1 rounded-full border border-green-500/20">

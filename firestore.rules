@@ -2,10 +2,10 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow users to read any profile for leaderboard purposes
-    // but only allow writing to their own profile
+    // Mengizinkan semua orang membaca profil pengguna untuk keperluan leaderboard global
+    // Namun penulisan hanya diizinkan bagi pengguna yang terautentikasi pada dokumen mereka sendiri
     match /users/{userId} {
-      allow read: if request.auth != null;
+      allow read: if true;
       allow write: if request.auth != null && request.auth.uid == userId;
     }
     
