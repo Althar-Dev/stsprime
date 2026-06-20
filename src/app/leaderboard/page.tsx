@@ -71,7 +71,7 @@ export default function LeaderboardPage() {
         fontFamily: profileData?.fontFamily,
         nameColor: profileData?.nameColor,
         vip: profileData?.vip,
-        profileBg: profileData?.profileBg
+        profileBg: profileData?.profileBg || "bg-muted/30"
       });
     }
 
@@ -83,7 +83,7 @@ export default function LeaderboardPage() {
   }, [user, userPoints, profileData, displayPhotoURL]);
 
   const TOP_THREE = leaderboardData.slice(0, 3);
-  const OTHER_RANKS = leaderboardData.slice(3, 11); // Show top 10 total after top 3
+  const OTHER_RANKS = leaderboardData.slice(3, 11);
 
   const myRank = leaderboardData.find(item => item.id === user?.uid)?.rank || 0;
   const rookieGoal = 2000;
@@ -131,10 +131,15 @@ export default function LeaderboardPage() {
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-24 md:w-48 flex items-center justify-center mb-2">
                 <Image src="/img/border/two.png" alt="Rank 2 Border" fill className="object-contain z-20" unoptimized />
-                <Avatar className="h-8 w-8 md:h-16 md:w-16 shadow-xl relative z-10 border-2 border-slate-400/30">
-                  <AvatarImage src={TOP_THREE[1]?.avatar} alt={TOP_THREE[1]?.name} />
-                  <AvatarFallback className="bg-muted text-[10px]">{TOP_THREE[1]?.name?.charAt(0)}</AvatarFallback>
-                </Avatar>
+                <div className={cn(
+                  "h-8 w-8 md:h-16 md:w-16 rounded-full flex items-center justify-center p-0.5 md:p-1 shadow-xl relative z-10",
+                  !TOP_THREE[1]?.isPlaceholder ? TOP_THREE[1]?.profileBg : "bg-muted/20"
+                )}>
+                  <Avatar className="h-full w-full border border-background">
+                    <AvatarImage src={TOP_THREE[1]?.avatar} alt={TOP_THREE[1]?.name} />
+                    <AvatarFallback className="bg-muted text-[10px]">{TOP_THREE[1]?.name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                </div>
               </div>
               <p 
                 className={cn("font-black text-[9px] md:text-sm truncate w-20 md:w-32", !TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.nameColor)}
@@ -155,14 +160,19 @@ export default function LeaderboardPage() {
 
           {/* RANK 1 */}
           <div className="flex flex-col items-center flex-1 relative -top-3 md:-top-4">
-            <Crown className="h-5 w-5 md:h-10 md:w-10 text-primary mb-1 md:mb-2" />
+            <Crown className="h-5 w-5 md:h-10 md:w-10 text-primary mb-1 md:mb-2 animate-bounce" />
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-32 md:w-64 flex items-center justify-center mb-2">
                 <Image src="/img/border/one.png" alt="Rank 1 Border" fill className="object-contain z-20" priority unoptimized />
-                <Avatar className="h-12 w-12 md:h-24 md:w-24 md:border-4 shadow-2xl relative z-10 border-primary/30">
-                  <AvatarImage src={TOP_THREE[0]?.avatar} alt={TOP_THREE[0]?.name} />
-                  <AvatarFallback className="bg-primary/20 text-primary font-black">{TOP_THREE[0]?.name?.charAt(0)}</AvatarFallback>
-                </Avatar>
+                <div className={cn(
+                  "h-12 w-12 md:h-24 md:w-24 rounded-full flex items-center justify-center p-0.5 md:p-1.5 shadow-2xl relative z-10",
+                  !TOP_THREE[0]?.isPlaceholder ? TOP_THREE[0]?.profileBg : "bg-muted/20"
+                )}>
+                  <Avatar className="h-full w-full border border-background">
+                    <AvatarImage src={TOP_THREE[0]?.avatar} alt={TOP_THREE[0]?.name} />
+                    <AvatarFallback className="bg-primary/20 text-primary font-black">{TOP_THREE[0]?.name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                </div>
               </div>
               <p 
                 className={cn("font-black text-[11px] md:text-lg truncate w-24 md:w-40", !TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.nameColor)}
@@ -186,10 +196,15 @@ export default function LeaderboardPage() {
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-20 md:w-40 flex items-center justify-center mb-2">
                 <Image src="/img/border/three.png" alt="Rank 3 Border" fill className="object-contain z-20" unoptimized />
-                <Avatar className="h-7 w-7 md:h-12 md:w-12 shadow-xl relative z-10 border-2 border-orange-400/30">
-                  <AvatarImage src={TOP_THREE[2]?.avatar} alt={TOP_THREE[2]?.name} />
-                  <AvatarFallback className="bg-muted text-[10px]">{TOP_THREE[2]?.name?.charAt(0)}</AvatarFallback>
-                </Avatar>
+                <div className={cn(
+                  "h-7 w-7 md:h-12 md:w-12 rounded-full flex items-center justify-center p-0.5 md:p-1 shadow-xl relative z-10",
+                  !TOP_THREE[2]?.isPlaceholder ? TOP_THREE[2]?.profileBg : "bg-muted/20"
+                )}>
+                  <Avatar className="h-full w-full border border-background">
+                    <AvatarImage src={TOP_THREE[2]?.avatar} alt={TOP_THREE[2]?.name} />
+                    <AvatarFallback className="bg-muted text-[10px]">{TOP_THREE[2]?.name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                </div>
               </div>
               <p 
                 className={cn("font-black text-[8px] md:text-xs truncate w-16 md:w-28", !TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.nameColor)}
@@ -237,24 +252,30 @@ export default function LeaderboardPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {OTHER_RANKS.map((item) => (
-                      <TableRow key={item.id} className={cn("border-border/20 transition-all group", !item.isPlaceholder ? "bg-primary/5 hover:bg-primary/10" : "hover:bg-muted/30")}>
+                    {leaderboardData.slice(0, 10).map((item) => (
+                      <TableRow key={item.id} className={cn("border-border/20 transition-all group", item.id === user?.uid ? "bg-primary/5 hover:bg-primary/10" : "hover:bg-muted/30")}>
                         <TableCell className="text-center p-3 md:p-4">
                           <span className="font-black text-xs md:text-sm text-muted-foreground group-hover:text-foreground transition-colors">#{item.rank}</span>
                         </TableCell>
                         <TableCell className="p-3 md:p-4">
                           <div className="flex items-center gap-2 md:gap-3">
-                            <Avatar className="h-7 w-7 md:h-9 md:w-9 border border-border/60">
-                              <AvatarImage src={item.avatar} />
-                              <AvatarFallback className="bg-muted text-[10px]">{item.name?.charAt(0)}</AvatarFallback>
-                            </Avatar>
+                            <div className={cn(
+                              "h-7 w-7 md:h-9 md:w-9 rounded-full flex items-center justify-center p-0.5",
+                              !item.isPlaceholder ? (item.profileBg || "bg-muted/30") : "bg-muted/20"
+                            )}>
+                              <Avatar className="h-full w-full border border-background">
+                                <AvatarImage src={item.avatar} />
+                                <AvatarFallback className="bg-muted text-[10px]">{item.name?.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                            </div>
                             <div className="min-w-0">
                               <p 
-                                className={cn("font-black text-xs md:text-sm flex items-center gap-1 truncate", !item.isPlaceholder && item.nameColor)}
+                                className={cn("font-black text-xs md:text-sm flex items-center gap-1 truncate", !item.isPlaceholder && (item.nameColor || "text-foreground"))}
                                 style={!item.isPlaceholder && item.fontFamily ? { fontFamily: item.fontFamily } : {}}
                               >
                                 {item.name}
-                                {!item.isPlaceholder && <ShieldCheck className="h-3 w-3 md:h-3.5 md:w-3.5 text-primary shrink-0" />}
+                                {item.id === user?.uid && <ShieldCheck className="h-3 w-3 md:h-3.5 md:w-3.5 text-primary shrink-0" />}
+                                {item.vip && <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0" />}
                               </p>
                               <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">
                                 {item.isPlaceholder ? "Verified Player" : "Your Account"}
