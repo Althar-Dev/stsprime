@@ -49,7 +49,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/utils";
 
 const TABS_CONFIG = [
   { id: "profile", label: "Profil", icon: User },
