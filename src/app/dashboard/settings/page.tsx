@@ -298,8 +298,9 @@ export default function SettingsPage() {
                   <CardTitle className="text-xl md:text-2xl font-black">Informasi Profil</CardTitle>
                 </CardHeader>
                 <CardContent className="px-6 md:px-10 space-y-12">
-                  <div className="flex flex-col items-center sm:items-start gap-8">
-                    <div className="relative group">
+                  <div className="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12">
+                    {/* Avatar Section */}
+                    <div className="relative group shrink-0">
                       <div className={cn(
                         "h-32 w-32 md:h-40 md:w-40 rounded-full flex items-center justify-center p-1 transition-all duration-500",
                         profileBg
@@ -437,7 +438,8 @@ export default function SettingsPage() {
                       </Dialog>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-8 w-full">
+                    {/* Inputs Section */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 w-full flex-1">
                       <div className="space-y-3">
                         <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">Email</Label>
                         <Input 
