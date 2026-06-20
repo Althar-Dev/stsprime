@@ -61,7 +61,7 @@ export function DashboardHeader() {
           <div className="flex items-center gap-2 md:gap-1.5 px-3 md:px-2.5 py-1.5 md:py-1 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
             <img src="/img/coin.png" alt="Coin" className="h-6 w-6 md:h-5 md:w-5 group-hover:scale-110 transition-transform" />
             <span className="text-sm md:text-sm font-black text-primary">
-              {(profileData?.points || 0).toLocaleString()}
+              {(profileData?.coins || 0).toLocaleString()}
             </span>
           </div>
 

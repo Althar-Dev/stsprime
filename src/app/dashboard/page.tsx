@@ -152,7 +152,7 @@ export default function DashboardPage() {
               <div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-5xl md:text-6xl lg:text-7xl font-black text-primary tracking-tighter">
-                    {(profileData?.points || 0).toLocaleString()}
+                    {(profileData?.coins || 0).toLocaleString()}
                   </span>
                   <span className="text-sm md:text-lg text-muted-foreground font-black uppercase tracking-widest">Coins</span>
                 </div>

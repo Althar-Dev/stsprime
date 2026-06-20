@@ -55,6 +55,10 @@
         "points": {
           "type": "integer",
           "description": "Jumlah poin leaderboard pengguna."
+        },
+        "coins": {
+          "type": "integer",
+          "description": "Jumlah saldo koin (mata uang) pengguna."
         }
       },
       "required": ["email"]
