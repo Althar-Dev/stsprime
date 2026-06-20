@@ -30,11 +30,6 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { 
   User, 
   Settings, 
@@ -537,26 +532,18 @@ export default function SettingsPage() {
                           <div className={cn(
                             "h-16 w-16 md:h-20 md:w-20 rounded-2xl border-2 border-primary bg-primary/10 flex items-center justify-center transition-all relative scale-105 shadow-lg shadow-primary/20"
                           )}>
-                            <Image src="/img/badge/vip.png" alt="VIP" width={48} height={48} className="object-contain" />
-                            <div className="absolute -top-1.5 -right-1.5 h-6 w-6 md:h-7 md:w-7 rounded-full bg-primary flex items-center justify-center border-2 border-background shadow-md">
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Image src="/img/badge/vip.png" alt="VIP" width={48} height={48} className="object-contain cursor-pointer" />
+                              </PopoverTrigger>
+                              <PopoverContent side="bottom" className="rounded-xl border-primary/20 bg-background px-4 py-3 w-40 shadow-2xl animate-in zoom-in-95 duration-200">
+                                <p className="text-[10px] font-black text-center">VIP Member</p>
+                              </PopoverContent>
+                            </Popover>
+                            <div className="absolute -top-1.5 -right-1.5 h-6 w-6 md:h-7 md:w-7 rounded-full bg-primary flex items-center justify-center border-2 border-background shadow-md pointer-events-none">
                               <Check className="h-3 w-3 md:h-4 md:w-4 text-primary-foreground" />
                             </div>
                           </div>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <button type="button" className="absolute -bottom-1 -right-1 h-5 w-5 md:h-6 md:w-6 rounded-full bg-muted border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm">
-                                <CircleHelp className="h-3 w-3 md:h-3.5 md:w-3.5" />
-                              </button>
-                            </PopoverTrigger>
-                            <PopoverContent side="bottom" className="rounded-xl border-primary/20 bg-background px-4 py-3 w-56 shadow-2xl animate-in zoom-in-95 duration-200">
-                              <div className="space-y-1">
-                                <p className="text-xs font-black flex items-center gap-2">
-                                   VIP Member
-                                </p>
-                                <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">Badge eksklusif untuk member VIP.</p>
-                              </div>
-                            </PopoverContent>
-                          </Popover>
                         </div>
                       )}
                       

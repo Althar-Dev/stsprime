@@ -28,11 +28,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 function SearchInput({ isMobile, closeSearch }: { isMobile?: boolean, closeSearch?: () => void }) {
   const router = useRouter();
@@ -241,14 +240,14 @@ export function Navbar() {
                                   {user.displayName || "Gamer"}
                                 </p>
                                 {profileData?.vip && (
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} className="shrink-0 cursor-help" />
-                                    </TooltipTrigger>
-                                    <TooltipContent>
+                                  <Popover>
+                                    <PopoverTrigger asChild>
+                                      <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} className="shrink-0 cursor-pointer" />
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-2">
                                       <p className="text-[10px] font-black">VIP Member</p>
-                                    </TooltipContent>
-                                  </Tooltip>
+                                    </PopoverContent>
+                                  </Popover>
                                 )}
                               </div>
                               <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
@@ -299,7 +298,14 @@ export function Navbar() {
                             <div className="flex items-center gap-1.5">
                               <h3 className="font-headline font-black text-base tracking-tight leading-none">STS Pedia</h3>
                               {profileData?.vip && (
-                                <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} className="shrink-0 cursor-pointer" />
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-auto p-2">
+                                    <p className="text-[10px] font-black">VIP Member</p>
+                                  </PopoverContent>
+                                </Popover>
                               )}
                             </div>
                             <p className="text-[9px] text-muted-foreground font-bold mt-1">from StarVale</p>

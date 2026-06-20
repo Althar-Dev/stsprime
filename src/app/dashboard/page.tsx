@@ -9,11 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Gamepad2, History, LayoutDashboard, ArrowUpRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -113,14 +112,14 @@ export default function DashboardPage() {
                 {user?.displayName || "Gamer Pro"}
               </h2>
               {profileData?.vip && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Image src="/img/badge/vip.png" alt="VIP" width={24} height={24} className="shrink-0 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-xs font-black">VIP Member</p>
-                  </TooltipContent>
-                </Tooltip>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Image src="/img/badge/vip.png" alt="VIP" width={24} height={24} className="shrink-0 cursor-pointer" />
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-2 bg-background border-border shadow-xl">
+                    <p className="text-[10px] font-black">VIP Member</p>
+                  </PopoverContent>
+                </Popover>
               )}
             </div>
             <p className="text-xs text-muted-foreground font-bold truncate max-w-full mb-6 opacity-70">
