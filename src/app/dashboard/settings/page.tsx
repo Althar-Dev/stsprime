@@ -19,11 +19,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Dialog,
   DialogContent,
@@ -396,45 +395,43 @@ export default function SettingsPage() {
                    </div>
                    
                    <div className="flex flex-wrap gap-4">
-                      <TooltipProvider>
-                        {BADGE_OPTIONS.map((badge) => {
-                          const isSelected = selectedBadgeId === badge.id;
-                          return (
-                            <div key={badge.id} className="relative group/badge">
-                              <button
-                                onClick={() => setSelectedBadgeId(badge.id)}
-                                className={cn(
-                                  "h-16 w-16 rounded-2xl border-2 flex items-center justify-center transition-all relative",
-                                  isSelected 
-                                    ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" 
-                                    : "border-border bg-card/10 hover:border-primary/30"
-                                )}
-                              >
-                                <badge.icon className={cn("h-8 w-8", badge.color)} />
-                                {isSelected && (
-                                  <div className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-primary flex items-center justify-center border-2 border-background shadow-sm">
-                                    <Check className="h-3 w-3 text-primary-foreground" />
-                                  </div>
-                                )}
-                              </button>
-                              
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <button className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-muted border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm">
-                                    <CircleHelp className="h-3 w-3" />
-                                  </button>
-                                </TooltipTrigger>
-                                <TooltipContent side="bottom" className="rounded-xl border-primary/20 bg-background px-3 py-2">
-                                  <div className="space-y-1">
-                                    <p className="text-xs font-black">{badge.name}</p>
-                                    <p className="text-[10px] text-muted-foreground font-bold">{badge.desc}</p>
-                                  </div>
-                                </TooltipContent>
-                              </Tooltip>
-                            </div>
-                          );
-                        })}
-                      </TooltipProvider>
+                      {BADGE_OPTIONS.map((badge) => {
+                        const isSelected = selectedBadgeId === badge.id;
+                        return (
+                          <div key={badge.id} className="relative group/badge">
+                            <button
+                              onClick={() => setSelectedBadgeId(badge.id)}
+                              className={cn(
+                                "h-16 w-16 rounded-2xl border-2 flex items-center justify-center transition-all relative",
+                                isSelected 
+                                  ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" 
+                                  : "border-border bg-card/10 hover:border-primary/30"
+                              )}
+                            >
+                              <badge.icon className={cn("h-8 w-8", badge.color)} />
+                              {isSelected && (
+                                <div className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-primary flex items-center justify-center border-2 border-background shadow-sm">
+                                  <Check className="h-3 w-3 text-primary-foreground" />
+                                </div>
+                              )}
+                            </button>
+                            
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <button className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-muted border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm">
+                                  <CircleHelp className="h-3 w-3" />
+                                </button>
+                              </PopoverTrigger>
+                              <PopoverContent side="bottom" className="rounded-xl border-primary/20 bg-background px-3 py-2 w-48 shadow-xl animate-in zoom-in-95 duration-200">
+                                <div className="space-y-1">
+                                  <p className="text-xs font-black">{badge.name}</p>
+                                  <p className="text-[10px] text-muted-foreground font-bold">{badge.desc}</p>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        );
+                      })}
                    </div>
                 </div>
 
