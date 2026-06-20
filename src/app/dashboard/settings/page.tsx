@@ -17,7 +17,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
 import {
   Popover,
   PopoverContent,
@@ -48,7 +47,6 @@ import {
   Mail,
   Type,
   CircleHelp,
-  Palette,
   Type as FontIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -142,9 +140,7 @@ export default function SettingsPage() {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [isDev, setIsDev] = useState(false);
   const [firestorePhotoURL, setFirestorePhotoURL] = useState("");
-  const [nameGlow, setNameGlow] = useState(false);
   
-  // States menggunakan ID untuk seleksi tunggal yang akurat
   const [selectedFontId, setSelectedFontId] = useState("f1");
   const [selectedColorId, setSelectedColorId] = useState("g1");
   const [selectedBadgeId, setSelectedBadgeId] = useState("verified");
@@ -178,7 +174,6 @@ export default function SettingsPage() {
           setFirestorePhotoURL(data.photoURL || "");
           setProfileBg(data.profileBg || "bg-muted/30");
           setIsDev(!!data.dev);
-          setNameGlow(!!data.nameGlow);
           setSelectedFontId(data.fontId || "f1");
           setSelectedColorId(data.colorId || "g1");
           setSelectedBadgeId(data.badgeId || "verified");
@@ -199,7 +194,6 @@ export default function SettingsPage() {
     return isDev ? "/img/ava/dev.png" : (user?.photoURL || "");
   }, [photoURL, firestorePhotoURL, isDev, user?.photoURL]);
 
-  // Ambil kelas aktif berdasarkan ID yang dipilih
   const activeFontClass = FONT_OPTIONS.find(f => f.id === selectedFontId)?.class || "font-sans";
   const activeColorClass = GRADIENT_COLORS.find(c => c.id === selectedColorId)?.class || "bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent";
 
@@ -217,7 +211,6 @@ export default function SettingsPage() {
         displayName,
         photoURL: finalPhotoURL,
         profileBg,
-        nameGlow,
         fontId: selectedFontId,
         colorId: selectedColorId,
         fontFamily: activeFontClass,
@@ -408,8 +401,7 @@ export default function SettingsPage() {
                          <h4 className={cn(
                            "text-3xl md:text-5xl font-black transition-all duration-300",
                            activeFontClass,
-                           activeColorClass,
-                           nameGlow && "drop-shadow-[0_0_12px_currentColor]"
+                           activeColorClass
                          )}>
                             {displayName || "Gamer Pro"}
                          </h4>
@@ -459,15 +451,6 @@ export default function SettingsPage() {
                               </button>
                             ))}
                          </div>
-                      </div>
-
-                      {/* Glow Effect */}
-                      <div className="flex items-center justify-between p-6 rounded-2xl border border-border/50 bg-card/10 max-w-md">
-                         <div className="space-y-1">
-                            <p className="font-black text-sm">Efek Kilau Nama (Name Glow)</p>
-                            <p className="text-[10px] text-muted-foreground font-bold">Memberikan cahaya neon sesuai warna pilihan Anda.</p>
-                         </div>
-                         <Switch checked={nameGlow} onCheckedChange={setNameGlow} />
                       </div>
                    </div>
                 </div>
