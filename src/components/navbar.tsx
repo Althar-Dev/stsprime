@@ -246,7 +246,7 @@ export function Navbar() {
                                       <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} className="shrink-0 cursor-help" />
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                      <p className="text-[10px] font-black">Member VIP STS Pedia</p>
+                                      <p className="text-[10px] font-black">VIP Member</p>
                                     </TooltipContent>
                                   </Tooltip>
                                 )}

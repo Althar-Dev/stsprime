@@ -553,7 +553,7 @@ export default function SettingsPage() {
                                 <p className="text-xs font-black flex items-center gap-2">
                                    VIP Member
                                 </p>
-                                <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">Badge eksklusif untuk member VIP STS Pedia.</p>
+                                <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">Badge eksklusif untuk member VIP.</p>
                               </div>
                             </PopoverContent>
                           </Popover>

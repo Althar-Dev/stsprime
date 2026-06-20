@@ -118,7 +118,7 @@ export default function DashboardPage() {
                     <Image src="/img/badge/vip.png" alt="VIP" width={24} height={24} className="shrink-0 cursor-help" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="text-xs font-black">VIP Member STS Pedia</p>
+                    <p className="text-xs font-black">VIP Member</p>
                   </TooltipContent>
                 </Tooltip>
               )}
