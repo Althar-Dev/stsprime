@@ -75,12 +75,6 @@ const STATIC_AVATARS = [
   "girl.png", "girl-1.png", "girl-2.png", "girl-3.png"
 ];
 
-const BADGE_OPTIONS = [
-  { id: "verified", name: "Verified", icon: ShieldCheck, color: "text-primary", desc: "Badge verifikasi standar member." },
-  { id: "pro", name: "Pro Gamer", icon: Sparkles, color: "text-accent", desc: "Badge khusus pemain profesional." },
-  { id: "elite", name: "Elite", icon: Medal, color: "text-purple-500", desc: "Badge eksklusif member elit." },
-];
-
 const FONT_OPTIONS = [
   { id: "f1", name: "Inter" },
   { id: "f2", name: "Space Grotesk" },
@@ -185,7 +179,7 @@ export default function SettingsPage() {
   
   const [selectedFontId, setSelectedFontId] = useState("f1");
   const [selectedColorId, setSelectedColorId] = useState("g1");
-  const [selectedBadgeId, setSelectedBadgeId] = useState("verified");
+  const [selectedBadgeId, setSelectedBadgeId] = useState("");
 
   const [showAllFonts, setShowAllFonts] = useState(false);
   const [showAllColors, setShowAllColors] = useState(false);
@@ -222,7 +216,7 @@ export default function SettingsPage() {
           setIsVip(!!data.vip);
           setSelectedFontId(data.fontId || "f1");
           setSelectedColorId(data.colorId || "g1");
-          setSelectedBadgeId(data.badgeId || "verified");
+          setSelectedBadgeId(data.badgeId || "");
         }
       } catch (error) {}
     }
@@ -560,48 +554,12 @@ export default function SettingsPage() {
                           </Popover>
                         </div>
                       )}
-
-                      {BADGE_OPTIONS.map((badge) => {
-                        const isSelected = selectedBadgeId === badge.id;
-                        return (
-                          <div key={badge.id} className="relative group">
-                            <button
-                              type="button"
-                              onClick={() => setSelectedBadgeId(badge.id)}
-                              className={cn(
-                                "h-16 w-16 md:h-20 md:w-20 rounded-2xl border-2 flex items-center justify-center transition-all relative",
-                                isSelected 
-                                  ? "border-primary bg-primary/10 shadow-lg shadow-primary/20 scale-105" 
-                                  : "border-border bg-card/10 hover:border-primary/30"
-                              )}
-                            >
-                              <badge.icon className={cn("h-8 w-8 md:h-10 md:w-10", badge.color)} />
-                              {isSelected && (
-                                <div className="absolute -top-1.5 -right-1.5 h-6 w-6 md:h-7 md:w-7 rounded-full bg-primary flex items-center justify-center border-2 border-background shadow-md">
-                                  <Check className="h-3 w-3 md:h-4 md:w-4 text-primary-foreground" />
-                                </div>
-                              )}
-                            </button>
-                            
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <button type="button" className="absolute -bottom-1 -right-1 h-5 w-5 md:h-6 md:w-6 rounded-full bg-muted border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm">
-                                  <CircleHelp className="h-3 w-3 md:h-3.5 md:w-3.5" />
-                                </button>
-                              </PopoverTrigger>
-                              <PopoverContent side="bottom" className="rounded-xl border-primary/20 bg-background px-4 py-3 w-56 shadow-2xl animate-in zoom-in-95 duration-200">
-                                <div className="space-y-1">
-                                  <p className="text-xs font-black flex items-center gap-2">
-                                     <badge.icon className={cn("h-3.5 w-3.5", badge.color)} />
-                                     {badge.name}
-                                  </p>
-                                  <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">{badge.desc}</p>
-                                </div>
-                              </PopoverContent>
-                            </Popover>
-                          </div>
-                        );
-                      })}
+                      
+                      {!isVip && (
+                        <div className="p-4 rounded-xl border border-dashed border-border bg-muted/20">
+                          <p className="text-[10px] md:text-xs text-muted-foreground font-bold">Belum ada badge yang tersedia untuk koleksi Anda.</p>
+                        </div>
+                      )}
                    </div>
                 </div>
 
