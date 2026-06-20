@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -96,7 +95,7 @@ const BACKGROUND_OPTIONS = [
   { id: "grad-space", name: "Deep Space", class: "bg-gradient-to-bl from-gray-900 via-purple-900 to-violet-600" },
 ];
 
-// LIST AVATAR STATIS - SESUAI INSTRUKSI (boy.png, boy-1 s/d 4, girl.png, girl-1 s/d 3)
+// LIST AVATAR STATIS - URUTAN SESUAI INSTRUKSI
 const STATIC_AVATAR_LIST = [
   "boy.png",
   "boy-1.png",
@@ -118,7 +117,7 @@ export default function SettingsPage() {
 
   const [activeTab, setActiveTab] = useState("profile");
   const [displayName, setDisplayName] = useState("");
-  const [photoURL, setPhotoURL] = useState(""); // State untuk pilihan avatar aktif
+  const [photoURL, setPhotoURL] = useState(""); // State untuk pilihan avatar klik aktif
   const [profileBg, setProfileBg] = useState("bg-muted/30");
   const [isSaving, setIsSaving] = useState(false);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
@@ -128,11 +127,9 @@ export default function SettingsPage() {
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
-  // Daftar avatar yang akan ditampilkan di grid - DIJAMIN UNIK & STATIS
+  // Urutan final: dev.png (jika dev), lalu boy list, lalu girl list
   const availableAvatars = useMemo(() => {
-    // Selalu mulai dengan list bersih untuk mencegah duplikasi
     const list = [...STATIC_AVATAR_LIST];
-    // Tambahkan dev.png di awal HANYA jika user adalah Developer
     if (isDev) {
       return ["dev.png", ...list];
     }
@@ -186,6 +183,14 @@ export default function SettingsPage() {
     return () => clearTimeout(timer);
   }, [activeTab]);
 
+  // LOGIKA PRATINJAU UTAMA - HARUS KONSISTEN DENGAN PILIHAN GRID
+  const displayPhotoURL = useMemo(() => {
+    if (photoURL) return photoURL; // Apa yang baru saja diklik
+    if (firestorePhotoURL) return firestorePhotoURL; // Apa yang ada di DB
+    if (isDev) return "/img/ava/dev.png"; // Fallback dev
+    return user?.photoURL || ""; // Fallback auth
+  }, [photoURL, firestorePhotoURL, isDev, user?.photoURL]);
+
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !db || !auth) return;
@@ -237,14 +242,6 @@ export default function SettingsPage() {
   };
 
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
-  
-  // LOGIKA PRATINJAU UTAMA - HARUS KONSISTEN DENGAN PILIHAN GRID
-  const displayPhotoURL = useMemo(() => {
-    if (photoURL) return photoURL; // Apa yang baru saja diklik
-    if (firestorePhotoURL) return firestorePhotoURL; // Apa yang ada di DB
-    if (isDev) return "/img/ava/dev.png"; // Fallback dev
-    return user?.photoURL || ""; // Fallback auth
-  }, [photoURL, firestorePhotoURL, isDev, user?.photoURL]);
 
   return (
     <div className="p-4 md:p-6 lg:p-10 space-y-8 md:space-y-12 w-full mx-auto">
@@ -360,7 +357,6 @@ export default function SettingsPage() {
                               <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 gap-3">
                                 {availableAvatars.map((file) => {
                                   const avatarPath = `/img/ava/${file}`;
-                                  // PERBANDINGAN HARUS EKSAK DENGAN displayPhotoURL AGAR HIGHLIGHT BENAR
                                   const isSelected = avatarPath === displayPhotoURL;
                                   
                                   return (
