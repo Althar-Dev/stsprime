@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import {
   Dialog,
   DialogContent,
@@ -30,7 +31,7 @@ import {
   User, 
   Settings, 
   ShieldCheck, 
-  Palette, 
+  Wand2, 
   Moon, 
   Sun, 
   Monitor,
@@ -40,13 +41,16 @@ import {
   Check,
   Camera,
   Layers,
-  X
+  X,
+  Sparkles,
+  Trophy,
+  Medal
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS_CONFIG = [
   { id: "profile", label: "Profil", icon: User },
-  { id: "appearance", label: "Tema", icon: Palette },
+  { id: "customize", label: "Customize", icon: Wand2 },
   { id: "security", label: "Keamanan", icon: KeyRound },
 ];
 
@@ -110,6 +114,12 @@ const STATIC_GIRL_AVATARS = [
   "girl-3.png"
 ];
 
+const BADGE_OPTIONS = [
+  { id: "verified", name: "Verified", icon: ShieldCheck, color: "text-primary" },
+  { id: "pro", name: "Pro Gamer", icon: Trophy, color: "text-accent" },
+  { id: "elite", name: "Elite", icon: Medal, color: "text-purple-500" },
+];
+
 export default function SettingsPage() {
   const { user } = useUser();
   const auth = useAuth();
@@ -125,6 +135,10 @@ export default function SettingsPage() {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [isDev, setIsDev] = useState(false);
   const [firestorePhotoURL, setFirestorePhotoURL] = useState("");
+  
+  // Customization state
+  const [nameGlow, setNameGlow] = useState(false);
+  const [selectedBadgeId, setSelectedBadgeId] = useState("verified");
   
   const tabsListRef = useRef<HTMLDivElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
@@ -167,11 +181,15 @@ export default function SettingsPage() {
           setFirestorePhotoURL(data.photoURL || "");
           setProfileBg(data.profileBg || "bg-muted/30");
           setIsDev(!!data.dev);
+          setNameGlow(!!data.nameGlow);
+          setSelectedBadgeId(data.badgeId || "verified");
         } else {
           setDisplayName(user.displayName || "");
           setFirestorePhotoURL("");
           setProfileBg("bg-muted/30");
           setIsDev(false);
+          setNameGlow(false);
+          setSelectedBadgeId("verified");
         }
       } catch (error) {
         // Silent fail
@@ -211,6 +229,8 @@ export default function SettingsPage() {
         displayName,
         photoURL: finalPhotoURL,
         profileBg,
+        nameGlow,
+        badgeId: selectedBadgeId,
         email: user.email,
         updatedAt: new Date().toISOString(),
       };
@@ -229,7 +249,7 @@ export default function SettingsPage() {
       setPhotoURL("");
       toast({
         title: "Berhasil",
-        description: "Profil Anda telah diperbarui.",
+        description: "Perubahan Anda telah disimpan.",
       });
     } catch (error: any) {
       toast({
@@ -254,7 +274,7 @@ export default function SettingsPage() {
           Pengaturan
         </h1>
         <p className="text-sm md:text-base text-muted-foreground font-bold opacity-75">
-          Kelola profil dan preferensi akun Anda.
+          Kelola profil dan preferensi kustomisasi akun Anda.
         </p>
       </div>
 
@@ -439,7 +459,7 @@ export default function SettingsPage() {
                     </div>
 
                     {/* Inputs Section */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 w-full flex-1">
+                    <div className="grid grid-cols-1 gap-6 md:gap-8 w-full flex-1">
                       <div className="space-y-3">
                         <Label htmlFor="email" className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">Email</Label>
                         <Input 
@@ -476,45 +496,127 @@ export default function SettingsPage() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="appearance" className="space-y-8 mt-0 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm">
+          <TabsContent value="customize" className="space-y-8 mt-0 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-500">
+            <Card className="bento-card border-border/50 shadow-sm bg-card/30 backdrop-blur-sm overflow-hidden">
               <CardHeader className="p-6 md:p-10">
-                <CardTitle className="text-xl md:text-2xl font-black">Tema Visual</CardTitle>
-                <CardDescription className="font-bold">Pilih gaya yang paling nyaman untuk Anda.</CardDescription>
+                <CardTitle className="text-xl md:text-2xl font-black">Costumize Profil</CardTitle>
+                <CardDescription className="font-bold">Sesuaikan tampilan nama, badge, dan tema aplikasi Anda.</CardDescription>
               </CardHeader>
-              <CardContent className="px-6 md:px-10 pb-10">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  {[
-                    { id: 'light', name: 'Mode Terang', icon: Sun },
-                    { id: 'dark', name: 'Mode Gelap', icon: Moon },
-                    { id: 'system', name: 'Sistem', icon: Monitor },
-                  ].map((t) => (
-                    <button
-                      key={t.id}
-                      onClick={() => setTheme(t.id)}
-                      className={cn(
-                        "flex flex-col items-center gap-6 p-10 rounded-3xl border-2 transition-all group relative",
-                        theme === t.id 
-                          ? "border-primary bg-primary/5 shadow-inner scale-[1.02]" 
-                          : "border-border bg-background hover:border-primary/30 hover:bg-muted/30 hover:scale-[1.01]"
-                      )}
-                    >
-                      <t.icon className={cn(
-                        "h-12 w-12 transition-colors",
-                        theme === t.id ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
-                      )} />
-                      <span className="font-black text-xs uppercase tracking-tighter">{t.name}</span>
-                      {theme === t.id && (
-                        <div className="absolute top-4 right-4 animate-in zoom-in duration-300">
-                           <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
-                              <Check className="h-3.5 w-3.5 text-primary-foreground" />
-                           </div>
-                        </div>
-                      )}
-                    </button>
-                  ))}
+              <CardContent className="px-6 md:px-10 pb-10 space-y-12">
+                
+                {/* Name Styling Section */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    <h3 className="font-black text-base uppercase tracking-tight">Desain Nama</h3>
+                  </div>
+                  <div className="p-6 bg-muted/20 rounded-3xl border border-border/40 flex items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <p className="font-black text-sm">Efek Kilau Nama (Name Glow)</p>
+                      <p className="text-xs text-muted-foreground font-bold">Memberikan efek bercahaya pada nama Anda di papan peringkat.</p>
+                    </div>
+                    <Switch 
+                      checked={nameGlow} 
+                      onCheckedChange={(val) => {
+                        setNameGlow(val);
+                        // Auto-save logic can be added here or via save button
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <Separator className="opacity-40" />
+
+                {/* Badge Selection Section */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <Medal className="h-5 w-5 text-primary" />
+                    <h3 className="font-black text-base uppercase tracking-tight">Pilih Badge</h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {BADGE_OPTIONS.map((badge) => {
+                      const isSelected = selectedBadgeId === badge.id;
+                      return (
+                        <button
+                          key={badge.id}
+                          onClick={() => setSelectedBadgeId(badge.id)}
+                          className={cn(
+                            "flex flex-col items-center gap-4 p-6 rounded-3xl border-2 transition-all group relative",
+                            isSelected 
+                              ? "border-primary bg-primary/5 shadow-inner scale-[1.02]" 
+                              : "border-border bg-background hover:border-primary/30 hover:bg-muted/30"
+                          )}
+                        >
+                          <badge.icon className={cn(
+                            "h-8 w-8 transition-colors",
+                            badge.color,
+                            !isSelected && "opacity-60 group-hover:opacity-100"
+                          )} />
+                          <span className="font-black text-xs uppercase tracking-tighter">{badge.name}</span>
+                          {isSelected && (
+                            <div className="absolute top-3 right-3 animate-in zoom-in duration-300">
+                               <div className="h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                                  <Check className="h-3 w-3 text-primary-foreground" />
+                               </div>
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <Separator className="opacity-40" />
+
+                {/* Theme Selection Section (Moved here) */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <Layers className="h-5 w-5 text-primary" />
+                    <h3 className="font-black text-base uppercase tracking-tight">Tema Sistem</h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    {[
+                      { id: 'light', name: 'Mode Terang', icon: Sun },
+                      { id: 'dark', name: 'Mode Gelap', icon: Moon },
+                      { id: 'system', name: 'Sistem', icon: Monitor },
+                    ].map((t) => (
+                      <button
+                        key={t.id}
+                        onClick={() => setTheme(t.id)}
+                        className={cn(
+                          "flex flex-col items-center gap-6 p-8 rounded-3xl border-2 transition-all group relative",
+                          theme === t.id 
+                            ? "border-primary bg-primary/5 shadow-inner" 
+                            : "border-border bg-background hover:border-primary/30 hover:bg-muted/30"
+                        )}
+                      >
+                        <t.icon className={cn(
+                          "h-10 w-10 transition-colors",
+                          theme === t.id ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                        )} />
+                        <span className="font-black text-xs uppercase tracking-tighter">{t.name}</span>
+                        {theme === t.id && (
+                          <div className="absolute top-4 right-4 animate-in zoom-in duration-300">
+                             <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
+                                <Check className="h-3.5 w-3.5 text-primary-foreground" />
+                             </div>
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
+              <CardFooter className="flex justify-end bg-muted/10 border-t border-border/30 p-6 md:p-10">
+                <Button 
+                  onClick={handleUpdateProfile} 
+                  disabled={isSaving}
+                  className="w-full md:w-auto bg-primary text-primary-foreground font-black text-sm gap-3 rounded-2xl h-12 px-12 shadow-xl shadow-primary/20 transition-all hover:scale-[1.02]"
+                >
+                  {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
+                  Simpan Kustomisasi
+                </Button>
+              </CardFooter>
             </Card>
           </TabsContent>
 
