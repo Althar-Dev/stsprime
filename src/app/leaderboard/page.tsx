@@ -141,12 +141,17 @@ export default function LeaderboardPage() {
                   </Avatar>
                 </div>
               </div>
-              <p 
-                className={cn("font-black text-[9px] md:text-sm truncate w-20 md:w-32", !TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.nameColor)}
-                style={!TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.fontFamily ? { fontFamily: TOP_THREE[1].fontFamily } : {}}
-              >
-                {TOP_THREE[1]?.name}
-              </p>
+              <div className="flex items-center gap-1 justify-center w-full">
+                <p 
+                  className={cn("font-black text-[9px] md:text-sm truncate max-w-[80px] md:max-w-[120px]", !TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.nameColor)}
+                  style={!TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.fontFamily ? { fontFamily: TOP_THREE[1].fontFamily } : {}}
+                >
+                  {TOP_THREE[1]?.name}
+                </p>
+                {!TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.vip && (
+                  <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0" />
+                )}
+              </div>
               <div className="mt-1 px-1.5 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
                 <span className="text-[8px] md:text-[11px] font-black">
                   {TOP_THREE[1]?.points?.toLocaleString()} 
@@ -174,12 +179,17 @@ export default function LeaderboardPage() {
                   </Avatar>
                 </div>
               </div>
-              <p 
-                className={cn("font-black text-[11px] md:text-lg truncate w-24 md:w-40", !TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.nameColor)}
-                style={!TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.fontFamily ? { fontFamily: TOP_THREE[0].fontFamily } : {}}
-              >
-                {TOP_THREE[0]?.name}
-              </p>
+              <div className="flex items-center gap-1 justify-center w-full">
+                <p 
+                  className={cn("font-black text-[11px] md:text-lg truncate max-w-[100px] md:max-w-[160px]", !TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.nameColor)}
+                  style={!TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.fontFamily ? { fontFamily: TOP_THREE[0].fontFamily } : {}}
+                >
+                  {TOP_THREE[0]?.name}
+                </p>
+                {!TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.vip && (
+                  <Image src="/img/badge/vip.png" alt="VIP" width={18} height={18} className="shrink-0" />
+                )}
+              </div>
               <div className="mt-1 px-2 py-0.5 md:px-3 md:py-1 bg-primary/10 rounded-full flex items-center gap-1 border border-primary/30">
                 <span className="text-[9px] md:text-sm font-black text-primary">
                   {TOP_THREE[0]?.points?.toLocaleString()} 
@@ -206,12 +216,17 @@ export default function LeaderboardPage() {
                   </Avatar>
                 </div>
               </div>
-              <p 
-                className={cn("font-black text-[8px] md:text-xs truncate w-16 md:w-28", !TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.nameColor)}
-                style={!TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.fontFamily ? { fontFamily: TOP_THREE[2].fontFamily } : {}}
-              >
-                {TOP_THREE[2]?.name}
-              </p>
+              <div className="flex items-center gap-1 justify-center w-full">
+                <p 
+                  className={cn("font-black text-[8px] md:text-xs truncate max-w-[70px] md:max-w-[100px]", !TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.nameColor)}
+                  style={!TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.fontFamily ? { fontFamily: TOP_THREE[2].fontFamily } : {}}
+                >
+                  {TOP_THREE[2]?.name}
+                </p>
+                {!TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.vip && (
+                  <Image src="/img/badge/vip.png" alt="VIP" width={12} height={12} className="shrink-0" />
+                )}
+              </div>
               <div className="mt-1 px-1 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
                 <span className="text-[7px] md:text-[10px] font-black">
                   {TOP_THREE[2]?.points?.toLocaleString()} 
@@ -230,7 +245,7 @@ export default function LeaderboardPage() {
               <div className="p-4 md:p-6 border-b border-border/40 bg-muted/20 flex justify-between items-center">
                 <div className="flex items-center gap-2 md:gap-3">
                   <div className="h-8 w-8 md:h-10 md:w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <Medal className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+                    < Medal className="h-4 w-4 md:h-5 md:w-5 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-headline font-black text-sm md:text-lg">Peringkat Global</h3>
@@ -269,14 +284,16 @@ export default function LeaderboardPage() {
                               </Avatar>
                             </div>
                             <div className="min-w-0">
-                              <p 
-                                className={cn("font-black text-xs md:text-sm flex items-center gap-1 truncate", !item.isPlaceholder && (item.nameColor || "text-foreground"))}
-                                style={!item.isPlaceholder && item.fontFamily ? { fontFamily: item.fontFamily } : {}}
-                              >
-                                {item.name}
+                              <div className="flex items-center gap-1.5">
+                                <p 
+                                  className={cn("font-black text-xs md:text-sm truncate", !item.isPlaceholder && (item.nameColor || "text-foreground"))}
+                                  style={!item.isPlaceholder && item.fontFamily ? { fontFamily: item.fontFamily } : {}}
+                                >
+                                  {item.name}
+                                </p>
                                 {item.id === user?.uid && <ShieldCheck className="h-3 w-3 md:h-3.5 md:w-3.5 text-primary shrink-0" />}
                                 {item.vip && <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0" />}
-                              </p>
+                              </div>
                               <p className="text-[8px] md:text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">
                                 {item.isPlaceholder ? "Verified Player" : "Your Account"}
                               </p>
