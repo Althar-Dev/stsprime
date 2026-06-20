@@ -15,18 +15,18 @@ import { useState, useEffect, useMemo } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { cn } from "@/lib/utils";
 
-// Placeholder data with numeric points for calculation
+// Placeholder data with random local avatars from /img/avas/
 const PLACEHOLDERS = [
-  { id: "p1", name: "Sultan_MLBB", points: 45280, avatar: "https://picsum.photos/seed/u1/200/200", badge: "Legendary", isPlaceholder: true },
-  { id: "p2", name: "RiotGamer99", points: 38150, avatar: "https://picsum.photos/seed/u2/200/200", badge: "Elite", isPlaceholder: true },
-  { id: "p3", name: "GenshinSimp", points: 32900, avatar: "https://picsum.photos/seed/u3/200/200", badge: "Elite", isPlaceholder: true },
-  { id: "p4", name: "ProPlayer_ID", points: 28400, avatar: "https://picsum.photos/seed/u4/100/100", isPlaceholder: true },
-  { id: "p5", name: "Vand_Points", points: 25120, avatar: "https://picsum.photos/seed/u5/100/100", isPlaceholder: true },
-  { id: "p6", name: "Alucard_Main", points: 22800, avatar: "https://picsum.photos/seed/u6/100/100", isPlaceholder: true },
-  { id: "p7", name: "Primogem_Hunter", points: 19550, avatar: "https://picsum.photos/seed/u7/100/100", isPlaceholder: true },
-  { id: "p8", name: "ValorantBoy", points: 15200, avatar: "https://picsum.photos/seed/u8/100/100", isPlaceholder: true },
-  { id: "p9", name: "F2P_God", points: 12400, avatar: "https://picsum.photos/seed/u9/100/100", isPlaceholder: true },
-  { id: "p10", name: "Newbie_Topup", points: 10100, avatar: "https://picsum.photos/seed/u10/100/100", isPlaceholder: true },
+  { id: "p1", name: "Sultan_MLBB", points: 45280, avatar: "/img/avas/boy-1.png", isPlaceholder: true },
+  { id: "p2", name: "RiotGamer99", points: 38150, avatar: "/img/avas/boy-2.png", isPlaceholder: true },
+  { id: "p3", name: "GenshinSimp", points: 32900, avatar: "/img/avas/girl-1.png", isPlaceholder: true },
+  { id: "p4", name: "ProPlayer_ID", points: 28400, avatar: "/img/avas/boy-3.png", isPlaceholder: true },
+  { id: "p5", name: "Vand_Points", points: 25120, avatar: "/img/avas/boy-4.png", isPlaceholder: true },
+  { id: "p6", name: "Alucard_Main", points: 22800, avatar: "/img/avas/boy.png", isPlaceholder: true },
+  { id: "p7", name: "Primogem_Hunter", points: 19550, avatar: "/img/avas/girl-2.png", isPlaceholder: true },
+  { id: "p8", name: "ValorantBoy", points: 15200, avatar: "/img/avas/boy-1.png", isPlaceholder: true },
+  { id: "p9", name: "F2P_God", points: 12400, avatar: "/img/avas/girl-3.png", isPlaceholder: true },
+  { id: "p10", name: "Newbie_Topup", points: 10100, avatar: "/img/avas/girl.png", isPlaceholder: true },
 ];
 
 export default function LeaderboardPage() {
@@ -53,6 +53,8 @@ export default function LeaderboardPage() {
 
   const userPoints = profileData?.points || 0;
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
+  
+  // Logic for display photo: if no photoURL and isDev, show dev.png
   const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
 
   // Calculate dynamic rankings
@@ -65,7 +67,6 @@ export default function LeaderboardPage() {
         name: user.displayName || "Gamer Pro",
         points: userPoints,
         avatar: displayPhotoURL,
-        badge: profileData?.vip ? "VIP" : "",
         isPlaceholder: false,
         fontFamily: profileData?.fontFamily,
         nameColor: profileData?.nameColor,
@@ -115,7 +116,7 @@ export default function LeaderboardPage() {
           <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 px-4 py-1.5 text-[10px] md:text-xs font-black tracking-[0.2em] rounded-full">
             SEASON 1: THE ULTIMATE
           </Badge>
-          <h1 className="font-headline text-4xl md:text-7xl font-black mb-4 tracking-tighter">
+          <h1 className="font-headline text-4xl md:text-7xl font-black mb-4 tracking-tighter text-foreground">
             Hall of Fame
           </h1>
           <p className="text-xs md:text-lg text-muted-foreground max-w-2xl mx-auto font-bold opacity-80 leading-relaxed px-4">
@@ -131,8 +132,8 @@ export default function LeaderboardPage() {
               <div className="relative aspect-video w-24 md:w-48 flex items-center justify-center mb-2">
                 <Image src="/img/border/two.png" alt="Rank 2 Border" fill className="object-contain z-20" unoptimized />
                 <div className={cn(
-                  "h-8 w-8 md:h-16 md:w-16 rounded-full flex items-center justify-center p-0.5 md:p-1 shadow-xl relative z-10",
-                  !TOP_THREE[1]?.isPlaceholder ? TOP_THREE[1]?.profileBg : "bg-muted/20"
+                  "h-10 w-10 md:h-20 md:w-20 rounded-full flex items-center justify-center p-0.5 md:p-1 shadow-xl relative z-10",
+                  !TOP_THREE[1]?.isPlaceholder ? (TOP_THREE[1]?.profileBg || "bg-muted/20") : "bg-muted/20"
                 )}>
                   <Avatar className="h-full w-full border border-background">
                     <AvatarImage src={TOP_THREE[1]?.avatar} alt={TOP_THREE[1]?.name} />
@@ -142,7 +143,7 @@ export default function LeaderboardPage() {
               </div>
               <div className="flex items-center gap-1 justify-center w-full">
                 <p 
-                  className={cn("font-black text-[9px] md:text-sm truncate max-w-[80px] md:max-w-[120px]", !TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.nameColor)}
+                  className={cn("font-black text-[9px] md:text-sm truncate max-w-[80px] md:max-w-[120px]", !TOP_THREE[1]?.isPlaceholder ? (TOP_THREE[1]?.nameColor || "text-foreground") : "text-foreground")}
                   style={!TOP_THREE[1]?.isPlaceholder && TOP_THREE[1]?.fontFamily ? { fontFamily: TOP_THREE[1].fontFamily } : {}}
                 >
                   {TOP_THREE[1]?.name}
@@ -152,7 +153,7 @@ export default function LeaderboardPage() {
                 )}
               </div>
               <div className="mt-1 px-1.5 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
-                <span className="text-[8px] md:text-[11px] font-black">
+                <span className="text-[8px] md:text-[11px] font-black text-foreground">
                   {TOP_THREE[1]?.points?.toLocaleString()} 
                 </span>
               </div>
@@ -164,13 +165,13 @@ export default function LeaderboardPage() {
 
           {/* RANK 1 */}
           <div className="flex flex-col items-center flex-1 relative -top-3 md:-top-4">
-            <Crown className="h-5 w-5 md:h-10 md:w-10 text-primary mb-1 md:mb-2 animate-bounce" />
+            <Crown className="h-5 w-5 md:h-10 md:w-10 text-primary mb-1 md:mb-2" />
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-32 md:w-64 flex items-center justify-center mb-2">
                 <Image src="/img/border/one.png" alt="Rank 1 Border" fill className="object-contain z-20" priority unoptimized />
                 <div className={cn(
                   "h-12 w-12 md:h-24 md:w-24 rounded-full flex items-center justify-center p-0.5 md:p-1.5 shadow-2xl relative z-10",
-                  !TOP_THREE[0]?.isPlaceholder ? TOP_THREE[0]?.profileBg : "bg-muted/20"
+                  !TOP_THREE[0]?.isPlaceholder ? (TOP_THREE[0]?.profileBg || "bg-muted/20") : "bg-muted/20"
                 )}>
                   <Avatar className="h-full w-full border border-background">
                     <AvatarImage src={TOP_THREE[0]?.avatar} alt={TOP_THREE[0]?.name} />
@@ -180,7 +181,7 @@ export default function LeaderboardPage() {
               </div>
               <div className="flex items-center gap-1 justify-center w-full">
                 <p 
-                  className={cn("font-black text-[11px] md:text-lg truncate max-w-[100px] md:max-w-[160px]", !TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.nameColor)}
+                  className={cn("font-black text-[11px] md:text-lg truncate max-w-[100px] md:max-w-[160px]", !TOP_THREE[0]?.isPlaceholder ? (TOP_THREE[0]?.nameColor || "text-foreground") : "text-foreground")}
                   style={!TOP_THREE[0]?.isPlaceholder && TOP_THREE[0]?.fontFamily ? { fontFamily: TOP_THREE[0].fontFamily } : {}}
                 >
                   {TOP_THREE[0]?.name}
@@ -206,8 +207,8 @@ export default function LeaderboardPage() {
               <div className="relative aspect-video w-20 md:w-40 flex items-center justify-center mb-2">
                 <Image src="/img/border/three.png" alt="Rank 3 Border" fill className="object-contain z-20" unoptimized />
                 <div className={cn(
-                  "h-7 w-7 md:h-12 md:w-12 rounded-full flex items-center justify-center p-0.5 md:p-1 shadow-xl relative z-10",
-                  !TOP_THREE[2]?.isPlaceholder ? TOP_THREE[2]?.profileBg : "bg-muted/20"
+                  "h-9 w-9 md:h-16 md:w-16 rounded-full flex items-center justify-center p-0.5 md:p-1 shadow-xl relative z-10",
+                  !TOP_THREE[2]?.isPlaceholder ? (TOP_THREE[2]?.profileBg || "bg-muted/20") : "bg-muted/20"
                 )}>
                   <Avatar className="h-full w-full border border-background">
                     <AvatarImage src={TOP_THREE[2]?.avatar} alt={TOP_THREE[2]?.name} />
@@ -217,7 +218,7 @@ export default function LeaderboardPage() {
               </div>
               <div className="flex items-center gap-1 justify-center w-full">
                 <p 
-                  className={cn("font-black text-[8px] md:text-xs truncate max-w-[70px] md:max-w-[100px]", !TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.nameColor)}
+                  className={cn("font-black text-[8px] md:text-xs truncate max-w-[70px] md:max-w-[100px]", !TOP_THREE[2]?.isPlaceholder ? (TOP_THREE[2]?.nameColor || "text-foreground") : "text-foreground")}
                   style={!TOP_THREE[2]?.isPlaceholder && TOP_THREE[2]?.fontFamily ? { fontFamily: TOP_THREE[2].fontFamily } : {}}
                 >
                   {TOP_THREE[2]?.name}
@@ -227,7 +228,7 @@ export default function LeaderboardPage() {
                 )}
               </div>
               <div className="mt-1 px-1 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
-                <span className="text-[7px] md:text-[10px] font-black">
+                <span className="text-[7px] md:text-[10px] font-black text-foreground">
                   {TOP_THREE[2]?.points?.toLocaleString()} 
                 </span>
               </div>
@@ -247,7 +248,7 @@ export default function LeaderboardPage() {
                     < Medal className="h-4 w-4 md:h-5 md:w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-headline font-black text-sm md:text-lg">Peringkat Global</h3>
+                    <h3 className="font-headline font-black text-sm md:text-lg text-foreground">Peringkat Global</h3>
                     <p className="text-[9px] md:text-[10px] text-muted-foreground font-bold">Pemain Teratas Musim Ini</p>
                   </div>
                 </div>
@@ -285,7 +286,7 @@ export default function LeaderboardPage() {
                             <div className="min-w-0">
                               <div className="flex items-center gap-1.5">
                                 <p 
-                                  className={cn("font-black text-xs md:text-sm truncate", !item.isPlaceholder && (item.nameColor || "text-foreground"))}
+                                  className={cn("font-black text-xs md:text-sm truncate", !item.isPlaceholder ? (item.nameColor || "text-foreground") : "text-foreground")}
                                   style={!item.isPlaceholder && item.fontFamily ? { fontFamily: item.fontFamily } : {}}
                                 >
                                   {item.name}
@@ -377,14 +378,14 @@ export default function LeaderboardPage() {
             </div>
 
             <div className="bento-card p-6 bg-card/40 backdrop-blur-sm border-border/40">
-              <h3 className="font-black text-xs md:text-sm mb-6 tracking-widest uppercase">Pusat Poin</h3>
+              <h3 className="font-black text-xs md:text-sm mb-6 tracking-widest uppercase text-foreground">Pusat Poin</h3>
               <div className="space-y-5">
                 <div className="flex gap-4 group cursor-help">
                   <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                     <Trophy className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-xs font-black mb-1">Topup Loyalitas</p>
+                    <p className="text-xs font-black mb-1 text-foreground">Topup Loyalitas</p>
                     <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">Dapatkan 1 poin setiap transaksi kelipatan Rp 1.000.</p>
                   </div>
                 </div>
@@ -393,7 +394,7 @@ export default function LeaderboardPage() {
                     <Star className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-xs font-black mb-1">Daily Quest</p>
+                    <p className="text-xs font-black mb-1 text-foreground">Daily Quest</p>
                     <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">Login 7 hari berturut-turut untuk bonus 500 poin instan.</p>
                   </div>
                 </div>
