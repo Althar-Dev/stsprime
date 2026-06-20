@@ -51,6 +51,10 @@
         "vip": {
           "type": "boolean",
           "description": "Apakah pengguna adalah member VIP."
+        },
+        "points": {
+          "type": "integer",
+          "description": "Jumlah poin leaderboard pengguna."
         }
       },
       "required": ["email"]

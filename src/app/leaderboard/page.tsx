@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { cn } from "@/lib/utils";
 
@@ -57,16 +57,17 @@ export default function LeaderboardPage() {
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
   
-  // Logic for display photo: if no photoURL and isDev, show dev.png
   const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
+
+  const userPoints = profileData?.points || 0;
+  const rookieGoal = 2000;
+  const progressPercent = Math.min((userPoints / rookieGoal) * 100, 100);
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
-      {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-[0.03] pointer-events-none" />
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Navigation Header - Transparent */}
       <nav className="sticky top-0 z-50 w-full bg-transparent">
         <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
           <Button 
@@ -85,7 +86,6 @@ export default function LeaderboardPage() {
       </nav>
 
       <main className="flex-grow container mx-auto px-4 py-8 md:py-16 relative z-10">
-        {/* Header Section */}
         <div className="text-center mb-12 md:mb-20">
           <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 px-4 py-1.5 text-[10px] md:text-xs font-black tracking-[0.2em] rounded-full">
             SEASON 1: THE ULTIMATE
@@ -98,9 +98,7 @@ export default function LeaderboardPage() {
           </p>
         </div>
 
-        {/* 3D Podium Section */}
         <div className="flex items-end justify-center gap-1 md:gap-6 mb-20 md:mb-32 px-1 max-w-4xl mx-auto">
-          {/* Rank 2 */}
           <div className="flex flex-col items-center flex-1">
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-24 md:w-48 flex items-center justify-center mb-2">
@@ -122,7 +120,6 @@ export default function LeaderboardPage() {
             </div>
           </div>
 
-          {/* Rank 1 */}
           <div className="flex flex-col items-center flex-1 relative -top-3 md:-top-4">
             <Crown className="h-5 w-5 md:h-10 md:w-10 text-primary mb-1 md:mb-2" />
             <div className="flex flex-col items-center mb-4 text-center">
@@ -145,7 +142,6 @@ export default function LeaderboardPage() {
             </div>
           </div>
 
-          {/* Rank 3 */}
           <div className="flex flex-col items-center flex-1">
             <div className="flex flex-col items-center mb-4 text-center">
               <div className="relative aspect-video w-20 md:w-40 flex items-center justify-center mb-2">
@@ -169,7 +165,6 @@ export default function LeaderboardPage() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8 items-start">
-          {/* Main Table Section */}
           <div className="lg:col-span-2 space-y-6">
             <div className="bento-card p-0 overflow-hidden border-border/40 bg-card/30 backdrop-blur-sm">
               <div className="p-4 md:p-6 border-b border-border/40 bg-muted/20 flex justify-between items-center">
@@ -228,7 +223,6 @@ export default function LeaderboardPage() {
             </div>
           </div>
 
-          {/* User Stats Sidebar */}
           <div className="space-y-6">
             <div className="bento-card p-6 border-primary/30 bg-primary/5 backdrop-blur-md relative overflow-hidden group">
               <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all" />
@@ -276,14 +270,17 @@ export default function LeaderboardPage() {
               <div className="space-y-4">
                 <div className="flex justify-between text-xs font-black">
                   <span className="text-muted-foreground tracking-widest uppercase text-[10px]">Your Points</span>
-                  <span className="text-primary text-sm">1,240 pts</span>
+                  <span className="text-primary text-sm">{userPoints.toLocaleString()} pts</span>
                 </div>
                 <div className="relative h-2.5 w-full bg-muted rounded-full overflow-hidden border border-border/30">
-                  <div className="absolute top-0 left-0 bg-primary h-full w-[40%] rounded-full shadow-[0_0_10px_rgba(242,255,0,0.5)] transition-all duration-1000" />
+                  <div 
+                    className="absolute top-0 left-0 bg-primary h-full rounded-full shadow-[0_0_10px_rgba(242,255,0,0.5)] transition-all duration-1000" 
+                    style={{ width: `${progressPercent}%` }}
+                  />
                 </div>
                 <div className="flex items-center justify-between text-[9px] font-bold text-muted-foreground italic">
                    <span>Newbie</span>
-                   <span>760 pts to Rookie</span>
+                   <span>{Math.max(0, rookieGoal - userPoints).toLocaleString()} pts to Rookie</span>
                 </div>
               </div>
             </div>
