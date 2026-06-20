@@ -114,7 +114,9 @@ export default function DashboardPage() {
               {profileData?.vip && (
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Image src="/img/badge/vip.png" alt="VIP" width={24} height={24} className="shrink-0 cursor-pointer" />
+                    <div className="shrink-0 cursor-pointer">
+                      <Image src="/img/badge/vip.png" alt="VIP" width={24} height={24} />
+                    </div>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-2 bg-background border-border shadow-xl">
                     <p className="text-[10px] font-black">VIP Member</p>
@@ -149,7 +151,9 @@ export default function DashboardPage() {
               
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl md:text-6xl lg:text-7xl font-black text-primary tracking-tighter">{profileData?.points || 0}</span>
+                  <span className="text-5xl md:text-6xl lg:text-7xl font-black text-primary tracking-tighter">
+                    {(profileData?.points || 0).toLocaleString()}
+                  </span>
                   <span className="text-sm md:text-lg text-muted-foreground font-black uppercase tracking-widest">Coins</span>
                 </div>
                 <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-4 border-t border-border/40 pt-6">

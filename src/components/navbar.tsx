@@ -212,7 +212,9 @@ export function Navbar() {
                     <div className="flex items-center gap-2 md:gap-3">
                       <div className="flex items-center gap-2 md:gap-1.5 px-3 md:px-2.5 py-1.5 md:py-1 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
                         <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-5 md:w-5 object-contain group-hover:scale-110 transition-transform" />
-                        <span className="text-sm md:text-sm font-black text-primary">0</span>
+                        <span className="text-sm md:text-sm font-black text-primary">
+                          {(profileData?.points || 0).toLocaleString()}
+                        </span>
                       </div>
                       
                       <DropdownMenu>
@@ -242,9 +244,11 @@ export function Navbar() {
                                 {profileData?.vip && (
                                   <Popover>
                                     <PopoverTrigger asChild>
-                                      <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} className="shrink-0 cursor-pointer" />
+                                      <div className="shrink-0 cursor-pointer">
+                                        <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
+                                      </div>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-2">
+                                    <PopoverContent className="w-auto p-2 bg-background border-border shadow-xl">
                                       <p className="text-[10px] font-black">VIP Member</p>
                                     </PopoverContent>
                                   </Popover>
@@ -300,9 +304,11 @@ export function Navbar() {
                               {profileData?.vip && (
                                 <Popover>
                                   <PopoverTrigger asChild>
-                                    <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} className="shrink-0 cursor-pointer" />
+                                    <div className="shrink-0 cursor-pointer">
+                                      <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
+                                    </div>
                                   </PopoverTrigger>
-                                  <PopoverContent className="w-auto p-2">
+                                  <PopoverContent className="w-auto p-2 bg-background border-border shadow-xl">
                                     <p className="text-[10px] font-black">VIP Member</p>
                                   </PopoverContent>
                                 </Popover>
@@ -378,7 +384,9 @@ export function Navbar() {
                               <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-8 md:w-8 object-contain" />
                               <span className="text-xs font-black">STS Coin</span>
                             </div>
-                            <span className="text-sm font-black text-primary">0</span>
+                            <span className="text-sm font-black text-primary">
+                              {(profileData?.points || 0).toLocaleString()}
+                            </span>
                           </div>
                         )}
                         <div className="flex items-center gap-3 mb-4">
