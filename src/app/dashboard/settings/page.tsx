@@ -50,7 +50,6 @@ import {
   CircleHelp,
   Palette,
   Type as FontIcon,
-  ChevronRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -71,6 +70,7 @@ const BACKGROUND_OPTIONS = [
   { id: "grad-cosmic", name: "Cosmic", class: "bg-gradient-to-br from-purple-600 to-blue-500" },
 ];
 
+// URUTAN AVATAR SESUAI PERMINTAAN
 const STATIC_AVATARS = [
   "dev.png",
   "boy.png", "boy-1.png", "boy-2.png", "boy-3.png", "boy-4.png",
@@ -167,8 +167,10 @@ export default function SettingsPage() {
   const [isDev, setIsDev] = useState(false);
   const [firestorePhotoURL, setFirestorePhotoURL] = useState("");
   const [nameGlow, setNameGlow] = useState(false);
-  const [fontFamily, setFontFamily] = useState("font-sans");
-  const [nameColor, setNameColor] = useState("text-foreground");
+  
+  // States menggunakan ID untuk seleksi tunggal yang akurat
+  const [selectedFontId, setSelectedFontId] = useState("f1");
+  const [selectedColorId, setSelectedColorId] = useState("s1");
   const [selectedBadgeId, setSelectedBadgeId] = useState("verified");
   
   const tabsListRef = useRef<HTMLDivElement>(null);
@@ -201,8 +203,8 @@ export default function SettingsPage() {
           setProfileBg(data.profileBg || "bg-muted/30");
           setIsDev(!!data.dev);
           setNameGlow(!!data.nameGlow);
-          setFontFamily(data.fontFamily || "font-sans");
-          setNameColor(data.nameColor || "text-foreground");
+          setSelectedFontId(data.fontId || "f1");
+          setSelectedColorId(data.colorId || "s1");
           setSelectedBadgeId(data.badgeId || "verified");
         }
       } catch (error) {}
@@ -221,6 +223,10 @@ export default function SettingsPage() {
     return isDev ? "/img/ava/dev.png" : (user?.photoURL || "");
   }, [photoURL, firestorePhotoURL, isDev, user?.photoURL]);
 
+  // Ambil kelas aktif berdasarkan ID yang dipilih
+  const activeFontClass = FONT_OPTIONS.find(f => f.id === selectedFontId)?.class || "font-sans";
+  const activeColorClass = [...SOLID_COLORS, ...GRADIENT_COLORS].find(c => c.id === selectedColorId)?.class || "text-foreground";
+
   const handleUpdateProfile = async (e: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!user || !db || !auth) return;
@@ -236,8 +242,10 @@ export default function SettingsPage() {
         photoURL: finalPhotoURL,
         profileBg,
         nameGlow,
-        fontFamily,
-        nameColor,
+        fontId: selectedFontId,
+        colorId: selectedColorId,
+        fontFamily: activeFontClass, // Simpan kelas untuk kemudahan render di tempat lain
+        nameColor: activeColorClass,   // Simpan kelas untuk kemudahan render di tempat lain
         badgeId: selectedBadgeId,
         email: user.email,
         updatedAt: new Date().toISOString(),
@@ -310,6 +318,7 @@ export default function SettingsPage() {
               <form onSubmit={handleUpdateProfile}>
                 <CardContent className="p-0">
                   <div className="flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-16">
+                    {/* AVATAR LEFT SIDE */}
                     <div className="relative group shrink-0">
                       <div className={cn("h-36 w-36 md:h-48 md:w-48 rounded-full flex items-center justify-center p-1.5 transition-all duration-500", profileBg)}>
                         <Avatar className="h-full w-full border-4 border-background shadow-2xl">
@@ -349,6 +358,7 @@ export default function SettingsPage() {
                                   {STATIC_AVATARS.map((file) => {
                                     if (file === "dev.png" && !isDev) return null;
                                     const avatarPath = `/img/ava/${file}`;
+                                    // SINKRONISASI PRATINJAU: Bandingkan path secara absolut
                                     const isSelected = avatarPath === displayPhotoURL;
                                     return (
                                       <button key={file} type="button" onClick={() => setPhotoURL(avatarPath)} className={cn("relative aspect-square rounded-full overflow-hidden border-2 transition-all hover:scale-110", isSelected ? "border-primary shadow-lg ring-2 ring-primary/20" : "border-border/30 bg-muted/20")}>
@@ -379,6 +389,7 @@ export default function SettingsPage() {
                       </Dialog>
                     </div>
 
+                    {/* INPUT FIELDS RIGHT SIDE ON DESKTOP */}
                     <div className="flex-1 w-full space-y-8">
                         <div className="space-y-4">
                           <Label className="text-[10px] font-black tracking-widest text-muted-foreground uppercase flex items-center gap-2">
@@ -421,15 +432,15 @@ export default function SettingsPage() {
                          <span className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">Pratinjau Nama</span>
                          <h4 className={cn(
                            "text-3xl md:text-5xl font-black transition-all duration-300",
-                           fontFamily,
-                           nameColor,
+                           activeFontClass,
+                           activeColorClass,
                            nameGlow && "drop-shadow-[0_0_12px_currentColor]"
                          )}>
                             {displayName || "Gamer Pro"}
                          </h4>
                       </div>
 
-                      {/* Font Selection */}
+                      {/* Font Selection - MENGGUNAKAN ID UNTUK SELEKSI TUNGGAL */}
                       <div className="space-y-4">
                          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                             <FontIcon className="h-4 w-4" /> Pilih Font
@@ -438,11 +449,11 @@ export default function SettingsPage() {
                             {FONT_OPTIONS.map((font) => (
                               <button
                                 key={font.id}
-                                onClick={() => setFontFamily(font.class)}
+                                onClick={() => setSelectedFontId(font.id)}
                                 className={cn(
                                   "p-3 rounded-xl border text-sm font-bold transition-all h-12 flex items-center justify-center",
-                                  fontFamily === font.class 
-                                    ? "border-primary bg-primary/10 shadow-sm" 
+                                  selectedFontId === font.id 
+                                    ? "border-primary bg-primary/10 shadow-sm ring-1 ring-primary/20" 
                                     : "border-border/50 hover:border-primary/20"
                                 )}
                               >
@@ -452,7 +463,7 @@ export default function SettingsPage() {
                          </div>
                       </div>
 
-                      {/* Solid Color Selection */}
+                      {/* Solid Color Selection - MENGGUNAKAN ID UNTUK SELEKSI TUNGGAL */}
                       <div className="space-y-4">
                          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                             <Palette className="h-4 w-4" /> Warna Solid
@@ -461,21 +472,21 @@ export default function SettingsPage() {
                             {SOLID_COLORS.map((color) => (
                               <button
                                 key={color.id}
-                                onClick={() => setNameColor(color.class)}
+                                onClick={() => setSelectedColorId(color.id)}
                                 title={color.name}
                                 className={cn(
                                   "h-10 w-10 rounded-full border-2 transition-all flex items-center justify-center relative mx-auto",
-                                  nameColor === color.class ? "border-primary scale-110" : "border-transparent"
+                                  selectedColorId === color.id ? "border-primary scale-110" : "border-transparent"
                                 )}
                               >
                                 <div className={cn("h-7 w-7 rounded-full", color.class.replace("text-", "bg-"))} />
-                                {nameColor === color.class && <Check className="h-4 w-4 text-white absolute" />}
+                                {selectedColorId === color.id && <Check className="h-4 w-4 text-white absolute" />}
                               </button>
                             ))}
                          </div>
                       </div>
 
-                      {/* Gradient Color Selection */}
+                      {/* Gradient Color Selection - MENGGUNAKAN ID UNTUK SELEKSI TUNGGAL */}
                       <div className="space-y-4">
                          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
                             <Sparkles className="h-4 w-4" /> Warna Gradient
@@ -484,15 +495,15 @@ export default function SettingsPage() {
                             {GRADIENT_COLORS.map((grad) => (
                               <button
                                 key={grad.id}
-                                onClick={() => setNameColor(grad.class)}
+                                onClick={() => setSelectedColorId(grad.id)}
                                 className={cn(
-                                  "p-3 rounded-xl border text-xs font-black transition-all h-12 flex items-center justify-center",
-                                  nameColor === grad.class 
-                                    ? "border-primary bg-primary/10 shadow-sm" 
+                                  "p-3 rounded-xl border text-xs font-black transition-all h-12 flex items-center justify-center overflow-hidden",
+                                  selectedColorId === grad.id 
+                                    ? "border-primary bg-primary/10 shadow-sm ring-1 ring-primary/20" 
                                     : "border-border/50 hover:border-primary/20"
                                 )}
                               >
-                                <span className={grad.class}>{grad.name}</span>
+                                <span className={cn("truncate px-1", grad.class)}>{grad.name}</span>
                               </button>
                             ))}
                          </div>
@@ -524,6 +535,7 @@ export default function SettingsPage() {
                         return (
                           <div key={badge.id} className="relative group">
                             <button
+                              type="button"
                               onClick={() => setSelectedBadgeId(badge.id)}
                               className={cn(
                                 "h-20 w-20 rounded-2xl border-2 flex items-center justify-center transition-all relative",
@@ -542,7 +554,7 @@ export default function SettingsPage() {
                             
                             <Popover>
                               <PopoverTrigger asChild>
-                                <button className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-muted border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm">
+                                <button type="button" className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-muted border border-border flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm">
                                   <CircleHelp className="h-3.5 w-3.5" />
                                 </button>
                               </PopoverTrigger>
