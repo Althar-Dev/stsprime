@@ -97,8 +97,14 @@ export default function DashboardPage() {
                 <ShieldCheck className="h-5 w-5 text-primary" />
               </div>
             </div>
-            <div className="flex items-center gap-2 justify-center mb-1">
-              <h2 className="font-headline text-xl md:text-2xl font-black tracking-tight text-foreground line-clamp-1">
+            <div className="flex items-center gap-2 justify-center mb-1 w-full overflow-hidden">
+              <h2 
+                className={cn(
+                  "text-xl md:text-2xl font-black tracking-tight line-clamp-1 transition-all",
+                  profileData?.nameColor || "text-foreground"
+                )}
+                style={profileData?.fontFamily ? { fontFamily: profileData.fontFamily } : {}}
+              >
                 {user?.displayName || "Gamer Pro"}
               </h2>
               {profileData?.vip && (

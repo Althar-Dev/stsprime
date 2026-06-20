@@ -65,7 +65,12 @@ export function DashboardHeader() {
           <div className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 border-l border-border/50">
             <div className="hidden lg:flex flex-col items-end">
               <div className="flex items-center gap-1.5">
-                <span className="text-xs font-black leading-none text-foreground">{user?.displayName || "Gamer"}</span>
+                <span 
+                  className={cn("text-xs font-black leading-none", profileData?.nameColor || "text-foreground")}
+                  style={profileData?.fontFamily ? { fontFamily: profileData.fontFamily } : {}}
+                >
+                  {user?.displayName || "Gamer"}
+                </span>
                 {profileData?.vip && (
                   <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
                 )}

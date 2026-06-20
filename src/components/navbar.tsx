@@ -228,7 +228,12 @@ export function Navbar() {
                           <DropdownMenuLabel className="font-normal">
                             <div className="flex flex-col space-y-1">
                               <div className="flex items-center gap-1.5">
-                                <p className="text-sm font-black leading-none">{user.displayName || "Gamer"}</p>
+                                <p 
+                                  className={cn("text-sm font-black leading-none", profileData?.nameColor || "text-foreground")}
+                                  style={profileData?.fontFamily ? { fontFamily: profileData.fontFamily } : {}}
+                                >
+                                  {user.displayName || "Gamer"}
+                                </p>
                                 {profileData?.vip && (
                                   <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
                                 )}

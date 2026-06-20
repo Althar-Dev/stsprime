@@ -255,9 +255,14 @@ export default function LeaderboardPage() {
                      <ShieldCheck className="h-4 w-4 text-primary" />
                   </div>
                 </div>
-                <div>
+                <div className="min-w-0 overflow-hidden">
                   <div className="flex items-center gap-1.5 mb-2">
-                    <p className="font-black text-lg md:text-xl leading-none truncate max-w-[140px]">{user?.displayName || "Gamer Pro"}</p>
+                    <p 
+                      className={cn("font-black text-lg md:text-xl leading-none truncate max-w-[140px]", profileData?.nameColor || "text-foreground")}
+                      style={profileData?.fontFamily ? { fontFamily: profileData.fontFamily } : {}}
+                    >
+                      {user?.displayName || "Gamer Pro"}
+                    </p>
                     {profileData?.vip && (
                       <Image src="/img/badge/vip.png" alt="VIP" width={20} height={20} className="shrink-0" />
                     )}
