@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 export const metadata: Metadata = {
-  title: 'STS Pedia | The Ultimate Topup Hub',
+  title: 'STSPrime | The Ultimate Topup Hub',
   description: 'Fast, secure, and reliable game topups and digital services.',
 };
 

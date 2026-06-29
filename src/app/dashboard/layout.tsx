@@ -1,4 +1,3 @@
-
 "use client";
 
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
@@ -37,7 +36,7 @@ export default function DashboardLayout({
           <div className="space-y-3">
             <h1 className="font-headline text-3xl font-black tracking-tighter">Akses Terbatas</h1>
             <p className="text-sm text-muted-foreground font-bold leading-relaxed">
-              Anda harus masuk ke akun STS Pedia untuk mengakses fitur Dashboard, riwayat transaksi, dan pengaturan profil secara penuh.
+              Anda harus masuk ke akun STSPrime untuk mengakses fitur Dashboard, riwayat transaksi, dan pengaturan profil secara penuh.
             </p>
           </div>
           <div className="flex flex-col w-full gap-3">

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef, Suspense } from "react";
@@ -167,7 +166,7 @@ export function Navbar() {
                 <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105 shrink-0">
                   <Logo className="h-9 w-9 md:h-10 md:w-10" />
                   <div className="flex flex-col">
-                    <span className="font-headline text-lg md:text-xl font-black tracking-tighter text-foreground leading-none">STS Pedia</span>
+                    <span className="font-headline text-lg md:text-xl font-black tracking-tighter text-foreground leading-none">STSPrime</span>
                     <span className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-tight">from StarVale</span>
                   </div>
                 </Link>
@@ -300,7 +299,7 @@ export function Navbar() {
                           <Logo className="h-10 w-10" />
                           <div>
                             <div className="flex items-center gap-1.5">
-                              <h3 className="font-headline font-black text-base tracking-tight leading-none">STS Pedia</h3>
+                              <h3 className="font-headline font-black text-base tracking-tight leading-none">STSPrime</h3>
                               {profileData?.vip && (
                                 <Popover>
                                   <PopoverTrigger asChild>

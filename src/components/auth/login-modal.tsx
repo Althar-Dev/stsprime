@@ -53,7 +53,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
         await signInWithEmailAndPassword(auth, email, password);
         toast({
           title: "Berhasil masuk",
-          description: "Selamat datang kembali di STS Pedia!",
+          description: "Selamat datang kembali di STSPrime!",
         });
       } else {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -66,6 +66,9 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
           email: user.email,
           displayName: displayName,
           createdAt: new Date().toISOString(),
+          coins: 0,
+          points: 0,
+          vip: false
         };
 
         const userDocRef = doc(db, "users", user.uid);

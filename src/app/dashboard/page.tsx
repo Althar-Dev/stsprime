@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useUser, useFirestore } from "@/firebase";
@@ -125,7 +124,7 @@ export default function DashboardPage() {
               )}
             </div>
             <p className="text-xs text-muted-foreground font-bold truncate max-w-full mb-6 opacity-70">
-              {user?.email || "guest@stspedia.com"}
+              {user?.email || "guest@stsprime.com"}
             </p>
             <Badge className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 text-[10px] font-black tracking-widest rounded-full uppercase">
               {profileData?.dev ? "Developer Verified" : (profileData?.vip ? "VIP Member" : "Member Verified")}
@@ -151,7 +150,7 @@ export default function DashboardPage() {
               
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl md:text-4xl lg:text-5xl font-black text-primary tracking-tighter">
+                  <span className="text-2xl md:text-3xl lg:text-4xl font-black text-primary tracking-tighter tabular-nums">
                     {(profileData?.coins || 0).toLocaleString()}
                   </span>
                   <span className="text-xs md:text-sm text-muted-foreground font-black uppercase tracking-widest">Coins</span>

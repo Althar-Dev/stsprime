@@ -139,7 +139,7 @@ export default function LeaderboardPage() {
             Hall of Fame
           </h1>
           <p className="text-xs md:text-lg text-muted-foreground max-w-2xl mx-auto font-bold opacity-80 leading-relaxed px-4">
-            Siapa pun yang memegang poin tertinggi akan bertahta di puncak klasemen global STS Pedia!
+            Siapa pun yang memegang poin tertinggi akan bertahta di puncak klasemen global STSPrime!
           </p>
         </div>
 

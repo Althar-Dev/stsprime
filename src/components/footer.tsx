@@ -12,7 +12,7 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-2">
               <Logo className="h-8 w-8 rounded-lg shadow-none" />
               <div className="flex flex-col">
-                <span className="font-headline text-lg font-black tracking-tighter text-foreground leading-none">STS Pedia</span>
+                <span className="font-headline text-lg font-black tracking-tighter text-foreground leading-none">STSPrime</span>
                 <span className="text-[10px] font-bold text-muted-foreground tracking-tight">from StarVale</span>
               </div>
             </Link>
@@ -49,7 +49,7 @@ export function Footer() {
         </div>
         <div className="mt-12 md:mt-16 border-t border-border pt-8 text-center">
           <p className="text-[9px] md:text-[10px] text-muted-foreground font-black tracking-[0.2em]">
-            © {new Date().getFullYear()} STS Pedia. All rights reserved. Built for the community.
+            © {new Date().getFullYear()} STSPrime. All rights reserved. Built for the community.
           </p>
         </div>
       </div>

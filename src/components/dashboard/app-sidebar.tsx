@@ -83,7 +83,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <Logo className="h-9 w-9 shrink-0 shadow-lg shadow-primary/10 rounded-xl" />
           <div className="flex flex-col group-data-[collapsible=icon]:hidden animate-in fade-in duration-300">
             <span className="font-headline text-base font-black tracking-tighter text-foreground leading-none">
-              STS Pedia
+              STSPrime
             </span>
             <span className="text-[10px] font-bold text-muted-foreground tracking-tight mt-0.5">
               by StarVale

@@ -87,7 +87,7 @@ export default function BenefitPage() {
               Exclusive Member Perks
             </Badge>
             <h1 className="font-headline text-4xl md:text-7xl font-black mb-6 tracking-tighter">
-              Banyak Untungnya di <span className="text-primary">STS Pedia</span>
+              Banyak Untungnya di <span className="text-primary">STSPrime</span>
             </h1>
             <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto font-bold opacity-80 leading-relaxed px-4">
               Kami tidak hanya sekadar tempat topup. Kami adalah mitra gaming Anda yang memberikan nilai lebih di setiap klik.
@@ -126,7 +126,7 @@ export default function BenefitPage() {
                   Kenalan dengan <br/><span className="text-primary">STS Coin</span>
                 </h2>
                 <p className="text-sm md:text-base text-muted-foreground font-bold leading-relaxed">
-                  STS Coin adalah mata uang virtual eksklusif di ekosistem STS Pedia. Setiap kali Anda melakukan topup, Anda akan mendapatkan koin yang bisa dikumpulkan. 
+                  STS Coin adalah mata uang virtual eksklusif di ekosistem STSPrime. Setiap kali Anda melakukan topup, Anda akan mendapatkan koin yang bisa dikumpulkan. 
                   <br/><br/>
                   Semakin sering Anda bertransaksi, semakin banyak saldo STS Coin yang Anda miliki untuk mendapatkan potongan harga hingga gratis topup!
                 </p>
