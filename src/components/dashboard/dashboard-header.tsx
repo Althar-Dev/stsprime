@@ -43,6 +43,8 @@ export function DashboardHeader() {
   
   const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
 
+  const coinValue = profileData?.coins || 0;
+
   return (
     <header className="sticky top-0 z-40 flex h-16 md:h-20 shrink-0 items-center gap-2 border-b border-border bg-background px-4 md:px-8">
       <div className="flex items-center gap-1 md:gap-2">
@@ -61,7 +63,14 @@ export function DashboardHeader() {
           <div className="flex items-center gap-2 md:gap-1.5 px-3 md:px-2.5 py-1.5 md:py-1 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
             <img src="/img/coin.png" alt="Coin" className="h-6 w-6 md:h-5 md:w-5 group-hover:scale-110 transition-transform" />
             <span className="text-sm md:text-sm font-black text-primary">
-              {(profileData?.coins || 0).toLocaleString()}
+              <span className="md:hidden">
+                {coinValue >= 10000000 
+                  ? `${Math.floor(coinValue / 1000000)}m` 
+                  : coinValue.toLocaleString('id-ID')}
+              </span>
+              <span className="hidden md:block">
+                {coinValue.toLocaleString('id-ID')}
+              </span>
             </span>
           </div>
 
