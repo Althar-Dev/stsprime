@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { SearchX, LayoutGrid, Zap, ChevronLeft, ChevronRight } from "lucide-react";
@@ -238,14 +238,14 @@ export function CatalogGrid() {
             icon="/img/fire.gif" 
             subtitle="Paling banyak dicari dan dimainkan oleh komunitas."
           />
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
             {populerItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group relative flex items-center gap-3 md:gap-5 p-3 md:p-4 bg-card bg-dots-pattern border border-border rounded-2xl transition-all hover:scale-[1.02] hover:bg-muted/50 hover:border-primary/30 active:scale-95 shadow-xl"
+                  className="group relative flex items-center gap-3 md:gap-5 p-3 md:py-3 md:px-5 bg-card bg-dots-pattern border border-border rounded-2xl transition-all hover:scale-[1.02] hover:bg-muted/50 hover:border-primary/30 active:scale-95 shadow-xl"
                 >
                   <div className="relative h-12 w-12 md:h-20 md:w-20 shrink-0 overflow-hidden rounded-xl md:rounded-2xl z-10">
                     <Image
@@ -257,10 +257,10 @@ export function CatalogGrid() {
                     />
                   </div>
                   <div className="flex flex-col justify-center z-10 min-w-0">
-                    <h3 className="text-xs md:text-base lg:text-sm font-black tracking-tight text-card-foreground leading-tight mb-0.5 md:mb-1 group-hover:text-primary transition-colors truncate">
+                    <h3 className="text-xs md:text-sm font-black tracking-tight text-card-foreground leading-tight mb-0.5 md:mb-1 group-hover:text-primary transition-colors truncate">
                       {item.name}
                     </h3>
-                    <p className="text-[8px] md:text-sm font-bold text-muted-foreground opacity-80 tracking-wide truncate">
+                    <p className="text-[8px] md:text-xs font-bold text-muted-foreground opacity-80 tracking-wide truncate">
                       {item.type}
                     </p>
                   </div>
@@ -441,7 +441,7 @@ export function CatalogGrid() {
                     <p className="text-[7px] md:text-[10px] tracking-tight text-accent font-black truncate mb-0.5">
                       {item.type}
                     </p>
-                    <h3 className="line-clamp-1 text-[10px] md:text-base lg:text-sm font-black text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="line-clamp-1 text-[10px] md:text-sm font-black text-foreground group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
                   </div>
