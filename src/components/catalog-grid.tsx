@@ -257,7 +257,7 @@ export function CatalogGrid() {
                     />
                   </div>
                   <div className="flex flex-col justify-center z-10 min-w-0">
-                    <h3 className="text-xs md:text-base lg:text-lg font-black tracking-tight text-card-foreground leading-tight mb-0.5 md:mb-1 group-hover:text-primary transition-colors truncate">
+                    <h3 className="text-xs md:text-base lg:text-base font-black tracking-tight text-card-foreground leading-tight mb-0.5 md:mb-1 group-hover:text-primary transition-colors truncate">
                       {item.name}
                     </h3>
                     <p className="text-[8px] md:text-sm font-bold text-muted-foreground opacity-80 tracking-wide truncate">
