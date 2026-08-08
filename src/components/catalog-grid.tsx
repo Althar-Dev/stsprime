@@ -245,9 +245,8 @@ export function CatalogGrid() {
                 <Link
                   key={item.id}
                   href={`/topup/${item.imageId}`}
-                  className="group relative flex items-center gap-3 md:gap-5 p-3 md:py-3 md:px-5 bg-card bg-dots-pattern border border-border rounded-2xl transition-all hover:scale-[1.02] hover:bg-muted/50 hover:border-primary/30 active:scale-95 shadow-xl"
+                  className="group relative flex items-center gap-3 md:gap-5 p-2 md:py-2 md:px-2 bg-card bg-dots-pattern border border-border rounded-2xl transition-all hover:scale-[1.02] hover:bg-muted/50 hover:border-primary/30 active:scale-95 shadow-xl"
                 >
-                  {/* Image size increased for desktop to h-20 w-20 (80px) */}
                   <div className="relative h-12 w-12 md:h-20 md:w-20 shrink-0 overflow-hidden rounded-xl md:rounded-2xl z-10">
                     <Image
                       src={image?.imageUrl || ""}
