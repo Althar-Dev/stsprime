@@ -438,10 +438,10 @@ export function CatalogGrid() {
                     )}
                   </div>
                   <div className="p-2 md:p-3 flex flex-col justify-center flex-1 bg-card/30">
-                    <p className="text-[7px] md:text-[9px] tracking-tight text-accent font-black truncate mb-0.5">
+                    <p className="text-[7px] md:text-[10px] tracking-tight text-accent font-black truncate mb-0.5">
                       {item.type}
                     </p>
-                    <h3 className="line-clamp-1 text-[10px] md:sm font-black text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="line-clamp-1 text-[10px] md:text-base font-black text-foreground group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
                   </div>
