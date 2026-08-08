@@ -13,7 +13,7 @@ export function Logo({ className, iconClassName }: LogoProps) {
       className
     )}>
       <Image 
-        src="/img/icon.png" 
+        src="/img/favicons.png" 
         alt="STS Pedia Logo" 
         fill 
         className={cn("object-contain", iconClassName)}

@@ -36,8 +36,8 @@ export function CatalogSkeleton() {
             <Skeleton className="h-3 w-48" />
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
-          {[...Array(16)].map((_, i) => (
+        <div className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6">
+          {[...Array(18)].map((_, i) => (
             <div key={i} className="flex flex-col rounded-sm border border-border bg-card/50 overflow-hidden h-full">
               <Skeleton className="aspect-square w-full" />
               <div className="p-2 md:p-3 space-y-2">

@@ -273,7 +273,7 @@ export function CatalogGrid() {
 
       {/* Flash Sale Section */}
       {flashSaleItems.length > 0 && (
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="relative">
             <div className="flex flex-col">
               <div className="flex items-end justify-between relative z-10">
@@ -414,7 +414,7 @@ export function CatalogGrid() {
         </div>
 
         {topUpItems.length > 0 ? (
-          <div className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+          <div className="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6">
             {topUpItems.map((item) => {
               const image = PlaceHolderImages.find((img) => img.id === item.imageId);
               return (
