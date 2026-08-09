@@ -21,7 +21,8 @@ import {
   CheckCircle2,
   XCircle,
   Crown,
-  Medal
+  Medal,
+  Award
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -32,6 +33,7 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 const MOCK_LEVELS = [
   {
@@ -44,7 +46,9 @@ const MOCK_LEVELS = [
     status: "Active",
     color: "text-orange-700",
     bg: "bg-orange-700/10",
-    icon: Medal
+    icon: Medal,
+    badgeName: "Bronze Explorer",
+    badgeIcon: "https://picsum.photos/seed/badge-bronze/100/100"
   },
   {
     id: "LVL-002",
@@ -56,7 +60,9 @@ const MOCK_LEVELS = [
     status: "Active",
     color: "text-slate-400",
     bg: "bg-slate-400/10",
-    icon: ShieldCheck
+    icon: ShieldCheck,
+    badgeName: "Silver Warrior",
+    badgeIcon: "https://picsum.photos/seed/badge-silver/100/100"
   },
   {
     id: "LVL-003",
@@ -68,7 +74,9 @@ const MOCK_LEVELS = [
     status: "Active",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
-    icon: Trophy
+    icon: Trophy,
+    badgeName: "Gold VIP",
+    badgeIcon: "/img/badge/vip.png"
   },
   {
     id: "LVL-004",
@@ -80,7 +88,9 @@ const MOCK_LEVELS = [
     status: "Active",
     color: "text-cyan-400",
     bg: "bg-cyan-400/10",
-    icon: Crown
+    icon: Crown,
+    badgeName: "Platinum Mythic",
+    badgeIcon: "https://picsum.photos/seed/badge-platinum/100/100"
   }
 ];
 
@@ -125,20 +135,20 @@ export default function AdminMemberLevelsPage() {
         <CardHeader className="p-6 border-b border-border/30 bg-muted/10">
           <div className="flex flex-col md:flex-row justify-between gap-4">
             <div className="space-y-1">
-              <CardTitle className="text-lg font-black tracking-tight">Hirarki Keanggotaan</CardTitle>
-              <CardDescription className="text-xs font-bold">Atur ambang batas transaksi dan keuntungan untuk setiap tier.</CardDescription>
+              <CardTitle className="text-lg font-black tracking-tight">Hirarki Keanggotaan & Hadiah</CardTitle>
+              <CardDescription className="text-xs font-bold">Atur ambang batas transaksi, keuntungan, dan badge eksklusif untuk setiap tier.</CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <Table className="min-w-[900px]">
+            <Table className="min-w-[1000px]">
               <TableHeader className="bg-muted/30">
                 <TableRow className="hover:bg-transparent border-border/30">
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Level & Badge</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Level & Pangkat</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Badge Eksklusif</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Syarat Kenaikan</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Reward Multiplier</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Extra Cashback</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Populasi</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Status</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest text-right pr-6 h-12">Aksi</TableHead>
@@ -159,18 +169,33 @@ export default function AdminMemberLevelsPage() {
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
-                      <span className="text-xs font-bold">{level.requirement}</span>
-                    </TableCell>
-                    <TableCell className="py-4">
-                      <div className="flex items-center gap-1.5">
-                        <Zap className="h-3.5 w-3.5 text-amber-500" />
-                        <span className="text-xs font-black tabular-nums">{level.multiplier}</span>
+                      <div className="flex items-center gap-2">
+                        <div className="relative h-8 w-8 rounded-lg overflow-hidden border border-border/50 bg-muted/20 flex items-center justify-center p-1 group-hover:border-primary/50 transition-all">
+                          <Image 
+                            src={level.badgeIcon} 
+                            alt={level.badgeName} 
+                            width={24}
+                            height={24}
+                            className="object-contain"
+                            unoptimized
+                          />
+                        </div>
+                        <span className="text-xs font-bold text-foreground">{level.badgeName}</span>
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
-                      <div className="flex items-center gap-1.5">
-                        <Percent className="h-3.5 w-3.5 text-primary" />
-                        <span className="text-xs font-black tabular-nums">{level.cashback}</span>
+                      <span className="text-xs font-bold">{level.requirement}</span>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <div className="flex flex-col gap-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <Zap className="h-3 w-3 text-amber-500" />
+                          <span className="text-xs font-black tabular-nums">{level.multiplier}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Percent className="h-3 w-3 text-primary" />
+                          <span className="text-[10px] font-bold text-muted-foreground tabular-nums">Extra {level.cashback}</span>
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
@@ -193,8 +218,8 @@ export default function AdminMemberLevelsPage() {
                           <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
                             <Edit className="h-3.5 w-3.5" /> Edit Keuntungan
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
-                            <ShieldCheck className="h-3.5 w-3.5 text-primary" /> Atur Badge Khusus
+                          <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-primary">
+                            <Award className="h-3.5 w-3.5" /> Atur Badge Khusus
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-destructive focus:text-destructive">
@@ -218,9 +243,9 @@ export default function AdminMemberLevelsPage() {
               <ShieldCheck className="h-6 w-6 text-primary" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-black text-sm uppercase tracking-wider">Mekanisme Kenaikan Pangkat</h3>
+              <h3 className="font-black text-sm uppercase tracking-wider">Mekanisme Badge Khusus</h3>
               <p className="text-xs text-muted-foreground font-bold leading-relaxed">
-                Sistem akan memindai total transaksi sukses setiap pengguna secara berkala. Saat ambang batas level berikutnya tercapai, pengguna akan mendapatkan notifikasi dan badge baru secara otomatis.
+                Setiap member level dapat dikaitkan dengan satu badge utama. Saat pengguna naik level, badge ini akan secara otomatis tersemat di profil mereka dan muncul di Leaderboard global.
               </p>
             </div>
           </div>
