@@ -25,7 +25,7 @@ import {
   CreditCard,
   Wallet,
   Shield,
-  Lock,
+  Trophy,
   Settings,
   LogOut,
   ShieldAlert,
@@ -117,7 +117,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
       label: "System",
       items: [
         { title: "Staff/Team", url: "/admin/system/staff", icon: Shield },
-        { title: "Roles", url: "/admin/system/roles", icon: Lock },
+        { title: "Member Level", url: "/admin/system/member-levels", icon: Trophy },
         { title: "Settings", url: "/admin/system/settings", icon: Settings },
       ]
     }
