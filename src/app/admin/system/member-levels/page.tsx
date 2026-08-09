@@ -20,7 +20,8 @@ import {
   Percent,
   CheckCircle2,
   XCircle,
-  Crown
+  Crown,
+  Medal
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -35,50 +36,50 @@ import {
 const MOCK_LEVELS = [
   {
     id: "LVL-001",
-    name: "ROOKIE",
+    name: "BRONZE",
     requirement: "Pendaftaran Baru",
     multiplier: "1x Poin",
     cashback: "1%",
     members: 842,
     status: "Active",
-    color: "text-slate-400",
-    bg: "bg-slate-400/10",
-    icon: Star
+    color: "text-orange-700",
+    bg: "bg-orange-700/10",
+    icon: Medal
   },
   {
     id: "LVL-002",
-    name: "PRO GAMER",
+    name: "SILVER",
     requirement: "10+ Transaksi",
-    multiplier: "1.5x Poin",
+    multiplier: "1.2x Poin",
     cashback: "2%",
     members: 312,
     status: "Active",
-    color: "text-primary",
-    bg: "bg-primary/10",
-    icon: TrendingUp
+    color: "text-slate-400",
+    bg: "bg-slate-400/10",
+    icon: ShieldCheck
   },
   {
     id: "LVL-003",
-    name: "LEGENDARY",
+    name: "GOLD",
     requirement: "50+ Transaksi",
-    multiplier: "2.5x Poin",
+    multiplier: "1.5x Poin",
     cashback: "5%",
     members: 86,
     status: "Active",
-    color: "text-amber-500",
-    bg: "bg-amber-500/10",
+    color: "text-amber-400",
+    bg: "bg-amber-400/10",
     icon: Trophy
   },
   {
     id: "LVL-004",
-    name: "MYTHIC",
+    name: "PLATINUM",
     requirement: "200+ Transaksi",
-    multiplier: "4x Poin",
+    multiplier: "2.5x Poin",
     cashback: "10%",
     members: 12,
     status: "Active",
-    color: "text-purple-500",
-    bg: "bg-purple-500/10",
+    color: "text-cyan-400",
+    bg: "bg-cyan-400/10",
     icon: Crown
   }
 ];
@@ -102,9 +103,9 @@ export default function AdminMemberLevelsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: "Total Level", value: "4 Tingkat", icon: ShieldCheck, color: "text-primary" },
-          { label: "Populasi Terbesar", value: "ROOKIE", icon: Users, color: "text-blue-500" },
-          { label: "Multiplier Maks.", value: "4x Poin", icon: Zap, color: "text-amber-500" },
-          { label: "Rata-rata Tier", value: "PRO GAMER", icon: ArrowUpCircle, color: "text-emerald-500" },
+          { label: "Populasi Terbesar", value: "BRONZE", icon: Users, color: "text-blue-500" },
+          { label: "Multiplier Maks.", value: "2.5x Poin", icon: Zap, color: "text-amber-500" },
+          { label: "Rata-rata Tier", value: "SILVER", icon: ArrowUpCircle, color: "text-emerald-500" },
         ].map((stat, i) => (
           <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
             <CardContent className="p-6 flex items-center justify-between">
@@ -228,7 +229,7 @@ export default function AdminMemberLevelsPage() {
         <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm p-6 flex items-center justify-between">
            <div className="space-y-1">
               <h3 className="font-black text-sm uppercase tracking-wider">Distribusi Member</h3>
-              <p className="text-xs text-muted-foreground font-bold italic">Terdapat lonjakan 15% pada level PRO GAMER bulan ini.</p>
+              <p className="text-xs text-muted-foreground font-bold italic">Terdapat lonjakan 15% pada level SILVER bulan ini.</p>
             </div>
             <Button variant="outline" className="rounded-xl font-black text-[10px] uppercase tracking-widest px-4 border-border">
               Lihat Grafik Pertumbuhan
