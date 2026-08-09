@@ -3,12 +3,34 @@
 import * as React from "react";
 import {
   LayoutDashboard,
-  ShoppingBag,
+  BarChart3,
   Users,
+  ShoppingBag,
   Package,
+  Layers,
+  Ticket,
+  Zap,
+  Coins,
+  ArrowDownCircle,
+  ArrowUpCircle,
+  Undo2,
+  FileText,
+  Image as ImageIcon,
+  Monitor,
+  Grid3X3,
+  Palette,
+  Globe,
+  Cpu,
+  Server,
+  CreditCard,
+  Wallet,
+  Shield,
+  Lock,
+  Settings,
   LogOut,
   ShieldAlert,
-  ChevronLeft
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 
 import {
@@ -41,31 +63,64 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
     }
   };
 
-  const navAdmin = [
+  const menuGroups = [
     {
-      title: "Ringkasan",
-      url: "/admin",
-      icon: LayoutDashboard,
-      isActive: pathname === "/admin",
+      label: "Dashboard",
+      items: [
+        { title: "Overview", url: "/admin", icon: LayoutDashboard },
+        { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
+      ]
     },
     {
-      title: "Kelola Pesanan",
-      url: "/admin/orders",
-      icon: ShoppingBag,
-      isActive: pathname === "/admin/orders",
+      label: "Shop",
+      items: [
+        { title: "Users", url: "/admin/shop/users", icon: Users },
+        { title: "Transactions", url: "/admin/shop/transactions", icon: ShoppingBag },
+        { title: "Products", url: "/admin/shop/products", icon: Package },
+        { title: "Categories", url: "/admin/shop/categories", icon: Layers },
+        { title: "Vouchers", url: "/admin/shop/vouchers", icon: Ticket },
+        { title: "Flash Sales", url: "/admin/shop/flash-sales", icon: Zap },
+        { title: "Coins", url: "/admin/shop/coins", icon: Coins },
+        { title: "Deposits", url: "/admin/shop/deposits", icon: ArrowDownCircle },
+        { title: "Withdrawals", url: "/admin/shop/withdrawals", icon: ArrowUpCircle },
+        { title: "Refunds", url: "/admin/shop/refunds", icon: Undo2 },
+        { title: "Reports", url: "/admin/shop/reports", icon: FileText },
+      ]
     },
     {
-      title: "Produk & Harga",
-      url: "/admin/products",
-      icon: Package,
-      isActive: pathname === "/admin/products",
+      label: "Gallery",
+      items: [
+        { title: "Banners", url: "/admin/gallery/banners", icon: Monitor },
+        { title: "Icons", url: "/admin/gallery/icons", icon: Grid3X3 },
+        { title: "Backgrounds", url: "/admin/gallery/backgrounds", icon: Palette },
+        { title: "Others", url: "/admin/gallery/others", icon: ImageIcon },
+      ]
     },
     {
-      title: "Data Pengguna",
-      url: "/admin/users",
-      icon: Users,
-      isActive: pathname === "/admin/users",
+      label: "Providers",
+      items: [
+        { title: "DigiFlazz", url: "/admin/providers/digiflazz", icon: Server },
+        { title: "Orderkuota", url: "/admin/providers/orderkuota", icon: Cpu },
+      ]
     },
+    {
+      label: "Payments",
+      items: [
+        { title: "GoPay Merchant", url: "/admin/payments/gopay", icon: Wallet },
+        { title: "Orderkuota", url: "/admin/payments/orderkuota", icon: CreditCard },
+        { title: "ShopeePay", url: "/admin/payments/shopeepay", icon: Wallet },
+        { title: "Midtrans", url: "/admin/payments/midtrans", icon: Globe },
+        { title: "Xendit", url: "/admin/payments/xendit", icon: CreditCard },
+      ]
+    },
+    {
+      label: "System",
+      items: [
+        { title: "Staff/Team", url: "/admin/system/staff", icon: Shield },
+        { title: "Roles", url: "/admin/system/roles", icon: Lock },
+        { title: "Settings", url: "/admin/system/settings", icon: Settings },
+      ]
+    }
   ];
 
   return (
@@ -79,49 +134,51 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
         </Link>
       </SidebarHeader>
 
-      <SidebarContent className="px-2 group-data-[collapsible=icon]:px-1">
-        <SidebarGroup className="group-data-[collapsible=icon]:px-0">
-          <SidebarGroupLabel className="font-black text-[10px] text-muted-foreground/50 px-4 mb-2 group-data-[collapsible=icon]:hidden">
-            Manajemen Sistem
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navAdmin.map((item) => (
-                <SidebarMenuItem key={item.title} className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
-                  <SidebarMenuButton
-                    asChild
-                    isActive={item.isActive}
-                    tooltip={item.title}
-                    className={cn(
-                      "font-bold rounded-xl h-11 px-4 transition-all duration-200",
-                      "group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center",
-                      item.isActive
-                        ? "!bg-primary !text-primary-foreground shadow-lg shadow-primary/20"
-                        : "text-muted-foreground hover:bg-muted/50"
-                    )}
-                  >
-                    <Link href={item.url}>
-                      <item.icon className={cn("h-5 w-5 shrink-0", item.isActive ? "!text-primary-foreground" : "text-muted-foreground")} />
-                      <span className="ml-1 group-data-[collapsible=icon]:hidden">{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+      <SidebarContent className="px-2 group-data-[collapsible=icon]:px-1 overflow-x-hidden">
+        {menuGroups.map((group, idx) => (
+          <SidebarGroup key={idx} className="group-data-[collapsible=icon]:px-0">
+            <SidebarGroupLabel className="font-black text-[9px] uppercase tracking-[0.15em] text-muted-foreground/60 px-4 mb-2 group-data-[collapsible=icon]:hidden">
+              {group.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.items.map((item) => {
+                  const isActive = pathname === item.url;
+                  return (
+                    <SidebarMenuItem key={item.title} className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive}
+                        tooltip={item.title}
+                        className={cn(
+                          "font-bold rounded-xl h-10 px-4 transition-all duration-200",
+                          "group-data-[collapsible=icon]:h-9 group-data-[collapsible=icon]:w-9 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center",
+                          isActive
+                            ? "!bg-primary !text-primary-foreground shadow-lg shadow-primary/20"
+                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                        )}
+                      >
+                        <Link href={item.url}>
+                          <item.icon className={cn("h-4.5 w-4.5 shrink-0", isActive ? "!text-primary-foreground" : "text-muted-foreground")} />
+                          <span className="ml-1 text-xs group-data-[collapsible=icon]:hidden">{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
 
-        <SidebarGroup className="mt-4 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:mt-2">
-          <SidebarGroupLabel className="font-black text-[10px] text-muted-foreground/50 px-4 mb-2 group-data-[collapsible=icon]:hidden">
-            Lainnya
-          </SidebarGroupLabel>
+        <SidebarGroup className="mt-2 group-data-[collapsible=icon]:px-0">
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
-                <SidebarMenuButton asChild tooltip="Halaman User" className="group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center">
-                  <Link href="/dashboard" className="font-bold text-muted-foreground hover:text-primary">
-                    <ChevronLeft className="h-5 w-5 shrink-0" />
-                    <span className="group-data-[collapsible=icon]:hidden">Halaman User</span>
+                <SidebarMenuButton asChild tooltip="Halaman User" className="group-data-[collapsible=icon]:h-9 group-data-[collapsible=icon]:w-9 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center">
+                  <Link href="/dashboard" className="font-bold text-muted-foreground hover:text-primary transition-colors">
+                    <ChevronLeft className="h-4.5 w-4.5 shrink-0" />
+                    <span className="ml-1 text-xs group-data-[collapsible=icon]:hidden">Halaman User</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -135,7 +192,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
           <SidebarMenuItem className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
             <SidebarMenuButton
               onClick={handleLogout}
-              className="font-bold rounded-xl h-11 px-4 text-destructive hover:bg-destructive/10 hover:text-destructive transition-all group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
+              className="font-bold rounded-xl h-11 px-4 text-destructive hover:bg-destructive/10 hover:text-destructive transition-all group-data-[collapsible=icon]:h-9 group-data-[collapsible=icon]:w-9 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
               tooltip="Logout Admin"
             >
               <LogOut className="h-5 w-5 shrink-0" />
