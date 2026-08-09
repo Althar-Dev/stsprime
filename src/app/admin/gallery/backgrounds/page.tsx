@@ -8,20 +8,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
-  Palette, 
+  Image as ImageIcon, 
   Search, 
   Plus, 
   Filter, 
   MoreVertical, 
   Edit, 
   Trash2, 
-  Users,
+  Gamepad2,
   Eye,
   EyeOff,
   Sparkles,
   Layers,
   CheckCircle2,
-  Lock
+  Monitor,
+  Maximize2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -32,81 +33,69 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Image from "next/image";
 
-const MOCK_BACKGROUNDS = [
+const MOCK_PRODUCT_BACKGROUNDS = [
   {
-    id: "BG-001",
-    name: "STS Gold",
-    type: "Gradient",
-    class: "bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-600",
-    usage: 1240,
+    id: "HBG-001",
+    gameName: "Mobile Legends",
+    imageHint: "mobile legends night city",
+    imageUrl: "https://picsum.photos/seed/mlbb-bg/1200/400",
+    dimensions: "1200x400",
     status: "Active",
-    vipOnly: false,
+    lastUpdated: "12 Agu 2026"
   },
   {
-    id: "BG-002",
-    name: "STS Blue",
-    type: "Gradient",
-    class: "bg-gradient-to-tr from-blue-600 via-cyan-500 to-sky-400",
-    usage: 856,
+    id: "HBG-002",
+    gameName: "Free Fire",
+    imageHint: "free fire battleground",
+    imageUrl: "https://picsum.photos/seed/ff-bg/1200/400",
+    dimensions: "1200x400",
     status: "Active",
-    vipOnly: false,
+    lastUpdated: "12 Agu 2026"
   },
   {
-    id: "BG-003",
-    name: "Obsidian",
-    type: "Special",
-    class: "bg-gradient-to-tr from-slate-950 via-slate-900 to-zinc-800",
-    usage: 420,
+    id: "HBG-003",
+    gameName: "Valorant",
+    imageHint: "valorant agent collection",
+    imageUrl: "https://picsum.photos/seed/valorant-bg/1200/400",
+    dimensions: "1200x400",
     status: "Active",
-    vipOnly: true,
+    lastUpdated: "11 Agu 2026"
   },
   {
-    id: "BG-004",
-    name: "Cyber Void",
-    type: "Special",
-    class: "bg-gradient-to-tr from-zinc-900 via-purple-950 to-pink-900",
-    usage: 215,
+    id: "HBG-004",
+    gameName: "Genshin Impact",
+    imageHint: "genshin scenery anime",
+    imageUrl: "https://picsum.photos/seed/genshin-bg/1200/400",
+    dimensions: "1200x400",
     status: "Active",
-    vipOnly: true,
+    lastUpdated: "10 Agu 2026"
   },
   {
-    id: "BG-005",
-    name: "Rose Pink",
-    type: "Solid",
-    class: "bg-rose-500",
-    usage: 124,
+    id: "HBG-005",
+    gameName: "PUBG Mobile",
+    imageHint: "pubg erangel map",
+    imageUrl: "https://picsum.photos/seed/pubgm-bg/1200/400",
+    dimensions: "1200x400",
     status: "Inactive",
-    vipOnly: false,
+    lastUpdated: "08 Agu 2026"
   },
-  {
-    id: "BG-006",
-    name: "Prismatic",
-    type: "Gradient",
-    class: "bg-gradient-to-tr from-red-500 via-yellow-400 via-emerald-400 to-blue-500",
-    usage: 340,
-    status: "Active",
-    vipOnly: false,
-  }
 ];
 
 export default function AdminBackgroundsPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("all");
 
-  const filteredBgs = MOCK_BACKGROUNDS.filter(bg => {
-    const matchesSearch = bg.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = activeTab === "all" || bg.type.toLowerCase() === activeTab.toLowerCase();
-    return matchesSearch && matchesType;
-  });
+  const filteredBgs = MOCK_PRODUCT_BACKGROUNDS.filter(bg => 
+    bg.gameName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Active":
-        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Active</Badge>;
+        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Published</Badge>;
       case "Inactive":
-        return <Badge className="bg-muted text-muted-foreground border-border text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Inactive</Badge>;
+        return <Badge className="bg-muted text-muted-foreground border-border text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Draft</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -117,22 +106,22 @@ export default function AdminBackgroundsPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="space-y-1">
           <h1 className="text-3xl font-black tracking-tight flex items-center gap-3">
-            <Palette className="h-8 w-8 text-primary" /> Manajemen Latar Belakang
+            <Monitor className="h-8 w-8 text-primary" /> Gambar Header Produk
           </h1>
-          <p className="text-sm text-muted-foreground font-bold italic">Kelola pustaka warna, gradasi, dan desain eksklusif untuk kustomisasi profil pengguna.</p>
+          <p className="text-sm text-muted-foreground font-bold italic">Kelola gambar latar belakang (spanduk) yang muncul di bagian atas halaman top-up setiap produk.</p>
         </div>
         <Button className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2">
-          <Plus className="h-4 w-4" /> Tambah Asset Baru
+          <Plus className="h-4 w-4" /> Upload Header Baru
         </Button>
       </div>
 
       {/* Summary Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Total Aset", value: "28", icon: Layers, color: "text-primary" },
-          { label: "Paling Populer", value: "STS Gold", icon: Sparkles, color: "text-amber-500" },
-          { label: "Total Digunakan", value: "3.2k", icon: Users, color: "text-blue-500" },
-          { label: "Edisi Khusus", value: "8", icon: Lock, color: "text-purple-500" },
+          { label: "Total Header", value: "24 Aset", icon: Layers, color: "text-primary" },
+          { label: "Aktif Digunakan", value: "18 Game", icon: CheckCircle2, color: "text-emerald-500" },
+          { label: "Rasio Standar", value: "3:1 (Wide)", icon: Maximize2, color: "text-blue-500" },
+          { label: "Draft / Antrean", value: "6 Aset", icon: ImageIcon, color: "text-amber-500" },
         ].map((stat, i) => (
           <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
             <CardContent className="p-6 flex items-center justify-between">
@@ -150,27 +139,16 @@ export default function AdminBackgroundsPage() {
 
       <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm overflow-hidden">
         <CardHeader className="p-6 border-b border-border/30 bg-muted/10">
-          <div className="flex flex-col lg:flex-row justify-between gap-6">
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <CardTitle className="text-lg font-black tracking-tight">Koleksi Visual Profil</CardTitle>
-                <CardDescription className="text-xs font-bold">Atur ketersediaan dan syarat akses latar belakang pengguna.</CardDescription>
-              </div>
-              <Tabs defaultValue="all" onValueChange={setActiveTab} className="w-full">
-                <TabsList className="bg-muted/40 p-1 rounded-xl overflow-x-auto no-scrollbar justify-start">
-                  <TabsTrigger value="all" className="text-[10px] font-black uppercase tracking-widest px-4 rounded-lg data-[state=active]:bg-background">Semua</TabsTrigger>
-                  <TabsTrigger value="gradient" className="text-[10px] font-black uppercase tracking-widest px-4 rounded-lg">Gradient</TabsTrigger>
-                  <TabsTrigger value="solid" className="text-[10px] font-black uppercase tracking-widest px-4 rounded-lg">Solid</TabsTrigger>
-                  <TabsTrigger value="special" className="text-[10px] font-black uppercase tracking-widest px-4 rounded-lg">Special</TabsTrigger>
-                </TabsList>
-              </Tabs>
+          <div className="flex flex-col md:flex-row justify-between gap-4">
+            <div className="space-y-1">
+              <CardTitle className="text-lg font-black tracking-tight">Katalog Visual Header</CardTitle>
+              <CardDescription className="text-xs font-bold">Sesuaikan estetika halaman top-up game Anda.</CardDescription>
             </div>
-            
-            <div className="flex flex-col sm:flex-row gap-2 self-end w-full lg:w-auto">
-              <div className="relative flex-1 sm:w-64">
+            <div className="flex gap-2">
+              <div className="relative w-full md:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
-                  placeholder="Cari nama desain..." 
+                  placeholder="Cari berdasarkan game..." 
                   className="pl-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -184,14 +162,14 @@ export default function AdminBackgroundsPage() {
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <Table className="min-w-[900px]">
+            <Table className="min-w-[1000px]">
               <TableHeader className="bg-muted/30">
                 <TableRow className="hover:bg-transparent border-border/30">
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Visual & Nama</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Tipe</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Akses</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12 text-center">Penggunaan</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Pratampil Header</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Produk Game</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Dimensi</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Status</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Terakhir Diubah</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest text-right pr-6 h-12">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
@@ -199,38 +177,38 @@ export default function AdminBackgroundsPage() {
                 {filteredBgs.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-20 text-muted-foreground font-bold">
-                      Tidak ada latar belakang ditemukan.
+                      Tidak ada gambar header ditemukan.
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredBgs.map((bg) => (
                     <TableRow key={bg.id} className="hover:bg-muted/20 border-border/30 transition-colors group">
                       <TableCell className="py-4 pl-6">
-                        <div className="flex items-center gap-4">
-                          <div className={cn("h-10 w-10 rounded-full border border-background shadow-md shrink-0", bg.class)} />
-                          <div className="flex flex-col min-w-0">
-                            <span className="text-xs font-black truncate">{bg.name}</span>
-                            <span className="text-[9px] text-muted-foreground font-mono font-bold uppercase truncate max-w-[150px]">{bg.class}</span>
-                          </div>
+                        <div className="relative h-20 w-60 rounded-lg overflow-hidden border border-border/50 bg-muted group-hover:border-primary/50 transition-all">
+                          <Image 
+                            src={bg.imageUrl} 
+                            alt={bg.gameName} 
+                            fill 
+                            className="object-cover"
+                            unoptimized
+                            data-ai-hint={bg.imageHint}
+                          />
                         </div>
                       </TableCell>
                       <TableCell className="py-4">
-                        <span className="text-xs font-bold">{bg.type}</span>
+                        <div className="flex items-center gap-2">
+                          <Gamepad2 className="h-4 w-4 text-primary" />
+                          <span className="text-sm font-black">{bg.gameName}</span>
+                        </div>
                       </TableCell>
                       <TableCell className="py-4">
-                        {bg.vipOnly ? (
-                          <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20 text-[9px] font-black uppercase tracking-tighter px-1.5 rounded-md gap-1">
-                            <Lock className="h-2.5 w-2.5" /> VIP ONLY
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline" className="text-[9px] font-black uppercase tracking-tighter px-1.5 rounded-md">FREE</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="py-4 text-center">
-                        <span className="text-xs font-black tabular-nums">{bg.usage.toLocaleString()} User</span>
+                        <span className="text-xs font-mono font-bold text-muted-foreground">{bg.dimensions}</span>
                       </TableCell>
                       <TableCell className="py-4">
                         {getStatusBadge(bg.status)}
+                      </TableCell>
+                      <TableCell className="py-4">
+                        <span className="text-xs font-bold text-muted-foreground">{bg.lastUpdated}</span>
                       </TableCell>
                       <TableCell className="text-right pr-6 py-4">
                         <DropdownMenu>
@@ -240,21 +218,21 @@ export default function AdminBackgroundsPage() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-52 rounded-xl border-border">
-                            <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest opacity-50">Kontrol Visual</DropdownMenuLabel>
+                            <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest opacity-50">Kontrol Gambar</DropdownMenuLabel>
                             <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
-                              <Edit className="h-3.5 w-3.5" /> Edit Nama & Syarat
+                              <Edit className="h-3.5 w-3.5" /> Ganti Gambar
                             </DropdownMenuItem>
                             <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
-                              <Palette className="h-3.5 w-3.5 text-primary" /> Ubah Warna/Kelas
+                              <Gamepad2 className="h-3.5 w-3.5 text-primary" /> Ganti Produk Game
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             {bg.status === "Active" ? (
                               <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-amber-500">
-                                <EyeOff className="h-3.5 w-3.5" /> Sembunyikan
+                                <EyeOff className="h-3.5 w-3.5" /> Nonaktifkan
                               </DropdownMenuItem>
                             ) : (
                               <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-emerald-500">
-                                <Eye className="h-3.5 w-3.5" /> Aktifkan Kembali
+                                <Eye className="h-3.5 w-3.5" /> Aktifkan (Publish)
                               </DropdownMenuItem>
                             )}
                             <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-destructive focus:text-destructive">
@@ -279,9 +257,9 @@ export default function AdminBackgroundsPage() {
               <Sparkles className="h-6 w-6 text-primary" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-black text-sm uppercase tracking-wider">Tren Visual</h3>
+              <h3 className="font-black text-sm uppercase tracking-wider">Spesifikasi Visual</h3>
               <p className="text-xs text-muted-foreground font-bold leading-relaxed">
-                Latar belakang dengan tipe gradasi (*gradient*) memiliki tingkat penggunaan 3x lebih tinggi dibandingkan warna solid. Pertimbangkan untuk menambah variasi gradasi modern untuk menarik minat member.
+                Gunakan gambar dengan rasio aspek 3:1 (direkomendasikan 1200x400px). Pastikan fokus utama gambar berada di tengah agar tidak tertutup oleh ikon produk saat diakses melalui perangkat mobile.
               </p>
             </div>
           </div>
@@ -289,11 +267,11 @@ export default function AdminBackgroundsPage() {
         
         <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm p-6 flex items-center justify-between">
            <div className="space-y-1">
-              <h3 className="font-black text-sm uppercase tracking-wider">Sinkronisasi Katalog</h3>
-              <p className="text-xs text-muted-foreground font-bold italic">Update database kustomisasi profil pengguna.</p>
+              <h3 className="font-black text-sm uppercase tracking-wider">Audit Aset</h3>
+              <p className="text-xs text-muted-foreground font-bold italic">Terdapat 4 game yang belum memiliki gambar header khusus.</p>
             </div>
-            <Button variant="outline" className="rounded-xl font-black text-[10px] uppercase tracking-widest px-4 border-border gap-2">
-              <CheckCircle2 className="h-4 w-4" /> Push Updates
+            <Button variant="outline" className="rounded-xl font-black text-[10px] uppercase tracking-widest px-4 border-border">
+              Lihat Game Tanpa Header
             </Button>
         </Card>
       </div>
