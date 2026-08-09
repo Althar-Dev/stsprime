@@ -30,7 +30,8 @@ import {
   LogOut,
   ShieldAlert,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Award
 } from "lucide-react";
 
 import {
@@ -93,7 +94,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
         { title: "Banners", url: "/admin/gallery/banners", icon: Monitor },
         { title: "Icons", url: "/admin/gallery/icons", icon: Grid3X3 },
         { title: "Backgrounds", url: "/admin/gallery/backgrounds", icon: Palette },
-        { title: "Others", url: "/admin/gallery/others", icon: ImageIcon },
+        { title: "Badges", url: "/admin/gallery/badges", icon: Award },
       ]
     },
     {
