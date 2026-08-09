@@ -7,7 +7,8 @@ import { useUser } from "@/firebase";
 import { LoginModal } from "@/components/auth/login-modal";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ShieldAlert, ArrowLeft, Loader2 } from "lucide-react";
+import { ShieldAlert, ArrowLeft, Loader2, Sparkles } from "lucide-react";
+import { Logo } from "@/components/logo";
 import Link from "next/link";
 
 export default function DashboardLayout({
@@ -20,8 +21,30 @@ export default function DashboardLayout({
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+      <div className="flex h-screen w-full flex-col items-center justify-center bg-background relative overflow-hidden selection:bg-primary selection:text-primary-foreground">
+        {/* Glow Aura Backdrop */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/15 blur-[120px] rounded-full pointer-events-none animate-pulse" />
+
+        <div className="relative z-10 flex flex-col items-center gap-6 text-center px-4">
+          {/* Clean Logo */}
+          <div className="relative flex items-center justify-center">
+            <Logo className="h-14 sm:h-16 w-28 sm:w-32" />
+          </div>
+
+          <div className="space-y-1.5">
+            <h3 className="font-headline text-xl sm:text-2xl font-black tracking-tight text-foreground flex items-center justify-center gap-2">
+              Memuat <span className="text-primary">Dashboard...</span>
+            </h3>
+            <p className="text-xs text-muted-foreground font-bold tracking-wide opacity-80 animate-pulse">
+              Menyiapkan data profil, koin, & riwayat transaksi Anda
+            </p>
+          </div>
+
+          {/* Shimmering Progress Bar */}
+          <div className="w-48 sm:w-64 h-1.5 bg-muted/40 rounded-full overflow-hidden border border-border/40">
+            <div className="h-full bg-gradient-to-r from-primary via-emerald-400 to-primary rounded-full animate-shimmer" style={{ width: '100%' }} />
+          </div>
+        </div>
       </div>
     );
   }

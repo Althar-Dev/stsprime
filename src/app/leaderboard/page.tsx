@@ -24,11 +24,55 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 import { LoginModal } from "@/components/auth/login-modal";
 
+const PROFILE_BG_PALETTES = [
+  "bg-gradient-to-tr from-amber-500 via-yellow-400 to-amber-600 shadow-amber-500/40 ring-2 ring-amber-400/50",
+  "bg-gradient-to-tr from-slate-400 via-slate-300 to-zinc-500 shadow-slate-400/40 ring-2 ring-slate-300/50",
+  "bg-gradient-to-tr from-amber-700 via-orange-600 to-amber-800 shadow-orange-500/40 ring-2 ring-orange-400/50",
+  "bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-600 shadow-emerald-500/30",
+  "bg-gradient-to-tr from-blue-500 via-indigo-500 to-violet-600 shadow-blue-500/30",
+  "bg-gradient-to-tr from-purple-500 via-fuchsia-500 to-pink-600 shadow-purple-500/30",
+  "bg-gradient-to-tr from-rose-500 via-red-500 to-orange-600 shadow-rose-500/30",
+  "bg-gradient-to-tr from-cyan-500 via-sky-500 to-blue-600 shadow-cyan-500/30",
+  "bg-gradient-to-tr from-lime-500 via-emerald-500 to-teal-600 shadow-lime-500/30",
+  "bg-gradient-to-tr from-violet-600 via-purple-600 to-indigo-700 shadow-violet-500/30",
+  "bg-gradient-to-tr from-red-600 via-orange-500 to-amber-400 shadow-red-500/40",
+  "bg-gradient-to-tr from-purple-700 via-fuchsia-600 to-violet-400 shadow-purple-500/40",
+  "bg-gradient-to-tr from-lime-500 via-emerald-400 to-teal-300 shadow-lime-500/40",
+  "bg-gradient-to-tr from-pink-600 via-rose-500 to-amber-400 shadow-pink-500/40",
+  "bg-gradient-to-tr from-teal-500 via-cyan-400 to-emerald-300 shadow-teal-500/40",
+  "bg-gradient-to-tr from-indigo-900 via-blue-800 to-sky-600 shadow-indigo-500/40",
+  "bg-gradient-to-tr from-amber-600 via-orange-500 to-yellow-300 shadow-amber-500/40",
+  "bg-gradient-to-tr from-zinc-900 via-purple-950 to-pink-900 border border-purple-500/30",
+  "bg-gradient-to-tr from-yellow-400 via-amber-500 to-rose-600 shadow-yellow-500/40",
+  "bg-gradient-to-tr from-emerald-400 via-teal-400 to-indigo-500 shadow-emerald-400/40",
+  "bg-gradient-to-tr from-zinc-800 via-slate-700 to-neutral-500 shadow-zinc-500/40",
+  "bg-gradient-to-tr from-green-500 via-lime-400 to-emerald-600 shadow-green-500/40",
+  "bg-gradient-to-tr from-violet-600 via-purple-500 to-fuchsia-400 shadow-purple-500/40",
+  "bg-gradient-to-tr from-amber-700 via-yellow-600 to-slate-900 shadow-amber-600/40",
+  "bg-gradient-to-tr from-red-500 via-yellow-400 via-emerald-400 to-blue-500 shadow-pink-500/40",
+  "bg-gradient-to-tr from-sky-400 via-cyan-300 to-blue-600 shadow-sky-400/40",
+  "bg-gradient-to-tr from-orange-700 via-red-600 to-stone-900 shadow-red-600/40",
+  "bg-gradient-to-tr from-pink-400 via-rose-300 to-fuchsia-400 shadow-pink-400/40",
+];
+
+const NAME_COLORS = [
+  "text-amber-400 font-extrabold",
+  "text-slate-300 font-extrabold",
+  "text-orange-400 font-extrabold",
+  "text-emerald-400",
+  "text-cyan-400",
+  "text-purple-400",
+  "text-pink-400",
+  "text-red-400",
+  "text-violet-400",
+  "text-lime-400",
+];
+
 // Backup placeholders with local assets
 const BACKUP_PLACEHOLDERS = [
-  { id: "p1", name: "Sultan_MLBB", points: 45280, avatar: "/img/avas/boy-1.png", isPlaceholder: true },
-  { id: "p2", name: "RiotGamer99", points: 38150, avatar: "/img/avas/boy-2.png", isPlaceholder: true },
-  { id: "p3", name: "GenshinSimp", points: 32900, avatar: "/img/avas/girl-1.png", isPlaceholder: true },
+  { id: "p1", name: "Sultan_MLBB", points: 45280, avatar: "/img/avas/boy-1.png", vip: true, isPlaceholder: true },
+  { id: "p2", name: "RiotGamer99", points: 38150, avatar: "/img/avas/boy-2.png", vip: true, isPlaceholder: true },
+  { id: "p3", name: "GenshinSimp", points: 32900, avatar: "/img/avas/girl-1.png", vip: true, isPlaceholder: true },
   { id: "p4", name: "ProPlayer_ID", points: 28400, avatar: "/img/avas/boy-3.png", isPlaceholder: true },
   { id: "p5", name: "Vand_Points", points: 25120, avatar: "/img/avas/boy-4.png", isPlaceholder: true },
   { id: "p6", name: "Alucard_Main", points: 22800, avatar: "/img/avas/boy.png", isPlaceholder: true },
@@ -49,10 +93,10 @@ export default function LeaderboardPage() {
   useEffect(() => {
     async function fetchGlobalLeaderboard() {
       if (!db) return;
-      
+
       const usersRef = collection(db, "users");
       const q = query(usersRef, orderBy("points", "desc"), limit(20));
-      
+
       getDocs(q)
         .then((querySnapshot) => {
           const fetchedUsers = querySnapshot.docs.map(doc => ({
@@ -79,7 +123,7 @@ export default function LeaderboardPage() {
 
   const leaderboardData = useMemo(() => {
     let combined = [...realUsers];
-    
+
     if (combined.length < 10) {
       const needed = 10 - combined.length;
       const placeholdersToAdd = BACKUP_PLACEHOLDERS.slice(0, needed);
@@ -88,7 +132,9 @@ export default function LeaderboardPage() {
 
     return combined.sort((a, b) => (b.points || 0) - (a.points || 0)).map((item, index) => ({
       ...item,
-      rank: index + 1
+      rank: index + 1,
+      profileBg: item.profileBg || PROFILE_BG_PALETTES[index % PROFILE_BG_PALETTES.length],
+      nameColor: item.nameColor || NAME_COLORS[index % NAME_COLORS.length],
     }));
   }, [realUsers]);
 
@@ -98,7 +144,7 @@ export default function LeaderboardPage() {
   const currentUserData = leaderboardData.find(item => item.id === user?.uid);
   const userPoints = currentUserData?.points || 0;
   const myRank = currentUserData?.rank || 0;
-  
+
   const rookieGoal = 2000;
   const progressPercent = Math.min((userPoints / rookieGoal) * 100, 100);
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
@@ -115,38 +161,39 @@ export default function LeaderboardPage() {
 
       <nav className="sticky top-0 z-50 w-full bg-transparent">
         <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             className="-ml-2 text-muted-foreground hover:text-foreground text-xs md:text-sm font-bold"
             onClick={() => router.back()}
           >
             <ChevronLeft className="mr-1 h-5 w-5" />
             Kembali
           </Button>
-          
+
           <Link href="/" className="transition-transform hover:scale-105">
-            <Logo className="h-9 w-9 md:h-12 md:w-12" />
+            <Logo className="h-16 w-32" />
           </Link>
         </div>
       </nav>
 
-      <main className="flex-grow container mx-auto px-4 py-8 md:py-16 relative z-10">
-        <div className="text-center mb-12 md:mb-20">
-          <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 px-4 py-1.5 text-[10px] md:text-xs font-black tracking-[0.2em] rounded-full">
+      <main className="flex-grow container mx-auto px-4 py-8 md:py-12 relative z-10">
+        <div className="text-center mb-10 md:mb-14">
+          <Badge className="mb-3 bg-primary/10 text-primary border-primary/20 px-3.5 py-1 text-[10px] md:text-xs font-black tracking-[0.2em] rounded-full">
             SEASON 1: THE ULTIMATE
           </Badge>
-          <h1 className="font-headline text-4xl md:text-7xl font-black mb-4 tracking-tighter text-foreground">
+          <h1 className="font-headline text-3xl md:text-5xl font-black mb-3 tracking-tighter text-foreground">
             Hall of Fame
           </h1>
-          <p className="text-xs md:text-lg text-muted-foreground max-w-2xl mx-auto font-bold opacity-80 leading-relaxed px-4">
+          <p className="text-xs md:text-sm text-muted-foreground max-w-lg mx-auto font-bold opacity-80 leading-relaxed px-4">
             Siapa pun yang memegang poin tertinggi akan bertahta di puncak klasemen global STSPrime!
           </p>
         </div>
 
-        <div className="flex items-end justify-center gap-1 md:gap-6 mb-20 md:mb-32 px-1 max-w-4xl mx-auto">
+        {/* Podium Stand - Original Structure with Adjusted Typography */}
+        <div className="flex items-end justify-center gap-1 md:gap-6 mb-16 md:mb-24 px-1 max-w-4xl mx-auto">
           {/* RANK 2 */}
           <div className="flex flex-col items-center flex-1">
-            <div className="flex flex-col items-center mb-4 text-center">
+            <div className="flex flex-col items-center mb-3 text-center">
               <div className="relative aspect-video w-24 md:w-48 flex items-center justify-center mb-2">
                 <Image src="/img/border/two.png" alt="Rank 2 Border" fill className="object-contain z-20" unoptimized />
                 <div className={cn(
@@ -155,13 +202,13 @@ export default function LeaderboardPage() {
                 )}>
                   <Avatar className="h-full w-full border border-background">
                     <AvatarImage src={TOP_THREE[1]?.photoURL || TOP_THREE[1]?.avatar} alt={TOP_THREE[1]?.name || TOP_THREE[1]?.displayName} />
-                    <AvatarFallback className="bg-muted text-[10px]">{ (TOP_THREE[1]?.displayName || TOP_THREE[1]?.name)?.charAt(0) }</AvatarFallback>
+                    <AvatarFallback className="bg-muted text-[10px]">{(TOP_THREE[1]?.displayName || TOP_THREE[1]?.name)?.charAt(0)}</AvatarFallback>
                   </Avatar>
                 </div>
               </div>
               <div className="flex items-center gap-1 justify-center w-full">
-                <p 
-                  className={cn("font-black text-[9px] md:text-sm truncate max-w-[80px] md:max-w-[120px]", TOP_THREE[1]?.nameColor || "text-foreground")}
+                <p
+                  className={cn("font-black text-[9px] md:text-sm truncate max-w-[80px] md:max-w-[130px]", TOP_THREE[1]?.nameColor || "text-foreground")}
                   style={TOP_THREE[1]?.fontFamily ? { fontFamily: TOP_THREE[1].fontFamily } : {}}
                 >
                   {TOP_THREE[1]?.displayName || TOP_THREE[1]?.name}
@@ -178,21 +225,21 @@ export default function LeaderboardPage() {
                 )}
               </div>
               <div className="mt-1 px-1.5 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
-                <span className="text-[8px] md:text-[11px] font-black text-foreground">
-                  {TOP_THREE[1]?.points?.toLocaleString()} 
+                <span className="text-[8px] md:text-xs font-black text-foreground">
+                  {TOP_THREE[1]?.points?.toLocaleString()} pts
                 </span>
               </div>
             </div>
             <div className="w-full h-16 md:h-40 bg-gradient-to-b from-slate-400/30 to-slate-400/10 border-t-2 md:border-t-4 border-slate-400/50 rounded-t-lg md:rounded-t-xl flex items-center justify-center">
-              <span className="font-headline text-2xl md:text-6xl font-black text-slate-400/40">2</span>
+              <span className="font-headline text-2xl md:text-5xl font-black text-slate-400/40">2</span>
             </div>
           </div>
 
           {/* RANK 1 */}
           <div className="flex flex-col items-center flex-1 relative -top-3 md:-top-4">
-            <Crown className="h-5 w-5 md:h-10 md:w-10 text-primary mb-1 md:mb-2" />
-            <div className="flex flex-col items-center mb-4 text-center">
-              <div className="relative aspect-video w-32 md:w-64 flex items-center justify-center mb-2">
+            <Crown className="h-5 w-5 md:h-9 md:w-9 text-primary mb-1 md:mb-2 drop-shadow-[0_0_10px_rgba(1,202,147,0.7)]" />
+            <div className="flex flex-col items-center mb-3 text-center">
+              <div className="relative aspect-video w-32 md:w-60 flex items-center justify-center mb-2">
                 <Image src="/img/border/one.png" alt="Rank 1 Border" fill className="object-contain z-20" priority unoptimized />
                 <div className={cn(
                   "h-12 w-12 md:h-24 md:w-24 rounded-full flex items-center justify-center p-0.5 md:p-1.5 shadow-2xl relative z-10",
@@ -200,13 +247,13 @@ export default function LeaderboardPage() {
                 )}>
                   <Avatar className="h-full w-full border border-background">
                     <AvatarImage src={TOP_THREE[0]?.photoURL || TOP_THREE[0]?.avatar} alt={TOP_THREE[0]?.name || TOP_THREE[0]?.displayName} />
-                    <AvatarFallback className="bg-primary/20 text-primary font-black">{ (TOP_THREE[0]?.displayName || TOP_THREE[0]?.name)?.charAt(0) }</AvatarFallback>
+                    <AvatarFallback className="bg-primary/20 text-primary font-black">{(TOP_THREE[0]?.displayName || TOP_THREE[0]?.name)?.charAt(0)}</AvatarFallback>
                   </Avatar>
                 </div>
               </div>
               <div className="flex items-center gap-1 justify-center w-full">
-                <p 
-                  className={cn("font-black text-[11px] md:text-lg truncate max-w-[100px] md:max-w-[160px]", TOP_THREE[0]?.nameColor || "text-foreground")}
+                <p
+                  className={cn("font-black text-[11px] md:text-base truncate max-w-[100px] md:max-w-[160px]", TOP_THREE[0]?.nameColor || "text-foreground")}
                   style={TOP_THREE[0]?.fontFamily ? { fontFamily: TOP_THREE[0].fontFamily } : {}}
                 >
                   {TOP_THREE[0]?.displayName || TOP_THREE[0]?.name}
@@ -223,19 +270,19 @@ export default function LeaderboardPage() {
                 )}
               </div>
               <div className="mt-1 px-2 py-0.5 md:px-3 md:py-1 bg-primary/10 rounded-full flex items-center gap-1 border border-primary/30">
-                <span className="text-[9px] md:text-sm font-black text-primary">
-                  {TOP_THREE[0]?.points?.toLocaleString()} 
+                <span className="text-[9px] md:text-xs font-black text-primary">
+                  {TOP_THREE[0]?.points?.toLocaleString()} pts
                 </span>
               </div>
             </div>
-            <div className="w-full h-24 md:h-56 bg-gradient-to-b from-primary/30 to-primary/5 border-t-2 md:border-t-4 border-primary rounded-t-lg md:rounded-t-xl flex items-center justify-center shadow-[0_-10px_30px_-12px_rgba(242,255,0,0.15)] md:shadow-[0_-20px_50px_-12px_rgba(242,255,0,0.15)]">
-              <span className="font-headline text-3xl md:text-8xl font-black text-primary/30">1</span>
+            <div className="w-full h-24 md:h-56 bg-gradient-to-b from-primary/30 to-primary/5 border-t-2 md:border-t-4 border-primary rounded-t-lg md:rounded-t-xl flex items-center justify-center shadow-[0_-10px_30px_-12px_rgba(1,202,147,0.3)]">
+              <span className="font-headline text-3xl md:text-7xl font-black text-primary/30">1</span>
             </div>
           </div>
 
           {/* RANK 3 */}
           <div className="flex flex-col items-center flex-1">
-            <div className="flex flex-col items-center mb-4 text-center">
+            <div className="flex flex-col items-center mb-3 text-center">
               <div className="relative aspect-video w-20 md:w-40 flex items-center justify-center mb-2">
                 <Image src="/img/border/three.png" alt="Rank 3 Border" fill className="object-contain z-20" unoptimized />
                 <div className={cn(
@@ -244,13 +291,13 @@ export default function LeaderboardPage() {
                 )}>
                   <Avatar className="h-full w-full border border-background">
                     <AvatarImage src={TOP_THREE[2]?.photoURL || TOP_THREE[2]?.avatar} alt={TOP_THREE[2]?.name || TOP_THREE[2]?.displayName} />
-                    <AvatarFallback className="bg-muted text-[10px]">{ (TOP_THREE[2]?.displayName || TOP_THREE[2]?.name)?.charAt(0) }</AvatarFallback>
+                    <AvatarFallback className="bg-muted text-[10px]">{(TOP_THREE[2]?.displayName || TOP_THREE[2]?.name)?.charAt(0)}</AvatarFallback>
                   </Avatar>
                 </div>
               </div>
               <div className="flex items-center gap-1 justify-center w-full">
-                <p 
-                  className={cn("font-black text-[8px] md:text-xs truncate max-w-[70px] md:max-w-[100px]", TOP_THREE[2]?.nameColor || "text-foreground")}
+                <p
+                  className={cn("font-black text-[8px] md:text-xs truncate max-w-[70px] md:max-w-[110px]", TOP_THREE[2]?.nameColor || "text-foreground")}
                   style={TOP_THREE[2]?.fontFamily ? { fontFamily: TOP_THREE[2].fontFamily } : {}}
                 >
                   {TOP_THREE[2]?.displayName || TOP_THREE[2]?.name}
@@ -266,14 +313,14 @@ export default function LeaderboardPage() {
                   </Popover>
                 )}
               </div>
-              <div className="mt-1 px-1 py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
+              <div className="mt-1 px-1 py-0.5 md:px-2 md:py-0.5 bg-muted rounded-full flex items-center gap-1 border border-border/50">
                 <span className="text-[7px] md:text-[10px] font-black text-foreground">
-                  {TOP_THREE[2]?.points?.toLocaleString()} 
+                  {TOP_THREE[2]?.points?.toLocaleString()} pts
                 </span>
               </div>
             </div>
             <div className="w-full h-12 md:h-28 bg-gradient-to-b from-orange-400/20 to-orange-400/5 border-t-2 md:border-t-4 border-orange-400/40 rounded-t-lg md:rounded-t-xl flex items-center justify-center">
-              <span className="font-headline text-xl md:text-5xl font-black text-orange-400/30">3</span>
+              <span className="font-headline text-xl md:text-4xl font-black text-orange-400/30">3</span>
             </div>
           </div>
         </div>
@@ -292,8 +339,8 @@ export default function LeaderboardPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 md:gap-2 text-green-500 bg-green-500/10 px-2 md:px-3 py-1 rounded-full border border-green-500/20">
-                   <TrendingUp className="h-3 w-3 md:h-4 md:w-4" />
-                   <span className="text-[8px] md:text-[10px] font-black">LIVE</span>
+                  <TrendingUp className="h-3 w-3 md:h-4 md:w-4" />
+                  <span className="text-[8px] md:text-[10px] font-black">LIVE</span>
                 </div>
               </div>
               <div className="overflow-x-auto">
@@ -319,12 +366,12 @@ export default function LeaderboardPage() {
                             )}>
                               <Avatar className="h-full w-full border border-background">
                                 <AvatarImage src={item.photoURL || item.avatar} />
-                                <AvatarFallback className="bg-muted text-[10px]">{ (item.displayName || item.name)?.charAt(0) }</AvatarFallback>
+                                <AvatarFallback className="bg-muted text-[10px]">{(item.displayName || item.name)?.charAt(0)}</AvatarFallback>
                               </Avatar>
                             </div>
                             <div className="min-w-0">
                               <div className="flex items-center gap-1.5">
-                                <p 
+                                <p
                                   className={cn("font-black text-xs md:text-sm truncate", item.nameColor || "text-foreground")}
                                   style={item.fontFamily ? { fontFamily: item.fontFamily } : {}}
                                 >
@@ -364,12 +411,12 @@ export default function LeaderboardPage() {
           <div className="space-y-6">
             <div className="bento-card p-6 border-primary/30 bg-primary/5 backdrop-blur-md relative overflow-hidden group">
               <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all" />
-              
+
               <h3 className="font-black text-xs md:text-sm mb-6 flex items-center gap-2 text-primary tracking-widest">
                 <Star className="h-4 w-4 fill-primary" />
                 MY STATS
               </h3>
-              
+
               {user ? (
                 <>
                   <div className="flex items-center gap-4 mb-8">
@@ -386,12 +433,12 @@ export default function LeaderboardPage() {
                         </Avatar>
                       </div>
                       <div className="absolute -bottom-1 -right-1 bg-background border border-primary/30 p-1 rounded-lg">
-                         <ShieldCheck className="h-4 w-4 text-primary" />
+                        <ShieldCheck className="h-4 w-4 text-primary" />
                       </div>
                     </div>
                     <div className="min-w-0 overflow-hidden">
                       <div className="flex items-center gap-1.5 mb-2">
-                        <p 
+                        <p
                           className={cn("font-black text-lg md:text-xl leading-none truncate max-w-[140px]", currentUserData?.nameColor || "text-foreground")}
                           style={currentUserData?.fontFamily ? { fontFamily: currentUserData.fontFamily } : {}}
                         >
@@ -422,14 +469,14 @@ export default function LeaderboardPage() {
                       <span className="text-primary text-sm">{userPoints.toLocaleString()} pts</span>
                     </div>
                     <div className="relative h-2.5 w-full bg-muted rounded-full overflow-hidden border border-border/30">
-                      <div 
-                        className="absolute top-0 left-0 bg-primary h-full rounded-full shadow-[0_0_10px_rgba(242,255,0,0.5)] transition-all duration-1000" 
+                      <div
+                        className="absolute top-0 left-0 bg-primary h-full rounded-full shadow-[0_0_10px_rgba(242,255,0,0.5)] transition-all duration-1000"
                         style={{ width: `${progressPercent}%` }}
                       />
                     </div>
                     <div className="flex items-center justify-between text-[9px] font-bold text-muted-foreground italic">
-                       <span>Newbie</span>
-                       <span>{Math.max(0, rookieGoal - userPoints).toLocaleString()} pts to Rookie</span>
+                      <span>Newbie</span>
+                      <span>{Math.max(0, rookieGoal - userPoints).toLocaleString()} pts to Rookie</span>
                     </div>
                   </div>
                 </>
@@ -444,7 +491,7 @@ export default function LeaderboardPage() {
                       Silakan masuk ke akun Anda untuk melihat statistik poin dan peringkat pribadi di Hall of Fame.
                     </p>
                   </div>
-                  <Button 
+                  <Button
                     onClick={() => setIsLoginModalOpen(true)}
                     className="h-10 px-8 rounded-xl bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all"
                   >
@@ -483,9 +530,9 @@ export default function LeaderboardPage() {
 
       <Footer />
 
-      <LoginModal 
-        isOpen={isLoginModalOpen} 
-        onOpenChange={setIsLoginModalOpen} 
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onOpenChange={setIsLoginModalOpen}
       />
     </div>
   );

@@ -4,36 +4,36 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
-    --card: 0 0% 97%;
-    --card-foreground: 0 0% 9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
-    --primary: 241 79% 63%;
+    --background: 0 0% 9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 164 99% 40%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 241 79% 63%;
+    --secondary: 164 99% 40%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 241 79% 63%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 164 99% 40%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 241 79% 63%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 164 99% 40%;
     --radius: 0.75rem;
 
-    /* Sidebar Variables */
-    --sidebar-background: 0 0% 97%;
-    --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 241 79% 63%;
+    /* Sidebar Variables Dark */
+    --sidebar-background: 0 0% 12%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 164 99% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 92%;
-    --sidebar-accent-foreground: 0 0% 9%;
-    --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 241 79% 63%;
+    --sidebar-accent: 0 0% 18%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 164 99% 40%;
   }
 
   .dark {
@@ -43,37 +43,71 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 15%;
     --popover-foreground: 0 0% 98%;
-    --primary: 241 79% 63%;
+    --primary: 164 99% 40%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 241 79% 63%;
+    --secondary: 164 99% 40%;
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 20%;
     --muted-foreground: 0 0% 70%;
-    --accent: 241 79% 63%;
+    --accent: 164 99% 40%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 241 79% 63%;
+    --ring: 164 99% 40%;
 
     /* Sidebar Variables Dark */
     --sidebar-background: 0 0% 12%;
     --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 241 79% 63%;
+    --sidebar-primary: 164 99% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 18%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 241 79% 63%;
+    --sidebar-ring: 164 99% 40%;
   }
+}
+
+/* Hide all scrollbar buttons / arrows globally on Desktop & Mobile */
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-button:start,
+::-webkit-scrollbar-button:end,
+::-webkit-scrollbar-button:single-button,
+::-webkit-scrollbar-button:double-button,
+::-webkit-scrollbar-button:vertical:decrement,
+::-webkit-scrollbar-button:vertical:increment,
+::-webkit-scrollbar-button:horizontal:decrement,
+::-webkit-scrollbar-button:horizontal:increment,
+*::-webkit-scrollbar-button,
+*::-webkit-scrollbar-button:start,
+*::-webkit-scrollbar-button:end,
+*::-webkit-scrollbar-button:single-button,
+*::-webkit-scrollbar-button:double-button,
+*::-webkit-scrollbar-button:vertical:decrement,
+*::-webkit-scrollbar-button:vertical:increment,
+*::-webkit-scrollbar-button:horizontal:decrement,
+*::-webkit-scrollbar-button:horizontal:increment {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+::-webkit-scrollbar-corner,
+*::-webkit-scrollbar-corner {
+  display: none !important;
+  background: transparent !important;
 }
 
 @layer base {
   * {
     @apply border-border;
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--border)) transparent;
+    scrollbar-color: hsl(var(--primary) / 0.4) transparent;
   }
   body {
     @apply bg-background text-foreground font-body transition-colors duration-300;
@@ -85,46 +119,48 @@
   }
 
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  
-  ::-webkit-scrollbar-button {
-    display: none !important;
+    width: 6px;
+    height: 6px;
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-transparent;
+    background: transparent;
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-border/50 transition-colors;
-    border: 2px solid transparent;
+    @apply rounded-full bg-primary/40 transition-all duration-300;
+    border: 1px solid transparent;
     background-clip: padding-box;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary/60;
+    @apply bg-primary;
+    box-shadow: 0 0 10px rgba(1, 202, 147, 0.6);
   }
 }
 
 @layer utilities {
+  .flash-sale-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.7) hsl(var(--muted) / 0.3);
+  }
+
   .flash-sale-scrollbar::-webkit-scrollbar {
     height: 6px;
   }
   
   .flash-sale-scrollbar::-webkit-scrollbar-track {
-    @apply bg-muted/20 rounded-full mx-8;
+    @apply bg-card/80 rounded-full border border-border/30 mx-2;
   }
   
   .flash-sale-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-primary/30 rounded-full transition-colors;
-    border: 1px solid transparent;
-    background-clip: padding-box;
+    @apply bg-gradient-to-r from-primary via-emerald-400 to-primary rounded-full transition-all duration-300;
+    box-shadow: 0 0 10px rgba(1, 202, 147, 0.5);
   }
   
   .flash-sale-scrollbar::-webkit-scrollbar-thumb:hover {
     @apply bg-primary;
+    box-shadow: 0 0 15px rgba(1, 202, 147, 0.9);
   }
 
   .modal-scrollbar {
@@ -163,6 +199,48 @@
     );
     background-size: 200% 100%;
     animation: shimmer 8s infinite linear;
+  }
+
+  /* Lucide Icon Hover Micro-animations */
+  @keyframes iconWiggle {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(-14deg) scale(1.25); }
+    75% { transform: rotate(14deg) scale(1.25); }
+  }
+
+  @keyframes iconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+  }
+
+  @keyframes iconBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    40% { transform: translateY(-4px) scale(1.25); }
+  }
+
+  @keyframes iconSpin {
+    0% { transform: rotate(0deg) scale(1); }
+    100% { transform: rotate(180deg) scale(1.25); }
+  }
+
+  .group:hover .animate-icon-wiggle,
+  .hover-icon-wiggle:hover {
+    animation: iconWiggle 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .group:hover .animate-icon-pulse,
+  .hover-icon-pulse:hover {
+    animation: iconPulse 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .group:hover .animate-icon-bounce,
+  .hover-icon-bounce:hover {
+    animation: iconBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .group:hover .animate-icon-spin,
+  .hover-icon-spin:hover {
+    animation: iconSpin 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 }
 

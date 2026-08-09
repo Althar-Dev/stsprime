@@ -12,10 +12,10 @@ export function Logo({ className, iconClassName }: LogoProps) {
       "relative overflow-hidden",
       className
     )}>
-      <Image 
-        src="/img/favicons.png" 
-        alt="STS Pedia Logo" 
-        fill 
+      <Image
+        src="/img/logo.png"
+        alt="STSPrime Logo"
+        fill
         className={cn("object-contain", iconClassName)}
         priority
       />

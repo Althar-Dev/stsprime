@@ -68,17 +68,17 @@ export default function TopupPage() {
     <div className="min-h-screen flex flex-col bg-background">
       <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/10">
         <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             className="-ml-2 text-muted-foreground hover:text-foreground text-xs md:text-sm font-bold"
             onClick={() => router.back()}
           >
             <ChevronLeft className="mr-1 h-5 w-5" />
             Kembali
           </Button>
-          
+
           <Link href="/" className="transition-transform hover:scale-105">
-            <Logo className="h-9 w-9 md:h-12 md:w-12" />
+            <Logo className="h-16 w-32" />
           </Link>
         </div>
       </nav>
@@ -87,8 +87,8 @@ export default function TopupPage() {
         <div className="container mx-auto px-4 py-6 md:py-10">
           <div className="mb-10 md:mb-16">
             <div className="relative h-44 md:h-80 w-full overflow-hidden rounded-md bg-muted shadow-lg">
-              <Image 
-                src={`https://picsum.photos/seed/${id}-banner/1200/400`} 
+              <Image
+                src={`https://picsum.photos/seed/${id}-banner/1200/400`}
                 alt="Banner background"
                 fill
                 className="object-cover"
@@ -100,10 +100,10 @@ export default function TopupPage() {
             <div className="relative px-4 py-6 md:px-6 md:py-8 flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-center">
               {/* Ikon Produk Tanpa Border dan Rounded-MD */}
               <div className="relative -mt-20 md:-mt-32 h-32 w-32 md:h-52 md:w-52 shrink-0 rounded-md overflow-hidden shadow-2xl z-20">
-                <Image 
-                  src={itemImage.imageUrl} 
-                  alt="Service" 
-                  fill 
+                <Image
+                  src={itemImage.imageUrl}
+                  alt="Service"
+                  fill
                   className="object-cover"
                   data-ai-hint={itemImage.imageHint}
                 />
@@ -144,19 +144,19 @@ export default function TopupPage() {
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="userId" className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-wider">User ID</Label>
-                    <Input 
-                      id="userId" 
-                      placeholder="Contoh: 12345678" 
-                      className="h-12 bg-background border-border text-sm font-bold rounded-md" 
+                    <Input
+                      id="userId"
+                      placeholder="Contoh: 12345678"
+                      className="h-12 bg-background border-border text-sm font-bold rounded-md"
                       value={userId}
                       onChange={(e) => setUserId(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="zoneId" className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-wider">Zone ID</Label>
-                    <Input 
-                      id="zoneId" 
-                      placeholder="Contoh: 1234" 
+                    <Input
+                      id="zoneId"
+                      placeholder="Contoh: 1234"
                       className="h-12 bg-background border-border text-sm font-bold rounded-md"
                       value={zoneId}
                       onChange={(e) => setUserIdZone(e.target.value)}
@@ -172,9 +172,8 @@ export default function TopupPage() {
                     <button
                       key={pack.id}
                       onClick={() => setSelectedPack(pack.id)}
-                      className={`relative flex flex-col p-4 text-left rounded-md border transition-all ${
-                        selectedPack === pack.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
-                      }`}
+                      className={`relative flex flex-col p-4 text-left rounded-md border transition-all ${selectedPack === pack.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
+                        }`}
                     >
                       {pack.popular && (
                         <Badge className="absolute -top-1.5 -right-1 bg-accent text-[9px] text-accent-foreground font-bold px-2 py-0.5 border-none">Populer</Badge>
@@ -194,9 +193,8 @@ export default function TopupPage() {
                     <button
                       key={method.id}
                       onClick={() => setSelectedPayment(method.id)}
-                      className={`flex items-center justify-between p-4 rounded-md border transition-all ${
-                        selectedPayment === method.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
-                      }`}
+                      className={`flex items-center justify-between p-4 rounded-md border transition-all ${selectedPayment === method.id ? "bg-primary/10 border-primary ring-1 ring-primary" : "bg-muted/30 border-border"
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 shrink-0 rounded-md bg-background flex items-center justify-center border border-border">
@@ -280,8 +278,8 @@ export default function TopupPage() {
                         </span>
                       </div>
                     </div>
-                    <Button 
-                      size="lg" 
+                    <Button
+                      size="lg"
                       disabled={!userId || !selectedPack || !selectedPayment}
                       onClick={handleOrder}
                       className="h-9 rounded-md px-8 text-sm font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-transform w-full"
@@ -373,7 +371,7 @@ export default function TopupPage() {
                         <p className="text-[10px] font-bold text-muted-foreground">{selectedPackData?.amount}</p>
                       </div>
                     </div>
-                    <button 
+                    <button
                       onClick={() => setIsDetailsOpen(!isDetailsOpen)}
                       className="h-7 w-7 rounded-full bg-muted/50 flex items-center justify-center text-muted-foreground transition-transform duration-300"
                       style={{ transform: isDetailsOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
@@ -389,7 +387,7 @@ export default function TopupPage() {
               </div>
 
               <div className="space-y-2">
-                 <Button 
+                <Button
                   disabled={!userId || !selectedPack || !selectedPayment}
                   onClick={handleOrder}
                   className="w-full h-9 rounded-md font-black text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"

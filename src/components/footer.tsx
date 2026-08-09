@@ -10,11 +10,7 @@ export function Footer() {
         <div className="grid gap-10 md:gap-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2">
-              <Logo className="h-8 w-8 rounded-lg shadow-none" />
-              <div className="flex flex-col">
-                <span className="font-headline text-lg font-black tracking-tighter text-foreground leading-none">STSPrime</span>
-                <span className="text-[10px] font-bold text-muted-foreground tracking-tight">from StarVale</span>
-              </div>
+              <Logo className="h-16 w-32 rounded-lg shadow-none" />
             </Link>
             <p className="mt-4 text-xs md:text-sm text-muted-foreground leading-relaxed">
               Empowering gamers worldwide with instant digital top-ups and premium connectivity services. Fast, secure, and reliable since day one.

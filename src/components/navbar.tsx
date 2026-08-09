@@ -4,7 +4,12 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Gamepad2, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft, LogOut, Settings, Trophy, Gift } from "lucide-react";
+import { Gamepad2, Search, LayoutDashboard, Menu, MessageCircle, HelpCircle, ShieldCheck, User, X, ChevronLeft, LogOut, Settings, Gift } from "lucide-react";
+import { AnimatedPodiumIcon } from "@/components/icons/animated-podium";
+import { AnimatedCartIcon } from "@/components/icons/animated-cart";
+import { AnimatedSearchTransactionIcon } from "@/components/icons/animated-search";
+import { AnimatedBenefitIcon } from "@/components/icons/animated-benefit";
+import { AnimatedArticleIcon } from "@/components/icons/animated-article";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
@@ -33,12 +38,35 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+import { SEARCH_ITEMS, SearchItem } from "@/lib/catalog-data";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+
+function HighlightText({ text, query }: { text: string; query: string }) {
+  if (!query.trim()) return <span>{text}</span>;
+
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const parts = text.split(new RegExp(`(${escapedQuery})`, 'gi'));
+
+  return (
+    <span>
+      {parts.map((part, i) =>
+        part.toLowerCase() === query.toLowerCase() ? (
+          <span key={i} className="text-primary font-black">
+            {part}
+          </span>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </span>
+  );
+}
+
 function SearchInput({ isMobile, closeSearch }: { isMobile?: boolean, closeSearch?: () => void }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [searchValue, setSearchValue] = useState(searchParams.get("q") || "");
+  const [searchValue, setSearchValue] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isMobile && inputRef.current) {
@@ -47,80 +75,237 @@ function SearchInput({ isMobile, closeSearch }: { isMobile?: boolean, closeSearc
   }, [isMobile]);
 
   useEffect(() => {
-    setSearchValue(searchParams.get("q") || "");
-  }, [searchParams]);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  const handleSearchAction = (value: string) => {
+  const searchResults = searchValue.trim()
+    ? SEARCH_ITEMS.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.type.toLowerCase().includes(searchValue.toLowerCase())
+    )
+    : [];
+
+  const handleInputChange = (value: string) => {
     setSearchValue(value);
-    const params = new URLSearchParams(searchParams.toString());
-    if (value) {
-      params.set("q", value);
-    } else {
-      params.delete("q");
-    }
-    
-    const queryString = params.toString();
-    const newPath = queryString ? `/?${queryString}` : '/';
+    setIsDropdownOpen(true);
+  };
 
-    if (pathname !== "/") {
-      router.push(newPath);
-    } else {
-      router.replace(newPath, { scroll: false });
-    }
+  const handleItemSelect = () => {
+    setSearchValue("");
+    setIsDropdownOpen(false);
+    closeSearch?.();
+  };
+
+  const DropdownResults = () => {
+    if (!isDropdownOpen || !searchValue.trim()) return null;
+
+    return (
+      <div className="absolute top-full right-0 mt-2 z-50 bg-card/95 backdrop-blur-xl border border-primary/30 rounded-2xl shadow-[0_16px_50px_rgba(0,0,0,0.7)] overflow-hidden max-h-[420px] overflow-y-auto p-3 animate-in fade-in slide-in-from-top-2 duration-200 flash-sale-scrollbar w-[500px] sm:w-[560px]">
+        {searchResults.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {searchResults.map((item) => {
+              const image = PlaceHolderImages.find((img) => img.id === item.imageId);
+              return (
+                <Link
+                  key={item.id}
+                  href={`/topup/${item.imageId}`}
+                  onClick={handleItemSelect}
+                  className="flex items-center gap-3.5 p-2.5 rounded-xl hover:bg-primary/10 hover:border-primary/30 border border-transparent transition-all group cursor-pointer"
+                >
+                  <div className="relative h-12 w-12 rounded-xl overflow-hidden shrink-0 bg-muted/30 border border-border/50">
+                    <Image
+                      src={image?.imageUrl || "/img/placeholder.png"}
+                      alt={item.name}
+                      fill
+                      className="object-cover transition-transform group-hover:scale-110"
+                      data-ai-hint={image?.imageHint}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center min-w-0 flex-1">
+                    <h4 className="text-sm font-black text-foreground tracking-tight line-clamp-1 group-hover:text-primary transition-colors">
+                      <HighlightText text={item.name} query={searchValue} />
+                    </h4>
+                    <p className="text-xs font-bold text-muted-foreground opacity-80 truncate">
+                      <HighlightText text={item.type} query={searchValue} />
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="py-6 px-4 text-center">
+            <p className="text-xs font-black text-muted-foreground">
+              Tidak ada hasil untuk "{searchValue}"
+            </p>
+          </div>
+        )}
+      </div>
+    );
   };
 
   if (isMobile) {
     return (
-      <div className="flex w-full items-center gap-2 animate-in fade-in slide-in-from-right-2 duration-200">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={closeSearch}
-          className="shrink-0 text-muted-foreground"
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </Button>
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            ref={inputRef}
-            placeholder="Cari game atau layanan..."
-            className="h-10 w-full rounded-full border-border bg-muted/50 pl-10 pr-10 focus-visible:ring-primary font-bold"
-            value={searchValue}
-            onChange={(e) => handleSearchAction(e.target.value)}
-          />
-          {searchValue && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full hover:bg-transparent"
-              onClick={() => handleSearchAction("")}
-            >
-              <X className="h-4 w-4 text-muted-foreground" />
-            </Button>
-          )}
+      <div ref={containerRef} className="relative w-full">
+        <div className="flex w-full items-center gap-1.5 sm:gap-2 animate-in fade-in slide-in-from-right-2 duration-200 py-1">
+          <Button
+            size="icon"
+            onClick={closeSearch}
+            className="h-8 w-8 sm:h-9 sm:w-9 rounded-full shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/25 border-none transition-all active:scale-95 flex items-center justify-center"
+          >
+            <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground stroke-[2.5]" />
+          </Button>
+          <div className="relative flex-1 min-w-0">
+            <Search className="absolute left-2.5 sm:left-3 top-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 -translate-y-1/2 text-primary pointer-events-none" />
+            <Input
+              ref={inputRef}
+              placeholder="Cari game atau layanan..."
+              className="h-9 sm:h-10 w-full rounded-full border-primary/40 bg-muted/50 pl-8 sm:pl-10 pr-8 sm:pr-10 text-xs sm:text-sm font-bold focus-visible:ring-primary placeholder:text-xs sm:placeholder:text-sm transition-all"
+              value={searchValue}
+              onFocus={() => setIsDropdownOpen(true)}
+              onChange={(e) => handleInputChange(e.target.value)}
+            />
+            {searchValue && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-1/2 h-7 w-7 sm:h-8 sm:w-8 -translate-y-1/2 rounded-full hover:bg-transparent"
+                onClick={() => setSearchValue("")}
+              >
+                <X className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground hover:text-primary" />
+              </Button>
+            )}
+          </div>
         </div>
+        <DropdownResults />
       </div>
     );
   }
 
   return (
-    <div className="hidden lg:flex relative group">
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
-      <Input 
-        placeholder="Cari game..." 
-        className="h-9 w-48 xl:w-64 rounded-full bg-muted/50 pl-10 border-border focus-visible:ring-primary font-bold"
+    <div ref={containerRef} className="hidden lg:block relative w-48 lg:w-56 xl:w-64 group">
+      <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors pointer-events-none z-10" />
+      <Input
+        ref={inputRef}
+        placeholder="Cari game..."
+        className="h-10 w-full rounded-full bg-muted/50 border-border/80 focus-visible:ring-primary pl-10 pr-10 text-xs sm:text-sm font-bold transition-all duration-300 focus:bg-card focus:border-primary/50 shadow-sm"
         value={searchValue}
-        onChange={(e) => handleSearchAction(e.target.value)}
+        onFocus={() => setIsDropdownOpen(true)}
+        onChange={(e) => handleInputChange(e.target.value)}
       />
+      {searchValue && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-1.5 top-1/2 h-7 w-7 -translate-y-1/2 rounded-full hover:bg-transparent z-10"
+          onClick={() => setSearchValue("")}
+        >
+          <X className="h-4 w-4 text-muted-foreground hover:text-primary" />
+        </Button>
+      )}
+      <DropdownResults />
+    </div>
+  );
+}
+
+function DesktopSlidingNav() {
+  const pathname = usePathname();
+  const [hoveredHref, setHoveredHref] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [underlineStyle, setUnderlineStyle] = useState<{ left: number; width: number; opacity: number }>({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  });
+
+  const NAV_LINKS = [
+    { href: "/", label: "Topup", icon: AnimatedCartIcon, anim: "" },
+    { href: "/status", label: "Cek Transaksi", icon: AnimatedSearchTransactionIcon, anim: "" },
+    { href: "/leaderboard", label: "Leaderboard", icon: AnimatedPodiumIcon, anim: "" },
+    { href: "/benefit", label: "Benefit", icon: AnimatedBenefitIcon, anim: "" },
+    { href: "/artikel", label: "Artikel", icon: AnimatedArticleIcon, anim: "" },
+  ];
+
+  const targetHref = hoveredHref ?? pathname;
+
+  useEffect(() => {
+    const updateUnderline = () => {
+      if (!containerRef.current) return;
+      const activeElement = containerRef.current.querySelector<HTMLElement>(`[data-href="${targetHref}"]`);
+      if (activeElement) {
+        setUnderlineStyle({
+          left: activeElement.offsetLeft,
+          width: activeElement.offsetWidth,
+          opacity: 1,
+        });
+      } else {
+        setUnderlineStyle((prev) => ({ ...prev, opacity: 0 }));
+      }
+    };
+
+    updateUnderline();
+    window.addEventListener("resize", updateUnderline);
+    return () => window.removeEventListener("resize", updateUnderline);
+  }, [targetHref, pathname]);
+
+  return (
+    <div
+      ref={containerRef}
+      onMouseLeave={() => setHoveredHref(null)}
+      className="hidden items-center gap-1 xl:flex relative h-full py-2"
+    >
+      {/* Smooth Sliding Underline Bar (Follows Hover) */}
+      <span
+        className="absolute bottom-0 h-[2.5px] rounded-full bg-primary shadow-[0_0_12px_rgba(1,202,147,0.9)] transition-all duration-300 ease-out pointer-events-none z-10"
+        style={{
+          left: `${underlineStyle.left}px`,
+          width: `${underlineStyle.width}px`,
+          opacity: underlineStyle.opacity,
+        }}
+      />
+
+      {NAV_LINKS.map((link) => {
+        const Icon = link.icon;
+        const isTargeted = targetHref === link.href;
+
+        return (
+          <Link key={link.href} href={link.href}>
+            <div
+              data-href={link.href}
+              onMouseEnter={() => setHoveredHref(link.href)}
+              className={cn(
+                "group relative flex items-center gap-2 px-3 py-2 text-sm font-bold transition-colors cursor-pointer rounded-lg",
+                isTargeted ? "text-primary font-black" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <Icon
+                className={cn(
+                  "h-4 w-4 shrink-0 transition-all duration-300",
+                  isTargeted ? "text-primary scale-110" : "text-muted-foreground group-hover:text-primary",
+                  link.anim
+                )}
+              />
+              <span>{link.label}</span>
+            </div>
+          </Link>
+        );
+      })}
     </div>
   );
 }
 
 export function Navbar() {
+  const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  
+
   const { user } = useUser();
   const auth = useAuth();
   const db = useFirestore();
@@ -144,7 +329,7 @@ export function Navbar() {
 
   const profileBg = profileData?.profileBg || "bg-muted/30";
   const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U";
-  
+
   const displayPhotoURL = profileData?.photoURL || (profileData?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
   const coinValue = profileData?.coins || 0;
 
@@ -158,65 +343,38 @@ export function Navbar() {
     <>
       <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto px-4 flex flex-col">
-          <div className="flex h-16 items-center justify-between">
+          <div className="flex h-16 items-center justify-between gap-4">
             {isSearchOpen ? (
               <Suspense fallback={<div className="h-10 w-full bg-muted rounded-full animate-pulse" />}>
                 <SearchInput isMobile closeSearch={() => setIsSearchOpen(false)} />
               </Suspense>
             ) : (
               <>
-                <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105 shrink-0">
-                  <Logo className="h-9 w-9 md:h-10 md:w-10" />
-                  <div className="flex flex-col">
-                    <span className="font-headline text-lg md:text-xl font-black tracking-tighter text-foreground leading-none">STSPrime</span>
-                    <span className="text-[10px] md:text-xs font-bold text-muted-foreground tracking-tight">from StarVale</span>
-                  </div>
-                </Link>
+                <div className="flex items-center gap-4 lg:gap-6 shrink-0">
+                  <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-105 shrink-0">
+                    <Logo className="h-16 w-32" />
+                  </Link>
 
-                <div className="hidden items-center gap-1 lg:flex">
-                  <Link href="/">
-                    <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground font-bold">
-                      <Gamepad2 className="h-4 w-4" />
-                      Topup
-                    </Button>
-                  </Link>
-                  <Link href="/status">
-                    <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground font-bold">
-                      <Search className="h-4 w-4" />
-                      Cek Transaksi
-                    </Button>
-                  </Link>
-                  <Link href="/leaderboard">
-                    <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground font-bold">
-                      <Trophy className="h-4 w-4" />
-                      Leaderboard
-                    </Button>
-                  </Link>
-                  <Link href="/benefit">
-                    <Button variant="ghost" className="gap-2 text-muted-foreground hover:text-foreground font-bold">
-                      <Gift className="h-4 w-4" />
-                      Benefit
-                    </Button>
-                  </Link>
+                  <DesktopSlidingNav />
                 </div>
 
-                <div className="flex items-center gap-2 md:gap-4">
-                  <Suspense fallback={<div className="hidden lg:block h-9 w-48 bg-muted rounded-full animate-pulse" />}>
+                <div className="flex items-center gap-2 md:gap-3 shrink-0">
+                  <Suspense fallback={<div className="hidden lg:block h-10 w-48 bg-muted/40 rounded-full animate-pulse" />}>
                     <SearchInput />
                   </Suspense>
-                  
+
                   <div className="hidden lg:block">
                     <ThemeToggle />
                   </div>
-                  
+
                   {user ? (
                     <div className="flex items-center gap-2 md:gap-3">
                       <div className="flex items-center gap-2 md:gap-1.5 px-3 md:px-2.5 py-1.5 md:py-1 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
                         <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-5 md:w-5 object-contain group-hover:scale-110 transition-transform" />
                         <span className="text-sm md:text-sm font-black text-primary">
                           <span className="md:hidden">
-                            {coinValue >= 10000000 
-                              ? `${Math.floor(coinValue / 1000000)}m` 
+                            {coinValue >= 10000000
+                              ? `${Math.floor(coinValue / 1000000)}m`
                               : coinValue.toLocaleString('id-ID')}
                           </span>
                           <span className="hidden md:block">
@@ -224,7 +382,7 @@ export function Navbar() {
                           </span>
                         </span>
                       </div>
-                      
+
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" className={cn(
@@ -243,7 +401,7 @@ export function Navbar() {
                           <DropdownMenuLabel className="font-normal">
                             <div className="flex flex-col space-y-1">
                               <div className="flex items-center gap-1.5">
-                                <p 
+                                <p
                                   className={cn("text-sm font-black leading-none", profileData?.nameColor || "text-foreground")}
                                   style={profileData?.fontFamily ? { fontFamily: profileData.fontFamily } : {}}
                                 >
@@ -266,25 +424,25 @@ export function Navbar() {
                             </div>
                           </DropdownMenuLabel>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="cursor-pointer font-bold gap-2" asChild>
+                          <DropdownMenuItem className="cursor-pointer font-bold gap-2 group" asChild>
                             <Link href="/dashboard" className="flex items-center w-full">
-                              <LayoutDashboard className="h-4 w-4" /> Dashboard
+                              <LayoutDashboard className="h-4 w-4 transition-all group-hover:scale-125 animate-icon-pulse" /> Dashboard
                             </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="cursor-pointer font-bold gap-2" asChild>
+                          <DropdownMenuItem className="cursor-pointer font-bold gap-2 group" asChild>
                             <Link href="/dashboard/settings" className="flex items-center w-full">
-                              <Settings className="h-4 w-4" /> Settings
+                              <Settings className="h-4 w-4 transition-all group-hover:scale-125 animate-icon-spin" /> Settings
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="cursor-pointer font-bold gap-2 text-destructive focus:text-destructive" onClick={handleLogout}>
-                            <LogOut className="h-4 w-4" /> Keluar
+                          <DropdownMenuItem className="cursor-pointer font-bold gap-2 text-destructive focus:text-destructive group" onClick={handleLogout}>
+                            <LogOut className="h-4 w-4 transition-all group-hover:scale-125 animate-icon-wiggle" /> Keluar
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
                   ) : (
-                    <Button 
+                    <Button
                       onClick={() => setIsLoginModalOpen(true)}
                       className="hidden sm:flex rounded-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 px-6"
                     >
@@ -292,23 +450,33 @@ export function Navbar() {
                     </Button>
                   )}
 
+                  {/* Mobile Search Icon Button (to the left of Sidebar Menu) */}
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setIsSearchOpen(true)}
+                    className="group rounded-xl lg:hidden border-primary/30 bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                    aria-label="Cari"
+                  >
+                    <Search className="h-5 w-5 text-primary transition-all animate-icon-pulse" />
+                  </Button>
+
                   <Sheet>
                     <SheetTrigger asChild>
-                      <Button variant="outline" size="icon" className="rounded-xl lg:hidden border-border bg-card/50">
-                        <Menu className="h-5 w-5" />
+                      <Button variant="outline" size="icon" className="group rounded-xl lg:hidden border-border bg-card/50">
+                        <Menu className="h-5 w-5 transition-all animate-icon-spin" />
                       </Button>
                     </SheetTrigger>
                     <SheetContent side="right" className="bg-background border-border p-0 flex flex-col w-full sm:max-w-none">
                       <SheetHeader className="sr-only">
                         <SheetTitle>Menu Navigasi</SheetTitle>
                       </SheetHeader>
-                      
+
                       <div className="h-16 px-6 border-b border-border bg-card/30 flex items-center justify-between shrink-0">
                         <div className="flex items-center gap-3">
-                          <Logo className="h-10 w-10" />
+                          <Logo className="h-16 w-32" />
                           <div>
                             <div className="flex items-center gap-1.5">
-                              <h3 className="font-headline font-black text-base tracking-tight leading-none">STSPrime</h3>
                               {profileData?.vip && (
                                 <Popover>
                                   <PopoverTrigger asChild>
@@ -322,7 +490,6 @@ export function Navbar() {
                                 </Popover>
                               )}
                             </div>
-                            <p className="text-[9px] text-muted-foreground font-bold mt-1">from StarVale</p>
                           </div>
                         </div>
                       </div>
@@ -333,23 +500,28 @@ export function Navbar() {
                             <p className="text-[10px] font-black tracking-widest text-muted-foreground/60 mb-3 px-2">Navigasi</p>
                             <div className="space-y-1">
                               <Link href="/">
-                                <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                  <Gamepad2 className="h-5 w-5" /> Topup
+                                <Button variant="ghost" className="group w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                  <AnimatedCartIcon className="h-5 w-5" /> Topup
                                 </Button>
                               </Link>
                               <Link href="/status">
-                                <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                  <Search className="h-5 w-5" /> Cek Transaksi
+                                <Button variant="ghost" className="group w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                  <AnimatedSearchTransactionIcon className="h-5 w-5" /> Cek Transaksi
                                 </Button>
                               </Link>
                               <Link href="/leaderboard">
-                                <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                  <Trophy className="h-5 w-5" /> Leaderboard
+                                <Button variant="ghost" className="group w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                  <AnimatedPodiumIcon className="h-5 w-5" /> Leaderboard
                                 </Button>
                               </Link>
                               <Link href="/benefit">
-                                <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                  <Gift className="h-5 w-5" /> Benefit
+                                <Button variant="ghost" className="group w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                  <AnimatedBenefitIcon className="h-5 w-5" /> Benefit
+                                </Button>
+                              </Link>
+                              <Link href="/artikel">
+                                <Button variant="ghost" className="group w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                  <AnimatedArticleIcon className="h-5 w-5" /> Artikel
                                 </Button>
                               </Link>
                             </div>
@@ -363,22 +535,22 @@ export function Navbar() {
                               {user && (
                                 <>
                                   <Link href="/dashboard">
-                                    <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                      <LayoutDashboard className="h-5 w-5" /> Dashboard
+                                    <Button variant="ghost" className="group w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                      <LayoutDashboard className="h-5 w-5 transition-all animate-icon-pulse" /> Dashboard
                                     </Button>
                                   </Link>
                                   <Link href="/dashboard/settings">
-                                    <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                      <Settings className="h-5 w-5" /> Settings
+                                    <Button variant="ghost" className="group w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                      <Settings className="h-5 w-5 transition-all animate-icon-spin" /> Settings
                                     </Button>
                                   </Link>
                                 </>
                               )}
-                              <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                <MessageCircle className="h-5 w-5" /> Hubungi Dukungan
+                              <Button variant="ghost" className="group w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                <MessageCircle className="h-5 w-5 transition-all animate-icon-bounce" /> Hubungi Dukungan
                               </Button>
-                              <Button variant="ghost" className="w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
-                                <HelpCircle className="h-5 w-5" /> Pusat Bantuan
+                              <Button variant="ghost" className="group w-full justify-start gap-4 h-12 text-sm font-bold hover:bg-primary/10 hover:text-primary transition-all rounded-xl">
+                                <HelpCircle className="h-5 w-5 transition-all animate-icon-pulse" /> Pusat Bantuan
                               </Button>
                             </div>
                           </div>
@@ -393,8 +565,8 @@ export function Navbar() {
                               <span className="text-xs font-black">STS Coin</span>
                             </div>
                             <span className="text-sm font-black text-primary">
-                              {coinValue >= 10000000 
-                                ? `${Math.floor(coinValue / 1000000)}m` 
+                              {coinValue >= 10000000
+                                ? `${Math.floor(coinValue / 1000000)}m`
                                 : coinValue.toLocaleString('id-ID')}
                             </span>
                           </div>
@@ -404,7 +576,7 @@ export function Navbar() {
                           <p className="text-[10px] font-black text-muted-foreground">Gerbang pembayaran bersertifikat & aman</p>
                         </div>
                         {user ? (
-                          <Button 
+                          <Button
                             onClick={handleLogout}
                             variant="outline"
                             className="w-full h-11 rounded-xl border-destructive text-destructive font-black text-sm hover:bg-destructive/10"
@@ -412,7 +584,7 @@ export function Navbar() {
                             <LogOut className="h-4 w-4 mr-2" /> Keluar
                           </Button>
                         ) : (
-                          <Button 
+                          <Button
                             onClick={() => setIsLoginModalOpen(true)}
                             className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-black text-sm"
                           >
@@ -426,27 +598,12 @@ export function Navbar() {
               </>
             )}
           </div>
-
-          {!isSearchOpen && (
-            <div className="lg:hidden pb-4 pt-1 animate-in fade-in slide-in-from-top-2 duration-300 flex items-center gap-2">
-              <div 
-                onClick={() => setIsSearchOpen(true)}
-                className="relative group cursor-pointer flex-1"
-              >
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-hover:text-primary transition-colors" />
-                <div className="h-10 w-full rounded-full border border-border bg-muted/40 pl-10 flex items-center text-sm font-bold text-muted-foreground">
-                  Cari game atau layanan...
-                </div>
-              </div>
-              <ThemeToggle />
-            </div>
-          )}
         </div>
       </nav>
-      
-      <LoginModal 
-        isOpen={isLoginModalOpen} 
-        onOpenChange={setIsLoginModalOpen} 
+
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onOpenChange={setIsLoginModalOpen}
       />
     </>
   );
