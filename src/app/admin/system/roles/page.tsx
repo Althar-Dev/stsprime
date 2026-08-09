@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -16,7 +17,7 @@ import {
   Key,
   CheckCircle2,
   XCircle,
-  Eye,
+  Award,
   Settings,
   AlertCircle
 } from "lucide-react";
@@ -29,6 +30,7 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 const MOCK_ROLES = [
   {
@@ -39,7 +41,9 @@ const MOCK_ROLES = [
     staffCount: 2,
     status: "Active",
     color: "text-red-500",
-    bg: "bg-red-500/10"
+    bg: "bg-red-500/10",
+    badgeName: "System Guardian",
+    badgeIcon: "https://picsum.photos/seed/badge-admin/100/100"
   },
   {
     id: "ROLE-002",
@@ -49,7 +53,9 @@ const MOCK_ROLES = [
     staffCount: 3,
     status: "Active",
     color: "text-emerald-500",
-    bg: "bg-emerald-500/10"
+    bg: "bg-emerald-500/10",
+    badgeName: "Finance Authority",
+    badgeIcon: "https://picsum.photos/seed/badge-finance/100/100"
   },
   {
     id: "ROLE-003",
@@ -59,7 +65,9 @@ const MOCK_ROLES = [
     staffCount: 5,
     status: "Active",
     color: "text-blue-500",
-    bg: "bg-blue-500/10"
+    bg: "bg-blue-500/10",
+    badgeName: "Support Hero",
+    badgeIcon: "https://picsum.photos/seed/badge-support/100/100"
   },
   {
     id: "ROLE-004",
@@ -69,7 +77,9 @@ const MOCK_ROLES = [
     staffCount: 2,
     status: "Active",
     color: "text-amber-500",
-    bg: "bg-amber-500/10"
+    bg: "bg-amber-500/10",
+    badgeName: "Content Curator",
+    badgeIcon: "https://picsum.photos/seed/badge-content/100/100"
   }
 ];
 
@@ -125,7 +135,7 @@ export default function AdminRolesPage() {
               <TableHeader className="bg-muted/30">
                 <TableRow className="hover:bg-transparent border-border/30">
                   <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Nama Role</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Deskripsi Tugas</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Badge Identitas</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Daftar Izin</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Jumlah Staf</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Status</TableHead>
@@ -147,9 +157,19 @@ export default function AdminRolesPage() {
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
-                      <p className="text-xs font-bold text-muted-foreground max-w-[250px] leading-relaxed">
-                        {role.description}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <div className="relative h-8 w-8 rounded-lg overflow-hidden border border-border/50 bg-muted/20 flex items-center justify-center p-1 group-hover:border-primary/50 transition-all">
+                          <Image 
+                            src={role.badgeIcon} 
+                            alt={role.badgeName} 
+                            width={24}
+                            height={24}
+                            className="object-contain"
+                            unoptimized
+                          />
+                        </div>
+                        <span className="text-xs font-bold text-foreground">{role.badgeName}</span>
+                      </div>
                     </TableCell>
                     <TableCell className="py-4">
                       <div className="flex flex-wrap gap-1.5">
@@ -183,8 +203,12 @@ export default function AdminRolesPage() {
                           <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
                             <Edit className="h-3.5 w-3.5" /> Ubah Nama & Izin
                           </DropdownMenuItem>
+                          <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-primary">
+                            <Award className="h-3.5 w-3.5" /> Atur Badge Khusus
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
-                            <Users className="h-3.5 w-3.5 text-primary" /> Lihat Daftar Staf
+                            <Users className="h-3.5 w-3.5" /> Lihat Daftar Staf
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-destructive focus:text-destructive">
@@ -208,9 +232,9 @@ export default function AdminRolesPage() {
               <Key className="h-6 w-6 text-primary" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-black text-sm uppercase tracking-wider">Keamanan Akun Staf</h3>
+              <h3 className="font-black text-sm uppercase tracking-wider">Badge Otoritas Staf</h3>
               <p className="text-xs text-muted-foreground font-bold leading-relaxed">
-                Setiap perubahan pada role akan dicatat dalam log aktivitas sistem. Sangat disarankan untuk memberikan izin "Full Access" hanya pada role Super Admin dengan verifikasi 2FA aktif.
+                Setiap peran staf dapat dikaitkan dengan badge identitas. Badge ini berfungsi sebagai penanda resmi saat staf berinteraksi dengan sistem atau membantu pengguna, memberikan rasa aman dan kepercayaan ekstra.
               </p>
             </div>
           </div>
