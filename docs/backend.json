@@ -52,6 +52,10 @@
           "type": "boolean",
           "description": "Apakah pengguna adalah member VIP."
         },
+        "admin": {
+          "type": "boolean",
+          "description": "Apakah pengguna adalah administrator sistem."
+        },
         "points": {
           "type": "integer",
           "description": "Jumlah poin leaderboard pengguna."
