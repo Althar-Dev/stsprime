@@ -65,7 +65,7 @@ export default function AdminDashboard() {
 
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Pending Orders Table */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-4 overflow-hidden">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-black tracking-tight flex items-center gap-2">
               <Clock className="h-5 w-5 text-primary" /> Antrean Pesanan
@@ -74,34 +74,36 @@ export default function AdminDashboard() {
               Lihat Semua <ArrowUpRight className="h-4 w-4 ml-1" />
             </Button>
           </div>
-          <div className="bento-card overflow-hidden border-border/50">
-            <Table>
-              <TableHeader className="bg-muted/30">
-                <TableRow>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-10">ID Order</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-10">Produk</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-10">User</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-10 text-right">Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {PENDING_ORDERS.map((order) => (
-                  <TableRow key={order.id} className="hover:bg-muted/20 border-border/30">
-                    <TableCell className="font-mono text-[11px] font-bold py-4">{order.id}</TableCell>
-                    <TableCell className="py-4">
-                      <p className="text-xs font-black">{order.game}</p>
-                      <p className="text-[10px] text-muted-foreground font-bold">{order.amount}</p>
-                    </TableCell>
-                    <TableCell className="text-xs font-bold py-4">{order.user}</TableCell>
-                    <TableCell className="text-right py-4">
-                      <Badge className={order.status === "Pending" ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : "bg-blue-500/10 text-blue-500 border-blue-500/20"}>
-                        {order.status}
-                      </Badge>
-                    </TableCell>
+          <div className="bento-card border-border/50 overflow-hidden">
+            <div className="overflow-x-auto">
+              <Table className="min-w-[500px] md:min-w-full">
+                <TableHeader className="bg-muted/30">
+                  <TableRow>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest h-10">ID Order</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest h-10">Produk</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest h-10">User</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest h-10 text-right">Status</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {PENDING_ORDERS.map((order) => (
+                    <TableRow key={order.id} className="hover:bg-muted/20 border-border/30">
+                      <TableCell className="font-mono text-[11px] font-bold py-4">{order.id}</TableCell>
+                      <TableCell className="py-4">
+                        <p className="text-xs font-black">{order.game}</p>
+                        <p className="text-[10px] text-muted-foreground font-bold">{order.amount}</p>
+                      </TableCell>
+                      <TableCell className="text-xs font-bold py-4">{order.user}</TableCell>
+                      <TableCell className="text-right py-4">
+                        <Badge className={order.status === "Pending" ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : "bg-blue-500/10 text-blue-500 border-blue-500/20"}>
+                          {order.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </div>
 

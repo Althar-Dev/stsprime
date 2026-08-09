@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -257,39 +258,41 @@ export default function AdminAnalytics() {
             <CardDescription className="text-xs font-bold">Performa operasional 5 hari terakhir.</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
-            <Table>
-              <TableHeader className="bg-muted/30">
-                <TableRow className="hover:bg-transparent border-border/30">
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6">Tanggal</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest">Transaksi</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest">Gross Revenue</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-right pr-6">Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {[
-                  { date: "12 Agu 2026", orders: 156, rev: "Rp 14.2M", status: "Optimal" },
-                  { date: "11 Agu 2026", orders: 142, rev: "Rp 12.8M", status: "Optimal" },
-                  { date: "10 Agu 2026", orders: 168, rev: "Rp 15.5M", status: "Peak" },
-                  { date: "09 Agu 2026", orders: 98, rev: "Rp 8.9M", status: "Normal" },
-                  { date: "08 Agu 2026", orders: 110, rev: "Rp 10.1M", status: "Normal" },
-                ].map((row, idx) => (
-                  <TableRow key={idx} className="hover:bg-muted/20 border-border/30">
-                    <TableCell className="font-bold text-xs py-4 pl-6">{row.date}</TableCell>
-                    <TableCell className="font-black text-xs py-4">{row.orders}</TableCell>
-                    <TableCell className="font-black text-xs text-primary py-4">{row.rev}</TableCell>
-                    <TableCell className="text-right py-4 pr-6">
-                      <Badge variant="outline" className={cn(
-                        "text-[9px] font-black uppercase tracking-tighter px-2",
-                        row.status === "Peak" ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                      )}>
-                        {row.status}
-                      </Badge>
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[500px] md:min-w-full">
+                <TableHeader className="bg-muted/30">
+                  <TableRow className="hover:bg-transparent border-border/30">
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6">Tanggal</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest">Transaksi</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest">Gross Revenue</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest text-right pr-6">Status</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {[
+                    { date: "12 Agu 2026", orders: 156, rev: "Rp 14.2M", status: "Optimal" },
+                    { date: "11 Agu 2026", orders: 142, rev: "Rp 12.8M", status: "Optimal" },
+                    { date: "10 Agu 2026", orders: 168, rev: "Rp 15.5M", status: "Peak" },
+                    { date: "09 Agu 2026", orders: 98, rev: "Rp 8.9M", status: "Normal" },
+                    { date: "08 Agu 2026", orders: 110, rev: "Rp 10.1M", status: "Normal" },
+                  ].map((row, idx) => (
+                    <TableRow key={idx} className="hover:bg-muted/20 border-border/30">
+                      <TableCell className="font-bold text-xs py-4 pl-6">{row.date}</TableCell>
+                      <TableCell className="font-black text-xs py-4">{row.orders}</TableCell>
+                      <TableCell className="font-black text-xs text-primary py-4">{row.rev}</TableCell>
+                      <TableCell className="text-right py-4 pr-6">
+                        <Badge variant="outline" className={cn(
+                          "text-[9px] font-black uppercase tracking-tighter px-2",
+                          row.status === "Peak" ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                        )}>
+                          {row.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>
