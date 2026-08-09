@@ -16,10 +16,7 @@ import {
   Users, 
   Key,
   CheckCircle2,
-  XCircle,
-  Award,
-  Settings,
-  AlertCircle
+  Award
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -42,7 +39,6 @@ const MOCK_ROLES = [
     status: "Active",
     color: "text-red-500",
     bg: "bg-red-500/10",
-    badgeName: "System Guardian",
     badgeIcon: "https://picsum.photos/seed/badge-admin/100/100"
   },
   {
@@ -54,7 +50,6 @@ const MOCK_ROLES = [
     status: "Active",
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
-    badgeName: "Finance Authority",
     badgeIcon: "https://picsum.photos/seed/badge-finance/100/100"
   },
   {
@@ -66,7 +61,6 @@ const MOCK_ROLES = [
     status: "Active",
     color: "text-blue-500",
     bg: "bg-blue-500/10",
-    badgeName: "Support Hero",
     badgeIcon: "https://picsum.photos/seed/badge-support/100/100"
   },
   {
@@ -78,7 +72,6 @@ const MOCK_ROLES = [
     status: "Active",
     color: "text-amber-500",
     bg: "bg-amber-500/10",
-    badgeName: "Content Curator",
     badgeIcon: "https://picsum.photos/seed/badge-content/100/100"
   }
 ];
@@ -134,8 +127,7 @@ export default function AdminRolesPage() {
             <Table className="min-w-[1000px]">
               <TableHeader className="bg-muted/30">
                 <TableRow className="hover:bg-transparent border-border/30">
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Nama Role</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Badge Identitas</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Nama Role & Badge</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Daftar Izin</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Jumlah Staf</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Status</TableHead>
@@ -146,29 +138,22 @@ export default function AdminRolesPage() {
                 {MOCK_ROLES.map((role) => (
                   <TableRow key={role.id} className="hover:bg-muted/20 border-border/30 transition-colors group">
                     <TableCell className="py-4 pl-6">
-                      <div className="flex items-center gap-3">
-                        <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center border border-border/50", role.bg)}>
-                          <ShieldCheck className={cn("h-5 w-5", role.color)} />
+                      <div className="flex items-center gap-4">
+                        <div className={cn("h-12 w-12 rounded-xl flex items-center justify-center border border-border/50 transition-transform group-hover:scale-110 p-1.5", role.bg)}>
+                          <div className="relative h-full w-full">
+                            <Image 
+                              src={role.badgeIcon} 
+                              alt={role.name} 
+                              fill
+                              className="object-contain"
+                              unoptimized
+                            />
+                          </div>
                         </div>
                         <div className="flex flex-col">
                           <span className={cn("text-xs font-black tracking-wider", role.color)}>{role.name}</span>
                           <span className="text-[10px] text-muted-foreground font-mono font-bold uppercase">{role.id}</span>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="relative h-8 w-8 rounded-lg overflow-hidden border border-border/50 bg-muted/20 flex items-center justify-center p-1 group-hover:border-primary/50 transition-all">
-                          <Image 
-                            src={role.badgeIcon} 
-                            alt={role.badgeName} 
-                            width={24}
-                            height={24}
-                            className="object-contain"
-                            unoptimized
-                          />
-                        </div>
-                        <span className="text-xs font-bold text-foreground">{role.badgeName}</span>
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
@@ -204,7 +189,7 @@ export default function AdminRolesPage() {
                             <Edit className="h-3.5 w-3.5" /> Ubah Nama & Izin
                           </DropdownMenuItem>
                           <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-primary">
-                            <Award className="h-3.5 w-3.5" /> Atur Badge Khusus
+                            <Award className="h-3.5 w-3.5" /> Ganti Badge Identitas
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
@@ -234,7 +219,7 @@ export default function AdminRolesPage() {
             <div className="space-y-1">
               <h3 className="font-black text-sm uppercase tracking-wider">Badge Otoritas Staf</h3>
               <p className="text-xs text-muted-foreground font-bold leading-relaxed">
-                Setiap peran staf dapat dikaitkan dengan badge identitas. Badge ini berfungsi sebagai penanda resmi saat staf berinteraksi dengan sistem atau membantu pengguna, memberikan rasa aman dan kepercayaan ekstra.
+                Setiap peran staf dapat dikaitkan dengan badge identitas yang tampil langsung sebagai ikon peran. Badge ini berfungsi sebagai penanda resmi saat staf berinteraksi dengan sistem, memberikan rasa aman dan kepercayaan ekstra bagi tim.
               </p>
             </div>
           </div>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -11,17 +12,12 @@ import {
   MoreVertical, 
   Edit, 
   Trash2, 
-  Star, 
   TrendingUp, 
   Zap,
   ShieldCheck,
   ArrowUpCircle,
   Users,
   Percent,
-  CheckCircle2,
-  XCircle,
-  Crown,
-  Medal,
   Award
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -46,8 +42,6 @@ const MOCK_LEVELS = [
     status: "Active",
     color: "text-orange-700",
     bg: "bg-orange-700/10",
-    icon: Medal,
-    badgeName: "Bronze Explorer",
     badgeIcon: "https://picsum.photos/seed/badge-bronze/100/100"
   },
   {
@@ -60,8 +54,6 @@ const MOCK_LEVELS = [
     status: "Active",
     color: "text-slate-400",
     bg: "bg-slate-400/10",
-    icon: ShieldCheck,
-    badgeName: "Silver Warrior",
     badgeIcon: "https://picsum.photos/seed/badge-silver/100/100"
   },
   {
@@ -74,8 +66,6 @@ const MOCK_LEVELS = [
     status: "Active",
     color: "text-amber-400",
     bg: "bg-amber-400/10",
-    icon: Trophy,
-    badgeName: "Gold VIP",
     badgeIcon: "/img/badge/vip.png"
   },
   {
@@ -88,8 +78,6 @@ const MOCK_LEVELS = [
     status: "Active",
     color: "text-cyan-400",
     bg: "bg-cyan-400/10",
-    icon: Crown,
-    badgeName: "Platinum Mythic",
     badgeIcon: "https://picsum.photos/seed/badge-platinum/100/100"
   }
 ];
@@ -136,7 +124,7 @@ export default function AdminMemberLevelsPage() {
           <div className="flex flex-col md:flex-row justify-between gap-4">
             <div className="space-y-1">
               <CardTitle className="text-lg font-black tracking-tight">Hirarki Keanggotaan & Hadiah</CardTitle>
-              <CardDescription className="text-xs font-bold">Atur ambang batas transaksi, keuntungan, dan badge eksklusif untuk setiap tier.</CardDescription>
+              <CardDescription className="text-xs font-bold">Atur ambang batas transaksi, keuntungan, dan lencana identitas untuk setiap tier.</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -145,8 +133,7 @@ export default function AdminMemberLevelsPage() {
             <Table className="min-w-[1000px]">
               <TableHeader className="bg-muted/30">
                 <TableRow className="hover:bg-transparent border-border/30">
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Level & Pangkat</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Badge Eksklusif</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Level & Badge</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Syarat Kenaikan</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Reward Multiplier</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Populasi</TableHead>
@@ -158,29 +145,22 @@ export default function AdminMemberLevelsPage() {
                 {MOCK_LEVELS.map((level) => (
                   <TableRow key={level.id} className="hover:bg-muted/20 border-border/30 transition-colors group">
                     <TableCell className="py-4 pl-6">
-                      <div className="flex items-center gap-3">
-                        <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center border border-border/50", level.bg)}>
-                          <level.icon className={cn("h-5 w-5", level.color)} />
+                      <div className="flex items-center gap-4">
+                        <div className={cn("h-12 w-12 rounded-xl flex items-center justify-center border border-border/50 transition-transform group-hover:scale-110 p-1.5", level.bg)}>
+                          <div className="relative h-full w-full">
+                            <Image 
+                              src={level.badgeIcon} 
+                              alt={level.name} 
+                              fill
+                              className="object-contain"
+                              unoptimized
+                            />
+                          </div>
                         </div>
                         <div className="flex flex-col">
                           <span className={cn("text-xs font-black tracking-wider", level.color)}>{level.name}</span>
                           <span className="text-[10px] text-muted-foreground font-mono font-bold uppercase">{level.id}</span>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="relative h-8 w-8 rounded-lg overflow-hidden border border-border/50 bg-muted/20 flex items-center justify-center p-1 group-hover:border-primary/50 transition-all">
-                          <Image 
-                            src={level.badgeIcon} 
-                            alt={level.badgeName} 
-                            width={24}
-                            height={24}
-                            className="object-contain"
-                            unoptimized
-                          />
-                        </div>
-                        <span className="text-xs font-bold text-foreground">{level.badgeName}</span>
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
@@ -219,7 +199,7 @@ export default function AdminMemberLevelsPage() {
                             <Edit className="h-3.5 w-3.5" /> Edit Keuntungan
                           </DropdownMenuItem>
                           <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-primary">
-                            <Award className="h-3.5 w-3.5" /> Atur Badge Khusus
+                            <Award className="h-3.5 w-3.5" /> Ganti Badge Lencana
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-destructive focus:text-destructive">
@@ -243,9 +223,9 @@ export default function AdminMemberLevelsPage() {
               <ShieldCheck className="h-6 w-6 text-primary" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-black text-sm uppercase tracking-wider">Mekanisme Badge Khusus</h3>
+              <h3 className="font-black text-sm uppercase tracking-wider">Mekanisme Badge Terintegrasi</h3>
               <p className="text-xs text-muted-foreground font-bold leading-relaxed">
-                Setiap member level dapat dikaitkan dengan satu badge utama. Saat pengguna naik level, badge ini akan secara otomatis tersemat di profil mereka dan muncul di Leaderboard global.
+                Setiap level member kini langsung menggunakan lencana (badge) sebagai ikon identitasnya. Saat pengguna naik level, badge ini akan otomatis terpasang pada foto profil mereka di halaman publik dan leaderboard.
               </p>
             </div>
           </div>
