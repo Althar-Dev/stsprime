@@ -96,7 +96,7 @@ export default function AdminXenditPage() {
                   <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2">
                     <KeyRound className="h-5 w-5 text-primary" /> Kredensial API Xendit
                   </CardTitle>
-                  <CardDescription className="text-xs font-bold">Gunakan Secret Key dari Dashboard Xendit menu Settings > API Keys.</CardDescription>
+                  <CardDescription className="text-xs font-bold">Gunakan Secret Key dari Dashboard Xendit menu Settings &gt; API Keys.</CardDescription>
                 </div>
                 <div className={cn(
                   "flex items-center gap-2 px-3 py-1 rounded-full border transition-colors",
