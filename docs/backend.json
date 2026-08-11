@@ -58,11 +58,15 @@
         },
         "points": {
           "type": "integer",
-          "description": "Jumlah poin leaderboard pengguna."
+          "description": "Jumlah poin leaderboard pengguna (XP)."
         },
         "coins": {
           "type": "integer",
-          "description": "Jumlah saldo koin (mata uang) pengguna."
+          "description": "Jumlah saldo koin (reward currency) pengguna."
+        },
+        "balance": {
+          "type": "integer",
+          "description": "Saldo akun pengguna dalam Rupiah (IDR)."
         }
       },
       "required": ["email"]

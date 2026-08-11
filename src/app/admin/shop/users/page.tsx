@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useFirestore } from "@/firebase";
+import { useUser, useFirestore } from "@/firebase";
 import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -21,7 +21,9 @@ import {
   Trophy,
   Filter,
   Calendar,
-  Loader2
+  Loader2,
+  Wallet,
+  ArrowUpRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -41,6 +43,7 @@ interface UserData {
   photoURL?: string;
   coins?: number;
   points?: number;
+  balance?: number;
   vip?: boolean;
   admin?: boolean;
   createdAt?: string;
@@ -82,7 +85,7 @@ export default function AdminUsersPage() {
   const stats = {
     total: users.length,
     vip: users.filter(u => u.vip).length,
-    admins: users.filter(u => u.admin).length
+    totalBalance: users.reduce((acc, curr) => acc + (curr.balance || 0), 0)
   };
 
   return (
@@ -92,7 +95,7 @@ export default function AdminUsersPage() {
           <h1 className="text-3xl font-black tracking-tight flex items-center gap-3">
             <UsersIcon className="h-8 w-8 text-primary" /> Manajemen Pengguna
           </h1>
-          <p className="text-sm text-muted-foreground font-bold">Kelola data profil, saldo koin, dan otoritas member.</p>
+          <p className="text-sm text-muted-foreground font-bold">Kelola data profil, saldo utama, koin reward, dan otoritas member.</p>
         </div>
         <Button className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20">
           Tambah User Baru
@@ -125,12 +128,12 @@ export default function AdminUsersPage() {
         </Card>
         <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
           <CardContent className="p-6 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl bg-destructive/10 flex items-center justify-center">
-              <ShieldAlert className="h-6 w-6 text-destructive" />
+            <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
+              <Wallet className="h-6 w-6 text-emerald-500" />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Administrators</p>
-              <p className="text-2xl font-black">{stats.admins}</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Saldo Member</p>
+              <p className="text-2xl font-black">Rp {stats.totalBalance.toLocaleString()}</p>
             </div>
           </CardContent>
         </Card>
@@ -141,7 +144,7 @@ export default function AdminUsersPage() {
           <div className="flex flex-col md:flex-row justify-between gap-4">
             <div className="space-y-1">
               <CardTitle className="text-lg font-black tracking-tight">Daftar Member</CardTitle>
-              <CardDescription className="text-xs font-bold">Menampilkan {filteredUsers.length} pengguna aktif.</CardDescription>
+              <CardDescription className="text-xs font-bold">Menampilkan {filteredUsers.length} pengguna aktif beserta aset digital mereka.</CardDescription>
             </div>
             <div className="flex gap-2">
               <div className="relative w-full md:w-64">
@@ -167,11 +170,12 @@ export default function AdminUsersPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <Table className="min-w-[800px]">
+              <Table className="min-w-[900px]">
                 <TableHeader className="bg-muted/30">
                   <TableRow className="hover:bg-transparent border-border/30">
                     <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">User</TableHead>
-                    <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Saldo & Poin</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Saldo Utama (IDR)</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Coin & Poin</TableHead>
                     <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Status</TableHead>
                     <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Tanggal Join</TableHead>
                     <TableHead className="text-[10px] font-black uppercase tracking-widest text-right pr-6 h-12">Aksi</TableHead>
@@ -180,7 +184,7 @@ export default function AdminUsersPage() {
                 <TableBody>
                   {filteredUsers.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-20 text-muted-foreground font-bold">
+                      <TableCell colSpan={6} className="text-center py-20 text-muted-foreground font-bold">
                         Tidak ada pengguna ditemukan.
                       </TableCell>
                     </TableRow>
@@ -204,10 +208,16 @@ export default function AdminUsersPage() {
                           </div>
                         </TableCell>
                         <TableCell className="py-4">
+                          <div className="flex items-center gap-2 text-emerald-500">
+                             <Wallet className="h-4 w-4" />
+                             <span className="text-sm font-black tabular-nums">Rp {(user.balance || 0).toLocaleString()}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-4">
                           <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-1.5">
-                              <Coins className="h-3 w-3 text-primary" />
-                              <span className="text-xs font-black tabular-nums">{(user.coins || 0).toLocaleString()}</span>
+                              <img src="/img/coin.png" className="h-3 w-3" alt="coin" />
+                              <span className="text-xs font-black tabular-nums text-primary">{(user.coins || 0).toLocaleString()}</span>
                             </div>
                             <div className="flex items-center gap-1.5">
                               <Trophy className="h-3 w-3 text-amber-500" />
@@ -247,12 +257,18 @@ export default function AdminUsersPage() {
                                 <MoreVertical className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48 rounded-xl border-border">
+                            <DropdownMenuContent align="end" className="w-52 rounded-xl border-border">
                               <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest opacity-50">Kontrol Akun</DropdownMenuLabel>
-                              <DropdownMenuItem className="text-xs font-bold cursor-pointer">Lihat Detail Profil</DropdownMenuItem>
-                              <DropdownMenuItem className="text-xs font-bold cursor-pointer">Edit Saldo & Koin</DropdownMenuItem>
+                              <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
+                                <ArrowUpRight className="h-3.5 w-3.5" /> Lihat Detail Profil
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
+                                <Wallet className="h-3.5 w-3.5 text-emerald-500" /> Edit Saldo Utama
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
+                                <Coins className="h-3.5 w-3.5 text-primary" /> Edit Coin & Poin
+                              </DropdownMenuItem>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-xs font-bold cursor-pointer">Kirim Pesan Blast</DropdownMenuItem>
                               <DropdownMenuItem className={cn(
                                 "text-xs font-bold cursor-pointer",
                                 user.vip ? "text-destructive" : "text-amber-500"
