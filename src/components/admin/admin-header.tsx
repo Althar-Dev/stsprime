@@ -18,7 +18,7 @@ export function AdminHeader() {
         <Separator orientation="vertical" className="mx-2 h-4 opacity-30" />
         <div className="flex items-center gap-2">
           <ShieldAlert className="h-4 w-4 text-primary" />
-          <span className="text-xs font-black tracking-widest uppercase">Admin Panel</span>
+          <span className="text-xs font-black tracking-widest uppercase">Admin TOKO</span>
         </div>
       </div>
       
