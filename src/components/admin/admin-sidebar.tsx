@@ -32,7 +32,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Award,
-  Lock
+  Lock,
+  Crown
 } from "lucide-react";
 
 import {
@@ -119,6 +120,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
       label: "System",
       items: [
         { title: "Roles", url: "/admin/system/roles", icon: Lock },
+        { title: "Member VIP", url: "/admin/system/vip", icon: Crown },
         { title: "Member Level", url: "/admin/system/member-levels", icon: Trophy },
         { title: "Settings", url: "/admin/system/settings", icon: Settings },
       ]
