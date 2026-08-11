@@ -33,7 +33,8 @@ import {
   ChevronRight,
   Award,
   Lock,
-  Crown
+  Crown,
+  FileImage
 } from "lucide-react";
 
 import {
@@ -97,6 +98,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
         { title: "Icons", url: "/admin/gallery/icons", icon: Grid3X3 },
         { title: "Backgrounds", url: "/admin/gallery/backgrounds", icon: Palette },
         { title: "Badges", url: "/admin/gallery/badges", icon: Award },
+        { title: "Others", url: "/admin/gallery/others", icon: FileImage },
       ]
     },
     {
@@ -111,7 +113,6 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
       items: [
         { title: "GoPay Merchant", url: "/admin/payments/gopay", icon: Wallet },
         { title: "Orderkuota", url: "/admin/payments/orderkuota", icon: CreditCard },
-        { title: "ShopeePay", url: "/admin/payments/shopeepay", icon: Wallet },
         { title: "Midtrans", url: "/admin/payments/midtrans", icon: Globe },
         { title: "Xendit", url: "/admin/payments/xendit", icon: CreditCard },
       ]
