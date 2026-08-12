@@ -50,8 +50,8 @@ export async function uploadToR2(
     const buffer = Buffer.from(await file.arrayBuffer());
     
     // Gunakan nama asli file (file.name)
-    // Kita membersihkan nama file dari karakter yang mungkin bermasalah di URL (opsional)
-    const sanitizedFileName = file.name.replace(/\s+/g, '-');
+    // Membersihkan nama file dari karakter yang mungkin bermasalah di URL
+    const sanitizedFileName = file.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9.-]/g, '');
     const key = `${folder}/${sanitizedFileName}`;
 
     const command = new PutObjectCommand({
@@ -63,8 +63,12 @@ export async function uploadToR2(
 
     await s3Client.send(command);
 
-    // Gunakan publicUrl dari config, atau fallback ke format standar R2 dev
-    const baseUrl = config.publicUrl.replace(/\/$/, "");
+    // Pastikan base URL memiliki protokol https://
+    let baseUrl = config.publicUrl.trim();
+    if (baseUrl && !baseUrl.startsWith('http')) {
+      baseUrl = `https://${baseUrl}`;
+    }
+    baseUrl = baseUrl.replace(/\/$/, "");
     
     return {
       success: true,
