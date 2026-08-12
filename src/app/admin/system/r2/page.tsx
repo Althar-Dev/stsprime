@@ -310,7 +310,7 @@ export default function AdminR2StoragePage() {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-black uppercase tracking-widest">Kredensial S3 API</CardTitle>
               </div>
-            </Header>
+            </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
                 <div className="space-y-1">
