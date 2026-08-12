@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef } from "react";
@@ -11,11 +10,11 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Upload, X, FileImage, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
-import { uploadToR2 } from "@/app/actions/r2-actions";
+import { uploadToR2, type R2ConfigData } from "@/app/actions/r2-actions";
 import { useToast } from "@/hooks/use-toast";
+import { useFirestore } from "@/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 
 interface R2UploadModalProps {
@@ -31,6 +30,7 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const db = useFirestore();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -45,30 +45,46 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
   };
 
   const handleUpload = async () => {
-    if (!file) return;
+    if (!file || !db) return;
 
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
+    
+    try {
+      // 1. Ambil konfigurasi R2 terbaru dari Firestore sebelum upload
+      const configDoc = await getDoc(doc(db, "settings", "r2"));
+      
+      if (!configDoc.exists() || !configDoc.data().isEnabled) {
+        throw new Error("Layanan R2 belum diaktifkan atau dikonfigurasi.");
+      }
 
-    const result = await uploadToR2(formData, folder);
+      const config = configDoc.data() as R2ConfigData;
 
-    if (result.success && result.url) {
-      toast({
-        title: "Unggah Berhasil",
-        description: `File telah disimpan di folder ${folder}/`,
-      });
-      onSuccess?.(result.url);
-      onOpenChange(false);
-      resetState();
-    } else {
+      // 2. Jalankan Server Action dengan data konfigurasi
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const result = await uploadToR2(formData, folder, config);
+
+      if (result.success && result.url) {
+        toast({
+          title: "Unggah Berhasil",
+          description: `File telah disimpan di folder ${folder}/`,
+        });
+        onSuccess?.(result.url);
+        onOpenChange(false);
+        resetState();
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Gagal Mengunggah",
-        description: result.error,
+        description: error.message,
       });
+    } finally {
+      setIsUploading(false);
     }
-    setIsUploading(false);
   };
 
   const resetState = () => {
@@ -126,7 +142,7 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
           <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20">
              <AlertCircle className="h-4 w-4 text-blue-500 shrink-0" />
              <p className="text-[10px] font-bold text-blue-600 leading-tight">
-               Pastikan file tidak mengandung karakter aneh. Sistem akan otomatis memberikan nama unik berbasis UUID.
+               Sistem menggunakan kredensial dari database. Pastikan pengaturan R2 Storage sudah benar.
              </p>
           </div>
         </div>
