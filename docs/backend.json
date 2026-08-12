@@ -70,6 +70,20 @@
         }
       },
       "required": ["email"]
+    },
+    "R2Config": {
+      "title": "R2 Storage Configuration",
+      "description": "Kredensial dan pengaturan Cloudflare R2 untuk penyimpanan aset.",
+      "type": "object",
+      "properties": {
+        "accountId": { "type": "string" },
+        "accessKeyId": { "type": "string" },
+        "secretAccessKey": { "type": "string" },
+        "bucketName": { "type": "string" },
+        "publicUrl": { "type": "string" },
+        "isEnabled": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
     }
   },
   "auth": {
@@ -79,6 +93,10 @@
     "/users/{userId}": {
       "schema": "UserProfile",
       "description": "Dokumen profil pengguna."
+    },
+    "/settings/r2": {
+      "schema": "R2Config",
+      "description": "Konfigurasi Cloudflare R2 sistem."
     }
   }
 }

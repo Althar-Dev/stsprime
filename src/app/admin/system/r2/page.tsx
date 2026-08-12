@@ -1,6 +1,13 @@
+
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useFirestore, useDoc } from "@/firebase";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
+import { useToast } from "@/hooks/use-toast";
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -20,15 +27,87 @@ import {
   Globe,
   RefreshCw,
   AlertCircle,
-  ChevronRight,
   Eye,
-  EyeOff
+  EyeOff,
+  Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function AdminR2StoragePage() {
-  const [isLive, setIsLive] = useState(true);
+  const db = useFirestore();
+  const { toast } = useToast();
+  
+  // State form
+  const [accountId, setAccountId] = useState("");
+  const [accessKeyId, setAccessKeyId] = useState("");
+  const [secretAccessKey, setSecretAccessKey] = useState("");
+  const [bucketName, setBucketName] = useState("");
+  const [publicUrl, setPublicUrl] = useState("");
+  const [isEnabled, setIsEnabled] = useState(false);
+  
+  const [isSaving, setIsSaving] = useState(false);
   const [showSecret, setShowSecret] = useState(false);
+
+  // Fetch real data from Firestore
+  const r2DocRef = db ? doc(db, "settings", "r2") : null;
+  const { data: config, loading } = useDoc(r2DocRef);
+
+  // Update local state when data is loaded
+  useEffect(() => {
+    if (config) {
+      setAccountId(config.accountId || "");
+      setAccessKeyId(config.accessKeyId || "");
+      setSecretAccessKey(config.secretAccessKey || "");
+      setBucketName(config.bucketName || "");
+      setPublicUrl(config.publicUrl || "");
+      setIsEnabled(!!config.isEnabled);
+    }
+  }, [config]);
+
+  const handleSave = async () => {
+    if (!db) return;
+    
+    setIsSaving(true);
+    const data = {
+      accountId,
+      accessKeyId,
+      secretAccessKey,
+      bucketName,
+      publicUrl,
+      isEnabled,
+      updatedAt: serverTimestamp(),
+    };
+
+    const docRef = doc(db, "settings", "r2");
+    
+    setDoc(docRef, data, { merge: true })
+      .then(() => {
+        toast({
+          title: "Berhasil Disimpan",
+          description: "Konfigurasi R2 telah diperbarui di database.",
+        });
+      })
+      .catch(async (error) => {
+        const permissionError = new FirestorePermissionError({
+          path: docRef.path,
+          operation: 'update',
+          requestResourceData: data,
+        } satisfies SecurityRuleContext);
+        
+        errorEmitter.emit('permission-error', permissionError);
+      })
+      .finally(() => {
+        setIsSaving(false);
+      });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-[400px] w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-500">
@@ -58,7 +137,7 @@ export default function AdminR2StoragePage() {
           { label: "Penyimpanan", value: "24.5 GB", icon: HardDrive, color: "text-primary", trend: "75% Terisi" },
           { label: "Total Objek", value: "1,240 Aset", icon: Cloud, color: "text-blue-500", trend: "Banners & Icons" },
           { label: "Bandwidth (Bln)", value: "128.4 GB", icon: Globe, color: "text-emerald-500", trend: "Delivery Opt" },
-          { label: "Koneksi R2", value: "TERHUBUNG", icon: ShieldCheck, color: "text-emerald-500", trend: "API V4 Active" },
+          { label: "Koneksi R2", value: isEnabled ? "AKTIF" : "NONAKTIF", icon: ShieldCheck, color: isEnabled ? "text-emerald-500" : "text-destructive", trend: "API V4 Status" },
         ].map((stat, i) => (
           <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
             <CardContent className="p-6 space-y-3">
@@ -98,14 +177,24 @@ export default function AdminR2StoragePage() {
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                     <Database className="h-3 w-3" /> Account ID
                   </Label>
-                  <Input placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" className="h-11 bg-background rounded-xl font-bold border-border/50" defaultValue="f1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6" />
+                  <Input 
+                    placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
+                    className="h-11 bg-background rounded-xl font-bold border-border/50" 
+                    value={accountId}
+                    onChange={(e) => setAccountId(e.target.value)}
+                  />
                 </div>
                 
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                     <Lock className="h-3 w-3" /> Access Key ID
                   </Label>
-                  <Input placeholder="Access Key..." className="h-11 bg-background rounded-xl font-bold border-border/50" defaultValue="AKIA_STSPRIME_PROD_88" />
+                  <Input 
+                    placeholder="Access Key..." 
+                    className="h-11 bg-background rounded-xl font-bold border-border/50" 
+                    value={accessKeyId}
+                    onChange={(e) => setAccessKeyId(e.target.value)}
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -117,16 +206,16 @@ export default function AdminR2StoragePage() {
                       type={showSecret ? "text" : "password"} 
                       placeholder="Secret Key..." 
                       className="h-11 bg-background rounded-xl font-bold border-border/50 pr-10" 
-                      defaultValue="s3cr3t_p4ssw0rd_r2_stspr1m3" 
+                      value={secretAccessKey}
+                      onChange={(e) => setSecretAccessKey(e.target.value)}
                     />
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <button 
+                      type="button"
                       onClick={() => setShowSecret(!showSecret)}
-                      className="absolute right-1 top-1 h-9 w-9 rounded-lg"
+                      className="absolute right-1 top-1 h-9 w-9 rounded-lg flex items-center justify-center text-muted-foreground"
                     >
                       {showSecret ? <EyeOff className="h-4 w-4 opacity-50" /> : <Eye className="h-4 w-4 opacity-50" />}
-                    </Button>
+                    </button>
                   </div>
                 </div>
 
@@ -134,14 +223,24 @@ export default function AdminR2StoragePage() {
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                     <Cloud className="h-3 w-3" /> Bucket Name
                   </Label>
-                  <Input placeholder="my-bucket-name" className="h-11 bg-background rounded-xl font-bold border-border/50" defaultValue="sts-prime-assets" />
+                  <Input 
+                    placeholder="my-bucket-name" 
+                    className="h-11 bg-background rounded-xl font-bold border-border/50" 
+                    value={bucketName}
+                    onChange={(e) => setBucketName(e.target.value)}
+                  />
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                     <Globe className="h-3 w-3" /> Public URL Endpoint
                   </Label>
-                  <Input placeholder="https://pub-..." className="h-11 bg-background rounded-xl font-bold border-border/50" defaultValue="https://cdn.stsprime.com" />
+                  <Input 
+                    placeholder="https://pub-..." 
+                    className="h-11 bg-background rounded-xl font-bold border-border/50" 
+                    value={publicUrl}
+                    onChange={(e) => setPublicUrl(e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -150,12 +249,17 @@ export default function AdminR2StoragePage() {
                   <p className="text-sm font-black text-foreground">Aktifkan Pengunggahan</p>
                   <p className="text-[10px] text-muted-foreground font-bold">Izinkan admin mengunggah file baru ke bucket ini.</p>
                 </div>
-                <Switch checked={isLive} onCheckedChange={setIsLive} />
+                <Switch checked={isEnabled} onCheckedChange={setIsEnabled} />
               </div>
 
               <div className="pt-2">
-                <Button className="w-full sm:w-auto h-11 px-8 rounded-xl font-black gap-2 shadow-lg shadow-primary/20">
-                  <CheckCircle2 className="h-4 w-4" /> Simpan Konfigurasi R2
+                <Button 
+                  onClick={handleSave} 
+                  disabled={isSaving}
+                  className="w-full sm:w-auto h-11 px-8 rounded-xl font-black gap-2 shadow-lg shadow-primary/20"
+                >
+                  {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
+                  Simpan Konfigurasi R2
                 </Button>
               </div>
             </CardContent>
@@ -168,16 +272,15 @@ export default function AdminR2StoragePage() {
               <CardDescription className="text-xs font-bold">Daftar direktori aktif yang digunakan oleh sistem unggah otomatis.</CardDescription>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {["banners", "icons", "backgrounds", "badges", "others"].map((folder, idx) => (
                   <div key={idx} className="flex items-center justify-between p-4 rounded-xl bg-background border border-border/40 group hover:border-primary/30 transition-all">
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 text-center w-full">
                       <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                         <Database className="h-4.5 w-4.5 text-muted-foreground group-hover:text-primary transition-colors" />
                       </div>
                       <div className="space-y-0.5">
-                        <p className="text-xs font-black capitalize">{folder}/</p>
-                        <p className="text-[9px] text-muted-foreground font-bold">Active</p>
+                        <p className="text-[11px] font-black capitalize">{folder}/</p>
                       </div>
                     </div>
                   </div>
@@ -207,7 +310,7 @@ export default function AdminR2StoragePage() {
                 <div className="space-y-1">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">S3 Endpoint</Label>
                   <code className="block p-2 bg-background border border-border/50 rounded-lg text-[10px] font-mono text-primary truncate">
-                    https://[id].r2.cloudflarestorage.com
+                    {accountId ? `https://${accountId}.r2.cloudflarestorage.com` : 'Menunggu Account ID...'}
                   </code>
                 </div>
 
