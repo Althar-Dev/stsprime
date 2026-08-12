@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useFirestore, useDoc } from "@/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { errorEmitter } from "@/firebase/error-emitter";
@@ -48,8 +48,8 @@ export default function AdminR2StoragePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [showSecret, setShowSecret] = useState(false);
 
-  // Fetch real data from Firestore
-  const r2DocRef = db ? doc(db, "settings", "r2") : null;
+  // Memoize document reference to prevent infinite re-renders
+  const r2DocRef = useMemo(() => (db ? doc(db, "settings", "r2") : null), [db]);
   const { data: config, loading } = useDoc(r2DocRef);
 
   // Update local state when data is loaded
