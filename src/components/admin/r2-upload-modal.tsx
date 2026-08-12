@@ -57,7 +57,17 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
         throw new Error("Layanan R2 belum diaktifkan atau dikonfigurasi.");
       }
 
-      const config = configDoc.data() as R2ConfigData;
+      const data = configDoc.data();
+      
+      // Pastikan hanya plain object yang dikirim ke Server Action
+      // Firestore Timestamp (updatedAt) akan menyebabkan error jika dikirim langsung
+      const config: R2ConfigData = {
+        accountId: data?.accountId || "",
+        accessKeyId: data?.accessKeyId || "",
+        secretAccessKey: data?.secretAccessKey || "",
+        bucketName: data?.bucketName || "",
+        publicUrl: data?.publicUrl || "",
+      };
 
       // 2. Jalankan Server Action dengan data konfigurasi
       const formData = new FormData();
