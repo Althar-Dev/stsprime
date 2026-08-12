@@ -34,7 +34,8 @@ import {
   Award,
   Lock,
   Crown,
-  FileImage
+  FileImage,
+  Database
 } from "lucide-react";
 
 import {
@@ -123,6 +124,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
         { title: "Roles", url: "/admin/system/roles", icon: Lock },
         { title: "Member VIP", url: "/admin/system/vip", icon: Crown },
         { title: "Member Level", url: "/admin/system/member-levels", icon: Trophy },
+        { title: "R2 Storage", url: "/admin/system/r2", icon: Database },
         { title: "Settings", url: "/admin/system/settings", icon: Settings },
       ]
     }
