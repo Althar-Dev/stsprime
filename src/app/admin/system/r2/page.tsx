@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -144,7 +145,7 @@ export default function AdminR2StoragePage() {
                   <CardDescription className="text-xs font-bold">Dapatkan kredensial S3 API dari Dashboard Cloudflare R2.</CardDescription>
                 </div>
               </div>
-            </CardHeader>
+            </Header>
             <CardContent className="p-6 space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
                 <div className="space-y-2 lg:col-span-2">
@@ -246,7 +247,7 @@ export default function AdminR2StoragePage() {
             <CardHeader className="border-b border-border/30 bg-muted/10">
               <CardTitle className="text-lg font-black tracking-tight">Struktur Folder</CardTitle>
               <CardDescription className="text-xs font-bold">Aset akan disimpan secara otomatis ke dalam struktur folder berikut.</CardDescription>
-            </CardHeader>
+            </Header>
             <CardContent className="p-6">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {["banners", "icons", "backgrounds", "badges", "others"].map((folder, idx) => (
@@ -270,7 +271,7 @@ export default function AdminR2StoragePage() {
                 <AlertCircle className="h-5 w-5 text-amber-500" />
                 <CardTitle className="text-sm font-black uppercase tracking-widest">PENTING: Agar Gambar Muncul</CardTitle>
               </div>
-            </CardHeader>
+            </Header>
             <CardContent className="space-y-4">
               <div className="space-y-3">
                 <div className="flex gap-2">
@@ -309,7 +310,7 @@ export default function AdminR2StoragePage() {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-black uppercase tracking-widest">Kredensial S3 API</CardTitle>
               </div>
-            </CardHeader>
+            </Header>
             <CardContent className="space-y-4">
               <div className="space-y-4">
                 <div className="space-y-1">
