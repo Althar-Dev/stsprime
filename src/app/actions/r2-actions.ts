@@ -49,7 +49,6 @@ export async function uploadToR2(
 
     const buffer = Buffer.from(await file.arrayBuffer());
     
-    // Gunakan nama asli file (file.name)
     // Membersihkan nama file dari karakter yang mungkin bermasalah di URL
     const sanitizedFileName = file.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9.-]/g, '');
     const key = `${folder}/${sanitizedFileName}`;
@@ -63,16 +62,23 @@ export async function uploadToR2(
 
     await s3Client.send(command);
 
-    // Pastikan base URL memiliki protokol https://
+    // Pembersihan Base URL (Menghilangkan trailing slash dan memastikan https)
     let baseUrl = config.publicUrl.trim();
-    if (baseUrl && !baseUrl.startsWith('http')) {
+    if (!baseUrl) {
+      throw new Error("Public URL Endpoint belum diisi di pengaturan.");
+    }
+
+    if (!baseUrl.startsWith('http')) {
       baseUrl = `https://${baseUrl}`;
     }
     baseUrl = baseUrl.replace(/\/$/, "");
     
+    // URL Akhir yang akan disimpan ke database
+    const finalUrl = `${baseUrl}/${key}`;
+    
     return {
       success: true,
-      url: `${baseUrl}/${key}`,
+      url: finalUrl,
     };
   } catch (error: any) {
     console.error("R2 Upload Error:", error);

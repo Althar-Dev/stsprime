@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -29,7 +28,8 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
-  Loader2
+  Loader2,
+  Info
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -73,7 +73,7 @@ export default function AdminR2StoragePage() {
       accessKeyId,
       secretAccessKey,
       bucketName,
-      publicUrl,
+      publicUrl: publicUrl.trim().replace(/\/$/, ""), // Bersihkan URL
       isEnabled,
       updatedAt: serverTimestamp(),
     };
@@ -131,32 +131,6 @@ export default function AdminR2StoragePage() {
         </div>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { label: "Penyimpanan", value: "24.5 GB", icon: HardDrive, color: "text-primary", trend: "75% Terisi" },
-          { label: "Total Objek", value: "1,240 Aset", icon: Cloud, color: "text-blue-500", trend: "Banners & Icons" },
-          { label: "Bandwidth (Bln)", value: "128.4 GB", icon: Globe, color: "text-emerald-500", trend: "Delivery Opt" },
-          { label: "Koneksi R2", value: isEnabled ? "AKTIF" : "NONAKTIF", icon: ShieldCheck, color: isEnabled ? "text-emerald-500" : "text-destructive", trend: "API V4 Status" },
-        ].map((stat, i) => (
-          <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
-            <CardContent className="p-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="h-10 w-10 rounded-xl bg-muted/40 flex items-center justify-center">
-                  <stat.icon className={cn("h-5 w-5", stat.color)} />
-                </div>
-                <Badge variant="outline" className="text-[9px] font-black uppercase tracking-tighter opacity-60">S3 API</Badge>
-              </div>
-              <div className="space-y-0.5">
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{stat.label}</p>
-                <p className="text-xl font-black tabular-nums">{stat.value}</p>
-                <p className="text-[10px] font-bold text-muted-foreground/60 italic">{stat.trend}</p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Connection Settings */}
         <div className="lg:col-span-2 space-y-6">
@@ -178,7 +152,7 @@ export default function AdminR2StoragePage() {
                     <Database className="h-3 w-3" /> Account ID
                   </Label>
                   <Input 
-                    placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
+                    placeholder="Contoh: f98a... (Ada di Dashboard R2)" 
                     className="h-11 bg-background rounded-xl font-bold border-border/50" 
                     value={accountId}
                     onChange={(e) => setAccountId(e.target.value)}
@@ -224,7 +198,7 @@ export default function AdminR2StoragePage() {
                     <Cloud className="h-3 w-3" /> Bucket Name
                   </Label>
                   <Input 
-                    placeholder="my-bucket-name" 
+                    placeholder="Nama bucket Anda" 
                     className="h-11 bg-background rounded-xl font-bold border-border/50" 
                     value={bucketName}
                     onChange={(e) => setBucketName(e.target.value)}
@@ -236,7 +210,7 @@ export default function AdminR2StoragePage() {
                     <Globe className="h-3 w-3" /> Public URL Endpoint
                   </Label>
                   <Input 
-                    placeholder="https://pub-..." 
+                    placeholder="Contoh: pub-xxxx.r2.dev" 
                     className="h-11 bg-background rounded-xl font-bold border-border/50" 
                     value={publicUrl}
                     onChange={(e) => setPublicUrl(e.target.value)}
@@ -244,21 +218,23 @@ export default function AdminR2StoragePage() {
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-muted/20 border border-border/30 flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <p className="text-sm font-black text-foreground">Aktifkan Pengunggahan</p>
-                  <p className="text-[10px] text-muted-foreground font-bold">Izinkan admin mengunggah file baru ke bucket ini.</p>
+              <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-black text-foreground">Aktifkan Pengunggahan</p>
+                    <p className="text-[10px] text-muted-foreground font-bold">Izinkan admin mengunggah file baru ke bucket ini.</p>
+                  </div>
+                  <Switch checked={isEnabled} onCheckedChange={setIsEnabled} />
                 </div>
-                <Switch checked={isEnabled} onCheckedChange={setIsEnabled} />
               </div>
 
               <div className="pt-2">
                 <Button 
                   onClick={handleSave} 
                   disabled={isSaving}
-                  className="w-full sm:w-auto h-11 px-8 rounded-xl font-black gap-2 shadow-lg shadow-primary/20"
+                  className="w-full sm:w-auto h-12 px-10 rounded-xl font-black gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform"
                 >
-                  {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
+                  {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : <CheckCircle2 className="h-5 w-5" />}
                   Simpan Konfigurasi R2
                 </Button>
               </div>
@@ -269,20 +245,16 @@ export default function AdminR2StoragePage() {
           <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
             <CardHeader className="border-b border-border/30 bg-muted/10">
               <CardTitle className="text-lg font-black tracking-tight">Struktur Folder</CardTitle>
-              <CardDescription className="text-xs font-bold">Daftar direktori aktif yang digunakan oleh sistem unggah otomatis.</CardDescription>
+              <CardDescription className="text-xs font-bold">Aset akan disimpan secara otomatis ke dalam struktur folder berikut.</CardDescription>
             </CardHeader>
             <CardContent className="p-6">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {["banners", "icons", "backgrounds", "badges", "others"].map((folder, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-4 rounded-xl bg-background border border-border/40 group hover:border-primary/30 transition-all">
-                    <div className="flex flex-col items-center gap-3 text-center w-full">
-                      <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                        <Database className="h-4.5 w-4.5 text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
-                      <div className="space-y-0.5">
-                        <p className="text-[11px] font-black capitalize">{folder}/</p>
-                      </div>
+                  <div key={idx} className="flex flex-col items-center gap-3 p-4 rounded-xl bg-background border border-border/40">
+                    <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center">
+                      <HardDrive className="h-4 w-4 text-primary" />
                     </div>
+                    <p className="text-[11px] font-black capitalize">{folder}/</p>
                   </div>
                 ))}
               </div>
@@ -292,57 +264,65 @@ export default function AdminR2StoragePage() {
 
         {/* Info Sidebar */}
         <div className="space-y-6">
-          <Card className="bento-card border-primary/20 bg-primary/5 h-fit">
+          <Card className="bento-card border-amber-500/30 bg-amber-500/5 h-fit">
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-black uppercase tracking-widest">Informasi R2</CardTitle>
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5 text-amber-500" />
+                <CardTitle className="text-sm font-black uppercase tracking-widest">PENTING: Agar Gambar Muncul</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20">
-                <AlertCircle className="h-4 w-4 text-blue-500 shrink-0" />
-                <p className="text-[10px] font-bold text-blue-600 leading-tight">
-                  Gunakan Token R2 dengan izin "Edit" agar sistem dapat melakukan penulisan (upload) dan pembacaan objek.
-                </p>
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <div className="h-4 w-4 rounded-full bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 mt-0.5 font-black text-[10px]">1</div>
+                  <p className="text-[11px] font-bold leading-relaxed">
+                    Masuk ke Cloudflare R2 Dashboard &gt; <strong>{bucketName || 'Bucket Anda'}</strong> &gt; Settings.
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <div className="h-4 w-4 rounded-full bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 mt-0.5 font-black text-[10px]">2</div>
+                  <p className="text-[11px] font-bold leading-relaxed">
+                    Cari bagian <strong>Public Access</strong>. Aktifkan (Allow Access) atau hubungkan Custom Domain.
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <div className="h-4 w-4 rounded-full bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 mt-0.5 font-black text-[10px]">3</div>
+                  <p className="text-[11px] font-bold leading-relaxed">
+                    Salin <strong>R2.dev Subdomain</strong> atau Custom Domain ke kolom <strong>Public URL Endpoint</strong> di formulir sebelah kiri.
+                  </p>
+                </div>
               </div>
               
+              {publicUrl && (
+                <div className="p-3 rounded-xl bg-background border border-border/50 space-y-2">
+                  <Label className="text-[9px] font-black uppercase text-muted-foreground">Contoh URL Gambar Anda:</Label>
+                  <code className="block p-2 bg-muted rounded-lg text-[9px] font-mono text-primary break-all">
+                    https://{publicUrl.replace(/^https?:\/\//, '')}/banners/promo.png
+                  </code>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="bento-card border-primary/20 bg-primary/5 h-fit">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-black uppercase tracking-widest">Kredensial S3 API</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div className="space-y-4">
                 <div className="space-y-1">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">S3 Endpoint</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Endpoint API (Internal)</Label>
                   <code className="block p-2 bg-background border border-border/50 rounded-lg text-[10px] font-mono text-primary truncate">
                     {accountId ? `https://${accountId}.r2.cloudflarestorage.com` : 'Menunggu Account ID...'}
                   </code>
                 </div>
-
-                <div className="space-y-1">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Keamanan Aset</Label>
-                  <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">
-                    Semua aset yang diunggah melalui Admin Panel akan menggunakan visibilitas "Public" melalui Public URL jika dikonfigurasi, atau diakses via API.
-                  </p>
-                </div>
+                <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">
+                  Endpoint di atas digunakan sistem untuk mengunggah file. Sedangkan Public URL digunakan browser untuk menampilkan gambar.
+                </p>
               </div>
             </CardContent>
-          </Card>
-
-          <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm p-5 space-y-4">
-            <h3 className="text-sm font-black tracking-widest uppercase">Panduan Konfigurasi</h3>
-            <div className="space-y-3">
-              {[
-                "Buka Dashboard Cloudflare > R2",
-                "Klik 'Create bucket' jika belum ada",
-                "Klik 'Manage R2 API Tokens'",
-                "Klik 'Create API token'",
-                "Berikan izin 'Object Read & Write'",
-                "Salin ID dan Keys ke formulir ini"
-              ].map((step, i) => (
-                <div key={i} className="flex gap-3">
-                  <span className="h-5 w-5 rounded-full bg-primary/10 border border-primary/20 text-primary font-black text-[10px] flex items-center justify-center shrink-0">
-                    {i + 1}
-                  </span>
-                  <p className="text-[11px] font-bold text-muted-foreground leading-tight">{step}</p>
-                </div>
-              ))}
-            </div>
           </Card>
         </div>
       </div>
