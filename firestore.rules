@@ -9,7 +9,6 @@ service cloud.firestore {
     }
 
     // Mengizinkan semua orang membaca profil pengguna untuk keperluan leaderboard global
-    // Namun penulisan hanya diizinkan bagi pengguna yang terautentikasi pada dokumen mereka sendiri atau admin
     match /users/{userId} {
       allow read: if true;
       allow write: if (request.auth != null && request.auth.uid == userId) || isAdmin();
@@ -19,6 +18,13 @@ service cloud.firestore {
     match /settings/{settingId} {
       allow read, write: if isAdmin();
     }
+    
+    // Banner, Icons, Backgrounds, Badges, Others: Read publik, Write admin
+    match /banners/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /icons/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /backgrounds/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /badges/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /others/{id} { allow read: if true; allow write: if isAdmin(); }
     
     // Default deny
     match /{document=**} {

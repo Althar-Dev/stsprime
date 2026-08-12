@@ -1,7 +1,9 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useFirestore, useCollection } from "@/firebase";
+import { collection, addDoc, deleteDoc, doc, query, orderBy } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -11,61 +13,80 @@ import {
   Award, 
   Search, 
   Plus, 
-  Filter, 
   MoreVertical, 
   Edit, 
   Trash2, 
-  CheckCircle2, 
-  XCircle, 
   Star,
   Users,
-  Sparkles,
-  Upload
+  Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import { R2UploadModal } from "@/components/admin/r2-upload-modal";
-
-const MOCK_BADGES = [
-  {
-    id: "BDG-001",
-    name: "VIP Member",
-    category: "Status",
-    imageUrl: "/img/badge/vip.png",
-    requirement: "Berlangganan VIP",
-    owners: 128,
-    status: "Active",
-    color: "text-amber-500"
-  },
-];
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError } from "@/firebase/errors";
+import { format } from "date-fns";
 
 export default function AdminBadgesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const db = useFirestore();
 
-  const filteredBadges = MOCK_BADGES.filter(badge => {
-    const matchesSearch = badge.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeTab === "all" || badge.category.toLowerCase() === activeTab.toLowerCase();
+  const badgesQuery = useMemo(() => {
+    if (!db) return null;
+    return query(collection(db, "badges"), orderBy("createdAt", "desc"));
+  }, [db]);
+
+  const { data: badges, loading } = useCollection<any>(badgesQuery);
+
+  const filteredBadges = badges.filter(badge => {
+    const matchesSearch = badge.name?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = activeTab === "all" || badge.category?.toLowerCase() === activeTab.toLowerCase();
     return matchesSearch && matchesCategory;
   });
 
+  const handleUploadSuccess = (url: string) => {
+    if (!db) return;
+    const badgeData = {
+      name: "Badge Baru",
+      category: activeTab === "all" ? "Achievement" : activeTab,
+      imageUrl: url,
+      requirement: "Syarat Belum Diatur",
+      owners: 0,
+      status: "Active",
+      createdAt: new Date().toISOString(),
+    };
+
+    addDoc(collection(db, "badges"), badgeData)
+      .catch(async (error) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: 'badges',
+          operation: 'create',
+          requestResourceData: badgeData
+        }));
+      });
+  };
+
+  const handleDelete = (id: string) => {
+    if (!db || !confirm("Hapus lencana ini?")) return;
+    deleteDoc(doc(db, "badges", id)).catch(async (error) => {
+      errorEmitter.emit('permission-error', new FirestorePermissionError({
+        path: `badges/${id}`,
+        operation: 'delete'
+      }));
+    });
+  };
+
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "Active":
-        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Active</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
+    return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Active</Badge>;
   };
 
   return (
@@ -75,7 +96,7 @@ export default function AdminBadgesPage() {
           <h1 className="text-3xl font-black tracking-tight flex items-center gap-3">
             <Award className="h-8 w-8 text-primary" /> Manajemen Badge Akun
           </h1>
-          <p className="text-sm text-muted-foreground font-bold italic">Kelola koleksi lencana pencapaian, status VIP, dan ikon identitas profil pengguna.</p>
+          <p className="text-sm text-muted-foreground font-bold italic">Kelola koleksi lencana identitas profil dari Cloudflare R2.</p>
         </div>
         <Button 
           onClick={() => setIsUploadOpen(true)}
@@ -85,13 +106,11 @@ export default function AdminBadgesPage() {
         </Button>
       </div>
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {[
-          { label: "Total Badge", value: "18 Aset", icon: Award, color: "text-primary" },
-          { label: "Terdistribusi", value: "1,541 User", icon: Users, color: "text-blue-500" },
-          { label: "Achievement", value: "12 Lencana", icon: Star, color: "text-emerald-500" },
-          { label: "Event Khusus", value: "2 Aktif", icon: Sparkles, color: "text-amber-500" },
+          { label: "Total Badge", value: badges.length.toString(), icon: Award, color: "text-primary" },
+          { label: "Distribusi", value: "Real-time", icon: Users, color: "text-blue-500" },
+          { label: "Achievement", value: badges.filter(b => b.category === "Achievement").length.toString(), icon: Star, color: "text-emerald-500" },
         ].map((stat, i) => (
           <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
             <CardContent className="p-6 flex items-center justify-between">
@@ -115,60 +134,77 @@ export default function AdminBadgesPage() {
               <Tabs defaultValue="all" onValueChange={setActiveTab} className="w-full">
                 <TabsList className="bg-muted/40 p-1 rounded-xl">
                   <TabsTrigger value="all" className="text-[10px] font-black uppercase px-4 rounded-lg">Semua</TabsTrigger>
+                  <TabsTrigger value="achievement" className="text-[10px] font-black uppercase px-4 rounded-lg">Achievement</TabsTrigger>
                   <TabsTrigger value="status" className="text-[10px] font-black uppercase px-4 rounded-lg">Status</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
             <div className="relative w-full md:w-64 self-end">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Cari badge..." className="pl-10 h-10 bg-background border-border text-xs font-bold rounded-xl" />
+              <Input 
+                placeholder="Cari badge..." 
+                className="pl-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <Table className="min-w-[900px]">
-              <TableHeader className="bg-muted/30">
-                <TableRow className="border-border/30">
-                  <TableHead className="text-[10px] font-black uppercase pl-6 h-12">Ikon & Lencana</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase h-12">Kategori</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase h-12">Total Pemilik</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase h-12">Status</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase text-right pr-6 h-12">Aksi</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredBadges.map((badge) => (
-                  <TableRow key={badge.id} className="hover:bg-muted/20 border-border/30 transition-colors">
-                    <TableCell className="py-4 pl-6">
-                      <div className="flex items-center gap-4">
-                        <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-muted flex items-center justify-center p-1">
-                          <Image src={badge.imageUrl} alt={badge.name} width={40} height={40} className="object-contain" unoptimized />
-                        </div>
-                        <span className={cn("text-sm font-black truncate", badge.color)}>{badge.name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="py-4">
-                      <Badge variant="outline" className="text-[10px] font-black uppercase px-2 rounded-md bg-muted/30">{badge.category}</Badge>
-                    </TableCell>
-                    <TableCell className="py-4 text-xs font-black tabular-nums">{badge.owners.toLocaleString()} User</TableCell>
-                    <TableCell className="py-4">{getStatusBadge(badge.status)}</TableCell>
-                    <TableCell className="text-right pr-6 py-4">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg"><MoreVertical className="h-4 w-4" /></Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-40 rounded-xl">
-                          <DropdownMenuItem className="text-xs font-bold gap-2"><Edit className="h-3.5 w-3.5" /> Edit</DropdownMenuItem>
-                          <DropdownMenuItem className="text-xs font-bold text-destructive gap-2"><Trash2 className="h-3.5 w-3.5" /> Hapus</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+          {loading ? (
+             <div className="py-20 flex flex-col items-center justify-center gap-4">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-[10px] font-black uppercase tracking-widest opacity-50">Menyelaraskan Galeri...</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table className="min-w-[900px]">
+                <TableHeader className="bg-muted/30">
+                  <TableRow className="border-border/30">
+                    <TableHead className="text-[10px] font-black uppercase pl-6 h-12">Ikon & Lencana</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase h-12">Kategori</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase h-12">Pemilik</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase h-12">Status</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase text-right pr-6 h-12">Aksi</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {filteredBadges.map((badge) => (
+                    <TableRow key={badge.id} className="hover:bg-muted/20 border-border/30 transition-colors">
+                      <TableCell className="py-4 pl-6">
+                        <div className="flex items-center gap-4">
+                          <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-muted flex items-center justify-center p-1">
+                            <Image src={badge.imageUrl} alt={badge.name} width={40} height={40} className="object-contain" unoptimized />
+                          </div>
+                          <span className="text-sm font-black truncate">{badge.name}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-4">
+                        <Badge variant="outline" className="text-[10px] font-black uppercase px-2 rounded-md bg-muted/30">{badge.category}</Badge>
+                      </TableCell>
+                      <TableCell className="py-4 text-xs font-black tabular-nums">{badge.owners?.toLocaleString()} User</TableCell>
+                      <TableCell className="py-4">{getStatusBadge(badge.status)}</TableCell>
+                      <TableCell className="text-right pr-6 py-4">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg"><MoreVertical className="h-4 w-4" /></Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-40 rounded-xl">
+                            <DropdownMenuItem className="text-xs font-bold gap-2"><Edit className="h-3.5 w-3.5" /> Edit</DropdownMenuItem>
+                            <DropdownMenuItem 
+                              className="text-xs font-bold text-destructive gap-2 cursor-pointer"
+                              onClick={() => handleDelete(badge.id)}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" /> Hapus</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -176,9 +212,7 @@ export default function AdminBadgesPage() {
         isOpen={isUploadOpen} 
         onOpenChange={setIsUploadOpen} 
         folder="badges"
-        onSuccess={(url) => {
-          console.log("New badge uploaded to R2:", url);
-        }}
+        onSuccess={handleUploadSuccess}
       />
     </div>
   );

@@ -6,74 +6,27 @@
       "description": "Informasi profil tambahan untuk pengguna.",
       "type": "object",
       "properties": {
-        "displayName": {
-          "type": "string",
-          "description": "Nama tampilan pengguna."
-        },
-        "email": {
-          "type": "string",
-          "format": "email",
-          "description": "Alamat email pengguna."
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Waktu pembuatan akun."
-        },
-        "photoURL": {
-          "type": "string",
-          "description": "URL foto profil pengguna."
-        },
-        "profileBg": {
-          "type": "string",
-          "description": "Kelas latar belakang profil."
-        },
-        "fontId": {
-          "type": "string",
-          "description": "ID font yang dipilih."
-        },
-        "colorId": {
-          "type": "string",
-          "description": "ID warna yang dipilih."
-        },
-        "fontFamily": {
-          "type": "string",
-          "description": "Jenis font untuk nama."
-        },
-        "nameColor": {
-          "type": "string",
-          "description": "Warna hex atau kelas tailwind untuk nama."
-        },
-        "badgeId": {
-          "type": "string",
-          "description": "ID badge yang dipilih."
-        },
-        "vip": {
-          "type": "boolean",
-          "description": "Apakah pengguna adalah member VIP."
-        },
-        "admin": {
-          "type": "boolean",
-          "description": "Apakah pengguna adalah administrator sistem."
-        },
-        "points": {
-          "type": "integer",
-          "description": "Jumlah poin leaderboard pengguna (XP)."
-        },
-        "coins": {
-          "type": "integer",
-          "description": "Jumlah saldo koin (reward currency) pengguna."
-        },
-        "balance": {
-          "type": "integer",
-          "description": "Saldo akun pengguna dalam Rupiah (IDR)."
-        }
+        "displayName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "photoURL": { "type": "string" },
+        "profileBg": { "type": "string" },
+        "fontId": { "type": "string" },
+        "colorId": { "type": "string" },
+        "fontFamily": { "type": "string" },
+        "nameColor": { "type": "string" },
+        "badgeId": { "type": "string" },
+        "vip": { "type": "boolean" },
+        "admin": { "type": "boolean" },
+        "points": { "type": "integer" },
+        "coins": { "type": "integer" },
+        "balance": { "type": "integer" }
       },
       "required": ["email"]
     },
     "R2Config": {
       "title": "R2 Storage Configuration",
-      "description": "Kredensial dan pengaturan Cloudflare R2 untuk penyimpanan aset.",
+      "description": "Kredensial dan pengaturan Cloudflare R2.",
       "type": "object",
       "properties": {
         "accountId": { "type": "string" },
@@ -84,6 +37,68 @@
         "isEnabled": { "type": "boolean" },
         "updatedAt": { "type": "string", "format": "date-time" }
       }
+    },
+    "Banner": {
+      "title": "Banner",
+      "description": "Aset banner promo hero section.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "link": { "type": "string" },
+        "status": { "type": "string" },
+        "clicks": { "type": "integer" },
+        "order": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "IconAsset": {
+      "title": "Icon Asset",
+      "description": "Aset ikon game atau pembayaran.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "status": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "BackgroundAsset": {
+      "title": "Background Asset",
+      "description": "Gambar latar belakang header produk.",
+      "type": "object",
+      "properties": {
+        "gameName": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "status": { "type": "string" },
+        "dimensions": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "BadgeAsset": {
+      "title": "Badge Asset",
+      "description": "Aset lencana akun.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "OtherAsset": {
+      "title": "Other Asset",
+      "description": "Aset visual pendukung lainnya.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
     }
   },
   "auth": {
@@ -92,11 +107,31 @@
   "firestore": {
     "/users/{userId}": {
       "schema": "UserProfile",
-      "description": "Dokumen profil pengguna."
+      "description": "Profil pengguna."
     },
     "/settings/r2": {
       "schema": "R2Config",
-      "description": "Konfigurasi Cloudflare R2 sistem."
+      "description": "Konfigurasi R2."
+    },
+    "/banners/{bannerId}": {
+      "schema": "Banner",
+      "description": "Koleksi banner hero."
+    },
+    "/icons/{iconId}": {
+      "schema": "IconAsset",
+      "description": "Koleksi ikon aset."
+    },
+    "/backgrounds/{bgId}": {
+      "schema": "BackgroundAsset",
+      "description": "Koleksi latar belakang produk."
+    },
+    "/badges/{badgeId}": {
+      "schema": "BadgeAsset",
+      "description": "Koleksi lencana akun."
+    },
+    "/others/{assetId}": {
+      "schema": "OtherAsset",
+      "description": "Koleksi aset tambahan."
     }
   }
 }

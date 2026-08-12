@@ -1,7 +1,9 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useFirestore, useCollection } from "@/firebase";
+import { collection, addDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -15,76 +17,80 @@ import {
   MoreVertical, 
   Edit, 
   Trash2, 
-  Eye, 
-  EyeOff, 
   ExternalLink,
   Image as ImageIcon,
   MousePointer2,
   Calendar,
   ArrowUpCircle,
-  ArrowDownCircle
+  Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 import { R2UploadModal } from "@/components/admin/r2-upload-modal";
-
-const MOCK_BANNERS = [
-  {
-    id: "BNR-001",
-    title: "Promo Merdeka MLBB",
-    imageUrl: "/img/bann1.webp",
-    link: "/topup/mlbb",
-    status: "Active",
-    clicks: 1240,
-    order: 1,
-    createdAt: "10 Agu 2026"
-  },
-  {
-    id: "BNR-002",
-    title: "Valorant Points Flash Sale",
-    imageUrl: "/img/bann2.webp",
-    link: "/topup/valorant",
-    status: "Active",
-    clicks: 856,
-    order: 2,
-    createdAt: "11 Agu 2026"
-  },
-  {
-    id: "BNR-003",
-    title: "Metode Pembayaran Baru QRIS",
-    imageUrl: "/img/bann3.webp",
-    link: "/status",
-    status: "Inactive",
-    clicks: 432,
-    order: 3,
-    createdAt: "12 Agu 2026"
-  },
-];
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError } from "@/firebase/errors";
+import { format } from "date-fns";
 
 export default function AdminBannersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const db = useFirestore();
 
-  const filteredBanners = MOCK_BANNERS.filter(b => 
-    b.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const bannersQuery = useMemo(() => {
+    if (!db) return null;
+    return query(collection(db, "banners"), orderBy("createdAt", "desc"));
+  }, [db]);
+
+  const { data: banners, loading } = useCollection<any>(bannersQuery);
+
+  const filteredBanners = banners.filter(b => 
+    b.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleUploadSuccess = (url: string) => {
+    if (!db) return;
+    const bannerData = {
+      title: "Banner Baru",
+      imageUrl: url,
+      link: "/",
+      status: "Active",
+      clicks: 0,
+      order: banners.length + 1,
+      createdAt: new Date().toISOString(),
+    };
+
+    addDoc(collection(db, "banners"), bannerData)
+      .catch(async (error) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: 'banners',
+          operation: 'create',
+          requestResourceData: bannerData
+        }));
+      });
+  };
+
+  const handleDelete = (id: string) => {
+    if (!db || !confirm("Hapus banner ini?")) return;
+    deleteDoc(doc(db, "banners", id)).catch(async (error) => {
+      errorEmitter.emit('permission-error', new FirestorePermissionError({
+        path: `banners/${id}`,
+        operation: 'delete'
+      }));
+    });
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Active":
         return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Active</Badge>;
-      case "Inactive":
-        return <Badge className="bg-muted text-muted-foreground border-border text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Inactive</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Badge variant="outline" className="text-[10px] uppercase font-black">{status}</Badge>;
     }
   };
 
@@ -95,7 +101,7 @@ export default function AdminBannersPage() {
           <h1 className="text-3xl font-black tracking-tight flex items-center gap-3">
             <Monitor className="h-8 w-8 text-primary" /> Manajemen Banner
           </h1>
-          <p className="text-sm text-muted-foreground font-bold italic">Kelola slider promo utama, urutan tampilan, dan statistik klik hero section.</p>
+          <p className="text-sm text-muted-foreground font-bold italic">Kelola slider promo utama dari Cloudflare R2.</p>
         </div>
         <Button 
           onClick={() => setIsUploadOpen(true)}
@@ -107,10 +113,8 @@ export default function AdminBannersPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Banner Aktif", value: "4", icon: ImageIcon, color: "text-primary" },
-          { label: "Total Klik (30 Hari)", value: "14.2k", icon: MousePointer2, color: "text-blue-500" },
-          { label: "Rata-rata CTR", value: "4.2%", icon: ArrowUpCircle, color: "text-emerald-500" },
-          { label: "Event Berjalan", value: "2", icon: Calendar, color: "text-amber-500" },
+          { label: "Total Banner", value: banners.length.toString(), icon: ImageIcon, color: "text-primary" },
+          { label: "Banner Aktif", value: banners.filter(b => b.status === "Active").length.toString(), icon: ArrowUpCircle, color: "text-emerald-500" },
         ].map((stat, i) => (
           <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
             <CardContent className="p-6 flex items-center justify-between">
@@ -131,83 +135,92 @@ export default function AdminBannersPage() {
           <div className="flex flex-col md:flex-row justify-between gap-4">
             <div className="space-y-1">
               <CardTitle className="text-lg font-black tracking-tight">Daftar Visual Hero Section</CardTitle>
-              <CardDescription className="text-xs font-bold">Atur urutan dan visibilitas kampanye marketing Anda.</CardDescription>
+              <CardDescription className="text-xs font-bold">Data real-time dari database STSPrime.</CardDescription>
             </div>
             <div className="flex gap-2">
               <div className="relative w-full md:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
-                  placeholder="Cari judul banner..." 
+                  placeholder="Cari judul..." 
                   className="pl-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <Button variant="outline" size="icon" className="rounded-xl border-border shrink-0">
-                <Filter className="h-4 w-4" />
-              </Button>
             </div>
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <Table className="min-w-[1000px]">
-              <TableHeader className="bg-muted/30">
-                <TableRow className="hover:bg-transparent border-border/30">
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Visual & Judul</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Urutan</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Status</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Statistik Klik</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Tanggal Upload</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-right pr-6 h-12">Aksi</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredBanners.map((banner) => (
-                  <TableRow key={banner.id} className="hover:bg-muted/20 border-border/30 transition-colors group">
-                    <TableCell className="py-4 pl-6">
-                      <div className="flex items-center gap-4">
-                        <div className="relative h-16 w-32 rounded-lg overflow-hidden border border-border/50 shrink-0 bg-muted">
-                          <Image src={banner.imageUrl} alt={banner.title} fill className="object-cover" unoptimized />
-                        </div>
-                        <div className="flex flex-col min-w-0">
-                          <span className="text-xs font-black truncate max-w-[200px]">{banner.title}</span>
-                          <span className="text-[10px] text-primary font-bold flex items-center gap-1 mt-1">
-                            <ExternalLink className="h-3 w-3" /> {banner.link}
-                          </span>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="py-4">
-                      <span className="text-sm font-black tabular-nums">{banner.order}</span>
-                    </TableCell>
-                    <TableCell className="py-4">
-                      {getStatusBadge(banner.status)}
-                    </TableCell>
-                    <TableCell className="py-4">
-                      <span className="text-xs font-black tabular-nums">{banner.clicks.toLocaleString()}</span>
-                    </TableCell>
-                    <TableCell className="py-4">
-                      <span className="text-xs font-bold text-muted-foreground">{banner.createdAt}</span>
-                    </TableCell>
-                    <TableCell className="text-right pr-6 py-4">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-52 rounded-xl border-border">
-                          <DropdownMenuItem className="text-xs font-bold gap-2"><Edit className="h-3.5 w-3.5" /> Edit</DropdownMenuItem>
-                          <DropdownMenuItem className="text-xs font-bold text-destructive gap-2"><Trash2 className="h-3.5 w-3.5" /> Hapus</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+          {loading ? (
+            <div className="py-20 flex flex-col items-center justify-center gap-4">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-[10px] font-black uppercase tracking-widest opacity-50">Menyelaraskan Galeri...</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table className="min-w-[1000px]">
+                <TableHeader className="bg-muted/30">
+                  <TableRow className="hover:bg-transparent border-border/30">
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Visual & Judul</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Urutan</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Status</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Klik</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Dibuat</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest text-right pr-6 h-12">Aksi</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {filteredBanners.map((banner) => (
+                    <TableRow key={banner.id} className="hover:bg-muted/20 border-border/30 transition-colors group">
+                      <TableCell className="py-4 pl-6">
+                        <div className="flex items-center gap-4">
+                          <div className="relative h-16 w-32 rounded-lg overflow-hidden border border-border/50 shrink-0 bg-muted">
+                            <Image src={banner.imageUrl} alt={banner.title} fill className="object-cover" unoptimized />
+                          </div>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-xs font-black truncate max-w-[200px]">{banner.title}</span>
+                            <span className="text-[10px] text-primary font-bold flex items-center gap-1 mt-1">
+                              <ExternalLink className="h-3 w-3" /> {banner.link}
+                            </span>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-4">
+                        <span className="text-sm font-black tabular-nums">{banner.order}</span>
+                      </TableCell>
+                      <TableCell className="py-4">{getStatusBadge(banner.status)}</TableCell>
+                      <TableCell className="py-4">
+                        <span className="text-xs font-black tabular-nums">{banner.clicks?.toLocaleString()}</span>
+                      </TableCell>
+                      <TableCell className="py-4">
+                        <span className="text-xs font-bold text-muted-foreground">
+                          {banner.createdAt ? format(new Date(banner.createdAt), "dd MMM yyyy") : "-"}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right pr-6 py-4">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48 rounded-xl border-border">
+                            <DropdownMenuItem className="text-xs font-bold gap-2"><Edit className="h-3.5 w-3.5" /> Edit</DropdownMenuItem>
+                            <DropdownMenuItem 
+                              className="text-xs font-bold text-destructive gap-2 cursor-pointer"
+                              onClick={() => handleDelete(banner.id)}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" /> Hapus
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -215,9 +228,7 @@ export default function AdminBannersPage() {
         isOpen={isUploadOpen} 
         onOpenChange={setIsUploadOpen} 
         folder="banners"
-        onSuccess={(url) => {
-          console.log("New banner uploaded to R2:", url);
-        }}
+        onSuccess={handleUploadSuccess}
       />
     </div>
   );
