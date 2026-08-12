@@ -1,7 +1,6 @@
 'use server';
 
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { v4 as uuidv4 } from 'uuid';
 
 export type UploadResult = {
   success: boolean;
@@ -49,9 +48,11 @@ export async function uploadToR2(
     });
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const fileExtension = file.name.split('.').pop();
-    const fileName = `${uuidv4()}.${fileExtension}`;
-    const key = `${folder}/${fileName}`;
+    
+    // Gunakan nama asli file (file.name)
+    // Kita membersihkan nama file dari karakter yang mungkin bermasalah di URL (opsional)
+    const sanitizedFileName = file.name.replace(/\s+/g, '-');
+    const key = `${folder}/${sanitizedFileName}`;
 
     const command = new PutObjectCommand({
       Bucket: config.bucketName,
