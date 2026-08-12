@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
-  Image as ImageIcon, 
+  Monitor, 
   Search, 
   Plus, 
   Filter, 
@@ -16,13 +16,10 @@ import {
   Edit, 
   Trash2, 
   Gamepad2,
-  Eye,
-  EyeOff,
-  Sparkles,
   Layers,
   CheckCircle2,
-  Monitor,
-  Maximize2
+  Maximize2,
+  Image as ImageIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -34,6 +31,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import { R2UploadModal } from "@/components/admin/r2-upload-modal";
 
 const MOCK_PRODUCT_BACKGROUNDS = [
   {
@@ -45,46 +43,11 @@ const MOCK_PRODUCT_BACKGROUNDS = [
     status: "Active",
     lastUpdated: "12 Agu 2026"
   },
-  {
-    id: "HBG-002",
-    gameName: "Free Fire",
-    imageHint: "free fire battleground",
-    imageUrl: "https://picsum.photos/seed/ff-bg/1200/400",
-    dimensions: "1200x400",
-    status: "Active",
-    lastUpdated: "12 Agu 2026"
-  },
-  {
-    id: "HBG-003",
-    gameName: "Valorant",
-    imageHint: "valorant agent collection",
-    imageUrl: "https://picsum.photos/seed/valorant-bg/1200/400",
-    dimensions: "1200x400",
-    status: "Active",
-    lastUpdated: "11 Agu 2026"
-  },
-  {
-    id: "HBG-004",
-    gameName: "Genshin Impact",
-    imageHint: "genshin scenery anime",
-    imageUrl: "https://picsum.photos/seed/genshin-bg/1200/400",
-    dimensions: "1200x400",
-    status: "Active",
-    lastUpdated: "10 Agu 2026"
-  },
-  {
-    id: "HBG-005",
-    gameName: "PUBG Mobile",
-    imageHint: "pubg erangel map",
-    imageUrl: "https://picsum.photos/seed/pubgm-bg/1200/400",
-    dimensions: "1200x400",
-    status: "Inactive",
-    lastUpdated: "08 Agu 2026"
-  },
 ];
 
 export default function AdminBackgroundsPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
 
   const filteredBgs = MOCK_PRODUCT_BACKGROUNDS.filter(bg => 
     bg.gameName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -110,8 +73,11 @@ export default function AdminBackgroundsPage() {
           </h1>
           <p className="text-sm text-muted-foreground font-bold italic">Kelola gambar latar belakang (spanduk) yang muncul di bagian atas halaman top-up setiap produk.</p>
         </div>
-        <Button className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2">
-          <Plus className="h-4 w-4" /> Upload Header Baru
+        <Button 
+          onClick={() => setIsUploadOpen(true)}
+          className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2"
+        >
+          <Plus className="h-4 w-4" /> Upload Header R2
         </Button>
       </div>
 
@@ -144,19 +110,14 @@ export default function AdminBackgroundsPage() {
               <CardTitle className="text-lg font-black tracking-tight">Katalog Visual Header</CardTitle>
               <CardDescription className="text-xs font-bold">Sesuaikan estetika halaman top-up game Anda.</CardDescription>
             </div>
-            <div className="flex gap-2">
-              <div className="relative w-full md:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Cari berdasarkan game..." 
-                  className="pl-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-              <Button variant="outline" size="icon" className="rounded-xl border-border shrink-0">
-                <Filter className="h-4 w-4" />
-              </Button>
+            <div className="relative w-full md:w-64 self-end">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Cari produk..." 
+                className="pl-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
           </div>
         </CardHeader>
@@ -164,117 +125,59 @@ export default function AdminBackgroundsPage() {
           <div className="overflow-x-auto">
             <Table className="min-w-[1000px]">
               <TableHeader className="bg-muted/30">
-                <TableRow className="hover:bg-transparent border-border/30">
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest pl-6 h-12">Pratampil Header</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Produk Game</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Dimensi</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Status</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest h-12">Terakhir Diubah</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-right pr-6 h-12">Aksi</TableHead>
+                <TableRow className="border-border/30">
+                  <TableHead className="text-[10px] font-black uppercase pl-6 h-12">Pratampil Header</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase h-12">Produk Game</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase h-12">Dimensi</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase h-12">Status</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase text-right pr-6 h-12">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredBgs.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-20 text-muted-foreground font-bold">
-                      Tidak ada gambar header ditemukan.
+                {filteredBgs.map((bg) => (
+                  <TableRow key={bg.id} className="hover:bg-muted/20 border-border/30 transition-colors">
+                    <TableCell className="py-4 pl-6">
+                      <div className="relative h-20 w-60 rounded-lg overflow-hidden border border-border/50 bg-muted">
+                        <Image src={bg.imageUrl} alt={bg.gameName} fill className="object-cover" unoptimized />
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <div className="flex items-center gap-2">
+                        <Gamepad2 className="h-4 w-4 text-primary" />
+                        <span className="text-sm font-black">{bg.gameName}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <span className="text-xs font-mono font-bold text-muted-foreground">{bg.dimensions}</span>
+                    </TableCell>
+                    <TableCell className="py-4">{getStatusBadge(bg.status)}</TableCell>
+                    <TableCell className="text-right pr-6 py-4">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg"><MoreVertical className="h-4 w-4" /></Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-40 rounded-xl">
+                          <DropdownMenuItem className="text-xs font-bold gap-2"><Edit className="h-3.5 w-3.5" /> Edit</DropdownMenuItem>
+                          <DropdownMenuItem className="text-xs font-bold text-destructive gap-2"><Trash2 className="h-3.5 w-3.5" /> Hapus</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
-                ) : (
-                  filteredBgs.map((bg) => (
-                    <TableRow key={bg.id} className="hover:bg-muted/20 border-border/30 transition-colors group">
-                      <TableCell className="py-4 pl-6">
-                        <div className="relative h-20 w-60 rounded-lg overflow-hidden border border-border/50 bg-muted group-hover:border-primary/50 transition-all">
-                          <Image 
-                            src={bg.imageUrl} 
-                            alt={bg.gameName} 
-                            fill 
-                            className="object-cover"
-                            unoptimized
-                            data-ai-hint={bg.imageHint}
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell className="py-4">
-                        <div className="flex items-center gap-2">
-                          <Gamepad2 className="h-4 w-4 text-primary" />
-                          <span className="text-sm font-black">{bg.gameName}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="py-4">
-                        <span className="text-xs font-mono font-bold text-muted-foreground">{bg.dimensions}</span>
-                      </TableCell>
-                      <TableCell className="py-4">
-                        {getStatusBadge(bg.status)}
-                      </TableCell>
-                      <TableCell className="py-4">
-                        <span className="text-xs font-bold text-muted-foreground">{bg.lastUpdated}</span>
-                      </TableCell>
-                      <TableCell className="text-right pr-6 py-4">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-52 rounded-xl border-border">
-                            <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest opacity-50">Kontrol Gambar</DropdownMenuLabel>
-                            <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
-                              <Edit className="h-3.5 w-3.5" /> Ganti Gambar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
-                              <Gamepad2 className="h-3.5 w-3.5 text-primary" /> Ganti Produk Game
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            {bg.status === "Active" ? (
-                              <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-amber-500">
-                                <EyeOff className="h-3.5 w-3.5" /> Nonaktifkan
-                              </DropdownMenuItem>
-                            ) : (
-                              <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-emerald-500">
-                                <Eye className="h-3.5 w-3.5" /> Aktifkan (Publish)
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-destructive focus:text-destructive">
-                              <Trash2 className="h-3.5 w-3.5" /> Hapus Aset
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
+                ))}
               </TableBody>
             </Table>
           </div>
         </CardContent>
       </Card>
-      
-      <div className="grid lg:grid-cols-2 gap-6">
-        <Card className="bento-card border-primary/20 bg-primary/5 p-6">
-          <div className="flex gap-4">
-            <div className="h-12 w-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0">
-              <Sparkles className="h-6 w-6 text-primary" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-black text-sm uppercase tracking-wider">Spesifikasi Visual</h3>
-              <p className="text-xs text-muted-foreground font-bold leading-relaxed">
-                Gunakan gambar dengan rasio aspek 3:1 (direkomendasikan 1200x400px). Pastikan fokus utama gambar berada di tengah agar tidak tertutup oleh ikon produk saat diakses melalui perangkat mobile.
-              </p>
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm p-6 flex items-center justify-between">
-           <div className="space-y-1">
-              <h3 className="font-black text-sm uppercase tracking-wider">Audit Aset</h3>
-              <p className="text-xs text-muted-foreground font-bold italic">Terdapat 4 game yang belum memiliki gambar header khusus.</p>
-            </div>
-            <Button variant="outline" className="rounded-xl font-black text-[10px] uppercase tracking-widest px-4 border-border">
-              Lihat Game Tanpa Header
-            </Button>
-        </Card>
-      </div>
+
+      <R2UploadModal 
+        isOpen={isUploadOpen} 
+        onOpenChange={setIsUploadOpen} 
+        folder="backgrounds"
+        onSuccess={(url) => {
+          console.log("New background uploaded to R2:", url);
+        }}
+      />
     </div>
   );
 }

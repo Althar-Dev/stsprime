@@ -34,6 +34,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import { R2UploadModal } from "@/components/admin/r2-upload-modal";
 
 const MOCK_BANNERS = [
   {
@@ -66,30 +67,11 @@ const MOCK_BANNERS = [
     order: 3,
     createdAt: "12 Agu 2026"
   },
-  {
-    id: "BNR-004",
-    title: "Event FF Token Ring",
-    imageUrl: "/img/bann4.webp",
-    link: "/topup/ff",
-    status: "Active",
-    clicks: 2105,
-    order: 4,
-    createdAt: "13 Agu 2026"
-  },
-  {
-    id: "BNR-005",
-    title: "Genshin 4.0 Update",
-    imageUrl: "/img/bann5.webp",
-    link: "/topup/genshin",
-    status: "Scheduled",
-    clicks: 0,
-    order: 5,
-    createdAt: "14 Agu 2026"
-  }
 ];
 
 export default function AdminBannersPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
 
   const filteredBanners = MOCK_BANNERS.filter(b => 
     b.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -101,8 +83,6 @@ export default function AdminBannersPage() {
         return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Active</Badge>;
       case "Inactive":
         return <Badge className="bg-muted text-muted-foreground border-border text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Inactive</Badge>;
-      case "Scheduled":
-        return <Badge className="bg-blue-500/10 text-blue-500 border-blue-500/20 text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Scheduled</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -117,12 +97,14 @@ export default function AdminBannersPage() {
           </h1>
           <p className="text-sm text-muted-foreground font-bold italic">Kelola slider promo utama, urutan tampilan, dan statistik klik hero section.</p>
         </div>
-        <Button className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2">
-          <Plus className="h-4 w-4" /> Upload Banner Baru
+        <Button 
+          onClick={() => setIsUploadOpen(true)}
+          className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2"
+        >
+          <Plus className="h-4 w-4" /> Upload Banner R2
         </Button>
       </div>
 
-      {/* Summary Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: "Banner Aktif", value: "4", icon: ImageIcon, color: "text-primary" },
@@ -181,120 +163,62 @@ export default function AdminBannersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredBanners.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-20 text-muted-foreground font-bold">
-                      Tidak ada banner ditemukan.
+                {filteredBanners.map((banner) => (
+                  <TableRow key={banner.id} className="hover:bg-muted/20 border-border/30 transition-colors group">
+                    <TableCell className="py-4 pl-6">
+                      <div className="flex items-center gap-4">
+                        <div className="relative h-16 w-32 rounded-lg overflow-hidden border border-border/50 shrink-0 bg-muted">
+                          <Image src={banner.imageUrl} alt={banner.title} fill className="object-cover" unoptimized />
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-xs font-black truncate max-w-[200px]">{banner.title}</span>
+                          <span className="text-[10px] text-primary font-bold flex items-center gap-1 mt-1">
+                            <ExternalLink className="h-3 w-3" /> {banner.link}
+                          </span>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <span className="text-sm font-black tabular-nums">{banner.order}</span>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      {getStatusBadge(banner.status)}
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <span className="text-xs font-black tabular-nums">{banner.clicks.toLocaleString()}</span>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <span className="text-xs font-bold text-muted-foreground">{banner.createdAt}</span>
+                    </TableCell>
+                    <TableCell className="text-right pr-6 py-4">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-52 rounded-xl border-border">
+                          <DropdownMenuItem className="text-xs font-bold gap-2"><Edit className="h-3.5 w-3.5" /> Edit</DropdownMenuItem>
+                          <DropdownMenuItem className="text-xs font-bold text-destructive gap-2"><Trash2 className="h-3.5 w-3.5" /> Hapus</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
-                ) : (
-                  filteredBanners.map((banner) => (
-                    <TableRow key={banner.id} className="hover:bg-muted/20 border-border/30 transition-colors group">
-                      <TableCell className="py-4 pl-6">
-                        <div className="flex items-center gap-4">
-                          <div className="relative h-16 w-32 rounded-lg overflow-hidden border border-border/50 shrink-0 bg-muted">
-                            <Image 
-                              src={banner.imageUrl} 
-                              alt={banner.title} 
-                              fill 
-                              className="object-cover"
-                              unoptimized
-                            />
-                          </div>
-                          <div className="flex flex-col min-w-0">
-                            <span className="text-xs font-black truncate max-w-[200px]">{banner.title}</span>
-                            <span className="text-[10px] text-primary font-bold flex items-center gap-1 mt-1">
-                              <ExternalLink className="h-3 w-3" /> {banner.link}
-                            </span>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="py-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-black tabular-nums">{banner.order}</span>
-                          <div className="flex flex-col">
-                            <button className="text-muted-foreground hover:text-primary"><ArrowUpCircle className="h-3 w-3" /></button>
-                            <button className="text-muted-foreground hover:text-primary"><ArrowDownCircle className="h-3 w-3" /></button>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="py-4">
-                        {getStatusBadge(banner.status)}
-                      </TableCell>
-                      <TableCell className="py-4">
-                        <div className="flex flex-col">
-                          <span className="text-xs font-black tabular-nums">{banner.clicks.toLocaleString()}</span>
-                          <span className="text-[9px] text-muted-foreground font-bold">Total Klik</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="py-4">
-                        <span className="text-xs font-bold text-muted-foreground">{banner.createdAt}</span>
-                      </TableCell>
-                      <TableCell className="text-right pr-6 py-4">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-52 rounded-xl border-border">
-                            <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest opacity-50">Kontrol Banner</DropdownMenuLabel>
-                            <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
-                              <Edit className="h-3.5 w-3.5" /> Edit Visual & Link
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2">
-                              <ImageIcon className="h-3.5 w-3.5 text-primary" /> Ganti Gambar
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            {banner.status === "Active" ? (
-                              <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-amber-500">
-                                <EyeOff className="h-3.5 w-3.5" /> Sembunyikan
-                              </DropdownMenuItem>
-                            ) : (
-                              <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-emerald-500">
-                                <Eye className="h-3.5 w-3.5" /> Tampilkan
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuItem className="text-xs font-bold cursor-pointer gap-2 text-destructive focus:text-destructive">
-                              <Trash2 className="h-3.5 w-3.5" /> Hapus Permanen
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
+                ))}
               </TableBody>
             </Table>
           </div>
         </CardContent>
       </Card>
-      
-      <div className="grid lg:grid-cols-2 gap-6">
-        <Card className="bento-card border-primary/20 bg-primary/5 p-6">
-          <div className="flex gap-4">
-            <div className="h-12 w-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0">
-              <ImageIcon className="h-6 w-6 text-primary" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-black text-sm uppercase tracking-wider">Spesifikasi Visual</h3>
-              <p className="text-xs text-muted-foreground font-bold leading-relaxed">
-                Gunakan gambar dengan rasio 1200x400 (3:1) untuk hasil terbaik. Pastikan ukuran file di bawah 500KB untuk menjaga kecepatan loading halaman utama pengguna.
-              </p>
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm p-6 flex items-center justify-between">
-           <div className="space-y-1">
-              <h3 className="font-black text-sm uppercase tracking-wider">Eksperimen CTR</h3>
-              <p className="text-xs text-muted-foreground font-bold italic">Banner urutan pertama memiliki klik 40% lebih tinggi.</p>
-            </div>
-            <Button variant="outline" className="rounded-xl font-black text-[10px] uppercase tracking-widest px-4 border-border">
-              Lihat Laporan CTR
-            </Button>
-        </Card>
-      </div>
+
+      <R2UploadModal 
+        isOpen={isUploadOpen} 
+        onOpenChange={setIsUploadOpen} 
+        folder="banners"
+        onSuccess={(url) => {
+          console.log("New banner uploaded to R2:", url);
+        }}
+      />
     </div>
   );
 }
