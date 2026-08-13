@@ -57,7 +57,7 @@ export function HeroSection() {
     return (
       <section className="w-full overflow-hidden py-6 md:py-10 flex flex-col items-center">
         <div className="container max-w-screen-2xl px-4">
-          <Skeleton className="aspect-[860/310] w-full max-w-[860px] mx-auto rounded-xl md:rounded-2xl" />
+          <Skeleton className="aspect-[780/300] w-full max-w-[780px] mx-auto rounded-xl md:rounded-2xl" />
           <div className="flex justify-center gap-2 mt-6 md:mt-8">
             {[...Array(3)].map((_, i) => (
               <Skeleton key={i} className="h-1.5 w-6 rounded-full" />
@@ -93,14 +93,14 @@ export function HeroSection() {
               return (
                 <CarouselItem 
                   key={banner.id} 
-                  className="pl-2 md:pl-4 basis-full md:basis-[85%] lg:basis-[860px]"
+                  className="pl-2 md:pl-4 basis-full md:basis-[85%] lg:basis-[780px]"
                 >
                   <Link href={banner.link || "#"} className="block">
                     <div 
                       className={cn(
-                        "relative aspect-[860/310] w-full bg-card rounded-xl md:rounded-2xl overflow-hidden border transition-all duration-500 ease-out will-change-transform",
+                        "relative aspect-[780/300] w-full bg-card rounded-xl md:rounded-2xl overflow-hidden border transition-all duration-500 ease-out will-change-transform",
                         isActive 
-                          ? "border-primary/60 z-20 scale-100 opacity-100" 
+                          ? "border-primary/60 z-20 scale-100 opacity-100 shadow-xl shadow-primary/10" 
                           : "border-white/5 z-10 scale-100 md:scale-[0.92] opacity-100 md:opacity-50"
                       )}
                     >
@@ -111,7 +111,7 @@ export function HeroSection() {
                         className="object-cover"
                         priority={index === 0}
                         unoptimized={banner.imageUrl.includes('cdn.stspoint.id') || banner.imageUrl.includes('r2.dev')}
-                        sizes="(max-width: 860px) 100vw, 860px"
+                        sizes="(max-width: 780px) 100vw, 780px"
                       />
                       
                       <div className={cn(
