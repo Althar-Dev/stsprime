@@ -38,7 +38,7 @@ export async function uploadToR2(
       throw new Error("Konfigurasi R2 tidak lengkap. Harap periksa pengaturan R2 Storage di menu System.");
     }
 
-    // Inisialisasi S3 Client secara dinamis dengan konfigurasi dari database
+    // Inisialisasi S3 Client dengan opsi tambahan untuk stabilitas R2
     const s3Client = new S3Client({
       region: "auto",
       endpoint: `https://${config.accountId}.r2.cloudflarestorage.com`,
@@ -46,13 +46,15 @@ export async function uploadToR2(
         accessKeyId: config.accessKeyId,
         secretAccessKey: config.secretAccessKey,
       },
+      // Penting untuk R2 agar tidak terjadi kesalahan resolusi bucket
+      forcePathStyle: true,
     });
 
     const buffer = Buffer.from(await file.arrayBuffer());
     
-    // Membersihkan nama file dari karakter yang mungkin bermasalah di URL
-    const sanitizedFileName = file.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9.-]/g, '');
-    const key = `${folder}/${sanitizedFileName}`;
+    // Pembersihan nama file yang lebih aman
+    const fileName = file.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9.-]/g, '');
+    const key = `${folder}/${fileName}`;
 
     const command = new PutObjectCommand({
       Bucket: config.bucketName,
@@ -74,7 +76,7 @@ export async function uploadToR2(
     }
     baseUrl = baseUrl.replace(/\/$/, "");
     
-    // URL Akhir yang akan disimpan ke database
+    // Gunakan URL absolut yang bersih
     const finalUrl = `${baseUrl}/${key}`;
     
     return {
@@ -82,10 +84,10 @@ export async function uploadToR2(
       url: finalUrl,
     };
   } catch (error: any) {
-    console.error("R2 Upload Error:", error);
+    console.error("R2 Upload Error details:", error);
     return {
       success: false,
-      error: error.message || "Gagal mengunggah file ke R2.",
+      error: error.message || "Gagal mengunggah file ke R2 karena gangguan koneksi.",
     };
   }
 }

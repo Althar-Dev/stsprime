@@ -1,19 +1,18 @@
+
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import { 
   Dialog, 
   DialogContent, 
   DialogHeader, 
   DialogTitle, 
-  DialogDescription,
-  DialogFooter
+  DialogDescription
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { 
   Upload, 
   X, 
-  FileImage, 
   Loader2, 
   CheckCircle2, 
   AlertCircle, 
@@ -43,6 +42,8 @@ interface R2UploadModalProps {
   onSuccess?: (url: string) => void;
 }
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
 export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2UploadModalProps) {
   const [fileQueue, setFileQueue] = useState<FileItem[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -54,12 +55,25 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
   const addFiles = (files: FileList | null) => {
     if (!files) return;
 
-    const newItems: FileItem[] = Array.from(files).map((file) => ({
-      id: Math.random().toString(36).substring(7),
-      file,
-      preview: URL.createObjectURL(file),
-      status: "pending",
-    }));
+    const newItems: FileItem[] = [];
+    
+    Array.from(files).forEach((file) => {
+      if (file.size > MAX_FILE_SIZE) {
+        toast({
+          variant: "destructive",
+          title: "File Terlalu Besar",
+          description: `${file.name} melebihi batas 5MB.`,
+        });
+        return;
+      }
+      
+      newItems.push({
+        id: Math.random().toString(36).substring(7),
+        file,
+        preview: URL.createObjectURL(file),
+        status: "pending",
+      });
+    });
 
     setFileQueue((prev) => [...prev, ...newItems]);
   };
@@ -72,7 +86,6 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
   const removeFile = (id: string) => {
     setFileQueue((prev) => {
       const filtered = prev.filter((item) => item.id !== id);
-      // Cleanup object URLs to avoid memory leaks
       const removedItem = prev.find((item) => item.id === id);
       if (removedItem) URL.revokeObjectURL(removedItem.preview);
       return filtered;
@@ -107,20 +120,18 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
 
       const rawData = configDoc.data();
       const config: R2ConfigData = {
-        accountId: rawData?.accountId || "",
-        accessKeyId: rawData?.accessKeyId || "",
-        secretAccessKey: rawData?.secretAccessKey || "",
-        bucketName: rawData?.bucketName || "",
-        publicUrl: rawData?.publicUrl || "",
+        accountId: String(rawData?.accountId || ""),
+        accessKeyId: String(rawData?.accessKeyId || ""),
+        secretAccessKey: String(rawData?.secretAccessKey || ""),
+        bucketName: String(rawData?.bucketName || ""),
+        publicUrl: String(rawData?.publicUrl || ""),
       };
 
       let successCount = 0;
 
-      // Upload files sequentially
       for (const item of fileQueue) {
         if (item.status === "success") continue;
 
-        // Update status to uploading
         setFileQueue((prev) => 
           prev.map((i) => i.id === item.id ? { ...i, status: "uploading" } : i)
         );
@@ -141,19 +152,22 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
             prev.map((i) => i.id === item.id ? { ...i, status: "error", error: result.error } : i)
           );
         }
+        
+        // Berikan jeda singkat antar pengunggahan untuk stabilitas koneksi
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
 
       if (successCount > 0) {
         toast({
           title: "Unggah Selesai",
-          description: `${successCount} file berhasil diunggah ke folder ${folder}/`,
+          description: `${successCount} file berhasil diunggah.`,
         });
       }
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Gagal Mengunggah",
-        description: error.message,
+        description: error.message || "Pastikan kredensial R2 sudah benar.",
       });
     } finally {
       setIsUploading(false);
@@ -176,17 +190,16 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
       }
     }}>
       <DialogContent className="sm:max-w-2xl rounded-3xl border-border bg-card p-0 overflow-hidden flex flex-col max-h-[90vh]">
-        <DialogHeader className="p-6 pb-0">
+        <DialogHeader className="p-6 pb-0 text-left">
           <DialogTitle className="text-xl font-black flex items-center gap-2">
             <Upload className="h-5 w-5 text-primary" /> Pengunggahan Massal R2
           </DialogTitle>
           <DialogDescription className="text-xs font-bold">
-            Unggah banyak file sekaligus ke direktori <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded">/{folder}</code>.
+            Unggah file ke direktori <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded">/{folder}</code>.
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6 modal-scrollbar">
-          {/* Drop Zone */}
           <div 
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -203,7 +216,7 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
             </div>
             <div className="text-center">
               <p className="text-sm font-black">Seret file ke sini atau klik untuk memilih</p>
-              <p className="text-[10px] text-muted-foreground font-bold">Mendukung banyak file gambar (Maks. 5MB per file)</p>
+              <p className="text-[10px] text-muted-foreground font-bold">Maks. 5MB per file</p>
             </div>
           </div>
 
@@ -216,7 +229,6 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
             onChange={handleFileChange} 
           />
 
-          {/* File Queue List */}
           {fileQueue.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -276,15 +288,6 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
               </div>
             </div>
           )}
-
-          {!isUploading && fileQueue.length === 0 && (
-             <div className="flex items-center gap-3 p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20">
-                <ImageIcon className="h-5 w-5 text-blue-500 shrink-0" />
-                <p className="text-[11px] font-bold text-blue-600 leading-tight">
-                  Pilih gambar yang ingin Anda tambahkan ke galeri {folder}. Anda bisa mengunggah hingga 20 gambar sekaligus.
-                </p>
-             </div>
-          )}
         </div>
 
         <div className="p-6 border-t border-border bg-muted/20">
@@ -315,4 +318,3 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
     </Dialog>
   );
 }
-

@@ -11,12 +11,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { 
   Database, 
-  Settings2, 
   ShieldCheck, 
   Cloud, 
   ExternalLink, 
@@ -29,8 +27,7 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
-  Loader2,
-  Info
+  Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -70,10 +67,10 @@ export default function AdminR2StoragePage() {
     
     setIsSaving(true);
     const data = {
-      accountId,
-      accessKeyId,
-      secretAccessKey,
-      bucketName,
+      accountId: accountId.trim(),
+      accessKeyId: accessKeyId.trim(),
+      secretAccessKey: secretAccessKey.trim(),
+      bucketName: bucketName.trim(),
       publicUrl: publicUrl.trim().replace(/\/$/, ""), // Bersihkan URL
       isEnabled,
       updatedAt: serverTimestamp(),
@@ -153,11 +150,12 @@ export default function AdminR2StoragePage() {
                     <Database className="h-3 w-3" /> Account ID
                   </Label>
                   <Input 
-                    placeholder="Contoh: f98a... (Ada di Dashboard R2)" 
+                    placeholder="Contoh: f98a... (HANYA ID, bukan URL)" 
                     className="h-11 bg-background rounded-xl font-bold border-border/50" 
                     value={accountId}
                     onChange={(e) => setAccountId(e.target.value)}
                   />
+                  <p className="text-[9px] text-muted-foreground font-bold">Dapatkan di Dashboard R2 &gt; Account ID (kolom kanan bawah).</p>
                 </div>
                 
                 <div className="space-y-2">
@@ -265,6 +263,38 @@ export default function AdminR2StoragePage() {
 
         {/* Info Sidebar */}
         <div className="space-y-6">
+          <Card className="bento-card border-primary/20 bg-primary/5 h-fit">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-sm font-black uppercase tracking-widest">Contoh URL Gambar Anda</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-[11px] text-muted-foreground font-bold leading-relaxed">
+                Berikut adalah visualisasi bagaimana URL gambar Anda akan terbentuk berdasarkan domain yang Anda masukkan:
+              </p>
+              
+              {publicUrl ? (
+                <div className="p-4 rounded-xl bg-background border border-border/50 space-y-3">
+                  <div className="space-y-1">
+                    <Label className="text-[9px] font-black uppercase text-primary">URL Utama (Banners)</Label>
+                    <code className="block p-2 bg-muted rounded-lg text-[9px] font-mono text-foreground break-all border border-border/30">
+                      https://{publicUrl.replace(/^https?:\/\//, '')}/banners/promo-gaming.png
+                    </code>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[9px] font-black uppercase text-primary">URL Ikon (Icons)</Label>
+                    <code className="block p-2 bg-muted rounded-lg text-[9px] font-mono text-foreground break-all border border-border/30">
+                      https://{publicUrl.replace(/^https?:\/\//, '')}/icons/mlbb-diamond.png
+                    </code>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4 rounded-xl border border-dashed border-border flex items-center justify-center text-center">
+                  <p className="text-[10px] font-bold text-muted-foreground italic">Masukkan Public URL untuk melihat pratinjau.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           <Card className="bento-card border-amber-500/30 bg-amber-500/5 h-fit">
             <CardHeader className="pb-4">
               <div className="flex items-center gap-2">
@@ -289,34 +319,23 @@ export default function AdminR2StoragePage() {
                 <div className="flex gap-2">
                   <div className="h-4 w-4 rounded-full bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 mt-0.5 font-black text-[10px]">3</div>
                   <p className="text-[11px] font-bold leading-relaxed">
-                    Salin <strong>R2.dev Subdomain</strong> atau Custom Domain ke kolom <strong>Public URL Endpoint</strong> di formulir sebelah kiri.
+                    Salin <strong>R2.dev Subdomain</strong> atau Custom Domain ke kolom <strong>Public URL Endpoint</strong>.
                   </p>
                 </div>
               </div>
-              
-              {publicUrl && (
-                <div className="p-3 rounded-xl bg-background border border-border/50 space-y-2">
-                  <Label className="text-[9px] font-black uppercase text-muted-foreground">Pratinjau URL Gambar:</Label>
-                  <code className="block p-2 bg-muted rounded-lg text-[9px] font-mono text-primary break-all">
-                    https://{publicUrl.replace(/^https?:\/\//, '')}/banners/promo.png
-                  </code>
-                </div>
-              )}
             </CardContent>
           </Card>
 
           <Card className="bento-card border-primary/20 bg-primary/5 h-fit">
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-black uppercase tracking-widest">Kredensial S3 API</CardTitle>
-              </div>
+              <CardTitle className="text-sm font-black uppercase tracking-widest">Kredensial S3 API</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
                 <div className="space-y-1">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Endpoint API (Internal)</Label>
                   <code className="block p-2 bg-background border border-border/50 rounded-lg text-[10px] font-mono text-primary truncate">
-                    {accountId ? `https://${accountId}.r2.cloudflarestorage.com` : 'Menunggu Account ID...'}
+                    {accountId ? `https://${accountId.trim()}.r2.cloudflarestorage.com` : 'Menunggu Account ID...'}
                   </code>
                 </div>
                 <p className="text-[10px] text-muted-foreground font-bold leading-relaxed">
