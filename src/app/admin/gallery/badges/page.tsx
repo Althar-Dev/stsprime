@@ -18,7 +18,8 @@ import {
   Trash2, 
   Star,
   Users,
-  Loader2
+  Loader2,
+  AlertTriangle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -27,6 +28,16 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import { R2UploadModal } from "@/components/admin/r2-upload-modal";
@@ -38,6 +49,7 @@ export default function AdminBadgesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const db = useFirestore();
 
   const badgesQuery = useMemo(() => {
@@ -75,14 +87,15 @@ export default function AdminBadgesPage() {
       });
   };
 
-  const handleDelete = (id: string) => {
-    if (!db || !confirm("Hapus lencana ini?")) return;
-    deleteDoc(doc(db, "badges", id)).catch(async (error) => {
+  const confirmDelete = () => {
+    if (!db || !deleteId) return;
+    deleteDoc(doc(db, "badges", deleteId)).catch(async (error) => {
       errorEmitter.emit('permission-error', new FirestorePermissionError({
-        path: `badges/${id}`,
+        path: `badges/${deleteId}`,
         operation: 'delete'
       }));
     });
+    setDeleteId(null);
   };
 
   const getStatusBadge = (status: string) => {
@@ -173,7 +186,7 @@ export default function AdminBadgesPage() {
                     <TableRow key={badge.id} className="hover:bg-muted/20 border-border/30 transition-colors">
                       <TableCell className="py-4 pl-6">
                         <div className="flex items-center gap-4">
-                          <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-muted flex items-center justify-center p-1">
+                          <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-muted flex items-center justify-center p-1 border border-border/50">
                             <Image src={badge.imageUrl} alt={badge.name} width={40} height={40} className="object-contain" unoptimized />
                           </div>
                           <span className="text-sm font-black truncate">{badge.name}</span>
@@ -193,9 +206,10 @@ export default function AdminBadgesPage() {
                             <DropdownMenuItem className="text-xs font-bold gap-2"><Edit className="h-3.5 w-3.5" /> Edit</DropdownMenuItem>
                             <DropdownMenuItem 
                               className="text-xs font-bold text-destructive gap-2 cursor-pointer"
-                              onClick={() => handleDelete(badge.id)}
+                              onClick={() => setDeleteId(badge.id)}
                             >
-                              <Trash2 className="h-3.5 w-3.5" /> Hapus</DropdownMenuItem>
+                              <Trash2 className="h-3.5 w-3.5" /> Hapus
+                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
@@ -214,6 +228,29 @@ export default function AdminBadgesPage() {
         folder="badges"
         onSuccess={handleUploadSuccess}
       />
+
+      <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <AlertDialogContent className="rounded-3xl border-border bg-card">
+          <AlertDialogHeader>
+            <div className="h-12 w-12 rounded-2xl bg-destructive/10 flex items-center justify-center mb-2">
+              <AlertTriangle className="h-6 w-6 text-destructive" />
+            </div>
+            <AlertDialogTitle className="font-black text-xl tracking-tight">Hapus Lencana?</AlertDialogTitle>
+            <AlertDialogDescription className="font-bold text-xs text-muted-foreground leading-relaxed">
+              Penghapusan badge ini akan berakibat lencana tidak lagi tampil di profil pengguna yang memilikinya. Anda yakin?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel className="rounded-xl font-bold border-border">Batal</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete}
+              className="rounded-xl font-black bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/20"
+            >
+              Hapus Aset
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

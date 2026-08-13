@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from "react";
 import { useFirestore, useCollection } from "@/firebase";
-import { collection, addDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from "firebase/firestore";
+import { collection, addDoc, deleteDoc, doc, query, orderBy } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -13,16 +13,14 @@ import {
   Monitor, 
   Search, 
   Plus, 
-  Filter, 
   MoreVertical, 
   Edit, 
   Trash2, 
   ExternalLink,
   Image as ImageIcon,
-  MousePointer2,
-  Calendar,
   ArrowUpCircle,
-  Loader2
+  Loader2,
+  AlertTriangle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -31,6 +29,16 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import Image from "next/image";
 import { R2UploadModal } from "@/components/admin/r2-upload-modal";
 import { errorEmitter } from "@/firebase/error-emitter";
@@ -40,6 +48,7 @@ import { format } from "date-fns";
 export default function AdminBannersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const db = useFirestore();
 
   const bannersQuery = useMemo(() => {
@@ -75,14 +84,15 @@ export default function AdminBannersPage() {
       });
   };
 
-  const handleDelete = (id: string) => {
-    if (!db || !confirm("Hapus banner ini?")) return;
-    deleteDoc(doc(db, "banners", id)).catch(async (error) => {
+  const confirmDelete = () => {
+    if (!db || !deleteId) return;
+    deleteDoc(doc(db, "banners", deleteId)).catch(async (error) => {
       errorEmitter.emit('permission-error', new FirestorePermissionError({
-        path: `banners/${id}`,
+        path: `banners/${deleteId}`,
         operation: 'delete'
       }));
     });
+    setDeleteId(null);
   };
 
   const getStatusBadge = (status: string) => {
@@ -208,7 +218,7 @@ export default function AdminBannersPage() {
                             <DropdownMenuItem className="text-xs font-bold gap-2"><Edit className="h-3.5 w-3.5" /> Edit</DropdownMenuItem>
                             <DropdownMenuItem 
                               className="text-xs font-bold text-destructive gap-2 cursor-pointer"
-                              onClick={() => handleDelete(banner.id)}
+                              onClick={() => setDeleteId(banner.id)}
                             >
                               <Trash2 className="h-3.5 w-3.5" /> Hapus
                             </DropdownMenuItem>
@@ -230,6 +240,29 @@ export default function AdminBannersPage() {
         folder="banners"
         onSuccess={handleUploadSuccess}
       />
+
+      <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <AlertDialogContent className="rounded-3xl border-border bg-card">
+          <AlertDialogHeader>
+            <div className="h-12 w-12 rounded-2xl bg-destructive/10 flex items-center justify-center mb-2">
+              <AlertTriangle className="h-6 w-6 text-destructive" />
+            </div>
+            <AlertDialogTitle className="font-black text-xl tracking-tight">Hapus Banner?</AlertDialogTitle>
+            <AlertDialogDescription className="font-bold text-xs text-muted-foreground leading-relaxed">
+              Tindakan ini akan menghapus aset banner secara permanen dari database. Gambar di R2 tetap ada namun tidak akan muncul lagi di aplikasi.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel className="rounded-xl font-bold border-border">Batal</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete}
+              className="rounded-xl font-black bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/20"
+            >
+              Ya, Hapus Banner
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

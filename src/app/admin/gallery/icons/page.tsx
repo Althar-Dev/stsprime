@@ -20,7 +20,8 @@ import {
   CheckCircle2,
   Gamepad2,
   CreditCard,
-  Loader2
+  Loader2,
+  AlertTriangle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -29,6 +30,16 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import { R2UploadModal } from "@/components/admin/r2-upload-modal";
@@ -40,6 +51,7 @@ export default function AdminIconsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const db = useFirestore();
 
   const iconsQuery = useMemo(() => {
@@ -75,14 +87,15 @@ export default function AdminIconsPage() {
       });
   };
 
-  const handleDelete = (id: string) => {
-    if (!db || !confirm("Hapus ikon ini?")) return;
-    deleteDoc(doc(db, "icons", id)).catch(async (error) => {
+  const confirmDelete = () => {
+    if (!db || !deleteId) return;
+    deleteDoc(doc(db, "icons", deleteId)).catch(async (error) => {
       errorEmitter.emit('permission-error', new FirestorePermissionError({
-        path: `icons/${id}`,
+        path: `icons/${deleteId}`,
         operation: 'delete'
       }));
     });
+    setDeleteId(null);
   };
 
   const getStatusBadge = (status: string) => {
@@ -195,7 +208,7 @@ export default function AdminIconsPage() {
                             <DropdownMenuItem className="text-xs font-bold gap-2"><Edit className="h-3.5 w-3.5" /> Edit</DropdownMenuItem>
                             <DropdownMenuItem 
                               className="text-xs font-bold text-destructive gap-2 cursor-pointer"
-                              onClick={() => handleDelete(icon.id)}
+                              onClick={() => setDeleteId(icon.id)}
                             >
                               <Trash2 className="h-3.5 w-3.5" /> Hapus
                             </DropdownMenuItem>
@@ -217,6 +230,29 @@ export default function AdminIconsPage() {
         folder="icons"
         onSuccess={handleUploadSuccess}
       />
+
+      <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <AlertDialogContent className="rounded-3xl border-border bg-card">
+          <AlertDialogHeader>
+            <div className="h-12 w-12 rounded-2xl bg-destructive/10 flex items-center justify-center mb-2">
+              <AlertTriangle className="h-6 w-6 text-destructive" />
+            </div>
+            <AlertDialogTitle className="font-black text-xl tracking-tight">Hapus Ikon?</AlertDialogTitle>
+            <AlertDialogDescription className="font-bold text-xs text-muted-foreground leading-relaxed">
+              Apakah Anda yakin ingin menghapus aset ikon ini? Data referensi di database akan hilang secara permanen.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel className="rounded-xl font-bold border-border">Batal</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete}
+              className="rounded-xl font-black bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/20"
+            >
+              Hapus Sekarang
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
