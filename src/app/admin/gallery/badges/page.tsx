@@ -65,10 +65,11 @@ export default function AdminBadgesPage() {
     return matchesSearch && matchesCategory;
   });
 
-  const handleUploadSuccess = (url: string) => {
+  const handleUploadSuccess = (url: string, filename: string) => {
     if (!db) return;
+    const cleanName = filename.replace(/\.[^/.]+$/, "");
     const badgeData = {
-      name: "Badge Baru",
+      name: cleanName,
       category: activeTab === "all" ? "Achievement" : activeTab,
       imageUrl: url,
       requirement: "Syarat Belum Diatur",

@@ -39,7 +39,7 @@ interface R2UploadModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   folder: "banners" | "icons" | "backgrounds" | "badges" | "others";
-  onSuccess?: (url: string) => void;
+  onSuccess?: (url: string, filename: string) => void;
 }
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -145,7 +145,7 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
           setFileQueue((prev) => 
             prev.map((i) => i.id === item.id ? { ...i, status: "success" } : i)
           );
-          onSuccess?.(result.url);
+          onSuccess?.(result.url, item.file.name);
           successCount++;
         } else {
           setFileQueue((prev) => 
@@ -153,7 +153,6 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
           );
         }
         
-        // Berikan jeda singkat antar pengunggahan untuk stabilitas koneksi
         await new Promise(resolve => setTimeout(resolve, 500));
       }
 

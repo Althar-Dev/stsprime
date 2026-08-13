@@ -64,10 +64,11 @@ export default function AdminBackgroundsPage() {
     bg.gameName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleUploadSuccess = (url: string) => {
+  const handleUploadSuccess = (url: string, filename: string) => {
     if (!db) return;
+    const cleanName = filename.replace(/\.[^/.]+$/, "");
     const bgData = {
-      gameName: "Produk Baru",
+      gameName: cleanName,
       imageUrl: url,
       dimensions: "1200x400",
       status: "Active",

@@ -64,10 +64,11 @@ export default function AdminOtherAssetsPage() {
     asset.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleUploadSuccess = (url: string) => {
+  const handleUploadSuccess = (url: string, filename: string) => {
     if (!db) return;
+    const cleanName = filename.replace(/\.[^/.]+$/, "");
     const assetData = {
-      name: "Aset Baru",
+      name: cleanName,
       category: "Tutorial",
       imageUrl: url,
       status: "Active",

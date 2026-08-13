@@ -67,10 +67,11 @@ export default function AdminIconsPage() {
     return matchesSearch && matchesCategory;
   });
 
-  const handleUploadSuccess = (url: string) => {
+  const handleUploadSuccess = (url: string, filename: string) => {
     if (!db) return;
+    const cleanName = filename.replace(/\.[^/.]+$/, "");
     const iconData = {
-      name: "Ikon Baru",
+      name: cleanName,
       category: activeCategory === "all" ? "Game" : activeCategory,
       imageUrl: url,
       status: "Active",

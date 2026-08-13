@@ -62,10 +62,11 @@ export default function AdminBannersPage() {
     b.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleUploadSuccess = (url: string) => {
+  const handleUploadSuccess = (url: string, filename: string) => {
     if (!db) return;
+    const cleanTitle = filename.replace(/\.[^/.]+$/, "");
     const bannerData = {
-      title: "Banner Baru",
+      title: cleanTitle,
       imageUrl: url,
       link: "/",
       status: "Active",
