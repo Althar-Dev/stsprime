@@ -1,9 +1,8 @@
-
 "use client";
 
 import { useState, useMemo } from "react";
 import { useFirestore, useCollection } from "@/firebase";
-import { collection, addDoc, deleteDoc, doc, query, orderBy, writeBatch } from "firebase/firestore";
+import { collection, addDoc, deleteDoc, doc, query, orderBy, writeBatch, getDoc } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -47,6 +46,7 @@ import { R2UploadModal } from "@/components/admin/r2-upload-modal";
 import { errorEmitter } from "@/firebase/error-emitter";
 import { FirestorePermissionError } from "@/firebase/errors";
 import { format } from "date-fns";
+import { deleteBatchFromR2 } from "@/app/actions/r2-actions";
 
 export default function AdminIconsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -105,22 +105,40 @@ export default function AdminIconsPage() {
   const handleClearAll = async () => {
     if (!db || icons.length === 0) return;
     setIsClearing(true);
-    const batch = writeBatch(db);
-    icons.forEach((icon) => {
-      batch.delete(doc(db, "icons", icon.id));
-    });
 
-    batch.commit()
-      .catch(async (error) => {
-        errorEmitter.emit('permission-error', new FirestorePermissionError({
-          path: 'icons',
-          operation: 'delete'
-        }));
-      })
-      .finally(() => {
-        setIsClearing(false);
-        setIsClearAllOpen(false);
+    try {
+      const configSnap = await getDoc(doc(db, "settings", "r2"));
+      if (!configSnap.exists()) throw new Error("Konfigurasi R2 tidak ditemukan.");
+      
+      const config = configSnap.data() as any;
+      const keysToDelete = icons.map((i: any) => {
+        const urlParts = i.imageUrl.split('/');
+        return `icons/${urlParts[urlParts.length - 1]}`;
       });
+
+      await deleteBatchFromR2(keysToDelete, {
+        accountId: config.accountId,
+        accessKeyId: config.accessKeyId,
+        secretAccessKey: config.secretAccessKey,
+        bucketName: config.bucketName,
+        publicUrl: config.publicUrl
+      });
+
+      const batch = writeBatch(db);
+      icons.forEach((icon) => {
+        batch.delete(doc(db, "icons", icon.id));
+      });
+      await batch.commit();
+
+    } catch (error: any) {
+      errorEmitter.emit('permission-error', new FirestorePermissionError({
+        path: 'icons',
+        operation: 'delete'
+      }));
+    } finally {
+      setIsClearing(false);
+      setIsClearAllOpen(false);
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -140,10 +158,10 @@ export default function AdminIconsPage() {
           <Button 
             variant="destructive"
             onClick={() => setIsClearAllOpen(true)}
-            disabled={icons.length === 0 || loading}
+            disabled={icons.length === 0 || loading || isClearing}
             className="rounded-xl font-black text-xs uppercase tracking-widest px-6 gap-2"
           >
-            <Eraser className="h-4 w-4" /> Hapus Semua
+            {isClearing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eraser className="h-4 w-4" />} Hapus Semua
           </Button>
           <Button 
             onClick={() => setIsUploadOpen(true)}
@@ -297,7 +315,7 @@ export default function AdminIconsPage() {
             </div>
             <AlertDialogTitle className="font-black text-xl tracking-tight">Hapus Seluruh Ikon?</AlertDialogTitle>
             <AlertDialogDescription className="font-bold text-xs text-muted-foreground leading-relaxed">
-              Tindakan ini akan menghapus **SEMUA** {icons.length} ikon dari database. Ini akan merusak tampilan produk yang menggunakan ikon tersebut.
+              Tindakan ini akan menghapus **{icons.length}** ikon dari database **DAN** Cloudflare R2 secara permanen.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2">
@@ -307,7 +325,7 @@ export default function AdminIconsPage() {
               disabled={isClearing}
               className="rounded-xl font-black bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/20"
             >
-              {isClearing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Ya, Bersihkan Semua"}
+              {isClearing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Ya, Bersihkan Semua & R2"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
