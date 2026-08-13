@@ -5,13 +5,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, Mail, Lock, UserPlus, X, User, Eye, EyeOff } from "lucide-react";
+import { ShieldCheck, Mail, Lock, UserPlus, User, Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
@@ -59,7 +58,6 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         
-        // Update basic profile
         await updateProfile(user, { displayName });
 
         const userData = {
@@ -73,7 +71,6 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
 
         const userDocRef = doc(db, "users", user.uid);
         
-        // Save to Firestore with contextual error handling
         setDoc(userDocRef, userData)
           .catch(async (serverError) => {
             const permissionError = new FirestorePermissionError({
@@ -125,15 +122,9 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
-        "w-[95vw] sm:max-w-[400px] max-h-[85vh] p-0 overflow-y-auto border-border bg-background rounded-2xl sm:rounded-3xl outline-none shadow-2xl",
-        "modal-scrollbar"
+        "w-[95vw] sm:max-w-[400px] p-0 border-border bg-background rounded-2xl sm:rounded-3xl outline-none shadow-2xl overflow-hidden"
       )}>
-        <div className="sticky top-0 z-50 p-6 md:p-8 flex flex-col items-center border-b border-border bg-accent">
-          <DialogPrimitive.Close className="absolute right-4 top-4 z-[60] rounded-full p-1.5 text-accent-foreground/70 opacity-70 ring-offset-accent transition-all hover:opacity-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">
-            <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
-          </DialogPrimitive.Close>
-
+        <div className="p-6 md:p-8 flex flex-col items-center border-b border-border bg-accent relative">
           <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-accent-foreground/20 backdrop-blur-sm flex items-center justify-center mb-4">
             {mode === "login" ? (
               <ShieldCheck className="h-6 w-6 text-accent-foreground" />
@@ -151,7 +142,7 @@ export function LoginModal({ isOpen, onOpenChange }: LoginModalProps) {
           </DialogDescription>
         </div>
 
-        <div className="p-5 md:p-8 space-y-6">
+        <div className="p-5 md:p-8 space-y-6 max-h-[60vh] overflow-y-auto modal-scrollbar">
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "register" && (
               <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">

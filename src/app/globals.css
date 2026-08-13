@@ -69,6 +69,11 @@
   }
 }
 
+/* Fix for Radix UI Dialog blocking pointer events on body after close */
+body[style*="pointer-events: none"] {
+  pointer-events: auto !important;
+}
+
 /* Hide all scrollbar buttons / arrows globally on Desktop & Mobile */
 ::-webkit-scrollbar-button,
 ::-webkit-scrollbar-button:start,
