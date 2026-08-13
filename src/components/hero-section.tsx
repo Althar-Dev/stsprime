@@ -3,7 +3,8 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { useFirestore, useCollection } from "@/firebase";
+import { collection, query, orderBy, where } from "firebase/firestore";
 import {
   Carousel,
   CarouselContent,
@@ -12,13 +13,25 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function HeroSection() {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
+  const db = useFirestore();
 
-  const bannerIds = ["banner-1", "banner-2", "banner-3", "banner-4", "banner-5"];
+  // Memoize query untuk mencegah re-render berlebih
+  const bannersQuery = React.useMemo(() => {
+    if (!db) return null;
+    return query(
+      collection(db, "banners"),
+      where("status", "==", "Active"),
+      orderBy("order", "asc")
+    );
+  }, [db]);
+
+  const { data: banners, loading } = useCollection<any>(bannersQuery);
 
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: false })
@@ -33,7 +46,28 @@ export function HeroSection() {
     api.on("select", () => {
       setCurrent(api.selectedScrollSnap());
     });
-  }, [api]);
+  }, [api, banners]);
+
+  // Tampilan Loading
+  if (loading) {
+    return (
+      <section className="w-full overflow-hidden py-6 md:py-10 flex flex-col items-center">
+        <div className="container max-w-screen-2xl px-4">
+          <Skeleton className="aspect-[860/310] w-full max-w-[860px] mx-auto rounded-xl md:rounded-2xl" />
+          <div className="flex justify-center gap-2 mt-6 md:mt-8">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-1.5 w-6 rounded-full" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Jika tidak ada banner, tampilkan placeholder atau kosong
+  if (banners.length === 0) {
+    return null;
+  }
 
   return (
     <section className="w-full overflow-hidden py-6 md:py-10 flex flex-col items-center">
@@ -49,42 +83,39 @@ export function HeroSection() {
           className="w-full"
         >
           <CarouselContent className="-ml-2 md:-ml-4">
-            {bannerIds.map((id, index) => {
-              const image = PlaceHolderImages.find((img) => img.id === id);
-              if (!image) return null;
-              
+            {banners.map((banner, index) => {
               const isActive = current === index;
               
               return (
                 <CarouselItem 
-                  key={id} 
-                  // Mobile: 100% width to hide neighbors
-                  // Desktop: Fixed or partial width to show neighbors
+                  key={banner.id} 
                   className="pl-2 md:pl-4 basis-full md:basis-[85%] lg:basis-[860px]"
                 >
-                  <div 
-                    className={cn(
-                      "relative aspect-[860/310] w-full bg-card rounded-xl md:rounded-2xl overflow-hidden border transition-all duration-500 ease-out will-change-transform",
-                      isActive 
-                        ? "border-primary/60 z-20 scale-100 opacity-100" 
-                        : "border-white/5 z-10 scale-100 md:scale-[0.92] opacity-100 md:opacity-50"
-                    )}
-                  >
-                    <Image
-                      src={image.imageUrl}
-                      alt={image.description}
-                      fill
-                      className="object-cover"
-                      priority={index === 0}
-                      sizes="(max-width: 860px) 100vw, 860px"
-                    />
-                    
-                    {/* Desktop-only dimming overlay for inactive slides to reduce flicker/distraction */}
-                    <div className={cn(
-                      "absolute inset-0 bg-black/40 transition-opacity duration-500 hidden md:block pointer-events-none",
-                      isActive ? "opacity-0" : "opacity-100"
-                    )} />
-                  </div>
+                  <Link href={banner.link || "#"} className="block">
+                    <div 
+                      className={cn(
+                        "relative aspect-[860/310] w-full bg-card rounded-xl md:rounded-2xl overflow-hidden border transition-all duration-500 ease-out will-change-transform",
+                        isActive 
+                          ? "border-primary/60 z-20 scale-100 opacity-100" 
+                          : "border-white/5 z-10 scale-100 md:scale-[0.92] opacity-100 md:opacity-50"
+                      )}
+                    >
+                      <Image
+                        src={banner.imageUrl}
+                        alt={banner.title || "Hero Banner"}
+                        fill
+                        className="object-cover"
+                        priority={index === 0}
+                        unoptimized={banner.imageUrl.includes('cdn.stspoint.id') || banner.imageUrl.includes('r2.dev')}
+                        sizes="(max-width: 860px) 100vw, 860px"
+                      />
+                      
+                      <div className={cn(
+                        "absolute inset-0 bg-black/40 transition-opacity duration-500 hidden md:block pointer-events-none",
+                        isActive ? "opacity-0" : "opacity-100"
+                      )} />
+                    </div>
+                  </Link>
                 </CarouselItem>
               );
             })}
@@ -111,3 +142,5 @@ export function HeroSection() {
     </section>
   );
 }
+
+import Link from "next/link";
