@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from "react";
 import { useFirestore, useCollection } from "@/firebase";
-import { collection, addDoc, deleteDoc, doc, query, orderBy } from "firebase/firestore";
+import { collection, addDoc, deleteDoc, doc, query, orderBy, writeBatch } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,8 @@ import {
   Star,
   Users,
   Loader2,
-  AlertTriangle
+  AlertTriangle,
+  Eraser
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -50,6 +51,8 @@ export default function AdminBadgesPage() {
   const [activeTab, setActiveTab] = useState("all");
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isClearAllOpen, setIsClearAllOpen] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
   const db = useFirestore();
 
   const badgesQuery = useMemo(() => {
@@ -99,6 +102,27 @@ export default function AdminBadgesPage() {
     setDeleteId(null);
   };
 
+  const handleClearAll = async () => {
+    if (!db || badges.length === 0) return;
+    setIsClearing(true);
+    const batch = writeBatch(db);
+    badges.forEach((badge) => {
+      batch.delete(doc(db, "badges", badge.id));
+    });
+
+    batch.commit()
+      .catch(async (error) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: 'badges',
+          operation: 'delete'
+        }));
+      })
+      .finally(() => {
+        setIsClearing(false);
+        setIsClearAllOpen(false);
+      });
+  };
+
   const getStatusBadge = (status: string) => {
     return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-black uppercase tracking-tighter px-2 rounded-md">Active</Badge>;
   };
@@ -112,12 +136,22 @@ export default function AdminBadgesPage() {
           </h1>
           <p className="text-sm text-muted-foreground font-bold italic">Kelola koleksi lencana identitas profil dari Cloudflare R2.</p>
         </div>
-        <Button 
-          onClick={() => setIsUploadOpen(true)}
-          className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2"
-        >
-          <Plus className="h-4 w-4" /> Upload Badge R2
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="destructive"
+            onClick={() => setIsClearAllOpen(true)}
+            disabled={badges.length === 0 || loading}
+            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 gap-2"
+          >
+            <Eraser className="h-4 w-4" /> Hapus Semua
+          </Button>
+          <Button 
+            onClick={() => setIsUploadOpen(true)}
+            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2"
+          >
+            <Plus className="h-4 w-4" /> Upload Badge R2
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -248,6 +282,30 @@ export default function AdminBadgesPage() {
               className="rounded-xl font-black bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/20"
             >
               Hapus Aset
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={isClearAllOpen} onOpenChange={setIsClearAllOpen}>
+        <AlertDialogContent className="rounded-3xl border-border bg-card">
+          <AlertDialogHeader>
+            <div className="h-12 w-12 rounded-2xl bg-destructive/10 flex items-center justify-center mb-2">
+              <Eraser className="h-6 w-6 text-destructive" />
+            </div>
+            <AlertDialogTitle className="font-black text-xl tracking-tight">Kosongkan Koleksi Badge?</AlertDialogTitle>
+            <AlertDialogDescription className="font-bold text-xs text-muted-foreground leading-relaxed">
+              Tindakan ini akan menghapus **SEMUA** {badges.length} badge. Pengguna yang memiliki lencana ini tidak akan lagi melihatnya di profil mereka.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel className="rounded-xl font-bold border-border">Batal</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleClearAll}
+              disabled={isClearing}
+              className="rounded-xl font-black bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/20"
+            >
+              {isClearing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Ya, Hapus Semua"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
