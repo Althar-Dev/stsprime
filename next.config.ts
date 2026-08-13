@@ -20,6 +20,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Meningkatkan batas ukuran data untuk Server Actions agar bisa menerima file besar
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
 };
 
 export default nextConfig;
