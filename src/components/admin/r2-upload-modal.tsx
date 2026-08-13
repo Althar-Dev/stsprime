@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef } from "react";
@@ -39,10 +38,10 @@ interface R2UploadModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   folder: "banners" | "icons" | "backgrounds" | "badges" | "others";
-  onSuccess?: (url: string, filename: string) => void;
+  onSuccess?: (url: string, filename: string, index: number) => void;
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2UploadModalProps) {
   const [fileQueue, setFileQueue] = useState<FileItem[]>([]);
@@ -62,7 +61,7 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
         toast({
           variant: "destructive",
           title: "File Terlalu Besar",
-          description: `${file.name} melebihi batas 5MB.`,
+          description: `${file.name} melebihi batas 10MB.`,
         });
         return;
       }
@@ -128,9 +127,13 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
       };
 
       let successCount = 0;
+      let sessionIndex = 0;
 
       for (const item of fileQueue) {
-        if (item.status === "success") continue;
+        if (item.status === "success") {
+          sessionIndex++;
+          continue;
+        }
 
         setFileQueue((prev) => 
           prev.map((i) => i.id === item.id ? { ...i, status: "uploading" } : i)
@@ -145,7 +148,7 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
           setFileQueue((prev) => 
             prev.map((i) => i.id === item.id ? { ...i, status: "success" } : i)
           );
-          onSuccess?.(result.url, item.file.name);
+          onSuccess?.(result.url, item.file.name, sessionIndex);
           successCount++;
         } else {
           setFileQueue((prev) => 
@@ -153,13 +156,15 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
           );
         }
         
-        await new Promise(resolve => setTimeout(resolve, 500));
+        sessionIndex++;
+        // Jeda singkat untuk stabilitas koneksi server action
+        await new Promise(resolve => setTimeout(resolve, 300));
       }
 
       if (successCount > 0) {
         toast({
           title: "Unggah Selesai",
-          description: `${successCount} file berhasil diunggah.`,
+          description: `${successCount} file berhasil diunggah ke storage.`,
         });
       }
     } catch (error: any) {
@@ -215,7 +220,7 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
             </div>
             <div className="text-center">
               <p className="text-sm font-black">Seret file ke sini atau klik untuk memilih</p>
-              <p className="text-[10px] text-muted-foreground font-bold">Maks. 5MB per file</p>
+              <p className="text-[10px] text-muted-foreground font-bold">Maks. 10MB per file</p>
             </div>
           </div>
 
@@ -239,7 +244,7 @@ export function R2UploadModal({ isOpen, onOpenChange, folder, onSuccess }: R2Upl
                   onClick={resetAll}
                   className="h-7 text-[9px] font-black uppercase tracking-tight text-destructive hover:bg-destructive/10"
                 >
-                  Bersihkan Semua
+                  Bersihkan Antrean
                 </Button>
               </div>
               

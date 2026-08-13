@@ -20,7 +20,8 @@ import {
   ArrowUpCircle,
   Loader2,
   AlertTriangle,
-  Eraser
+  Eraser,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -65,16 +66,21 @@ export default function AdminBannersPage() {
     b.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleUploadSuccess = (url: string, filename: string) => {
+  const handleUploadSuccess = (url: string, filename: string, index: number) => {
     if (!db) return;
     const cleanTitle = filename.replace(/\.[^/.]+$/, "");
+    
+    // Hitung urutan berdasarkan urutan tertinggi yang ada + indeks antrean
+    const currentMaxOrder = banners.reduce((max, b) => Math.max(max, b.order || 0), 0);
+    const nextOrder = Math.max(banners.length, currentMaxOrder) + index + 1;
+
     const bannerData = {
       title: cleanTitle,
       imageUrl: url,
       link: "/",
       status: "Active",
       clicks: 0,
-      order: banners.length + 1,
+      order: nextOrder,
       createdAt: new Date().toISOString(),
     };
 
@@ -91,8 +97,6 @@ export default function AdminBannersPage() {
   const confirmDelete = async () => {
     if (!db || !deleteId) return;
     
-    // Untuk penghapusan tunggal, kita hapus Firestore saja di MVP ini 
-    // karena User Story fokus pada 'Hapus Semua' untuk Storage sinkronisasi
     deleteDoc(doc(db, "banners", deleteId)).catch(async (error) => {
       errorEmitter.emit('permission-error', new FirestorePermissionError({
         path: `banners/${deleteId}`,
@@ -107,20 +111,15 @@ export default function AdminBannersPage() {
     setIsClearing(true);
 
     try {
-      // 1. Ambil Konfigurasi R2
       const configSnap = await getDoc(doc(db, "settings", "r2"));
       if (!configSnap.exists()) throw new Error("Konfigurasi R2 tidak ditemukan.");
       
       const config = configSnap.data() as any;
-      
-      // 2. Ekstrak Keys dari URL (banners/filename.ext)
       const keysToDelete = banners.map((b: any) => {
         const urlParts = b.imageUrl.split('/');
-        // Format: https://domain/banners/filename
         return `banners/${urlParts[urlParts.length - 1]}`;
       });
 
-      // 3. Hapus Fisik di R2
       await deleteBatchFromR2(keysToDelete, {
         accountId: config.accountId,
         accessKeyId: config.accessKeyId,
@@ -129,7 +128,6 @@ export default function AdminBannersPage() {
         publicUrl: config.publicUrl
       });
 
-      // 4. Hapus Data di Firestore
       const batch = writeBatch(db);
       banners.forEach((b) => {
         batch.delete(doc(db, "banners", b.id));
@@ -137,7 +135,6 @@ export default function AdminBannersPage() {
       await batch.commit();
 
     } catch (error: any) {
-      console.error(error);
       errorEmitter.emit('permission-error', new FirestorePermissionError({
         path: 'banners',
         operation: 'delete'
@@ -171,13 +168,13 @@ export default function AdminBannersPage() {
             variant="destructive"
             onClick={() => setIsClearAllOpen(true)}
             disabled={banners.length === 0 || loading || isClearing}
-            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 gap-2"
+            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 gap-2 h-11"
           >
             {isClearing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eraser className="h-4 w-4" />} Hapus Semua
           </Button>
           <Button 
             onClick={() => setIsUploadOpen(true)}
-            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2"
+            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2 h-11"
           >
             <Plus className="h-4 w-4" /> Upload Banner R2
           </Button>
@@ -210,16 +207,22 @@ export default function AdminBannersPage() {
               <CardTitle className="text-lg font-black tracking-tight">Daftar Visual Hero Section</CardTitle>
               <CardDescription className="text-xs font-bold">Data real-time dari database STSPrime.</CardDescription>
             </div>
-            <div className="flex gap-2">
-              <div className="relative w-full md:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Cari judul..." 
-                  className="pl-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+            <div className="relative w-full md:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Cari judul..." 
+                className="pl-10 pr-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
           </div>
         </CardHeader>
@@ -312,7 +315,7 @@ export default function AdminBannersPage() {
             </div>
             <AlertDialogTitle className="font-black text-xl tracking-tight">Hapus Banner?</AlertDialogTitle>
             <AlertDialogDescription className="font-bold text-xs text-muted-foreground leading-relaxed">
-              Tindakan ini akan menghapus aset banner secara permanen dari database. File fisik di R2 tidak akan dihapus secara otomatis untuk mencegah kegagalan akses massal.
+              Tindakan ini akan menghapus aset banner secara permanen dari database.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2">

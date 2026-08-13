@@ -19,7 +19,8 @@ import {
   Users,
   Loader2,
   AlertTriangle,
-  Eraser
+  Eraser,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -159,13 +160,13 @@ export default function AdminBadgesPage() {
             variant="destructive"
             onClick={() => setIsClearAllOpen(true)}
             disabled={badges.length === 0 || loading || isClearing}
-            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 gap-2"
+            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 gap-2 h-11"
           >
             {isClearing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eraser className="h-4 w-4" />} Hapus Semua
           </Button>
           <Button 
             onClick={() => setIsUploadOpen(true)}
-            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2"
+            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2 h-11"
           >
             <Plus className="h-4 w-4" /> Upload Badge R2
           </Button>
@@ -209,10 +210,18 @@ export default function AdminBadgesPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
                 placeholder="Cari badge..." 
-                className="pl-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
+                className="pl-10 pr-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
           </div>
         </CardHeader>
@@ -239,7 +248,7 @@ export default function AdminBadgesPage() {
                     <TableRow key={badge.id} className="hover:bg-muted/20 border-border/30 transition-colors">
                       <TableCell className="py-4 pl-6">
                         <div className="flex items-center gap-4">
-                          <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-muted flex items-center justify-center p-1 border border-border/50">
+                          <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-muted flex items-center justify-center p-1 border border-border/50 shrink-0">
                             <Image src={badge.imageUrl} alt={badge.name} width={40} height={40} className="object-contain" unoptimized />
                           </div>
                           <span className="text-sm font-black truncate">{badge.name}</span>
@@ -313,7 +322,7 @@ export default function AdminBadgesPage() {
             </div>
             <AlertDialogTitle className="font-black text-xl tracking-tight">Kosongkan Koleksi Badge?</AlertDialogTitle>
             <AlertDialogDescription className="font-bold text-xs text-muted-foreground leading-relaxed">
-              Tindakan ini akan menghapus **{badges.length}** badge dari database **DAN** Cloudflare R2 secara permanen. Pengguna yang memiliki lencana ini tidak akan lagi melihatnya.
+              Tindakan ini akan menghapus **{badges.length}** badge dari database **DAN** Cloudflare R2 secara permanen.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2">

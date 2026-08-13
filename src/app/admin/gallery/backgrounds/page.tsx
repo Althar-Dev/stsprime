@@ -22,7 +22,8 @@ import {
   Image as ImageIcon,
   Loader2,
   AlertTriangle,
-  Eraser
+  Eraser,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -156,13 +157,13 @@ export default function AdminBackgroundsPage() {
             variant="destructive"
             onClick={() => setIsClearAllOpen(true)}
             disabled={backgrounds.length === 0 || loading || isClearing}
-            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 gap-2"
+            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 gap-2 h-11"
           >
             {isClearing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eraser className="h-4 w-4" />} Hapus Semua
           </Button>
           <Button 
             onClick={() => setIsUploadOpen(true)}
-            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2"
+            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2 h-11"
           >
             <Plus className="h-4 w-4" /> Upload Header R2
           </Button>
@@ -199,10 +200,18 @@ export default function AdminBackgroundsPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
                 placeholder="Cari produk..." 
-                className="pl-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
+                className="pl-10 pr-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
           </div>
         </CardHeader>
