@@ -5,7 +5,8 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // Fungsi pembantu untuk mengecek apakah user adalah admin
     function isAdmin() {
-      return request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+      return request.auth != null && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
     }
 
     // Mengizinkan semua orang membaca profil pengguna untuk keperluan leaderboard global
@@ -19,12 +20,27 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
     
-    // Banner, Icons, Backgrounds, Badges, Others: Read publik, Write admin
-    match /banners/{id} { allow read: if true; allow write: if isAdmin(); }
-    match /icons/{id} { allow read: if true; allow write: if isAdmin(); }
-    match /backgrounds/{id} { allow read: if true; allow write: if isAdmin(); }
-    match /badges/{id} { allow read: if true; allow write: if isAdmin(); }
-    match /others/{id} { allow read: if true; allow write: if isAdmin(); }
+    // Banner, Icons, Backgrounds, Badges, Others: Read publik (termasuk list), Write admin
+    match /banners/{id} { 
+      allow read: if true; 
+      allow write: if isAdmin(); 
+    }
+    match /icons/{id} { 
+      allow read: if true; 
+      allow write: if isAdmin(); 
+    }
+    match /backgrounds/{id} { 
+      allow read: if true; 
+      allow write: if isAdmin(); 
+    }
+    match /badges/{id} { 
+      allow read: if true; 
+      allow write: if isAdmin(); 
+    }
+    match /others/{id} { 
+      allow read: if true; 
+      allow write: if isAdmin(); 
+    }
     
     // Default deny
     match /{document=**} {

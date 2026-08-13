@@ -3,8 +3,9 @@
 
 import * as React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useFirestore, useCollection } from "@/firebase";
-import { collection, query, orderBy, where } from "firebase/firestore";
+import { collection } from "firebase/firestore";
 import {
   Carousel,
   CarouselContent,
@@ -21,17 +22,20 @@ export function HeroSection() {
   const [count, setCount] = React.useState(0);
   const db = useFirestore();
 
-  // Memoize query untuk mencegah re-render berlebih
-  const bannersQuery = React.useMemo(() => {
+  // Ambil seluruh koleksi banner untuk menghindari masalah indeks komposit di client
+  const bannersRef = React.useMemo(() => {
     if (!db) return null;
-    return query(
-      collection(db, "banners"),
-      where("status", "==", "Active"),
-      orderBy("order", "asc")
-    );
+    return collection(db, "banners");
   }, [db]);
 
-  const { data: banners, loading } = useCollection<any>(bannersQuery);
+  const { data: rawBanners, loading } = useCollection<any>(bannersRef);
+
+  // Lakukan pemfilteran dan pengurutan di sisi klien
+  const banners = React.useMemo(() => {
+    return rawBanners
+      .filter((banner) => banner.status === "Active")
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+  }, [rawBanners]);
 
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: false })
@@ -64,7 +68,7 @@ export function HeroSection() {
     );
   }
 
-  // Jika tidak ada banner, tampilkan placeholder atau kosong
+  // Jika tidak ada banner, jangan tampilkan apa-apa
   if (banners.length === 0) {
     return null;
   }
@@ -142,5 +146,3 @@ export function HeroSection() {
     </section>
   );
 }
-
-import Link from "next/link";
