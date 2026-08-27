@@ -540,34 +540,12 @@ export function Navbar() {
                       <div className="p-6 border-t border-border mt-auto bg-muted/10">
                         {user && (
                           <>
-                            {/* Profile Info with VIP Badge */}
-                            <div className="mb-3 p-3 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
-                              <div className="flex items-center gap-3 min-w-0">
-                                <Avatar className="h-9 w-9 border border-background shrink-0">
-                                  <AvatarImage src={displayPhotoURL} alt={user.email || "User"} />
-                                  <AvatarFallback className="bg-muted text-muted-foreground font-black text-xs">
-                                    {userInitial}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <div className="flex flex-col min-w-0">
-                                  <div className="flex items-center gap-1.5">
-                                    <p className={cn("text-xs font-black truncate", profileData?.nameColor || "text-foreground")}>
-                                      {user.displayName || "Gamer"}
-                                    </p>
-                                    {profileData?.vip && (
-                                      <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0" />
-                                    )}
-                                  </div>
-                                  <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
-                                </div>
-                              </div>
-                            </div>
 
                             {/* STS Coin Card */}
                             <div className="mb-4 p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
                               <div className="flex items-center gap-3">
                                 <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-8 md:w-8 object-contain" />
-                                <span className="text-xs font-black">STS Coin</span>
+                                <span className="text-xs font-black">STSCoin</span>
                               </div>
                               <span className="text-sm font-black text-primary">
                                 {coinValue.toLocaleString('id-ID')}
