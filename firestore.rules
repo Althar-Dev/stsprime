@@ -15,9 +15,19 @@ service cloud.firestore {
       allow write: if (request.auth != null && request.auth.uid == userId) || isAdmin();
     }
 
-    // Pengaturan sistem hanya bisa diakses oleh admin
-    match /settings/{settingId} {
+    // Pengaturan R2 hanya untuk admin
+    match /settings/r2 {
       allow read, write: if isAdmin();
+    }
+
+    // Pengaturan konten publik (Terms, Privacy, Contact)
+    match /settings/legal {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /settings/contact {
+      allow read: if true;
+      allow write: if isAdmin();
     }
     
     // Banner, Icons, Backgrounds, Badges, Others: Read publik (termasuk list), Write admin
