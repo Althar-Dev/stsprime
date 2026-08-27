@@ -368,18 +368,11 @@ export function Navbar() {
                   </div>
 
                   {user ? (
-                    <div className="flex items-center gap-2 md:gap-3">
+                    <div className="hidden lg:flex items-center gap-2 md:gap-3">
                       <div className="flex items-center gap-2 md:gap-1.5 px-3 md:px-2.5 py-1.5 md:py-1 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
                         <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-5 md:w-5 object-contain group-hover:scale-110 transition-transform" />
                         <span className="text-sm md:text-sm font-black text-primary">
-                          <span className="md:hidden">
-                            {coinValue >= 10000000
-                              ? `${Math.floor(coinValue / 1000000)}m`
-                              : coinValue.toLocaleString('id-ID')}
-                          </span>
-                          <span className="hidden md:block">
-                            {coinValue.toLocaleString('id-ID')}
-                          </span>
+                          {coinValue.toLocaleString('id-ID')}
                         </span>
                       </div>
 
@@ -473,25 +466,7 @@ export function Navbar() {
                       </SheetHeader>
 
                       <div className="h-16 px-6 border-b border-border bg-card/30 flex items-center justify-between shrink-0">
-                        <div className="flex items-center gap-3">
-                          <Logo className="h-16 w-32" />
-                          <div>
-                            <div className="flex items-center gap-1.5">
-                              {profileData?.vip && (
-                                <Popover>
-                                  <PopoverTrigger asChild>
-                                    <div className="shrink-0 cursor-pointer">
-                                      <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
-                                    </div>
-                                  </PopoverTrigger>
-                                  <PopoverContent className="w-auto p-2 bg-background border-border shadow-xl">
-                                    <p className="text-[10px] font-black">VIP Member</p>
-                                  </PopoverContent>
-                                </Popover>
-                              )}
-                            </div>
-                          </div>
-                        </div>
+                        <Logo className="h-16 w-32" />
                       </div>
 
                       <ScrollArea className="flex-1">
@@ -559,16 +534,50 @@ export function Navbar() {
 
                       <div className="p-6 border-t border-border mt-auto bg-muted/10">
                         {user && (
-                          <div className="mb-4 p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
+                          <div className="mb-4 p-4 bg-card border border-border rounded-xl space-y-3 shadow-sm">
                             <div className="flex items-center gap-3">
-                              <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-8 md:w-8 object-contain" />
-                              <span className="text-xs font-black">STS Coin</span>
+                              <Avatar className="h-10 w-10 border border-background shrink-0">
+                                <AvatarImage src={displayPhotoURL} alt={user.email || "User"} />
+                                <AvatarFallback className="bg-muted text-muted-foreground font-black">
+                                  {userInitial}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex flex-col min-w-0 flex-1">
+                                <div className="flex items-center gap-1.5">
+                                  <p
+                                    className={cn("text-sm font-black leading-none truncate", profileData?.nameColor || "text-foreground")}
+                                    style={profileData?.fontFamily ? { fontFamily: profileData.fontFamily } : {}}
+                                  >
+                                    {user.displayName || "Gamer"}
+                                  </p>
+                                  {profileData?.vip && (
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <div className="shrink-0 cursor-pointer">
+                                          <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
+                                        </div>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-2 bg-background border-border shadow-xl">
+                                        <p className="text-[10px] font-black">VIP Member</p>
+                                      </PopoverContent>
+                                    </Popover>
+                                  )}
+                                </div>
+                                <p className="text-xs text-muted-foreground truncate mt-0.5">{user.email}</p>
+                              </div>
                             </div>
-                            <span className="text-sm font-black text-primary">
-                              {coinValue >= 10000000
-                                ? `${Math.floor(coinValue / 1000000)}m`
-                                : coinValue.toLocaleString('id-ID')}
-                            </span>
+
+                            <Separator className="opacity-40" />
+
+                            <div className="flex items-center justify-between pt-0.5">
+                              <div className="flex items-center gap-2">
+                                <img src="/img/coin.png" alt="STS Coin" className="h-5 w-5 object-contain" />
+                                <span className="text-xs font-black">STS Coin</span>
+                              </div>
+                              <span className="text-sm font-black text-primary">
+                                {coinValue.toLocaleString('id-ID')}
+                              </span>
+                            </div>
                           </div>
                         )}
                         <div className="flex items-center gap-3 mb-4">
