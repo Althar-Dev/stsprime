@@ -9,14 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { 
-  Cpu, 
-  RefreshCw, 
-  Settings2, 
-  ShieldCheck, 
-  Wallet, 
-  Zap, 
-  Activity, 
+import {
+  Cpu,
+  RefreshCw,
+  Settings2,
+  ShieldCheck,
+  Wallet,
+  Zap,
+  Activity,
   AlertCircle,
   KeyRound,
   IdCard,
@@ -39,54 +39,54 @@ export default function AdminOrderkuotaPage() {
   const [isProduction, setIsProduction] = useState(true);
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-500">
+    <div className="container mx-auto px-3 sm:px-6 md:px-8 py-3 sm:py-6 md:py-8 space-y-4 sm:space-y-6 md:space-y-8 animate-in fade-in duration-500 w-full max-w-full min-w-0">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tight flex items-center gap-3">
-            <Cpu className="h-8 w-8 text-primary" /> Orderkuota Provider
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+        <div className="space-y-0.5 min-w-0">
+          <h1 className="text-lg sm:text-2xl md:text-3xl font-black tracking-tight flex items-center gap-2 sm:gap-3 truncate">
+            <Cpu className="h-5 w-5 sm:h-7 sm:w-7 text-primary shrink-0" /> Integrasi Orderkuota
           </h1>
-          <p className="text-sm text-muted-foreground font-bold italic">Kelola integrasi API Orderkuota, pantau saldo deposit, dan sinkronisasi SKU produk.</p>
+          <p className="text-xs sm:text-sm text-muted-foreground font-bold">Pengaturan API ID, margin profit, dan log transaksi provider Orderkuota.</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" className="rounded-xl font-black text-xs uppercase tracking-widest gap-2 h-10 border-border">
-            <RefreshCw className="h-4 w-4" /> Sinkron Produk
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Button variant="outline" className="flex-1 sm:flex-initial rounded-xl font-black text-[11px] sm:text-xs uppercase tracking-widest gap-1.5 sm:gap-2 h-9 sm:h-10 border-border">
+            <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Sinkron Produk
           </Button>
-          <a href="https://orderkuota.com" target="_blank" rel="noopener noreferrer">
-            <Button className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2 h-10">
-              Merchant Area <ExternalLink className="h-4 w-4" />
+          <a href="https://orderkuota.com" target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-initial">
+            <Button className="w-full rounded-xl font-black text-[11px] sm:text-xs uppercase tracking-widest px-4 sm:px-6 shadow-lg shadow-primary/20 gap-1.5 sm:gap-2 h-9 sm:h-10">
+              Merchant <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Button>
           </a>
         </div>
       </div>
 
       {/* Provider Status Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 w-full">
         {[
           { label: "Saldo Orderkuota", value: "Rp 1.840.500", icon: Wallet, color: "text-primary", trend: "Saldo mengalir" },
           { label: "SKU Terhubung", value: "86 Produk", icon: Zap, color: "text-blue-500", trend: "Terintegrasi" },
           { label: "Success Rate", value: "99.1%", icon: Activity, color: "text-emerald-500", trend: "Sangat Stabil" },
           { label: "Server Status", value: "ONLINE", icon: ShieldCheck, color: "text-emerald-500", trend: "Latency Rendah" },
         ].map((stat, i) => (
-          <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
-            <CardContent className="p-6 space-y-3">
+          <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm min-w-0">
+            <CardContent className="p-3.5 sm:p-6 space-y-2 sm:space-y-3">
               <div className="flex items-center justify-between">
-                <div className="h-10 w-10 rounded-xl bg-muted/40 flex items-center justify-center">
-                  <stat.icon className={cn("h-5 w-5", stat.color)} />
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-muted/40 flex items-center justify-center shrink-0">
+                  <stat.icon className={cn("h-4 w-4 sm:h-5 sm:w-5", stat.color)} />
                 </div>
-                <Badge variant="outline" className="text-[9px] font-black uppercase tracking-tighter opacity-60">Provider API</Badge>
+                <Badge variant="outline" className="text-[8px] sm:text-[9px] font-black uppercase tracking-tighter opacity-60">Provider API</Badge>
               </div>
-              <div className="space-y-0.5">
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{stat.label}</p>
-                <p className="text-xl font-black tabular-nums">{stat.value}</p>
-                <p className="text-[10px] font-bold text-muted-foreground/60 italic">{stat.trend}</p>
+              <div className="space-y-0.5 min-w-0">
+                <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground truncate">{stat.label}</p>
+                <p className="text-base sm:text-xl font-black tabular-nums truncate">{stat.value}</p>
+                <p className="text-[9px] font-bold text-muted-foreground/60 italic truncate">{stat.trend}</p>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 w-full">
         {/* Connection Settings */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
@@ -211,7 +211,7 @@ export default function AdminOrderkuotaPage() {
                 ))}
               </div>
               <div className="p-4 pt-6 text-center space-y-4">
-                 <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-left">
+                <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-left">
                   <AlertCircle className="h-4 w-4 text-blue-500 shrink-0" />
                   <p className="text-[10px] font-bold text-blue-600 leading-tight">
                     Webhook Orderkuota sedang aktif. Status transaksi otomatis terupdate.

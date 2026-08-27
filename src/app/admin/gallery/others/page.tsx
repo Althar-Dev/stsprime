@@ -8,13 +8,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  FileImage, 
-  Search, 
-  Plus, 
-  MoreVertical, 
-  Edit, 
-  Trash2, 
+import {
+  FileImage,
+  FolderKanban,
+  Search,
+  Plus,
+  MoreVertical,
+  Edit,
+  Trash2,
   Upload,
   Layers,
   Copy,
@@ -24,11 +25,11 @@ import {
   X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
@@ -64,7 +65,7 @@ export default function AdminOtherAssetsPage() {
 
   const { data: assets, loading } = useCollection<any>(assetsQuery);
 
-  const filteredAssets = assets.filter(asset => 
+  const filteredAssets = assets.filter(asset =>
     asset.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -107,7 +108,7 @@ export default function AdminOtherAssetsPage() {
     try {
       const configSnap = await getDoc(doc(db, "settings", "r2"));
       if (!configSnap.exists()) throw new Error("Konfigurasi R2 tidak ditemukan.");
-      
+
       const config = configSnap.data() as any;
       const keysToDelete = assets.map((asset: any) => {
         const urlParts = asset.imageUrl.split('/');
@@ -149,90 +150,90 @@ export default function AdminOtherAssetsPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tight flex items-center gap-3">
-            <FileImage className="h-8 w-8 text-primary" /> Aset Lainnya
+    <div className="container mx-auto px-3 sm:px-6 md:px-8 py-3 sm:py-6 md:py-8 space-y-4 sm:space-y-6 md:space-y-8 animate-in fade-in duration-500 w-full max-w-full min-w-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+        <div className="space-y-0.5 min-w-0">
+          <h1 className="text-lg sm:text-2xl md:text-3xl font-black tracking-tight flex items-center gap-2 sm:gap-3 truncate">
+            <FolderKanban className="h-5 w-5 sm:h-7 sm:w-7 text-primary shrink-0" /> Galeri Aset Lainnya
           </h1>
-          <p className="text-sm text-muted-foreground font-bold italic">Kelola aset pendukung marketing dari Cloudflare R2.</p>
+          <p className="text-xs sm:text-sm text-muted-foreground font-bold">Kelola gambar logo, latar dekoratif, dan elemen UI pendukung.</p>
         </div>
-        <div className="flex gap-2">
-          <Button 
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Button
             variant="destructive"
             onClick={() => setIsClearAllOpen(true)}
             disabled={assets.length === 0 || loading || isClearing}
-            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 gap-2 h-11"
+            className="flex-1 sm:flex-initial rounded-xl font-black text-[11px] sm:text-xs uppercase tracking-widest px-4 sm:px-6 gap-1.5 sm:gap-2 h-9 sm:h-11"
           >
-            {isClearing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eraser className="h-4 w-4" />} Hapus Semua
+            {isClearing ? <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" /> : <Eraser className="h-3.5 w-3.5 sm:h-4 sm:w-4" />} Hapus Semua
           </Button>
-          <Button 
+          <Button
             onClick={() => setIsUploadOpen(true)}
-            className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2 h-11"
+            className="flex-1 sm:flex-initial rounded-xl font-black text-[11px] sm:text-xs uppercase tracking-widest px-4 sm:px-6 shadow-lg shadow-primary/20 gap-1.5 sm:gap-2 h-9 sm:h-11"
           >
-            <Plus className="h-4 w-4" /> Upload Aset R2
+            <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Upload Aset R2
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 w-full">
         {[
           { label: "Total Aset", value: assets.length.toString(), icon: Layers, color: "text-primary" },
           { label: "Storage Status", value: "Connected", icon: Upload, color: "text-emerald-500" },
         ].map((stat, i) => (
-          <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
-            <CardContent className="p-6 flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{stat.label}</p>
-                <p className="text-xl font-black truncate max-w-[120px]">{stat.value}</p>
+          <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm min-w-0">
+            <CardContent className="p-3.5 sm:p-6 flex items-center justify-between gap-2">
+              <div className="space-y-0.5 sm:space-y-1 min-w-0">
+                <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground truncate">{stat.label}</p>
+                <p className="text-base sm:text-xl font-black truncate">{stat.value}</p>
               </div>
-              <div className="h-12 w-12 rounded-2xl bg-muted/30 flex items-center justify-center">
-                <stat.icon className={cn("h-6 w-6", stat.color)} />
+              <div className="h-9 w-9 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-muted/30 flex items-center justify-center shrink-0">
+                <stat.icon className={cn("h-4 w-4 sm:h-6 sm:w-6", stat.color)} />
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm overflow-hidden">
-        <CardHeader className="p-6 border-b border-border/30 bg-muted/10">
-          <div className="flex flex-col md:flex-row justify-between gap-4">
-            <CardTitle className="text-lg font-black tracking-tight">Katalog Aset Pendukung</CardTitle>
-            <div className="relative w-full md:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder="Cari nama..." 
-                className="pl-10 pr-10 h-10 bg-background border-border text-xs font-bold rounded-xl"
+      <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm overflow-hidden w-full max-w-full min-w-0">
+        <CardHeader className="p-4 sm:p-6 border-b border-border/30 bg-muted/10">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+            <CardTitle className="text-base sm:text-lg font-black tracking-tight">Katalog Aset Pendukung</CardTitle>
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+              <Input
+                placeholder="Cari nama..."
+                className="pl-9 sm:pl-10 pr-9 sm:pr-10 h-9 sm:h-10 bg-background border-border text-[11px] sm:text-xs font-bold rounded-xl"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               {searchQuery && (
-                <button 
+                <button
                   onClick={() => setSearchQuery("")}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </button>
               )}
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 w-full max-w-full overflow-hidden">
           {loading ? (
-             <div className="py-20 flex flex-col items-center justify-center gap-4">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-50">Menyelaraskan Galeri...</p>
+            <div className="py-16 sm:py-20 flex flex-col items-center justify-center gap-3 sm:gap-4">
+              <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
+              <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest opacity-50">Menyelaraskan Galeri...</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table className="min-w-[1000px]">
+            <div className="w-full overflow-x-auto">
+              <Table className="min-w-[800px] whitespace-nowrap">
                 <TableHeader className="bg-muted/30">
                   <TableRow className="border-border/30">
-                    <TableHead className="text-[10px] font-black uppercase pl-6 h-12">Pratampil Aset</TableHead>
-                    <TableHead className="text-[10px] font-black uppercase h-12">Nama & ID</TableHead>
-                    <TableHead className="text-[10px] font-black uppercase h-12">Kategori</TableHead>
-                    <TableHead className="text-[10px] font-black uppercase h-12 text-center">Status</TableHead>
-                    <TableHead className="text-[10px] font-black uppercase text-right pr-6 h-12">Aksi</TableHead>
+                    <TableHead className="text-[9px] sm:text-[10px] font-black uppercase pl-4 sm:pl-6 h-10 sm:h-12">Pratampil Aset</TableHead>
+                    <TableHead className="text-[9px] sm:text-[10px] font-black uppercase h-10 sm:h-12">Nama & ID</TableHead>
+                    <TableHead className="text-[9px] sm:text-[10px] font-black uppercase h-10 sm:h-12">Kategori</TableHead>
+                    <TableHead className="text-[9px] sm:text-[10px] font-black uppercase h-10 sm:h-12 text-center">Status</TableHead>
+                    <TableHead className="text-[9px] sm:text-[10px] font-black uppercase text-right pr-4 sm:pr-6 h-10 sm:h-12">Aksi</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -260,7 +261,7 @@ export default function AdminOtherAssetsPage() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-52 rounded-xl border-border">
                             <DropdownMenuItem className="text-xs font-bold gap-2" onClick={() => copyUrl(asset.imageUrl)}><Copy className="h-3.5 w-3.5" /> Salin URL</DropdownMenuItem>
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               className="text-xs font-bold text-destructive gap-2 cursor-pointer"
                               onClick={() => setDeleteId(asset.id)}
                             >
@@ -278,9 +279,9 @@ export default function AdminOtherAssetsPage() {
         </CardContent>
       </Card>
 
-      <R2UploadModal 
-        isOpen={isUploadOpen} 
-        onOpenChange={setIsUploadOpen} 
+      <R2UploadModal
+        isOpen={isUploadOpen}
+        onOpenChange={setIsUploadOpen}
         folder="others"
         onSuccess={handleUploadSuccess}
       />
@@ -298,7 +299,7 @@ export default function AdminOtherAssetsPage() {
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2">
             <AlertDialogCancel className="rounded-xl font-bold border-border">Batal</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={confirmDelete}
               className="rounded-xl font-black bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/20"
             >
@@ -321,7 +322,7 @@ export default function AdminOtherAssetsPage() {
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2">
             <AlertDialogCancel className="rounded-xl font-bold border-border">Batal</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={handleClearAll}
               disabled={isClearing}
               className="rounded-xl font-black bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg shadow-destructive/20"

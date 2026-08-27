@@ -39,105 +39,105 @@ export default function AdminXenditPage() {
   const [isLiveMode, setIsLiveMode] = useState(false);
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-500">
+    <div className="container mx-auto px-3 sm:px-6 md:px-8 py-3 sm:py-6 md:py-8 space-y-4 sm:space-y-6 md:space-y-8 animate-in fade-in duration-500 w-full max-w-full min-w-0">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tight flex items-center gap-3">
-            <CreditCard className="h-8 w-8 text-primary" /> Xendit Gateway
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+        <div className="space-y-0.5 min-w-0">
+          <h1 className="text-lg sm:text-2xl md:text-3xl font-black tracking-tight flex items-center gap-2 sm:gap-3 truncate">
+            <CreditCard className="h-5 w-5 sm:h-7 sm:w-7 text-primary shrink-0" /> Gateway Xendit
           </h1>
-          <p className="text-sm text-muted-foreground font-bold italic">Konfigurasi payment gateway Xendit untuk Virtual Account, E-Wallet, dan Retail Outlet.</p>
+          <p className="text-xs sm:text-sm text-muted-foreground font-bold">Konfigurasi payment gateway Xendit untuk Virtual Account, E-Wallet, dan Retail Outlet.</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" className="rounded-xl font-black text-xs uppercase tracking-widest gap-2 h-10 border-border">
-            <RefreshCw className="h-4 w-4" /> Cek Koneksi
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Button variant="outline" className="flex-1 sm:flex-initial rounded-xl font-black text-[11px] sm:text-xs uppercase tracking-widest gap-1.5 sm:gap-2 h-9 sm:h-10 border-border">
+            <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> Cek Koneksi
           </Button>
-          <a href="https://dashboard.xendit.co" target="_blank" rel="noopener noreferrer">
-            <Button className="rounded-xl font-black text-xs uppercase tracking-widest px-6 shadow-lg shadow-primary/20 gap-2 h-10">
-              Dashboard Xendit <ExternalLink className="h-4 w-4" />
+          <a href="https://dashboard.xendit.co" target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-initial">
+            <Button className="w-full rounded-xl font-black text-[11px] sm:text-xs uppercase tracking-widest px-4 sm:px-6 shadow-lg shadow-primary/20 gap-1.5 sm:gap-2 h-9 sm:h-10">
+              Dashboard <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Button>
           </a>
         </div>
       </div>
 
       {/* Gateway Health Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 w-full">
         {[
           { label: "Total Terproses", value: "Rp 124.8M", icon: Wallet, color: "text-primary", trend: "Bulan ini" },
           { label: "Kanal Aktif", value: "18 Metode", icon: Globe, color: "text-blue-500", trend: "VA & E-Wallet" },
           { label: "Success Rate", value: "97.2%", icon: Activity, color: "text-emerald-500", trend: "Pembayaran Berhasil" },
           { label: "API Status", value: "ONLINE", icon: ShieldCheck, color: "text-emerald-500", trend: "Terhubung" },
         ].map((stat, i) => (
-          <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
-            <CardContent className="p-6 space-y-3">
+          <Card key={i} className="bento-card border-border/50 bg-card/30 backdrop-blur-sm min-w-0">
+            <CardContent className="p-3.5 sm:p-6 space-y-2 sm:space-y-3">
               <div className="flex items-center justify-between">
-                <div className="h-10 w-10 rounded-xl bg-muted/40 flex items-center justify-center">
-                  <stat.icon className={cn("h-5 w-5", stat.color)} />
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-muted/40 flex items-center justify-center shrink-0">
+                  <stat.icon className={cn("h-4 w-4 sm:h-5 sm:w-5", stat.color)} />
                 </div>
-                <Badge variant="outline" className="text-[9px] font-black uppercase tracking-tighter opacity-60">Gateway</Badge>
+                <Badge variant="outline" className="text-[8px] sm:text-[9px] font-black uppercase tracking-tighter opacity-60">Gateway</Badge>
               </div>
-              <div className="space-y-0.5">
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{stat.label}</p>
-                <p className="text-xl font-black tabular-nums">{stat.value}</p>
-                <p className="text-[10px] font-bold text-muted-foreground/60 italic">{stat.trend}</p>
+              <div className="space-y-0.5 min-w-0">
+                <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground truncate">{stat.label}</p>
+                <p className="text-base sm:text-xl font-black tabular-nums truncate">{stat.value}</p>
+                <p className="text-[9px] font-bold text-muted-foreground/60 italic truncate">{stat.trend}</p>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8 w-full">
         {/* Connection Settings */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
-            <CardHeader className="border-b border-border/30 bg-muted/10">
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2">
-                    <KeyRound className="h-5 w-5 text-primary" /> Kredensial API Xendit
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+          <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm min-w-0">
+            <CardHeader className="p-4 sm:p-6 border-b border-border/30 bg-muted/10">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                <div className="space-y-0.5">
+                  <CardTitle className="text-base sm:text-lg font-black tracking-tight flex items-center gap-2">
+                    <KeyRound className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" /> Kredensial API Xendit
                   </CardTitle>
-                  <CardDescription className="text-xs font-bold">Gunakan Secret Key dari Dashboard Xendit menu Settings &gt; API Keys.</CardDescription>
+                  <CardDescription className="text-[10px] sm:text-xs font-bold">Gunakan Secret Key dari Dashboard Xendit menu Settings &gt; API Keys.</CardDescription>
                 </div>
                 <div className={cn(
-                  "flex items-center gap-2 px-3 py-1 rounded-full border transition-colors",
+                  "flex items-center gap-2 px-2.5 sm:px-3 py-1 rounded-full border transition-colors shrink-0",
                   isLiveMode ? "bg-emerald-500/10 border-emerald-500/20" : "bg-blue-500/10 border-blue-500/20"
                 )}>
                   <div className={cn("h-2 w-2 rounded-full animate-pulse", isLiveMode ? "bg-emerald-500" : "bg-blue-500")} />
-                  <span className={cn("text-[10px] font-black uppercase", isLiveMode ? "text-emerald-500" : "text-blue-500")}>
+                  <span className={cn("text-[9px] sm:text-[10px] font-black uppercase", isLiveMode ? "text-emerald-500" : "text-blue-500")}>
                     {isLiveMode ? "Live Mode" : "Test Mode"}
                   </span>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="grid sm:grid-cols-1 gap-6">
+            <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 gap-4 sm:gap-6">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                     <Lock className="h-3 w-3" /> Secret Key (xnd_...)
                   </Label>
                   <div className="relative">
-                    <Input type="password" placeholder="xnd_production_..." className="h-11 bg-background rounded-xl font-bold border-border/50 pr-10" defaultValue="xnd_test_1234567890abcdef" />
-                    <Button variant="ghost" size="icon" className="absolute right-1 top-1 h-9 w-9 rounded-lg"><Settings2 className="h-4 w-4 opacity-50" /></Button>
+                    <Input type="password" placeholder="xnd_production_..." className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 pr-10 text-xs sm:text-sm" defaultValue="xnd_test_1234567890abcdef" />
+                    <Button variant="ghost" size="icon" className="absolute right-1 top-1 h-8 w-8 sm:h-9 sm:w-9 rounded-lg"><Settings2 className="h-4 w-4 opacity-50" /></Button>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                     <ShieldCheck className="h-3 w-3" /> Callback Verification Token
                   </Label>
-                  <Input placeholder="Token verifikasi webhook" className="h-11 bg-background rounded-xl font-bold border-border/50" defaultValue="v3rify_t0k3n_xnd" />
+                  <Input placeholder="Token verifikasi webhook" className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm" defaultValue="v3rify_t0k3n_xnd" />
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-muted/20 border border-border/30 flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <p className="text-sm font-black text-foreground">Gunakan Production / Live Mode</p>
-                  <p className="text-[10px] text-muted-foreground font-bold">Pastikan kredensial sudah menggunakan kunci produksi sebelum mengaktifkan ini.</p>
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-muted/20 border border-border/30 flex items-center justify-between gap-3">
+                <div className="space-y-0.5 min-w-0">
+                  <p className="text-xs sm:text-sm font-black text-foreground">Gunakan Production / Live Mode</p>
+                  <p className="text-[9px] sm:text-[10px] text-muted-foreground font-bold leading-tight">Pastikan kredensial sudah menggunakan kunci produksi sebelum mengaktifkan ini.</p>
                 </div>
-                <Switch checked={isLiveMode} onCheckedChange={setIsLiveMode} />
+                <Switch checked={isLiveMode} onCheckedChange={setIsLiveMode} className="shrink-0" />
               </div>
 
               <div className="pt-2">
-                <Button className="w-full sm:w-auto h-11 px-8 rounded-xl font-black gap-2 shadow-lg shadow-primary/20">
+                <Button className="w-full sm:w-auto h-10 sm:h-11 px-6 sm:px-8 rounded-xl font-black text-xs gap-2 shadow-lg shadow-primary/20">
                   <CheckCircle2 className="h-4 w-4" /> Simpan Konfigurasi
                 </Button>
               </div>
@@ -145,30 +145,30 @@ export default function AdminXenditPage() {
           </Card>
 
           {/* Payment Methods Control */}
-          <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm">
-            <CardHeader className="border-b border-border/30 bg-muted/10">
-              <CardTitle className="text-lg font-black tracking-tight">Status Metode Pembayaran</CardTitle>
-              <CardDescription className="text-xs font-bold">Aktifkan atau nonaktifkan kanal pembayaran tertentu di sisi checkout.</CardDescription>
+          <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm min-w-0">
+            <CardHeader className="p-4 sm:p-6 border-b border-border/30 bg-muted/10">
+              <CardTitle className="text-base sm:text-lg font-black tracking-tight">Status Metode Pembayaran</CardTitle>
+              <CardDescription className="text-[10px] sm:text-xs font-bold">Aktifkan atau nonaktifkan kanal pembayaran tertentu di sisi checkout.</CardDescription>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid sm:grid-cols-2 gap-4">
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {[
                   { label: "Virtual Account (VA)", desc: "BCA, Mandiri, BNI, BRI", icon: Building2 },
                   { label: "E-Wallets", desc: "OVO, Dana, LinkAja", icon: Wallet },
                   { label: "QRIS", desc: "Dynamic QR Code", icon: QrCode },
                   { label: "Retail Outlets", desc: "Alfamart, Indomaret", icon: CreditCard },
                 ].map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-4 rounded-xl bg-background border border-border/40 group hover:border-primary/30 transition-all">
-                    <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                        <item.icon className="h-4.5 w-4.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <div key={idx} className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-background border border-border/40 group hover:border-primary/30 transition-all gap-2">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                      <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors shrink-0">
+                        <item.icon className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-muted-foreground group-hover:text-primary transition-colors" />
                       </div>
-                      <div className="space-y-0.5">
-                        <p className="text-xs font-black">{item.label}</p>
-                        <p className="text-[9px] text-muted-foreground font-bold">{item.desc}</p>
+                      <div className="space-y-0.5 min-w-0">
+                        <p className="text-xs font-black truncate">{item.label}</p>
+                        <p className="text-[9px] text-muted-foreground font-bold truncate">{item.desc}</p>
                       </div>
                     </div>
-                    <Switch defaultChecked />
+                    <Switch defaultChecked className="shrink-0" />
                   </div>
                 ))}
               </div>
@@ -177,39 +177,39 @@ export default function AdminXenditPage() {
         </div>
 
         {/* Action Sidebar / Log Sidebar */}
-        <div className="space-y-6">
-          <Card className="bento-card border-primary/20 bg-primary/5 h-full">
-            <CardHeader className="pb-4">
+        <div className="space-y-4 sm:space-y-6">
+          <Card className="bento-card border-primary/20 bg-primary/5 h-full min-w-0">
+            <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-black uppercase tracking-widest">Xendit Webhook Logs</CardTitle>
-                <Button variant="ghost" size="sm" className="h-7 text-[10px] font-black text-primary hover:bg-primary/10">
+                <CardTitle className="text-xs sm:text-sm font-black uppercase tracking-widest">Xendit Webhook Logs</CardTitle>
+                <Button variant="ghost" size="sm" className="h-7 text-[10px] font-black text-primary hover:bg-primary/10 px-2">
                   Lihat Semua <ChevronRight className="h-3 w-3 ml-1" />
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="px-0">
+            <CardContent className="px-0 pb-4">
               <div className="divide-y divide-border/30">
                 {MOCK_XENDIT_LOGS.map((log) => (
-                  <div key={log.id} className="p-4 hover:bg-muted/10 transition-colors space-y-2">
+                  <div key={log.id} className="p-3.5 sm:p-4 hover:bg-muted/10 transition-colors space-y-2">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] font-black text-primary">{log.externalId}</span>
-                        <Badge variant="outline" className="text-[8px] h-4 font-black uppercase px-1">{log.type}</Badge>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="font-mono text-[10px] font-black text-primary truncate">{log.externalId}</span>
+                        <Badge variant="outline" className="text-[8px] h-4 font-black uppercase px-1 shrink-0">{log.type}</Badge>
                       </div>
                       <span className={cn(
-                        "text-[9px] font-black uppercase tracking-tighter",
+                        "text-[9px] font-black uppercase tracking-tighter shrink-0",
                         log.status === "Paid" ? "text-emerald-500" : 
                         log.status === "Pending" ? "text-amber-500" : "text-destructive"
                       )}>{log.status}</span>
                     </div>
-                    <div className="flex justify-between items-end">
-                      <div className="space-y-0.5">
-                        <p className="text-xs font-bold">{log.channel}</p>
-                        <p className="text-[10px] font-black text-foreground/80">{log.amount}</p>
-                        <p className="text-[9px] text-muted-foreground font-bold">{log.date}</p>
+                    <div className="flex justify-between items-end gap-2">
+                      <div className="space-y-0.5 min-w-0">
+                        <p className="text-xs font-bold truncate">{log.channel || "Auto"}</p>
+                        <p className="text-[10px] font-black text-foreground/80 tabular-nums truncate">{log.amount}</p>
+                        <p className="text-[9px] text-muted-foreground font-bold truncate">{log.date}</p>
                       </div>
-                      <code className="text-[9px] bg-background border border-border/50 px-1.5 py-0.5 rounded font-bold text-muted-foreground">
-                        ID: {log.id}
+                      <code className="text-[9px] bg-background border border-border/50 px-1.5 py-0.5 rounded font-bold text-muted-foreground shrink-0">
+                        {log.id}
                       </code>
                     </div>
                   </div>

@@ -70,9 +70,9 @@ export default function AdminLayout({
   return (
     <SidebarProvider>
       <AdminSidebar />
-      <SidebarInset className="flex flex-col bg-background">
+      <SidebarInset className="flex flex-col bg-background min-w-0 overflow-x-hidden w-full max-w-full">
         <AdminHeader />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden min-w-0 w-full max-w-full">
           {children}
         </main>
       </SidebarInset>
