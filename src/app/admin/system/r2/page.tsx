@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import AdminLoadingSkeleton from "@/components/admin/admin-loading-skeleton";
 import { useFirestore, useDoc } from "@/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { errorEmitter } from "@/firebase/error-emitter";
@@ -13,13 +14,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { 
-  Database, 
-  ShieldCheck, 
-  Cloud, 
-  ExternalLink, 
-  CheckCircle2, 
-  Lock, 
+import {
+  Database,
+  ShieldCheck,
+  Cloud,
+  ExternalLink,
+  CheckCircle2,
+  Lock,
   KeyRound,
   HardDrive,
   Globe,
@@ -34,7 +35,7 @@ import { cn } from "@/lib/utils";
 export default function AdminR2StoragePage() {
   const db = useFirestore();
   const { toast } = useToast();
-  
+
   // State form
   const [accountId, setAccountId] = useState("");
   const [accessKeyId, setAccessKeyId] = useState("");
@@ -42,7 +43,7 @@ export default function AdminR2StoragePage() {
   const [bucketName, setBucketName] = useState("");
   const [publicUrl, setPublicUrl] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
-  
+
   const [isSaving, setIsSaving] = useState(false);
   const [showSecret, setShowSecret] = useState(false);
 
@@ -64,7 +65,7 @@ export default function AdminR2StoragePage() {
 
   const handleSave = async () => {
     if (!db) return;
-    
+
     setIsSaving(true);
     const data = {
       accountId: accountId.trim(),
@@ -77,7 +78,7 @@ export default function AdminR2StoragePage() {
     };
 
     const docRef = doc(db, "settings", "r2");
-    
+
     setDoc(docRef, data, { merge: true })
       .then(() => {
         toast({
@@ -91,7 +92,7 @@ export default function AdminR2StoragePage() {
           operation: 'update',
           requestResourceData: data,
         } satisfies SecurityRuleContext);
-        
+
         errorEmitter.emit('permission-error', permissionError);
       })
       .finally(() => {
@@ -100,11 +101,7 @@ export default function AdminR2StoragePage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex h-[400px] w-full items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <AdminLoadingSkeleton />;
   }
 
   return (
@@ -149,22 +146,22 @@ export default function AdminR2StoragePage() {
                   <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                     <Database className="h-3 w-3" /> Account ID
                   </Label>
-                  <Input 
-                    placeholder="Contoh: f98a... (HANYA ID, bukan URL)" 
-                    className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm" 
+                  <Input
+                    placeholder="Contoh: f98a... (HANYA ID, bukan URL)"
+                    className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm"
                     value={accountId}
                     onChange={(e) => setAccountId(e.target.value)}
                   />
                   <p className="text-[9px] text-muted-foreground font-bold">Dapatkan di Dashboard R2 &gt; Account ID (kolom kanan bawah).</p>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                     <Lock className="h-3 w-3" /> Access Key ID
                   </Label>
-                  <Input 
-                    placeholder="Access Key..." 
-                    className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm" 
+                  <Input
+                    placeholder="Access Key..."
+                    className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm"
                     value={accessKeyId}
                     onChange={(e) => setAccessKeyId(e.target.value)}
                   />
@@ -175,14 +172,14 @@ export default function AdminR2StoragePage() {
                     <ShieldCheck className="h-3 w-3" /> Secret Access Key
                   </Label>
                   <div className="relative">
-                    <Input 
-                      type={showSecret ? "text" : "password"} 
-                      placeholder="Secret Key..." 
-                      className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 pr-10 text-xs sm:text-sm" 
+                    <Input
+                      type={showSecret ? "text" : "password"}
+                      placeholder="Secret Key..."
+                      className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 pr-10 text-xs sm:text-sm"
                       value={secretAccessKey}
                       onChange={(e) => setSecretAccessKey(e.target.value)}
                     />
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setShowSecret(!showSecret)}
                       className="absolute right-1 top-1 h-8 w-8 sm:h-9 sm:w-9 rounded-lg flex items-center justify-center text-muted-foreground"
@@ -196,9 +193,9 @@ export default function AdminR2StoragePage() {
                   <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                     <Cloud className="h-3 w-3" /> Bucket Name
                   </Label>
-                  <Input 
-                    placeholder="Nama bucket Anda" 
-                    className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm" 
+                  <Input
+                    placeholder="Nama bucket Anda"
+                    className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm"
                     value={bucketName}
                     onChange={(e) => setBucketName(e.target.value)}
                   />
@@ -208,9 +205,9 @@ export default function AdminR2StoragePage() {
                   <Label className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                     <Globe className="h-3 w-3" /> Public URL Endpoint
                   </Label>
-                  <Input 
-                    placeholder="Contoh: cdn.stspoint.id" 
-                    className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm" 
+                  <Input
+                    placeholder="Contoh: cdn.stspoint.id"
+                    className="h-10 sm:h-11 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm"
                     value={publicUrl}
                     onChange={(e) => setPublicUrl(e.target.value)}
                   />
@@ -228,8 +225,8 @@ export default function AdminR2StoragePage() {
               </div>
 
               <div className="pt-2">
-                <Button 
-                  onClick={handleSave} 
+                <Button
+                  onClick={handleSave}
                   disabled={isSaving}
                   className="w-full sm:w-auto h-10 sm:h-12 px-6 sm:px-10 rounded-xl font-black text-xs gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform"
                 >
@@ -271,7 +268,7 @@ export default function AdminR2StoragePage() {
               <p className="text-[10px] sm:text-[11px] text-muted-foreground font-bold leading-relaxed">
                 Berikut adalah visualisasi bagaimana URL gambar Anda akan terbentuk berdasarkan domain yang Anda masukkan:
               </p>
-              
+
               {publicUrl ? (
                 <div className="p-3 sm:p-4 rounded-xl bg-background border border-border/50 space-y-2.5 sm:space-y-3 min-w-0">
                   <div className="space-y-1 min-w-0">
