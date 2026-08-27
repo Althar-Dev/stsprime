@@ -2,8 +2,8 @@
 
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { Badge } from "@/ui/badge";
-import { Card, CardContent } from "@/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Lock, Eye, Database, Share2, ShieldCheck, Mail } from "lucide-react";
 
 const PRIVACY_SECTIONS = [
