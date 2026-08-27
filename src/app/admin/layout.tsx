@@ -55,7 +55,7 @@ export default function AdminLayout({
     return (
       <SidebarProvider>
         <AdminSidebar />
-        <SidebarInset className="flex flex-col bg-background min-w-0 overflow-x-hidden w-full max-w-full">
+        <SidebarInset className="flex flex-col h-screen max-h-screen overflow-hidden bg-background min-w-0 w-full max-w-full">
           <AdminHeader />
           <main className="flex-1 overflow-y-auto overflow-x-hidden min-w-0 w-full max-w-full">
             <AdminLoadingSkeleton />
@@ -68,7 +68,7 @@ export default function AdminLayout({
   return (
     <SidebarProvider>
       <AdminSidebar />
-      <SidebarInset className="flex flex-col bg-background min-w-0 overflow-x-hidden w-full max-w-full">
+      <SidebarInset className="flex flex-col h-screen max-h-screen overflow-hidden bg-background min-w-0 w-full max-w-full">
         <AdminHeader />
         <main className="flex-1 overflow-y-auto overflow-x-hidden min-w-0 w-full max-w-full">
           {children}

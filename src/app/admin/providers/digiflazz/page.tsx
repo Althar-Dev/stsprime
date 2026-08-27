@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,11 @@ import {
   ExternalLink,
   CheckCircle2,
   Lock,
-  Search
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useFirestore } from "@/firebase";
@@ -150,12 +154,23 @@ export default function AdminDigiFlazzPage() {
     }
   };
 
-  // Sync Products handler
+  const [selectedCmdFilter, setSelectedCmdFilter] = useState<"all" | "prepaid" | "pasca">("all");
+
+  // Pagination states (Options: 50, 100, 250)
+  const [pageSize, setPageSize] = useState<number>(50);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCmdFilter, pageSize]);
+
+  // Sync Products handler (Prepaid & Pascabayar)
   const handleSyncProducts = async () => {
     setSyncing(true);
-    setSyncStatus("Mengunduh & Menyimpan ke SQLite...");
+    setSyncStatus("Mengunduh Prabayar & Pascabayar...");
     try {
-      // Call Server Action to sync directly to SQLite
+      // Call Server Action to sync directly to SQLite database/product.db
       const result = await syncDigiflazzProducts(username, apiKey);
       if (!result.success) {
         throw new Error(result.error);
@@ -172,8 +187,8 @@ export default function AdminDigiFlazzPage() {
       }
 
       toast({
-        title: "Sinkronisasi berhasil!",
-        description: `${result.count} SKU prabayar DigiFlazz tersimpan ke database/product.db.`,
+        title: "Sinkronisasi Berhasil!",
+        description: `Total ${result.count} SKU tersimpan ke database/product.db (${result.prepaidCount} Prabayar, ${result.pascaCount} Pascabayar).`,
       });
       await loadSyncedProducts();
     } catch (err: any) {
@@ -191,13 +206,22 @@ export default function AdminDigiFlazzPage() {
 
   const filteredSyncedProducts = syncedProducts.filter(p => {
     const query = searchQuery.toLowerCase();
-    return (
+    const matchesQuery = (
       (p.productName || "").toLowerCase().includes(query) ||
       (p.skuCode || "").toLowerCase().includes(query) ||
       (p.brand || "").toLowerCase().includes(query) ||
       (p.category || "").toLowerCase().includes(query)
     );
+    const matchesCmd = selectedCmdFilter === "all" || p.cmdType === selectedCmdFilter;
+    return matchesQuery && matchesCmd;
   });
+
+  // Calculate paginated products
+  const totalItems = filteredSyncedProducts.length;
+  const totalPages = Math.ceil(totalItems / pageSize) || 1;
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, totalItems);
+  const paginatedProducts = filteredSyncedProducts.slice(startIndex, endIndex);
 
   return (
     <div className="container mx-auto px-3 sm:px-6 md:px-8 py-3 sm:py-6 md:py-8 space-y-4 sm:space-y-6 md:space-y-8 animate-in fade-in duration-500 w-full max-w-full min-w-0">
@@ -219,7 +243,7 @@ export default function AdminDigiFlazzPage() {
             <RefreshCw className={cn("h-3.5 w-3.5 sm:h-4 sm:w-4", syncing && "animate-spin")} />
             {syncing ? syncStatus || "Sinkron..." : "Sinkron Produk"}
           </Button>
-          <a href="https://dashboard.digiflazz.com" target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-initial">
+          <a href="https://member.digiflazz.com/buyer-area" target="_blank" rel="noopener noreferrer" className="flex-1 sm:flex-initial">
             <Button className="w-full rounded-xl font-black text-[11px] sm:text-xs uppercase tracking-widest px-4 sm:px-6 shadow-lg shadow-primary/20 gap-1.5 sm:gap-2 h-9 sm:h-10">
               Dashboard <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Button>
@@ -345,55 +369,102 @@ export default function AdminDigiFlazzPage() {
       {/* Synced SKU Table */}
       <Card className="bento-card border-border/50 bg-card/30 backdrop-blur-sm overflow-hidden w-full max-w-full min-w-0">
         <CardHeader className="p-4 sm:p-6 border-b border-border/30 bg-muted/10">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
             <div className="space-y-0.5">
               <CardTitle className="text-base sm:text-lg font-black tracking-tight flex items-center gap-2">
-                <Server className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" /> Daftar SKU Terkoneksi ({filteredSyncedProducts.length})
+                <Server className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" /> Daftar SKU ({filteredSyncedProducts.length})
               </CardTitle>
-              <CardDescription className="text-[10px] sm:text-xs font-bold">Daftar produk prabayar (prepaid) yang berhasil disinkronisasi dari provider DigiFlazz.</CardDescription>
+              <CardDescription className="text-[10px] sm:text-xs font-bold">Daftar produk prabayar & pascabayar.</CardDescription>
             </div>
-            <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
-              <Input
-                placeholder="Cari SKU, Nama, atau Brand..."
-                className="pl-9 sm:pl-10 h-9 sm:h-10 bg-background rounded-xl font-bold border-border/50 text-[11px] sm:text-xs"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+              <div className="flex p-1 bg-background rounded-xl border border-border/50">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedCmdFilter("all")}
+                  className={cn("h-7 sm:h-8 px-3 rounded-lg text-[10px] font-black uppercase", selectedCmdFilter === "all" && "bg-primary text-primary-foreground shadow")}
+                >
+                  Semua ({syncedProducts.length})
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedCmdFilter("prepaid")}
+                  className={cn("h-7 sm:h-8 px-3 rounded-lg text-[10px] font-black uppercase", selectedCmdFilter === "prepaid" && "bg-primary text-primary-foreground shadow")}
+                >
+                  Prabayar ({syncedProducts.filter(p => p.cmdType === "prepaid").length})
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedCmdFilter("pasca")}
+                  className={cn("h-7 sm:h-8 px-3 rounded-lg text-[10px] font-black uppercase", selectedCmdFilter === "pasca" && "bg-primary text-primary-foreground shadow")}
+                >
+                  Pascabayar ({syncedProducts.filter(p => p.cmdType === "pasca").length})
+                </Button>
+              </div>
+              <div className="relative w-full sm:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Cari SKU, Nama, atau Brand..."
+                  className="pl-9 sm:pl-10 h-9 sm:h-10 bg-background rounded-xl font-bold border-border/50 text-[11px] sm:text-xs"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
             </div>
           </div>
         </CardHeader>
         <CardContent className="p-0 w-full max-w-full overflow-hidden">
           <div className="w-full overflow-x-auto">
-            <Table className="min-w-[700px] whitespace-nowrap">
+            <Table className="min-w-[800px] whitespace-nowrap">
               <TableHeader>
                 <TableRow className="border-b border-border/30 hover:bg-transparent">
                   <TableHead className="text-[10px] font-black uppercase tracking-wider py-4 pl-6">Kode SKU</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase tracking-wider py-4">Tipe</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-wider py-4">Nama Produk</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-wider py-4">Kategori</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-wider py-4">Brand</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-wider py-4 text-right">Harga Buyer</TableHead>
+                  <TableHead className="text-[10px] font-black uppercase tracking-wider py-4 text-right">Harga / Admin</TableHead>
                   <TableHead className="text-[10px] font-black uppercase tracking-wider py-4 text-center">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredSyncedProducts.length === 0 ? (
+                {paginatedProducts.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-12 text-xs font-bold text-muted-foreground/60">
+                    <TableCell colSpan={7} className="text-center py-12 text-xs font-bold text-muted-foreground/60">
                       Belum ada SKU terhubung. Klik "Sinkron Produk" di pojok kanan atas untuk menyinkronkan data dengan DigiFlazz.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredSyncedProducts.map((prod) => (
+                  paginatedProducts.map((prod) => (
                     <TableRow key={prod.id} className="border-b border-border/20 hover:bg-muted/5 transition-colors">
                       <TableCell className="font-mono text-xs font-black text-primary py-4 pl-6">{prod.skuCode}</TableCell>
+                      <TableCell className="py-4">
+                        <Badge variant="outline" className={cn(
+                          "text-[9px] font-black uppercase py-0.5 px-2 rounded-md",
+                          prod.cmdType === "pasca" ? "border-purple-500/30 text-purple-400 bg-purple-500/10" : "border-cyan-500/30 text-cyan-400 bg-cyan-500/10"
+                        )}>
+                          {prod.cmdType === "pasca" ? "Pasca" : "Prabayar"}
+                        </Badge>
+                      </TableCell>
                       <TableCell className="font-bold text-xs py-4">{prod.productName}</TableCell>
                       <TableCell className="font-bold text-xs py-4">
                         <Badge variant="outline" className="text-[9px] font-black uppercase py-0.5">{prod.category}</Badge>
                       </TableCell>
                       <TableCell className="font-bold text-xs py-4">{prod.brand}</TableCell>
                       <TableCell className="font-mono text-xs font-black text-right py-4 text-neutral-200">
-                        Rp {prod.price?.toLocaleString("id-ID")}
+                        {prod.cmdType === "pasca" ? (
+                          <div className="flex flex-col items-end">
+                            <span>Admin: Rp {(prod.admin || 0).toLocaleString("id-ID")}</span>
+                            <span className="text-[9px] text-emerald-400 font-bold">Komisi: Rp {(prod.commission || 0).toLocaleString("id-ID")}</span>
+                          </div>
+                        ) : (
+                          <span>Rp {(prod.price || 0).toLocaleString("id-ID")}</span>
+                        )}
                       </TableCell>
                       <TableCell className="text-center py-4">
                         <Badge className={cn(
@@ -412,6 +483,80 @@ export default function AdminDigiFlazzPage() {
             </Table>
           </div>
         </CardContent>
+
+        {/* Pagination Footer */}
+        <CardFooter className="p-4 border-t border-border/30 bg-muted/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-bold text-muted-foreground">
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+            <span className="text-[11px] whitespace-nowrap">Tampilkan baris:</span>
+            <div className="flex items-center gap-1 p-0.5 bg-background rounded-xl border border-border/50">
+              {[50, 100, 250].map((size) => (
+                <Button
+                  key={size}
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setPageSize(size)}
+                  className={cn(
+                    "h-7 px-2.5 rounded-lg text-[10px] font-black",
+                    pageSize === size && "bg-primary text-primary-foreground shadow"
+                  )}
+                >
+                  {size}
+                </Button>
+              ))}
+            </div>
+            <span className="text-[11px] text-muted-foreground hidden md:inline">
+              Menampilkan {totalItems > 0 ? startIndex + 1 : 0} - {endIndex} dari {totalItems} SKU
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+            <span className="text-[11px] text-muted-foreground md:hidden">
+              {totalItems > 0 ? startIndex + 1 : 0}-{endIndex} dari {totalItems}
+            </span>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+                className="h-8 w-8 rounded-lg border-border/50"
+              >
+                <ChevronsLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="h-8 w-8 rounded-lg border-border/50"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <span className="text-[11px] font-black px-2 tabular-nums">
+                Halaman {currentPage} dari {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage >= totalPages}
+                className="h-8 w-8 rounded-lg border-border/50"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage >= totalPages}
+                className="h-8 w-8 rounded-lg border-border/50"
+              >
+                <ChevronsRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </CardFooter>
       </Card>
     </div>
   );

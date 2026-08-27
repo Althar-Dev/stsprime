@@ -38,7 +38,7 @@ export function AdminHeader() {
   const profileBg = profile?.profileBg || "bg-muted/40";
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 md:h-20 shrink-0 items-center gap-2 border-b border-border bg-background px-4 md:px-8">
+    <header className="sticky top-0 z-40 flex h-16 md:h-20 shrink-0 items-center gap-2 border-b border-border bg-background/95 backdrop-blur-md px-4 md:px-8">
       <div className="flex items-center gap-1 md:gap-2">
         <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-primary transition-colors" />
         <Separator orientation="vertical" className="hidden xs:block mx-1 md:mx-2 h-4 opacity-30" />
