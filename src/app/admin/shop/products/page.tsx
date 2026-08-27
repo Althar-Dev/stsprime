@@ -46,7 +46,11 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Type,
+  LayoutGrid,
+  Activity,
+  Link as LinkIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -59,7 +63,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { getSyncedProductsFromSQLite } from "@/app/actions/digiflazz-actions";
 
 export interface ProductItem {
   id: string;
@@ -417,7 +420,7 @@ export default function AdminProductsPage() {
             <CardContent className="p-3.5 sm:p-6 flex items-center justify-between gap-2">
               <div className="space-y-0.5 sm:space-y-1 min-w-0">
                 <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground truncate">{stat.label}</p>
-                <p className="text-base sm:text-2xl font-black tabular-nums truncate">{stat.value}</p>
+                <p className="text-base sm:text-xl font-black tabular-nums truncate">{stat.value}</p>
               </div>
               <div className="h-9 w-9 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-muted/30 flex items-center justify-center shrink-0">
                 <stat.icon className={cn("h-4 w-4 sm:h-6 sm:w-6", stat.color)} />
@@ -651,123 +654,161 @@ export default function AdminProductsPage() {
         </CardFooter>
       </Card>
 
-      {/* Modal Tambah / Edit Produk */}
+      {/* Modal Tambah / Edit Produk - Polished UI */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[500px] rounded-2xl bg-card border-border">
-          <DialogHeader>
-            <DialogTitle className="text-base sm:text-lg font-black tracking-tight flex items-center gap-2">
-              <Package className="h-5 w-5 text-primary" />
-              {editingProduct ? "Edit Detail Produk" : "Tambah Produk Baru"}
-            </DialogTitle>
-            <DialogDescription className="text-xs font-bold text-muted-foreground">
-              Isi data detail katalog produk yang akan ditampilkan kepada pengguna.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="sm:max-w-[550px] p-0 rounded-3xl bg-card border-border overflow-hidden shadow-2xl">
+          <div className="bg-primary/10 border-b border-border p-6 flex items-center gap-4">
+            <div className="h-12 w-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0 border border-primary/30">
+              <Package className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <DialogTitle className="text-xl font-black tracking-tight text-foreground">
+                {editingProduct ? "Edit Katalog Produk" : "Tambah Produk Baru"}
+              </DialogTitle>
+              <DialogDescription className="text-xs font-bold text-muted-foreground mt-0.5">
+                Konfigurasi detail layanan yang akan tampil di halaman belanja.
+              </DialogDescription>
+            </div>
+          </div>
 
-          <form onSubmit={handleSaveProduct} className="space-y-4 py-2">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">ID Produk (SKU Slug)</Label>
-                <Input
-                  placeholder="mlbb"
-                  className="h-10 bg-background rounded-xl font-mono text-xs font-bold border-border/50"
-                  value={formId}
-                  onChange={(e) => setFormId(e.target.value)}
-                  disabled={!!editingProduct}
-                />
+          <form onSubmit={handleSaveProduct} className="p-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+              {/* Image Preview & Field */}
+              <div className="md:col-span-4 flex flex-col items-center gap-4">
+                <div className="w-full aspect-square rounded-2xl bg-muted/30 border border-border/50 flex items-center justify-center relative group overflow-hidden">
+                  {formImage ? (
+                    <img 
+                      src={formImage} 
+                      alt="Preview" 
+                      className="w-full h-full object-contain p-4" 
+                      onError={(e) => (e.target as HTMLImageElement).src = "/img/popular/mlbb.png"}
+                    />
+                  ) : (
+                    <ImageIcon className="h-10 w-10 text-muted-foreground/20" />
+                  )}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="text-[10px] font-black uppercase text-white tracking-widest">Icon Preview</span>
+                  </div>
+                </div>
+                <div className="w-full space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <LinkIcon className="h-3 w-3" /> Image URL
+                  </Label>
+                  <Input
+                    placeholder="Contoh: /img/mlbb.png"
+                    className="h-10 bg-background rounded-xl text-xs font-bold border-border/50"
+                    value={formImage}
+                    onChange={(e) => setFormImage(e.target.value)}
+                  />
+                </div>
               </div>
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Provider API</Label>
-                <select
-                  value={formProvider}
-                  onChange={(e) => setFormProvider(e.target.value)}
-                  className="h-10 w-full bg-background rounded-xl font-bold border border-border/50 text-xs px-3 focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-                  <option value="DigiFlazz">DigiFlazz</option>
-                  <option value="Orderkuota">Orderkuota</option>
-                  <option value="Internal">Internal / Manual</option>
-                </select>
+
+              {/* Text Fields */}
+              <div className="md:col-span-8 space-y-5">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      <LayoutGrid className="h-3 w-3" /> SKU Slug
+                    </Label>
+                    <Input
+                      placeholder="mlbb"
+                      className="h-10 bg-muted/30 rounded-xl font-mono text-xs font-black border-border/50"
+                      value={formId}
+                      onChange={(e) => setFormId(e.target.value)}
+                      disabled={!!editingProduct}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      <Server className="h-3 w-3" /> Provider
+                    </Label>
+                    <select
+                      value={formProvider}
+                      onChange={(e) => setFormProvider(e.target.value)}
+                      className="h-10 w-full bg-background rounded-xl font-bold border border-border/50 text-xs px-3 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
+                    >
+                      <option value="DigiFlazz">DigiFlazz</option>
+                      <option value="Orderkuota">Orderkuota</option>
+                      <option value="Internal">Internal / Manual</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <Type className="h-3 w-3" /> Nama Publik Produk
+                  </Label>
+                  <Input
+                    placeholder="Contoh: Mobile Legends: Bang Bang"
+                    className="h-10 bg-background rounded-xl text-sm font-black border-border/50"
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Kategori</Label>
+                    <select
+                      value={formCategory}
+                      onChange={(e) => setFormCategory(e.target.value)}
+                      className="h-10 w-full bg-background rounded-xl font-bold border border-border/50 text-xs px-3 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
+                    >
+                      <option value="Topup Game">Topup Game</option>
+                      <option value="Voucher">Voucher Digital</option>
+                      <option value="Pulsa/Data">Pulsa & Data</option>
+                      <option value="PLN & Tagihan">PLN & Tagihan</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</Label>
+                    <select
+                      value={formStatus}
+                      onChange={(e: any) => setFormStatus(e.target.value)}
+                      className="h-10 w-full bg-background rounded-xl font-bold border border-border/50 text-xs px-3 focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
+                    >
+                      <option value="Active">Published (Aktif)</option>
+                      <option value="Maintenance">Maintenance</option>
+                      <option value="Inactive">Draft (Non-Aktif)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <Activity className="h-3 w-3" /> Varian Item Tersedia
+                  </Label>
+                  <div className="flex items-center gap-3">
+                    <Input
+                      type="number"
+                      placeholder="10"
+                      className="h-10 bg-background rounded-xl text-sm font-black border-border/50 w-24"
+                      value={formItems}
+                      onChange={(e) => setFormItems(e.target.value)}
+                    />
+                    <span className="text-[10px] font-bold text-muted-foreground italic">Unit SKU unik di sisi provider.</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Nama Produk</Label>
-              <Input
-                placeholder="Mobile Legends: Bang Bang"
-                className="h-10 bg-background rounded-xl text-xs font-bold border-border/50"
-                value={formName}
-                onChange={(e) => setFormName(e.target.value)}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Kategori</Label>
-                <select
-                  value={formCategory}
-                  onChange={(e) => setFormCategory(e.target.value)}
-                  className="h-10 w-full bg-background rounded-xl font-bold border border-border/50 text-xs px-3 focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-                  <option value="Topup Game">Topup Game</option>
-                  <option value="Voucher">Voucher Digital</option>
-                  <option value="Pulsa/Data">Pulsa & Data</option>
-                  <option value="PLN & Tagihan">PLN & Tagihan</option>
-                </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status Produk</Label>
-                <select
-                  value={formStatus}
-                  onChange={(e: any) => setFormStatus(e.target.value)}
-                  className="h-10 w-full bg-background rounded-xl font-bold border border-border/50 text-xs px-3 focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-                  <option value="Active">Active (Aktif)</option>
-                  <option value="Maintenance">Maintenance</option>
-                  <option value="Inactive">Inactive (Non-Aktif)</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">URL Ikon / Gambar</Label>
-                <Input
-                  placeholder="/img/popular/mlbb.png"
-                  className="h-10 bg-background rounded-xl text-xs font-bold border-border/50"
-                  value={formImage}
-                  onChange={(e) => setFormImage(e.target.value)}
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Jumlah Varian SKU</Label>
-                <Input
-                  type="number"
-                  placeholder="10"
-                  className="h-10 bg-background rounded-xl text-xs font-bold border-border/50"
-                  value={formItems}
-                  onChange={(e) => setFormItems(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <DialogFooter className="pt-3 flex gap-2 justify-end">
+            <DialogFooter className="pt-4 border-t border-border mt-6">
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 onClick={() => setIsModalOpen(false)}
-                className="h-10 rounded-xl font-black text-xs uppercase tracking-widest"
+                className="h-11 px-6 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-muted/50"
               >
                 Batal
               </Button>
               <Button
                 type="submit"
                 disabled={savingProduct}
-                className="h-10 rounded-xl font-black text-xs uppercase tracking-widest gap-2"
+                className="h-11 px-8 rounded-xl font-black text-xs uppercase tracking-widest gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform"
               >
-                {savingProduct && <Loader2 className="h-4 w-4 animate-spin" />}
-                {editingProduct ? "Simpan Perubahan" : "Tambah Produk"}
+                {savingProduct ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
+                {editingProduct ? "Simpan Perubahan" : "Publikasikan Produk"}
               </Button>
             </DialogFooter>
           </form>
