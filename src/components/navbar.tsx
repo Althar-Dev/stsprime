@@ -367,83 +367,17 @@ export function Navbar() {
                     <ThemeToggle />
                   </div>
 
-                  {user ? (
-                    <div className="hidden lg:flex items-center gap-2 md:gap-3">
-                      <div className="flex items-center gap-2 md:gap-1.5 px-3 md:px-2.5 py-1.5 md:py-1 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
-                        <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-5 md:w-5 object-contain group-hover:scale-110 transition-transform" />
-                        <span className="text-sm md:text-sm font-black text-primary">
-                          {coinValue.toLocaleString('id-ID')}
-                        </span>
-                      </div>
-
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className={cn(
-                            "relative h-10 w-10 md:h-11 md:w-11 rounded-full flex items-center justify-center p-0.5 transition-all duration-300",
-                            profileBg
-                          )}>
-                            <Avatar className="h-full w-full border border-background">
-                              <AvatarImage src={displayPhotoURL} alt={user.email || "User"} />
-                              <AvatarFallback className="bg-muted text-muted-foreground font-black">
-                                {userInitial}
-                              </AvatarFallback>
-                            </Avatar>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56 rounded-xl border-border" align="end" forceMount>
-                          <DropdownMenuLabel className="font-normal">
-                            <div className="flex flex-col space-y-1">
-                              <div className="flex items-center gap-1.5">
-                                <p
-                                  className={cn("text-sm font-black leading-none", profileData?.nameColor || "text-foreground")}
-                                  style={profileData?.fontFamily ? { fontFamily: profileData.fontFamily } : {}}
-                                >
-                                  {user.displayName || "Gamer"}
-                                </p>
-                                {profileData?.vip && (
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <div className="shrink-0 cursor-pointer">
-                                        <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
-                                      </div>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-2 bg-background border-border shadow-xl">
-                                      <p className="text-[10px] font-black">VIP Member</p>
-                                    </PopoverContent>
-                                  </Popover>
-                                )}
-                              </div>
-                              <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
-                            </div>
-                          </DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem className="cursor-pointer font-bold gap-2 group" asChild>
-                            <Link href="/dashboard" className="flex items-center w-full">
-                              <LayoutDashboard className="h-4 w-4 transition-all group-hover:scale-125 animate-icon-pulse" /> Dashboard
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="cursor-pointer font-bold gap-2 group" asChild>
-                            <Link href="/dashboard/settings" className="flex items-center w-full">
-                              <Settings className="h-4 w-4 transition-all group-hover:scale-125 animate-icon-spin" /> Settings
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem className="cursor-pointer font-bold gap-2 text-destructive focus:text-destructive group" onClick={handleLogout}>
-                            <LogOut className="h-4 w-4 transition-all group-hover:scale-125 animate-icon-wiggle" /> Keluar
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                  {/* STS Coin (Desktop Only in Header) */}
+                  {user && (
+                    <div className="hidden lg:flex items-center gap-2 md:gap-1.5 px-3 md:px-2.5 py-1.5 md:py-1 rounded-full bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors cursor-pointer group">
+                      <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-5 md:w-5 object-contain group-hover:scale-110 transition-transform" />
+                      <span className="text-sm md:text-sm font-black text-primary">
+                        {coinValue.toLocaleString('id-ID')}
+                      </span>
                     </div>
-                  ) : (
-                    <Button
-                      onClick={() => setIsLoginModalOpen(true)}
-                      className="hidden sm:flex rounded-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 px-6"
-                    >
-                      Login
-                    </Button>
                   )}
 
-                  {/* Mobile Search Icon Button (to the left of Sidebar Menu) */}
+                  {/* 1. Mobile Search Button (Left of Profil) */}
                   <Button
                     variant="outline"
                     size="icon"
@@ -454,6 +388,75 @@ export function Navbar() {
                     <Search className="h-5 w-5 text-primary transition-all animate-icon-pulse" />
                   </Button>
 
+                  {/* 2. Profil Avatar / Dropdown (Left of Toggle Sidebar) */}
+                  {user ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className={cn(
+                          "relative h-10 w-10 md:h-11 md:w-11 rounded-full flex items-center justify-center p-0.5 transition-all duration-300",
+                          profileBg
+                        )}>
+                          <Avatar className="h-full w-full border border-background">
+                            <AvatarImage src={displayPhotoURL} alt={user.email || "User"} />
+                            <AvatarFallback className="bg-muted text-muted-foreground font-black">
+                              {userInitial}
+                            </AvatarFallback>
+                          </Avatar>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56 rounded-xl border-border" align="end" forceMount>
+                        <DropdownMenuLabel className="font-normal">
+                          <div className="flex flex-col space-y-1">
+                            <div className="flex items-center gap-1.5">
+                              <p
+                                className={cn("text-sm font-black leading-none", profileData?.nameColor || "text-foreground")}
+                                style={profileData?.fontFamily ? { fontFamily: profileData.fontFamily } : {}}
+                              >
+                                {user.displayName || "Gamer"}
+                              </p>
+                              {profileData?.vip && (
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <div className="shrink-0 cursor-pointer">
+                                      <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
+                                    </div>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-auto p-2 bg-background border-border shadow-xl">
+                                    <p className="text-[10px] font-black">VIP Member</p>
+                                  </PopoverContent>
+                                </Popover>
+                              )}
+                            </div>
+                            <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
+                          </div>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="cursor-pointer font-bold gap-2 group" asChild>
+                          <Link href="/dashboard" className="flex items-center w-full">
+                            <LayoutDashboard className="h-4 w-4 transition-all group-hover:scale-125 animate-icon-pulse" /> Dashboard
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer font-bold gap-2 group" asChild>
+                          <Link href="/dashboard/settings" className="flex items-center w-full">
+                            <Settings className="h-4 w-4 transition-all group-hover:scale-125 animate-icon-spin" /> Settings
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="cursor-pointer font-bold gap-2 text-destructive focus:text-destructive group" onClick={handleLogout}>
+                          <LogOut className="h-4 w-4 transition-all group-hover:scale-125 animate-icon-wiggle" /> Keluar
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    <Button
+                      onClick={() => setIsLoginModalOpen(true)}
+                      className="hidden sm:flex rounded-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 px-6"
+                    >
+                      Login
+                    </Button>
+                  )}
+
+                  {/* 3. Toggle Sidebar Menu Button */}
                   <Sheet>
                     <SheetTrigger asChild>
                       <Button variant="outline" size="icon" className="group rounded-xl lg:hidden border-border bg-card/50">
@@ -465,6 +468,7 @@ export function Navbar() {
                         <SheetTitle>Menu Navigasi</SheetTitle>
                       </SheetHeader>
 
+                      {/* Mobile Sidebar Header */}
                       <div className="h-16 px-6 border-b border-border bg-card/30 flex items-center justify-between shrink-0">
                         <Logo className="h-16 w-32" />
                       </div>
@@ -532,53 +536,44 @@ export function Navbar() {
                         </div>
                       </ScrollArea>
 
+                      {/* Sidebar Mobile Bottom */}
                       <div className="p-6 border-t border-border mt-auto bg-muted/10">
                         {user && (
-                          <div className="mb-4 p-4 bg-card border border-border rounded-xl space-y-3 shadow-sm">
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-10 w-10 border border-background shrink-0">
-                                <AvatarImage src={displayPhotoURL} alt={user.email || "User"} />
-                                <AvatarFallback className="bg-muted text-muted-foreground font-black">
-                                  {userInitial}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex flex-col min-w-0 flex-1">
-                                <div className="flex items-center gap-1.5">
-                                  <p
-                                    className={cn("text-sm font-black leading-none truncate", profileData?.nameColor || "text-foreground")}
-                                    style={profileData?.fontFamily ? { fontFamily: profileData.fontFamily } : {}}
-                                  >
-                                    {user.displayName || "Gamer"}
-                                  </p>
-                                  {profileData?.vip && (
-                                    <Popover>
-                                      <PopoverTrigger asChild>
-                                        <div className="shrink-0 cursor-pointer">
-                                          <Image src="/img/badge/vip.png" alt="VIP" width={16} height={16} />
-                                        </div>
-                                      </PopoverTrigger>
-                                      <PopoverContent className="w-auto p-2 bg-background border-border shadow-xl">
-                                        <p className="text-[10px] font-black">VIP Member</p>
-                                      </PopoverContent>
-                                    </Popover>
-                                  )}
+                          <>
+                            {/* Profile Info with VIP Badge */}
+                            <div className="mb-3 p-3 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
+                              <div className="flex items-center gap-3 min-w-0">
+                                <Avatar className="h-9 w-9 border border-background shrink-0">
+                                  <AvatarImage src={displayPhotoURL} alt={user.email || "User"} />
+                                  <AvatarFallback className="bg-muted text-muted-foreground font-black text-xs">
+                                    {userInitial}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div className="flex flex-col min-w-0">
+                                  <div className="flex items-center gap-1.5">
+                                    <p className={cn("text-xs font-black truncate", profileData?.nameColor || "text-foreground")}>
+                                      {user.displayName || "Gamer"}
+                                    </p>
+                                    {profileData?.vip && (
+                                      <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0" />
+                                    )}
+                                  </div>
+                                  <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
                                 </div>
-                                <p className="text-xs text-muted-foreground truncate mt-0.5">{user.email}</p>
                               </div>
                             </div>
 
-                            <Separator className="opacity-40" />
-
-                            <div className="flex items-center justify-between pt-0.5">
-                              <div className="flex items-center gap-2">
-                                <img src="/img/coin.png" alt="STS Coin" className="h-5 w-5 object-contain" />
+                            {/* STS Coin Card */}
+                            <div className="mb-4 p-4 bg-card border border-border rounded-xl flex items-center justify-between shadow-sm">
+                              <div className="flex items-center gap-3">
+                                <img src="/img/coin.png" alt="STS Coin" className="h-6 w-6 md:h-8 md:w-8 object-contain" />
                                 <span className="text-xs font-black">STS Coin</span>
                               </div>
                               <span className="text-sm font-black text-primary">
                                 {coinValue.toLocaleString('id-ID')}
                               </span>
                             </div>
-                          </div>
+                          </>
                         )}
                         <div className="flex items-center gap-3 mb-4">
                           <ShieldCheck className="h-4 w-4 text-primary" />
