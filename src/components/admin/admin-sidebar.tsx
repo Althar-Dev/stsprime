@@ -51,16 +51,41 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
 } from "@/components/ui/sidebar";
-import { useAuth } from "@/firebase";
+import { useAuth, useUser, useFirestore } from "@/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const auth = useAuth();
+  const { user } = useUser();
+  const db = useFirestore();
   const pathname = usePathname();
+  const [profile, setProfile] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    async function fetchProfile() {
+      if (!user || !db) return;
+      try {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setProfile(docSnap.data());
+        }
+      } catch (err) {}
+    }
+    fetchProfile();
+  }, [user, db]);
+
+  const displayName = profile?.displayName || user?.displayName || "Admin";
+  const displayPhotoURL = profile?.photoURL || (profile?.dev ? "/img/avas/dev.png" : (user?.photoURL || ""));
+  const userInitial = displayName.charAt(0).toUpperCase();
+  const profileBg = profile?.profileBg || "bg-muted/40";
 
   const handleLogout = async () => {
     if (auth) {
@@ -193,16 +218,42 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-border bg-muted/20 group-data-[collapsible=icon]:p-1.5">
+      <SidebarFooter className="p-3 sm:p-4 border-t border-border bg-muted/20 group-data-[collapsible=icon]:p-1.5 space-y-2">
+        {user && (
+          <div className="flex items-center gap-2.5 p-2 rounded-2xl bg-card/60 border border-border/40 group-data-[collapsible=icon]:hidden min-w-0 shadow-sm">
+            <div className={cn("h-9 w-9 rounded-full flex items-center justify-center p-0.5 shrink-0 shadow-sm", profileBg)}>
+              <Avatar className="h-full w-full border border-background shadow-sm shrink-0">
+                <AvatarImage src={displayPhotoURL} alt={displayName} />
+                <AvatarFallback className="bg-primary text-primary-foreground font-black text-xs">
+                  {userInitial}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+            <div className="flex flex-col min-w-0 flex-1">
+              <div className="flex items-center gap-1 min-w-0">
+                <span 
+                  className={cn("text-xs font-black truncate leading-tight", profile?.nameColor || "text-foreground")}
+                  style={profile?.fontFamily ? { fontFamily: profile.fontFamily } : {}}
+                >
+                  {displayName}
+                </span>
+                {profile?.vip && (
+                  <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0" />
+                )}
+              </div>
+              <span className="text-[10px] text-muted-foreground font-bold truncate">{user.email}</span>
+            </div>
+          </div>
+        )}
         <SidebarMenu>
           <SidebarMenuItem className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
             <SidebarMenuButton
               onClick={handleLogout}
-              className="font-bold rounded-xl h-11 px-4 text-destructive hover:bg-destructive/10 hover:text-destructive transition-all group-data-[collapsible=icon]:h-9 group-data-[collapsible=icon]:w-9 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
+              className="font-bold rounded-xl h-10 px-3 text-destructive hover:bg-destructive/10 hover:text-destructive transition-all group-data-[collapsible=icon]:h-9 group-data-[collapsible=icon]:w-9 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
               tooltip="Logout Admin"
             >
-              <LogOut className="h-5 w-5 shrink-0" />
-              <span className="ml-1 group-data-[collapsible=icon]:hidden">Log Out</span>
+              <LogOut className="h-4.5 w-4.5 shrink-0" />
+              <span className="ml-1 text-xs group-data-[collapsible=icon]:hidden">Log Out</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

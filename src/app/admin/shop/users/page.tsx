@@ -34,6 +34,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 import { format } from "date-fns";
 
 interface UserData {
@@ -41,11 +42,17 @@ interface UserData {
   displayName?: string;
   email: string;
   photoURL?: string;
+  dev?: boolean;
+  profileBg?: string;
   coins?: number;
   points?: number;
   balance?: number;
   vip?: boolean;
   admin?: boolean;
+  nameColor?: string;
+  fontId?: string;
+  fontFamily?: string;
+  badgeId?: string;
   createdAt?: string;
 }
 
@@ -189,24 +196,39 @@ export default function AdminUsersPage() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredUsers.map((user) => (
-                      <TableRow key={user.id} className="hover:bg-muted/20 border-border/30 group">
-                        <TableCell className="py-3 sm:py-4 pl-4 sm:pl-6">
-                          <div className="flex items-center gap-2.5 sm:gap-3">
-                            <Avatar className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl border border-border group-hover:border-primary/50 transition-colors">
-                              <AvatarImage src={user.photoURL} />
-                              <AvatarFallback className="bg-muted font-black text-[10px] sm:text-xs">
-                                {user.displayName?.charAt(0) || user.email.charAt(0).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="flex flex-col min-w-0">
-                              <span className="text-xs sm:text-sm font-black truncate">{user.displayName || "Gamer"}</span>
-                              <span className="text-[9px] sm:text-[10px] text-muted-foreground font-bold flex items-center gap-1 truncate">
-                                <Mail className="h-3 w-3 shrink-0" /> {user.email}
-                              </span>
+                    filteredUsers.map((user) => {
+                      const displayPhoto = user.photoURL || (user.dev ? "/img/avas/dev.png" : "");
+                      const profileBg = user.profileBg || "bg-muted/40";
+                      return (
+                        <TableRow key={user.id} className="hover:bg-muted/20 border-border/30 group">
+                          <TableCell className="py-3 sm:py-4 pl-4 sm:pl-6">
+                            <div className="flex items-center gap-2.5 sm:gap-3">
+                              <div className={cn("h-8 w-8 sm:h-10 sm:w-10 rounded-full flex items-center justify-center p-0.5 shrink-0 shadow-sm", profileBg)}>
+                                <Avatar className="h-full w-full border border-background shadow-sm shrink-0">
+                                  <AvatarImage src={displayPhoto} alt={user.displayName || user.email} />
+                                  <AvatarFallback className="bg-muted font-black text-[10px] sm:text-xs">
+                                    {user.displayName?.charAt(0) || user.email.charAt(0).toUpperCase()}
+                                  </AvatarFallback>
+                                </Avatar>
+                              </div>
+                              <div className="flex flex-col min-w-0">
+                                <div className="flex items-center gap-1.5 min-w-0">
+                                  <span 
+                                    className={cn("text-xs sm:text-sm font-black truncate", user.nameColor || "text-foreground")}
+                                    style={user.fontFamily ? { fontFamily: user.fontFamily } : {}}
+                                  >
+                                    {user.displayName || "Gamer"}
+                                  </span>
+                                  {user.vip && (
+                                    <Image src="/img/badge/vip.png" alt="VIP" width={14} height={14} className="shrink-0" />
+                                  )}
+                                </div>
+                                <span className="text-[9px] sm:text-[10px] text-muted-foreground font-bold flex items-center gap-1 truncate">
+                                  <Mail className="h-3 w-3 shrink-0" /> {user.email}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                        </TableCell>
+                          </TableCell>
                         <TableCell className="py-3 sm:py-4">
                           <div className="flex items-center gap-1.5 sm:gap-2 text-emerald-500">
                             <Wallet className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
@@ -283,8 +305,9 @@ export default function AdminUsersPage() {
                           </DropdownMenu>
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
+                    );
+                  })
+                )}
                 </TableBody>
               </Table>
             </div>
