@@ -65,6 +65,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
+import Link from "next/link";
 
 export interface ProductItem {
   id: string;
@@ -408,7 +409,21 @@ export default function AdminProductsPage() {
                     </TableCell>
                     <TableCell className="py-3 sm:py-4 text-xs font-bold">{product.category}</TableCell>
                     <TableCell className="py-3 sm:py-4 text-xs font-bold">{product.provider}</TableCell>
-                    <TableCell className="py-3 sm:py-4 text-xs font-black tabular-nums">{product.items} SKU</TableCell>
+                    <TableCell className="py-3 sm:py-4">
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs font-black tabular-nums">{product.items} SKU</span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 rounded-lg hover:bg-primary/10 text-primary"
+                          asChild
+                        >
+                          <Link href={`/admin/shop/product/sku/${product.id}`}>
+                            <ChevronRight className="h-3.5 w-3.5" />
+                          </Link>
+                        </Button>
+                      </div>
+                    </TableCell>
                     <TableCell className="py-3 sm:py-4">{getStatusBadge(product.status)}</TableCell>
                     <TableCell className="text-right pr-4 sm:pr-6 py-3 sm:py-4">
                       <DropdownMenu>
