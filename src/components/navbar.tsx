@@ -107,7 +107,7 @@ function SearchInput({ isMobile, closeSearch }: { isMobile?: boolean, closeSearc
     if (!isDropdownOpen || !searchValue.trim()) return null;
 
     return (
-      <div className="absolute top-full right-0 mt-2 z-50 bg-card/95 backdrop-blur-xl border border-primary/30 rounded-2xl shadow-[0_16px_50px_rgba(0,0,0,0.7)] overflow-hidden max-h-[420px] overflow-y-auto p-3 animate-in fade-in slide-in-from-top-2 duration-200 flash-sale-scrollbar w-[500px] sm:w-[560px]">
+      <div className="absolute top-full left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-0 mt-2 z-50 bg-card/95 backdrop-blur-xl border border-primary/30 rounded-2xl shadow-[0_16px_50px_rgba(0,0,0,0.7)] overflow-hidden max-h-[60vh] sm:max-h-[420px] overflow-y-auto p-2.5 sm:p-3 animate-in fade-in slide-in-from-top-2 duration-200 flash-sale-scrollbar w-[calc(100vw-2rem)] max-w-[560px] sm:w-[500px] md:w-[560px]">
         {searchResults.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {searchResults.map((item) => {
