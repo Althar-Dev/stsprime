@@ -37,8 +37,8 @@ export default function AdminSettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
 
   // Firestore Docs
-  const { data: legalData, loading: legalLoading } = useDoc(db ? doc(db, "settings", "legal") : null);
-  const { data: contactData, loading: contactLoading } = useDoc(db ? doc(db, "settings", "contact") : null);
+  const { data: legalData } = useDoc(db ? doc(db, "settings", "legal") : null);
+  const { data: contactData } = useDoc(db ? doc(db, "settings", "contact") : null);
 
   // States
   const [terms, setTerms] = useState<LegalSection[]>([]);
@@ -108,14 +108,6 @@ export default function AdminSettingsPage() {
     if (type === 'terms') setTerms(list);
     else setPrivacy(list);
   };
-
-  if (legalLoading || contactLoading) {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto px-3 sm:px-6 md:px-8 py-3 sm:py-6 md:py-8 space-y-6">
