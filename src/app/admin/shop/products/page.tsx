@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { useFirestore, useCollection } from "@/firebase";
+import { useUser, useFirestore, useCollection } from "@/firebase";
 import {
   collection,
   getDocs,
@@ -51,6 +51,7 @@ import {
   Link as LinkIcon,
   Grid3X3,
   Check,
+  CheckCircle2,
   X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -691,7 +692,7 @@ export default function AdminProductsPage() {
                     <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-background border border-border/50 p-1.5 flex items-center justify-center">
                       <img src={icon.imageUrl} alt={icon.name} className="h-full w-full object-contain transition-transform group-hover:scale-110" />
                       {formImage === icon.imageUrl && (
-                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center animate-in zoom-in">
                           <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-md animate-in zoom-in">
                             <Check className="h-3.5 w-3.5" />
                           </div>
