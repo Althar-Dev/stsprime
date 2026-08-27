@@ -24,6 +24,13 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Package,
   Search,
   Plus,
@@ -488,15 +495,16 @@ export default function AdminProductsPage() {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Provider API</Label>
-                    <select
-                      value={formProvider}
-                      onChange={(e) => setFormProvider(e.target.value)}
-                      className="h-11 sm:h-12 w-full bg-background rounded-xl font-bold border border-border/50 text-xs sm:text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer hover:bg-muted/10 transition-colors"
-                    >
-                      <option value="DigiFlazz">DigiFlazz</option>
-                      <option value="Orderkuota">Orderkuota</option>
-                      <option value="Internal">Internal / Manual</option>
-                    </select>
+                    <Select value={formProvider} onValueChange={setFormProvider}>
+                      <SelectTrigger className="h-11 sm:h-12 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm focus:ring-primary/20">
+                        <SelectValue placeholder="Pilih Provider" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-border bg-card">
+                        <SelectItem value="DigiFlazz" className="font-bold text-xs sm:text-sm">DigiFlazz</SelectItem>
+                        <SelectItem value="Orderkuota" className="font-bold text-xs sm:text-sm">Orderkuota</SelectItem>
+                        <SelectItem value="Internal" className="font-bold text-xs sm:text-sm">Internal / Manual</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
@@ -515,29 +523,31 @@ export default function AdminProductsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Kategori Produk</Label>
-                    <select
-                      value={formCategory}
-                      onChange={(e) => setFormCategory(e.target.value)}
-                      className="h-11 sm:h-12 w-full bg-background rounded-xl font-bold border border-border/50 text-xs sm:text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer hover:bg-muted/10 transition-colors"
-                    >
-                      <option value="Topup Game">Topup Game</option>
-                      <option value="Voucher">Voucher Digital</option>
-                      <option value="Pulsa/Data">Pulsa & Data</option>
-                      <option value="PLN & Tagihan">PLN & Tagihan</option>
-                    </select>
+                    <Select value={formCategory} onValueChange={setFormCategory}>
+                      <SelectTrigger className="h-11 sm:h-12 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm focus:ring-primary/20">
+                        <SelectValue placeholder="Pilih Kategori" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-border bg-card">
+                        <SelectItem value="Topup Game" className="font-bold text-xs sm:text-sm">Topup Game</SelectItem>
+                        <SelectItem value="Voucher" className="font-bold text-xs sm:text-sm">Voucher Digital</SelectItem>
+                        <SelectItem value="Pulsa/Data" className="font-bold text-xs sm:text-sm">Pulsa & Data</SelectItem>
+                        <SelectItem value="PLN & Tagihan" className="font-bold text-xs sm:text-sm">PLN & Tagihan</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status Publikasi</Label>
-                    <select
-                      value={formStatus}
-                      onChange={(e: any) => setFormStatus(e.target.value)}
-                      className="h-11 sm:h-12 w-full bg-background rounded-xl font-bold border border-border/50 text-xs sm:text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer hover:bg-muted/10 transition-colors"
-                    >
-                      <option value="Active">Published (Aktif)</option>
-                      <option value="Maintenance">Maintenance</option>
-                      <option value="Inactive">Draft (Non-Aktif)</option>
-                    </select>
+                    <Select value={formStatus} onValueChange={(val: any) => setFormStatus(val)}>
+                      <SelectTrigger className="h-11 sm:h-12 bg-background rounded-xl font-bold border-border/50 text-xs sm:text-sm focus:ring-primary/20">
+                        <SelectValue placeholder="Pilih Status" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-border bg-card">
+                        <SelectItem value="Active" className="font-bold text-xs sm:text-sm text-emerald-500">Published (Aktif)</SelectItem>
+                        <SelectItem value="Maintenance" className="font-bold text-xs sm:text-sm text-amber-500">Maintenance</SelectItem>
+                        <SelectItem value="Inactive" className="font-bold text-xs sm:text-sm text-muted-foreground">Draft (Non-Aktif)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
