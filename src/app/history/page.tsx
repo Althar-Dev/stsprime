@@ -177,7 +177,6 @@ export default function HistoryPage() {
               </div>
             </div>
 
-            {/* TRANSACTIONS CARDS LIST */}
             <div className="space-y-2.5 sm:space-y-3">
               {filteredOrders.length === 0 ? (
                 <div className="p-6 sm:p-10 rounded-xl sm:rounded-2xl border border-dashed border-border bg-card/20 text-center space-y-2">

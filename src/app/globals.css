@@ -6,7 +6,7 @@
   :root {
     --background: 0 0% 9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 12%;
+    --card: 0 0% 5%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 15%;
     --popover-foreground: 0 0% 98%;
@@ -39,7 +39,7 @@
   .dark {
     --background: 0 0% 9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 12%;
+    --card: 0 0% 18%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 15%;
     --popover-foreground: 0 0% 98%;
@@ -114,12 +114,19 @@ body[style*="pointer-events: none"] {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--primary) / 0.4) transparent;
   }
+
   body {
     @apply bg-background text-foreground font-body transition-colors duration-300;
     touch-action: manipulation;
     -webkit-text-size-adjust: 100%;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-headline tracking-tight;
   }
 
@@ -127,17 +134,17 @@ body[style*="pointer-events: none"] {
     width: 6px;
     height: 6px;
   }
-  
+
   ::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   ::-webkit-scrollbar-thumb {
     @apply rounded-full bg-primary/40 transition-all duration-300;
     border: 1px solid transparent;
     background-clip: padding-box;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-primary;
     box-shadow: 0 0 10px rgba(1, 202, 147, 0.6);
@@ -153,16 +160,16 @@ body[style*="pointer-events: none"] {
   .flash-sale-scrollbar::-webkit-scrollbar {
     height: 6px;
   }
-  
+
   .flash-sale-scrollbar::-webkit-scrollbar-track {
     @apply bg-card/80 rounded-full border border-border/30 mx-2;
   }
-  
+
   .flash-sale-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-gradient-to-r from-primary via-emerald-400 to-primary rounded-full transition-all duration-300;
     box-shadow: 0 0 10px rgba(1, 202, 147, 0.5);
   }
-  
+
   .flash-sale-scrollbar::-webkit-scrollbar-thumb:hover {
     @apply bg-primary;
     box-shadow: 0 0 15px rgba(1, 202, 147, 0.9);
@@ -172,60 +179,104 @@ body[style*="pointer-events: none"] {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  
+
   .modal-scrollbar::-webkit-scrollbar {
     display: none;
   }
 
   .bg-grid-pattern {
-    background-image: 
+    background-image:
       linear-gradient(to right, hsl(var(--primary) / 0.1) 1px, transparent 1px),
       linear-gradient(to bottom, hsl(var(--primary) / 0.1) 1px, transparent 1px);
     background-size: 16px 16px;
   }
 
   .bg-dots-pattern {
-    background-image: radial-gradient(currentColor 1px, transparent 1px);
-    background-size: 10px 10px;
-    @apply text-foreground/10;
+    position: relative;
+    isolation: isolate;
+  }
+
+  .bg-dots-pattern::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('/img/bg-dot.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
   }
 
   @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
   }
 
   .animate-shimmer {
-    background: linear-gradient(
-      110deg,
-      transparent 35%,
-      rgba(255, 255, 255, 0.4) 50%,
-      transparent 65%
-    );
+    background: linear-gradient(110deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.4) 50%,
+        transparent 65%);
     background-size: 200% 100%;
     animation: shimmer 8s infinite linear;
   }
 
   /* Lucide Icon Hover Micro-animations */
   @keyframes iconWiggle {
-    0%, 100% { transform: rotate(0deg) scale(1); }
-    25% { transform: rotate(-14deg) scale(1.25); }
-    75% { transform: rotate(14deg) scale(1.25); }
+
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+    }
+
+    25% {
+      transform: rotate(-14deg) scale(1.25);
+    }
+
+    75% {
+      transform: rotate(14deg) scale(1.25);
+    }
   }
 
   @keyframes iconPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.3); }
+
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.3);
+    }
   }
 
   @keyframes iconBounce {
-    0%, 100% { transform: translateY(0) scale(1); }
-    40% { transform: translateY(-4px) scale(1.25); }
+
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+
+    40% {
+      transform: translateY(-4px) scale(1.25);
+    }
   }
 
   @keyframes iconSpin {
-    0% { transform: rotate(0deg) scale(1); }
-    100% { transform: rotate(180deg) scale(1.25); }
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+
+    100% {
+      transform: rotate(180deg) scale(1.25);
+    }
   }
 
   .group:hover .animate-icon-wiggle,

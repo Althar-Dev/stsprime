@@ -10,6 +10,14 @@ import { SearchX, LayoutGrid, Zap, ChevronLeft, ChevronRight } from "lucide-reac
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CatalogSkeleton } from "@/components/catalog-skeleton";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const CATALOG_ITEMS = [
   // Flash Sale
@@ -20,10 +28,10 @@ const CATALOG_ITEMS = [
     category: "Game",
     imageId: "ff",
     tag: "Flash Sale",
-    discount: "50%",
-    originalPrice: "Rp 20.000",
-    salePrice: "Rp 10.000",
-    soldPercent: 85
+    itemName: "Member Mingguan - (Limited)",
+    originalPrice: "Rp 28.999",
+    salePrice: "Rp 27.999",
+    soldPercent: 95
   },
   {
     id: "mlbb-fs",
@@ -32,9 +40,9 @@ const CATALOG_ITEMS = [
     category: "Game",
     imageId: "mlbb",
     tag: "Flash Sale",
-    discount: "30%",
-    originalPrice: "Rp 50.000",
-    salePrice: "Rp 35.000",
+    itemName: "Weekly Diamond Pass",
+    originalPrice: "Rp 30.000",
+    salePrice: "Rp 28.000",
     soldPercent: 92
   },
   {
@@ -44,9 +52,9 @@ const CATALOG_ITEMS = [
     category: "Game",
     imageId: "valorant",
     tag: "Flash Sale",
-    discount: "20%",
-    originalPrice: "Rp 125.000",
-    salePrice: "Rp 100.000",
+    itemName: "1250 Points - (Promo)",
+    originalPrice: "Rp 135.000",
+    salePrice: "Rp 120.000",
     soldPercent: 64
   },
   {
@@ -56,9 +64,9 @@ const CATALOG_ITEMS = [
     category: "Game",
     imageId: "pubgm",
     tag: "Flash Sale",
-    discount: "40%",
-    originalPrice: "Rp 80.000",
-    salePrice: "Rp 48.000",
+    itemName: "660 UC - (Limited)",
+    originalPrice: "Rp 140.000",
+    salePrice: "Rp 125.000",
     soldPercent: 78
   },
   {
@@ -68,9 +76,9 @@ const CATALOG_ITEMS = [
     category: "Game",
     imageId: "genshin",
     tag: "Flash Sale",
-    discount: "15%",
-    originalPrice: "Rp 160.000",
-    salePrice: "Rp 136.000",
+    itemName: "Blessing of the Welkin Moon",
+    originalPrice: "Rp 79.000",
+    salePrice: "Rp 69.000",
     soldPercent: 45
   },
   {
@@ -80,9 +88,9 @@ const CATALOG_ITEMS = [
     category: "Voucher",
     imageId: "steam",
     tag: "Flash Sale",
-    discount: "25%",
-    originalPrice: "Rp 100.000",
-    salePrice: "Rp 75.000",
+    itemName: "Steam Wallet Rp 100.000",
+    originalPrice: "Rp 115.000",
+    salePrice: "Rp 105.000",
     soldPercent: 89
   },
   // Populer
@@ -117,9 +125,9 @@ function FlashSaleTimer() {
       const target = new Date();
       target.setDate(now.getDate() + (7 - now.getDay()));
       target.setHours(23, 59, 59, 999);
-      
+
       const diff = target.getTime() - now.getTime();
-      
+
       if (diff > 0) {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -164,6 +172,9 @@ export function CatalogGrid() {
   const query = searchParams.get("q")?.toLowerCase() || "";
   const [activeTab, setActiveTab] = useState("Semua");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const autoplayPlugin = useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: false })
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -177,8 +188,8 @@ export function CatalogGrid() {
 
   const flashSaleItems = filteredItems.filter(item => item.tag === "Flash Sale");
   const populerItems = filteredItems.filter(item => item.tag === "Populer");
-  const topUpItems = filteredItems.filter(item => 
-    item.tag !== "Flash Sale" && 
+  const topUpItems = filteredItems.filter(item =>
+    item.tag !== "Flash Sale" &&
     item.tag !== "Populer" &&
     (activeTab === "Semua" || item.category === activeTab)
   );
@@ -193,14 +204,14 @@ export function CatalogGrid() {
     }
   };
 
-  const SectionHeader = ({ 
-    title, 
-    icon: Icon, 
-    subtitle, 
-    rightElement 
-  }: { 
-    title: string, 
-    icon: any, 
+  const SectionHeader = ({
+    title,
+    icon: Icon,
+    subtitle,
+    rightElement
+  }: {
+    title: string,
+    icon: any,
     subtitle?: string,
     rightElement?: React.ReactNode
   }) => {
@@ -275,65 +286,112 @@ export function CatalogGrid() {
                     </p>
                   </div>
 
-                  <div className="flex overflow-x-auto gap-3 sm:gap-4 md:gap-6 pb-3 pt-1 snap-x snap-mandatory flash-sale-scrollbar touch-pan-x">
-                    {flashSaleItems.map((item) => {
-                      const image = PlaceHolderImages.find((img) => img.id === item.imageId);
-                      const sold = item.soldPercent || 75;
-                      return (
-                        <Link
-                          key={item.id}
-                          href={`/topup/${item.imageId}`}
-                          className="group shrink-0 w-[130px] sm:w-[155px] md:w-[190px] rounded-xl sm:rounded-2xl border border-border/80 bg-card/80 backdrop-blur-md overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-[0_12px_30px_-10px_rgba(1,202,147,0.35)] active:scale-95 flex flex-col justify-between snap-start"
-                        >
-                          <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-muted/20">
-                            <Image
-                              src={image?.imageUrl || ""}
-                              alt={item.name}
-                              fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-110"
-                              data-ai-hint={image?.imageHint}
-                            />
-                            <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 bg-gradient-to-r from-primary to-emerald-400 text-primary-foreground font-black text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full shadow-lg z-10 flex items-center gap-0.5 sm:gap-1">
-                              <Zap className="h-2.5 w-2.5 sm:h-3 sm:w-3 fill-current" />
-                              -{item.discount}
-                            </div>
-                          </div>
-                          <div className="p-2.5 sm:p-3 md:p-4 flex flex-col justify-between flex-1 space-y-2 sm:space-y-3 min-w-0">
-                            <div>
-                              <p className="text-[7px] sm:text-[8px] md:text-[9px] tracking-widest uppercase text-primary font-black mb-0.5 sm:mb-1">
-                                {item.type}
-                              </p>
-                              <h3 className="line-clamp-1 text-[11px] sm:text-xs md:text-sm font-black tracking-tight text-foreground group-hover:text-primary transition-colors">
-                                {item.name}
-                              </h3>
-                            </div>
-                            <div className="space-y-1.5 sm:space-y-2 pt-1.5 sm:pt-2 border-t border-border/30">
-                              <div>
-                                <p className="text-[11px] sm:text-xs md:text-sm font-black text-primary leading-tight">
-                                  {item.salePrice}
-                                </p>
-                                <p className="text-[8px] sm:text-[9px] md:text-[10px] text-muted-foreground line-through font-bold opacity-60">
-                                  {item.originalPrice}
-                                </p>
-                              </div>
-                              <div className="space-y-0.5 sm:space-y-1">
-                                <div className="flex justify-between text-[7px] sm:text-[8px] md:text-[9px] font-black text-muted-foreground">
-                                  <span>Terjual</span>
-                                  <span className="text-primary">{sold}%</span>
+                  <Carousel
+                    plugins={[autoplayPlugin.current]}
+                    opts={{
+                      align: "start",
+                      loop: true,
+                    }}
+                    className="w-full"
+                  >
+                    <CarouselContent className="-ml-3 sm:-ml-4 md:-ml-6 pt-4 pb-4">
+                      {flashSaleItems.map((item) => {
+                        const image = PlaceHolderImages.find((img) => img.id === item.imageId);
+                        const sold = item.soldPercent || 75;
+
+                        // Calculate savings dynamically
+                        const getSaving = (original: string, sale: string) => {
+                          const origNum = parseInt(original.replace(/[^0-9]/g, ""), 10);
+                          const saleNum = parseInt(sale.replace(/[^0-9]/g, ""), 10);
+                          if (isNaN(origNum) || isNaN(saleNum)) return "";
+                          const diff = origNum - saleNum;
+                          if (diff <= 0) return "";
+                          return `Rp ${diff.toLocaleString("id-ID")}`;
+                        };
+                        const savingStr = getSaving(item.originalPrice, item.salePrice);
+                        const limit = 199;
+                        const soldCount = Math.round((sold / 100) * limit);
+
+                        return (
+                          <CarouselItem
+                            key={item.id}
+                            className="pl-3 sm:pl-4 md:pl-6 basis-auto snap-start"
+                          >
+                            <Link
+                              href={`/topup/${item.imageId}`}
+                              className="group block w-[230px] sm:w-[260px] md:w-[290px] rounded-2xl border border-neutral-800 bg-[#262626] overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-primary hover:shadow-[0_12px_30px_-10px_rgba(1,202,147,0.35)] active:scale-95 flex flex-col justify-between"
+                            >
+                              <div className="p-3 sm:p-4 flex flex-col justify-between flex-1 space-y-3 min-w-0">
+                                {/* Header Section */}
+                                <div className="space-y-0.5">
+                                  <h3 className="line-clamp-1 text-xs sm:text-sm font-black tracking-tight text-white group-hover:text-primary transition-colors">
+                                    {(item as any).itemName || item.name}
+                                  </h3>
+                                  <p className="text-[10px] sm:text-xs font-bold text-neutral-400 tracking-wide">
+                                    {item.name}
+                                  </p>
                                 </div>
-                                <div className="h-1 sm:h-1.5 w-full bg-muted/60 rounded-full overflow-hidden border border-border/30">
-                                  <div
-                                    className="h-full bg-gradient-to-r from-primary to-emerald-400 rounded-full transition-all duration-500"
-                                    style={{ width: `${sold}%` }}
-                                  />
+
+                                {/* Middle section (Image & Price) */}
+                                <div className="flex items-center gap-3 py-1">
+                                  <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden bg-neutral-800/80 shrink-0 border border-neutral-700/50 flex items-center justify-center p-1">
+                                    <Image
+                                      src={image?.imageUrl || ""}
+                                      alt={item.name}
+                                      fill
+                                      className="object-contain transition-transform duration-500 group-hover:scale-110"
+                                      data-ai-hint={image?.imageHint}
+                                    />
+                                  </div>
+                                  <div className="flex flex-col justify-center min-w-0">
+                                    <span className="text-primary font-headline font-black text-sm sm:text-base md:text-lg tracking-tight leading-tight">
+                                      {item.salePrice}
+                                    </span>
+                                    <span className="text-red-500 line-through font-bold text-[10px] sm:text-xs opacity-80 leading-none">
+                                      {item.originalPrice}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {/* Progress bar */}
+                                <div className="space-y-1.5 pt-1">
+                                  <div className="h-2 w-full bg-[#1a1a1a] rounded-full overflow-hidden border border-neutral-700/20">
+                                    <div
+                                      className="h-full bg-gradient-to-r from-primary to-emerald-400 rounded-full transition-all duration-500"
+                                      style={{ width: `${sold}%` }}
+                                    />
+                                  </div>
+                                  <div className="text-right text-[9px] sm:text-[10px] font-bold text-neutral-300 uppercase tracking-tight">
+                                    {soldCount} / {limit} purchased
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
+
+                              {/* Footer Section */}
+                              <div className="bg-[#1c1c1c] px-3.5 py-2.5 flex items-center justify-between gap-2 border-t border-neutral-800 mt-auto">
+                                {savingStr ? (
+                                  <div className="bg-gradient-to-r from-primary to-emerald-500 text-primary-foreground font-black text-[9px] sm:text-[10px] px-2.5 py-1 rounded-md shadow-inner tracking-wider">
+                                    - {savingStr}
+                                  </div>
+                                ) : (
+                                  <div />
+                                )}
+                                <div className="flex items-center gap-1.5 bg-white px-2 py-1 rounded-md shadow-sm border border-neutral-200">
+                                  <svg className="h-3.5 w-3.5 text-[#04aa6d] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" className="fill-[#04aa6d]" />
+                                  </svg>
+                                  <div className="flex flex-col text-left leading-[1.1] justify-center shrink-0">
+                                    <span className="text-[5px] sm:text-[6px] text-neutral-500 font-extrabold tracking-tighter uppercase">Pengiriman</span>
+                                    <span className="text-[8px] sm:text-[9px] text-[#04aa6d] font-black tracking-tighter uppercase">INSTAN</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </Link>
+                          </CarouselItem>
+                        );
+                      })}
+                    </CarouselContent>
+                  </Carousel>
                 </div>
               </div>
             </div>
@@ -344,9 +402,9 @@ export function CatalogGrid() {
       {/* Populer Section */}
       {populerItems.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <SectionHeader 
-            title="Populer" 
-            icon="/img/fire.gif" 
+          <SectionHeader
+            title="Populer"
+            icon="/img/fire.gif"
             subtitle="Paling banyak dicari dan dimainkan oleh komunitas."
           />
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -358,7 +416,7 @@ export function CatalogGrid() {
                   href={`/topup/${item.imageId}`}
                   className="group relative flex items-center gap-3 md:gap-5 p-2 md:py-2 md:px-2 bg-card bg-dots-pattern border border-border rounded-2xl transition-all hover:scale-[1.02] hover:bg-muted/50 hover:border-primary/30 active:scale-95 shadow-xl"
                 >
-                  <div className="relative h-12 w-12 md:h-20 md:w-20 shrink-0 overflow-hidden rounded-xl md:rounded-2xl z-10">
+                  <div className="relative h-12 w-12 md:h-20 md:w-20 shrink-0 overflow-hidden rounded-sm md:rounded-md z-10">
                     <Image
                       src={image?.imageUrl || ""}
                       alt={item.name}
@@ -368,7 +426,7 @@ export function CatalogGrid() {
                     />
                   </div>
                   <div className="flex flex-col justify-center z-10 min-w-0">
-                    <h3 className="text-xs md:text-sm font-black tracking-tight text-card-foreground leading-tight mb-0.5 md:mb-1 group-hover:text-primary transition-colors truncate">
+                    <h3 className="text-[10px] md:text-sm font-black tracking-tight text-card-foreground leading-tight mb-0.5 md:mb-1 group-hover:text-primary transition-colors truncate">
                       {item.name}
                     </h3>
                     <p className="text-[8px] md:text-xs font-bold text-muted-foreground opacity-80 tracking-wide truncate">
