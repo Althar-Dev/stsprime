@@ -15,13 +15,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter
 } from "@/components/ui/dialog";
 import {
   Package,
@@ -31,18 +31,10 @@ import {
   Edit,
   Power,
   Trash2,
-  Gamepad2,
-  Ticket,
-  Zap,
   CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  Server,
   Loader2,
   ChevronLeft,
   ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
   Image as ImageIcon,
   Type,
   LayoutGrid,
@@ -58,7 +50,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 
 export interface ProductItem {
@@ -419,12 +410,12 @@ export default function AdminProductsPage() {
         </CardFooter>
       </Card>
 
-      {/* Modal Tambah / Edit Produk - Refactored for Responsiveness */}
+      {/* Modal Tambah / Edit Produk */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="w-[95vw] sm:max-w-[600px] p-0 rounded-2xl sm:rounded-3xl bg-card border-border overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+        <DialogContent className="w-[95vw] sm:max-w-[650px] p-0 rounded-2xl sm:rounded-3xl bg-card border-border overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
           {/* Header - Sticky */}
           <div className="bg-primary/10 border-b border-border p-5 sm:p-6 flex items-center gap-3 sm:gap-4 shrink-0">
-            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-primary/20 flex items-center justify-center shrink-0 border border-primary/30">
+            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-primary/20 flex items-center justify-center shrink-0 border border-primary/30 shadow-inner">
               <Package className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
             </div>
             <div className="min-w-0">
@@ -432,7 +423,7 @@ export default function AdminProductsPage() {
                 {editingProduct ? "Edit Detail Produk" : "Tambah Produk Baru"}
               </DialogTitle>
               <DialogDescription className="text-[10px] sm:text-xs font-bold text-muted-foreground mt-0.5 truncate">
-                {editingProduct ? `ID: ${editingProduct.id}` : "Konfigurasi layanan digital baru."}
+                {editingProduct ? `ID: ${editingProduct.id}` : "Konfigurasi layanan digital baru untuk katalog."}
               </DialogDescription>
             </div>
           </div>
@@ -443,20 +434,20 @@ export default function AdminProductsPage() {
               
               {/* Visual Group */}
               <div className="space-y-4">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-primary">
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-primary/80">
                   <ImageIcon className="h-3 w-3" /> Identitas Visual
                 </div>
                 <div className="flex flex-col sm:flex-row gap-5 items-center sm:items-start">
-                  <div className="h-24 w-24 sm:h-32 sm:w-32 rounded-2xl sm:rounded-3xl bg-muted/40 border border-border/60 flex items-center justify-center relative group overflow-hidden shrink-0">
+                  <div className="h-28 w-28 sm:h-36 sm:w-36 rounded-2xl sm:rounded-3xl bg-muted/30 border-2 border-dashed border-border/60 flex items-center justify-center relative group overflow-hidden shrink-0 shadow-inner">
                     {formImage ? (
                       <img 
                         src={formImage} 
                         alt="Preview" 
-                        className="w-full h-full object-contain p-3 sm:p-4" 
+                        className="w-full h-full object-contain p-3 sm:p-4 transition-transform group-hover:scale-110" 
                         onError={(e) => (e.target as HTMLImageElement).src = "/img/popular/mlbb.png"}
                       />
                     ) : (
-                      <ImageIcon className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground/30" />
+                      <ImageIcon className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground/20" />
                     )}
                   </div>
                   <div className="flex-1 w-full space-y-4">
@@ -465,11 +456,12 @@ export default function AdminProductsPage() {
                         <LinkIcon className="h-3 w-3" /> URL Gambar Ikon
                       </Label>
                       <Input
-                        placeholder="Contoh: /img/mlbb.png atau https://..."
-                        className="h-10 sm:h-11 bg-background rounded-xl text-xs sm:text-sm font-bold border-border/50 focus:border-primary/50"
+                        placeholder="Contoh: /img/mlbb.png"
+                        className="h-11 sm:h-12 bg-background rounded-xl text-xs sm:text-sm font-bold border-border/50 focus:border-primary/50 transition-all"
                         value={formImage}
                         onChange={(e) => setFormImage(e.target.value)}
                       />
+                      <p className="text-[9px] text-muted-foreground font-bold italic">Gunakan URL absolut atau path lokal.</p>
                     </div>
                   </div>
                 </div>
@@ -479,27 +471,27 @@ export default function AdminProductsPage() {
 
               {/* Data Group */}
               <div className="space-y-5">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-primary">
-                  <LayoutGrid className="h-3 w-3" /> Detail Layanan
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-primary/80">
+                  <LayoutGrid className="h-3 w-3" /> Detail Layanan & Integrasi
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">ID Produk (SKU Slug)</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">ID Produk (Slug)</Label>
                     <Input
                       placeholder="contoh-id-game"
-                      className="h-10 sm:h-11 bg-muted/30 rounded-xl font-mono text-xs sm:text-sm font-black border-border/50"
+                      className="h-11 sm:h-12 bg-muted/20 rounded-xl font-mono text-xs sm:text-sm font-black border-border/50"
                       value={formId}
                       onChange={(e) => setFormId(e.target.value)}
                       disabled={!!editingProduct}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pilih Provider API</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Provider API</Label>
                     <select
                       value={formProvider}
                       onChange={(e) => setFormProvider(e.target.value)}
-                      className="h-10 sm:h-11 w-full bg-background rounded-xl font-bold border border-border/50 text-xs sm:text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer"
+                      className="h-11 sm:h-12 w-full bg-background rounded-xl font-bold border border-border/50 text-xs sm:text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer hover:bg-muted/10 transition-colors"
                     >
                       <option value="DigiFlazz">DigiFlazz</option>
                       <option value="Orderkuota">Orderkuota</option>
@@ -514,7 +506,7 @@ export default function AdminProductsPage() {
                   </Label>
                   <Input
                     placeholder="Masukkan nama produk..."
-                    className="h-10 sm:h-11 bg-background rounded-xl text-xs sm:text-sm font-black border-border/50"
+                    className="h-11 sm:h-12 bg-background rounded-xl text-xs sm:text-sm font-black border-border/50 focus:border-primary/50 transition-all"
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                   />
@@ -526,7 +518,7 @@ export default function AdminProductsPage() {
                     <select
                       value={formCategory}
                       onChange={(e) => setFormCategory(e.target.value)}
-                      className="h-10 sm:h-11 w-full bg-background rounded-xl font-bold border border-border/50 text-xs sm:text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer"
+                      className="h-11 sm:h-12 w-full bg-background rounded-xl font-bold border border-border/50 text-xs sm:text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer hover:bg-muted/10 transition-colors"
                     >
                       <option value="Topup Game">Topup Game</option>
                       <option value="Voucher">Voucher Digital</option>
@@ -540,7 +532,7 @@ export default function AdminProductsPage() {
                     <select
                       value={formStatus}
                       onChange={(e: any) => setFormStatus(e.target.value)}
-                      className="h-10 sm:h-11 w-full bg-background rounded-xl font-bold border border-border/50 text-xs sm:text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer"
+                      className="h-11 sm:h-12 w-full bg-background rounded-xl font-bold border border-border/50 text-xs sm:text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer hover:bg-muted/10 transition-colors"
                     >
                       <option value="Active">Published (Aktif)</option>
                       <option value="Maintenance">Maintenance</option>
@@ -557,11 +549,11 @@ export default function AdminProductsPage() {
                     <Input
                       type="number"
                       placeholder="10"
-                      className="h-10 sm:h-11 bg-background rounded-xl text-xs sm:text-sm font-black border-border/50 w-24 sm:w-28"
+                      className="h-11 sm:h-12 bg-background rounded-xl text-xs sm:text-sm font-black border-border/50 w-24 sm:w-28 text-center"
                       value={formItems}
                       onChange={(e) => setFormItems(e.target.value)}
                     />
-                    <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground italic leading-tight">Mewakili total item unik di sisi provider.</span>
+                    <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground italic leading-tight max-w-[200px]">Total item unik yang tersedia di sisi provider API.</span>
                   </div>
                 </div>
               </div>
@@ -569,22 +561,22 @@ export default function AdminProductsPage() {
 
             {/* Footer - Sticky */}
             <div className="p-5 sm:p-6 border-t border-border bg-muted/10 shrink-0">
-              <div className="flex gap-3 sm:gap-4 max-w-full">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
                 <Button
                   type="button"
                   variant="ghost"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 h-11 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-muted/50"
+                  className="w-full sm:flex-1 h-11 sm:h-12 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-muted/50 order-2 sm:order-1"
                 >
                   Batal
                 </Button>
                 <Button
                   type="submit"
                   disabled={savingProduct}
-                  className="flex-[2] h-11 rounded-xl font-black text-xs uppercase tracking-widest gap-2 shadow-lg shadow-primary/20"
+                  className="w-full sm:flex-[2] h-11 sm:h-12 rounded-xl font-black text-xs uppercase tracking-widest gap-2 shadow-lg shadow-primary/20 hover:scale-[1.01] transition-all order-1 sm:order-2"
                 >
                   {savingProduct ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
-                  {editingProduct ? "Simpan Perubahan" : "Publikasikan"}
+                  {editingProduct ? "Simpan Perubahan" : "Publikasikan Produk"}
                 </Button>
               </div>
             </div>
