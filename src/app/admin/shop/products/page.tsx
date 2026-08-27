@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useFirestore } from "@/firebase";
+import { useState, useEffect, useMemo } from "react";
+import { useFirestore, useCollection } from "@/firebase";
 import {
   collection,
   getDocs,
   doc,
   setDoc,
   deleteDoc,
+  query,
+  orderBy,
 } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -22,6 +24,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -38,7 +41,6 @@ import {
   Edit,
   Power,
   Trash2,
-  CheckCircle2,
   Loader2,
   ChevronLeft,
   ChevronRight,
@@ -46,7 +48,10 @@ import {
   Type,
   LayoutGrid,
   Activity,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Grid3X3,
+  Check,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -58,6 +63,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 export interface ProductItem {
   id: string;
@@ -129,6 +135,7 @@ export default function AdminProductsPage() {
 
   // Dialog States
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isIconLibraryOpen, setIsIconLibraryOpen] = useState(false);
   const [savingProduct, setSavingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState<ProductItem | null>(null);
 
@@ -140,6 +147,19 @@ export default function AdminProductsPage() {
   const [formStatus, setFormStatus] = useState<"Active" | "Inactive" | "Maintenance">("Active");
   const [formItems, setFormItems] = useState("10");
   const [formImage, setFormImage] = useState("");
+
+  // Icon Library Data
+  const iconsQuery = useMemo(() => {
+    if (!db) return null;
+    return query(collection(db, "icons"), orderBy("updatedAt", "desc"));
+  }, [db]);
+  const { data: libraryIcons, loading: loadingIcons } = useCollection<any>(iconsQuery);
+  const [iconSearch, setIconSearch] = useState("");
+
+  const filteredLibraryIcons = libraryIcons.filter(icon => 
+    icon.name?.toLowerCase().includes(iconSearch.toLowerCase()) ||
+    icon.category?.toLowerCase().includes(iconSearch.toLowerCase())
+  );
 
   const loadProducts = async () => {
     setLoading(true);
@@ -197,6 +217,15 @@ export default function AdminProductsPage() {
     setFormItems(product.items.toString());
     setFormImage(product.image || "");
     setIsModalOpen(true);
+  };
+
+  const handleSelectIcon = (url: string) => {
+    setFormImage(url);
+    setIsIconLibraryOpen(false);
+    toast({
+      title: "Ikon Terpilih",
+      description: "Gambar produk telah diperbarui dari galeri.",
+    });
   };
 
   const handleSaveProduct = async (e: React.FormEvent) => {
@@ -459,16 +488,25 @@ export default function AdminProductsPage() {
                   </div>
                   <div className="flex-1 w-full space-y-4">
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                        <LinkIcon className="h-3 w-3" /> URL Gambar Ikon
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center justify-between gap-2">
+                        <span className="flex items-center gap-2"><LinkIcon className="h-3 w-3" /> URL Ikon Produk</span>
+                        <Button 
+                          type="button" 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => setIsIconLibraryOpen(true)}
+                          className="h-6 text-[9px] font-black uppercase tracking-widest text-primary hover:bg-primary/10 px-2 rounded-md"
+                        >
+                          <Grid3X3 className="h-3 w-3 mr-1" /> Pilih dari Galeri
+                        </Button>
                       </Label>
                       <Input
-                        placeholder="Contoh: /img/mlbb.png"
+                        placeholder="Contoh: https://r2.dev/icons/mlbb.png"
                         className="h-11 sm:h-12 bg-background rounded-xl text-xs sm:text-sm font-bold border-border/50 focus:border-primary/50 transition-all"
                         value={formImage}
                         onChange={(e) => setFormImage(e.target.value)}
                       />
-                      <p className="text-[9px] text-muted-foreground font-bold italic">Gunakan URL absolut atau path lokal.</p>
+                      <p className="text-[9px] text-muted-foreground font-bold italic">Gunakan URL aset dari Galeri Ikon atau masukkan URL eksternal.</p>
                     </div>
                   </div>
                 </div>
@@ -591,6 +629,93 @@ export default function AdminProductsPage() {
               </div>
             </div>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* MODAL PEMILIH IKON DARI GALERI */}
+      <Dialog open={isIconLibraryOpen} onOpenChange={setIsIconLibraryOpen}>
+        <DialogContent className="w-[95vw] sm:max-w-[750px] p-0 rounded-2xl sm:rounded-3xl bg-card border-border overflow-hidden flex flex-col h-[85vh]">
+          <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-md border-b border-border p-4 sm:p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                  <Grid3X3 className="h-5 w-5 text-primary" />
+                </div>
+                <div className="min-w-0">
+                  <DialogTitle className="text-base sm:text-lg font-black tracking-tight">Galeri Ikon Aset</DialogTitle>
+                  <DialogDescription className="text-[10px] font-bold text-muted-foreground truncate">Pilih aset visual untuk memperbarui profil produk.</DialogDescription>
+                </div>
+              </div>
+              <DialogClose asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg"><X className="h-4 w-4" /></Button>
+              </DialogClose>
+            </div>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Cari nama ikon atau kategori..." 
+                className="pl-10 h-10 bg-muted/20 border-border/60 text-xs font-bold rounded-xl"
+                value={iconSearch}
+                onChange={(e) => setIconSearch(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 modal-scrollbar">
+            {loadingIcons ? (
+              <div className="h-full flex flex-col items-center justify-center gap-3 py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-50">Menyelaraskan Galeri...</p>
+              </div>
+            ) : filteredLibraryIcons.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center text-center gap-3 py-20">
+                <ImageIcon className="h-12 w-12 text-muted-foreground/20" />
+                <div className="space-y-1">
+                  <p className="text-sm font-black">Ikon Tidak Ditemukan</p>
+                  <p className="text-xs text-muted-foreground font-bold">Coba kata kunci lain atau unggah ikon baru di menu Galeri.</p>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
+                {filteredLibraryIcons.map((icon) => (
+                  <button
+                    key={icon.id}
+                    onClick={() => handleSelectIcon(icon.imageUrl)}
+                    className={cn(
+                      "group relative flex flex-col items-center gap-2 p-2.5 rounded-xl border transition-all hover:scale-[1.05]",
+                      formImage === icon.imageUrl 
+                        ? "bg-primary/5 border-primary shadow-lg ring-1 ring-primary/20" 
+                        : "bg-muted/10 border-border/40 hover:bg-muted/20 hover:border-primary/30"
+                    )}
+                  >
+                    <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-background border border-border/50 p-1.5 flex items-center justify-center">
+                      <img src={icon.imageUrl} alt={icon.name} className="h-full w-full object-contain transition-transform group-hover:scale-110" />
+                      {formImage === icon.imageUrl && (
+                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                          <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-md animate-in zoom-in">
+                            <Check className="h-3.5 w-3.5" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="w-full text-center">
+                      <p className="text-[9px] font-black text-foreground truncate w-full">{icon.name}</p>
+                      <p className="text-[7px] font-bold text-muted-foreground uppercase tracking-widest">{icon.category}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          <div className="p-4 border-t border-border bg-muted/10 flex items-center justify-between shrink-0">
+             <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+               Total: {filteredLibraryIcons.length} Aset Ikon
+             </p>
+             <Button variant="outline" size="sm" className="h-8 rounded-lg text-[9px] font-black uppercase tracking-widest" asChild>
+                <a href="/admin/gallery/icons" target="_blank">Kelola Galeri <ChevronRight className="h-3 w-3 ml-1" /></a>
+             </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
